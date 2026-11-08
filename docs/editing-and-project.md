@@ -26,6 +26,7 @@
 
 - Called modernstudio.
 - Delivered with an installer.
+- The window opens at 960 by 540 by default (decided by the user on 2026-11-08). Every page must work at that size. See [design.md](design.md).
 - The window can be resized and maximized.
 - Everything described in these docs is wanted working from the first build.
 

@@ -2,7 +2,7 @@
 
 The decided look. Every exhibition and page build reads this first.
 
-**This file decides the palette and the fonts, and nothing else.** It does not decide any layout, page design, control shape, corner radius, line weight, spacing or density. Those stay open and are decided page by page.
+**This file decides the palette, the fonts and the default window size, and nothing else.** It does not decide any layout, page design, control shape, corner radius, line weight, spacing or density. Those stay open and are decided page by page.
 
 ## The look: Bone and black
 
@@ -40,6 +40,16 @@ Chosen on 2026-11-08 from the twenty looks in [exhibition/overall-feel.html](exh
   --font-outlier: "Fragment Mono", ui-monospace, monospace;
 }
 ```
+
+## Default window size: 960 by 540
+
+Decided by the user on 2026-11-08. The program's default resolution is **960 by 540**, and every page design must be able to handle it. Every exhibition is judged against it, and every page is built to work at that size.
+
+- This is the default, not a limit. The window can still be resized and maximized ([editing-and-project.md](editing-and-project.md)).
+- The page never scrolls sideways at 960 wide. Wide editors may scroll sideways inside their own box, as the Song lanes and the string cards already do.
+- Not decided: whether 960 by 540 is the window or the area inside it, whether there is a smaller minimum window, and whether an editor may scroll vertically at 540 high or must fit.
+
+The layouts decided before this rule (Mixer, Song, Drums, Guitar) were not designed against it and were never viewed in a browser. They are unchecked at 960 by 540. See [open-items.md](open-items.md).
 
 ## Not decided
 
