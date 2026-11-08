@@ -1,0 +1,16 @@
+/* Bone and black: the decided palette and fonts (docs/design.md). Nothing else is decided here. */
+:root {
+  --color-paper: oklch(96.5% 0.006 90);
+  --color-paper-2: oklch(99% 0.004 90);
+  --color-paper-3: oklch(94% 0.006 90);
+  --color-ink: oklch(18% 0.006 90);
+  --color-muted: oklch(44% 0.006 90);
+  --color-rule: oklch(79% 0.006 90);
+  --color-accent: oklch(18% 0.006 90);
+  --color-accent-ink: oklch(97% 0.005 90);
+  --color-focus: oklch(18% 0.006 90);
+
+  --font-display: 'Piazzolla', ui-serif, serif;
+  --font-body: 'Golos Text', ui-sans-serif, sans-serif;
+  --font-outlier: 'Fragment Mono', ui-monospace, monospace;
+}

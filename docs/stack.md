@@ -9,6 +9,13 @@ Decided on 2026-11-08. The user had no preference and no technical background, s
 - **Web Audio API** for all sound: scheduling notes, attack, decay and release on the recorded instrument sounds, the mixer, the level meters, and WAV export by rendering the whole song offline.
 - The string layout editor and the Song timeline are custom drawings in the app.
 
+### As built (plan24 step 1)
+
+- Versions on 2026-11-09: Electron 45, React 19, Vite 8 through `electron-vite` 6, Vitest 5, ESLint 10 with `typescript-eslint`. TypeScript is held at 6.0 (`~6.0.3`), not 7, because `typescript-eslint` does not support 7 yet. Raise it when it does.
+- The three font faces ship inside the app as `@fontsource` packages, so the app works offline. Only the weights used are imported: Piazzolla 700, Golos Text 400 to 600, Fragment Mono 400.
+- The window is sandboxed with context isolation. The preload script is built as CommonJS (`index.cjs`) because a sandboxed preload cannot be a module, although the rest of the package is ESM.
+- `npm install` reports moderate-severity advisories in development tooling. None is shipped in the app. Revisit at the installer step.
+
 ### Why
 
 - Web Audio does the envelope shaping and the offline render the spec asks for, with no extra audio library.
