@@ -38,3 +38,35 @@ None of this is in the questionnaire answers. Change it if wrong.
 ### Where to look
 
 The drawn version is design 02 in [exhibition/mixer.html](exhibition/mixer.html). The other sixteen stay there as the record of what was considered.
+
+## Song: the Brush bar
+
+Chosen on 2026-11-08 from [exhibition/song.html](exhibition/song.html), design 08. Ten designs were built. None was opened in a browser; they were only checked with the static lint, so the picked layout is unseen rendered.
+
+### What it is
+
+One toolbar holds the whole pattern picker as a single "brush". Below it, five tall, clean lanes carry nothing but their blocks. You choose an instrument and a ready pattern in the toolbar, then click an empty bar in a lane to place it.
+
+### Layout
+
+- **Toolbar, one row.** At the left: the Play button (filled ink) and the position readout, "Bar 6 of 12". At the right, the brush: the word "Place", then the instrument as a five-way choice (Drums, Bass, Rhythm Guitar, Lead Guitar, Keys), then a stepper (previous arrow, the pattern number, next arrow). The stepper moves only through ready patterns and skips empty ones.
+- **Timeline.** A row of bar numbers above the lanes. Clicking a bar moves the playhead. The playhead is a 2px ink line through all five lanes.
+- **Lanes, top to bottom.** Drums, Bass, Rhythm Guitar, Lead Guitar, Keys. Each lane has its name in a left column and a track of bars with hairline bar lines. Lanes are tall (about 5.5rem).
+- **Blocks.** Ink-filled, with the pattern number set large in the figure face. A block is as wide as its pattern is long (1, 2, 4 or 8 bars) and snaps to the bar line. Blocks do not overlap; gaps are allowed.
+- **The brush lane.** The lane of the chosen instrument has its name outlined in ink. When the pointer is over an empty stretch of that lane, a dashed ghost block shows where the brush would land and how wide it is.
+- **Narrow windows.** The toolbar wraps, the name column narrows, and the lanes scroll sideways as one piece. The page itself never scrolls sideways.
+
+### Assumed in the design
+
+None of this is in the questionnaire answers. Change it if wrong.
+
+- The Song page carries its own Play button, as the Mixer does. [pages.md](pages.md) says where the transport belongs is not specified.
+- "Bar 6 of 12" is a readout of the playhead and the song end (the end of the last placed block on any lane). It is the only number added.
+- The stepper skips empty patterns, because only active patterns can be placed.
+- The sixteen bars drawn are the visible stretch. The song can run to 256 bars, reached by scrolling sideways.
+- Moving and removing blocks are not drawn. The design suggests dragging to move; how removal works (a Remove action on a selected block was drawn in design 05, and a Delete key is the plain option) is still open.
+- Corner shape, line weight and lane height are this page's own and are not a decision for other pages.
+
+### Where to look
+
+The drawn version is design 08 in [exhibition/song.html](exhibition/song.html). The other nine stay there as the record of what was considered.

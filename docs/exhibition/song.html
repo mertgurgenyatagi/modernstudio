@@ -1,0 +1,978 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>modernstudio song designs</title>
+<meta name="description" content="Ten layouts for the modernstudio Song page, in the decided Bone and black look. Design 08, the Brush bar, was picked.">
+<link rel="icon" href="data:,">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Piazzolla:wght@700&family=Golos+Text:wght@400;500;600&family=Fragment+Mono&display=swap">
+<style>
+/* Hallmark · shape: app screen · genre: modern-minimal · theme: custom (Bone and black, locked by docs/design.md)
+ * paper: oklch 96.5% 0.006 90 · accent: the ink itself · display: Piazzolla 700 · body: Golos Text · figures: Fragment Mono
+ * nav: none, the Song page alone · signature: the arrangement itself, five lanes of pattern blocks under one playhead · states: default, hover, focus, active, pressed, disabled
+ * axes: mixed/mixed/mixed · posture: restrained, ink fills only selected blocks, the selected pattern, the playhead and the running Play button · contrast: pass · v2.0.0 */
+/* Hallmark · pre-emit critique: P4 H4 E4 S4 R4 V5 · weakest: S, the lane and block grammar is shared by the docs, so the designs differ in where the picker, ruler, transport and overview sit and in lane geometry; each design has its own markup and rules */
+/* Hallmark · answered F4 · the filled ink style marks only a selected pattern, a selected block, or the running Play control, never a primary action, and each design is a separate layout being compared */
+/* Hallmark · answered F7 · the lane, block and chip recipes repeat across designs on purpose: only the arrangement around them differs between the ten */
+/* Hallmark · waive 37 · three families only (Piazzolla, Golos Text, Fragment Mono), flagged by the page loading one stylesheet for all three · the project fixed exactly these three in docs/design.md */
+
+:root {
+  --color-paper: oklch(96.5% 0.006 90);  --color-paper-2: oklch(99% 0.004 90);  --color-paper-3: oklch(94% 0.006 90);
+  --color-ink: oklch(18% 0.006 90);  --color-muted: oklch(44% 0.006 90);  --color-rule: oklch(79% 0.006 90);
+  --color-accent: oklch(18% 0.006 90);  --color-accent-ink: oklch(97% 0.005 90);  --color-focus: oklch(18% 0.006 90);
+  --font-display: "Piazzolla", ui-serif, serif;
+  --font-body: "Golos Text", ui-sans-serif, sans-serif;
+  --font-outlier: "Fragment Mono", ui-monospace, monospace;
+
+  --space-3xs: 2px; --space-2xs: 4px; --space-xs: 8px; --space-sm: 12px; --space-md: 16px; --space-lg: 24px; --space-lgx: 32px; --space-xl: 40px; --space-2xl: 64px; --space-3xl: 96px;
+  --text-xs: 0.75rem; --text-sm: 0.8125rem; --text-md: 0.9375rem; --text-lg: 1.0625rem; --text-xl: 1.2rem; --text-2xl: 1.5rem; --text-3xl: 2.25rem; --text-4xl: 3.5rem; --text-5xl: 6rem;
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --dur-micro: 120ms;
+  --container: 1360px; --gutter: 24px;
+  --rule-w: 1px;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html, body { overflow-x: clip; }
+html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; scrollbar-color: var(--color-muted) var(--color-paper-3); caret-color: var(--color-ink); }
+body { margin: 0; background: var(--color-paper-3); color: var(--color-ink); font-family: var(--font-body); font-size: var(--text-md); line-height: 1.5; font-synthesis: none; }
+h1, h2, h3, h4, p, ul, ol, dl, dd, figure { margin: 0; }
+h1, h2, h3, h4 { text-wrap: balance; overflow-wrap: break-word; min-width: 0; }
+ul, ol { padding: 0; list-style: none; }
+a { color: inherit; }
+::selection { background: var(--color-ink); color: var(--color-accent-ink); }
+
+.wrap { width: 100%; max-width: var(--container); margin: 0 auto; padding: var(--space-xl) var(--gutter) var(--space-3xl); }
+
+/* page header */
+.page-head { display: grid; gap: var(--space-md); max-width: 70ch; margin-bottom: var(--space-2xl); }
+.page-head h1 { font-family: var(--font-display); font-weight: 700; font-size: var(--text-3xl); line-height: 1.1; letter-spacing: -0.015em; }
+.page-head p { color: var(--color-muted); max-width: 62ch; }
+.index { display: grid; grid-template-columns: repeat(auto-fill, minmax(11rem, 1fr)); gap: 0 var(--space-md); max-width: 62rem; margin-top: var(--space-xs); }
+.index a { display: block; padding: var(--space-xs) 0; text-decoration: none; border-bottom: 1px solid var(--color-rule); }
+.index a span { font-family: var(--font-outlier); color: var(--color-muted); margin-right: var(--space-xs); }
+.index a:hover { border-bottom-color: var(--color-ink); }
+.index a:active { transform: translateY(1px); }
+.index a:focus-visible { outline: 3px solid var(--color-focus); outline-offset: 2px; }
+
+/* the frame around each design */
+.look { margin-top: var(--space-3xl); scroll-margin-top: var(--space-lg); }
+.meta { display: grid; gap: var(--space-xs); margin-bottom: var(--space-md); max-width: 70ch; }
+.meta h2 { font-family: var(--font-display); font-weight: 700; font-size: var(--text-2xl); line-height: 1.15; }
+.meta h2 .fig { margin-right: var(--space-xs); }
+.meta p { max-width: 62ch; }
+.frame { container-type: inline-size; background: var(--color-paper); color: var(--color-ink); border: var(--rule-w) solid var(--color-rule); overflow: clip; }
+.frame :is(button, input, output, select) { font: inherit; color: inherit; }
+.frame button { cursor: pointer; }
+.frame button:active { transform: translateY(1px); }
+.frame button:disabled { opacity: 0.45; cursor: not-allowed; }
+.frame button:disabled:active { transform: none; }
+.frame :focus-visible { outline: 3px solid var(--color-focus); outline-offset: 2px; }
+.frame h3, .frame h4 { font-family: var(--font-display); font-weight: 700; }
+.frame .fig { font-family: var(--font-outlier); font-variant-numeric: tabular-nums; }
+.frame .sr { position: absolute; inline-size: 1px; block-size: 1px; overflow: clip; clip-path: inset(50%); white-space: nowrap; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition: none !important; animation: none !important; scroll-behavior: auto !important; }
+  .index a:active, .frame button:active { transform: none; }
+}
+@media (max-width: 40rem) { :root { --gutter: 16px; } }
+
+/* ===== 01 Rail pickers ===== */
+.d01 { --bar: 3rem; }
+.d01 .top { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-sm) var(--space-lg); padding: var(--space-md) var(--space-lg); background: var(--color-paper-2); border-bottom: var(--rule-w) solid var(--color-rule); }
+.d01 .top h3 { margin-right: auto; font-size: var(--text-xl); line-height: 1.2; }
+.d01 .pos { color: var(--color-muted); font-size: var(--text-sm); }
+.d01 .play { display: inline-flex; align-items: center; gap: var(--space-xs); block-size: 2.25rem; padding: 0 var(--space-md); border: var(--rule-w) solid var(--color-ink); border-radius: 2px; background: var(--color-paper); font-weight: 600; transition: background-color var(--dur-micro) var(--ease-out), color var(--dur-micro) var(--ease-out); }
+.d01 .play:hover { background: var(--color-paper-3); }
+.d01 .play .tri { inline-size: 0; block-size: 0; border: 0.4rem solid transparent; border-left: 0.65rem solid currentColor; border-right: 0; }
+.d01 .scroll { overflow-x: auto; }
+.d01 .sheet { display: grid; grid-template-columns: 17rem minmax(calc(var(--bar) * 16), 1fr); min-inline-size: calc(17rem + var(--bar) * 16); position: relative; }
+.d01 .corner { position: sticky; left: 0; z-index: 2; display: flex; align-items: end; padding: var(--space-xs) var(--space-md); background: var(--color-paper); border-bottom: var(--rule-w) solid var(--color-ink); border-right: var(--rule-w) solid var(--color-rule); color: var(--color-muted); font-size: var(--text-sm); }
+.d01 .ruler { display: grid; grid-template-columns: repeat(16, 1fr); counter-reset: b; background: var(--color-paper); border-bottom: var(--rule-w) solid var(--color-ink); cursor: pointer; }
+.d01 .ruler li { counter-increment: b; padding: var(--space-xs) var(--space-xs) var(--space-2xs); border-left: var(--rule-w) solid var(--color-rule); font-family: var(--font-outlier); font-size: var(--text-xs); color: var(--color-muted); }
+.d01 .ruler li:first-child { border-left: 0; }
+.d01 .ruler li::before { content: counter(b); }
+.d01 .ruler li:hover { background: var(--color-paper-3); color: var(--color-ink); }
+.d01 .rail { position: sticky; left: 0; z-index: 2; display: grid; gap: var(--space-xs); align-content: center; padding: var(--space-sm) var(--space-md); background: var(--color-paper-2); border-bottom: var(--rule-w) solid var(--color-rule); border-right: var(--rule-w) solid var(--color-rule); }
+.d01 .rail h4 { font-size: var(--text-lg); line-height: 1.2; }
+.d01 .chips { display: grid; grid-template-columns: repeat(10, 1fr); gap: var(--space-3xs); }
+.d01 .chips button { aspect-ratio: 1; padding: 0; border: var(--rule-w) solid var(--color-rule); border-radius: 2px; background: var(--color-paper); font-family: var(--font-outlier); font-size: var(--text-xs); line-height: 1; transition: background-color var(--dur-micro) var(--ease-out), color var(--dur-micro) var(--ease-out); }
+.d01 .chips button:hover:not(:disabled) { border-color: var(--color-ink); }
+.d01 .chips button:disabled { background: transparent; border-style: dashed; color: var(--color-muted); }
+.d01 .chips button[aria-pressed="true"] { background: var(--color-ink); border-color: var(--color-ink); color: var(--color-accent-ink); }
+.d01 .track { display: grid; grid-template-columns: repeat(16, 1fr); align-items: stretch; padding: var(--space-xs) 0; min-block-size: 5.5rem; border-bottom: var(--rule-w) solid var(--color-rule); background: repeating-linear-gradient(to right, transparent 0, transparent calc(100% / 16 - var(--rule-w)), var(--color-rule) calc(100% / 16 - var(--rule-w)), var(--color-rule) calc(100% / 16)); cursor: copy; }
+.d01 .blk { margin: 0 var(--space-3xs); padding: var(--space-xs) var(--space-sm); border: var(--rule-w) solid var(--color-ink); border-radius: 2px; background: var(--color-paper-2); text-align: left; font-family: var(--font-outlier); cursor: grab; transition: background-color var(--dur-micro) var(--ease-out); }
+.d01 .blk:hover { background: var(--color-paper-3); }
+.d01 .blk.sel { background: var(--color-ink); color: var(--color-accent-ink); }
+.d01 .head { position: absolute; top: 0; bottom: 0; left: calc(17rem + (100% - 17rem) / 16 * 5); inline-size: 2px; margin-left: -1px; background: var(--color-ink); pointer-events: none; z-index: 1; }
+.d01 .head::before { content: ""; position: absolute; top: 0; left: -5px; border: 6px solid transparent; border-top: 8px solid var(--color-ink); border-bottom: 0; }
+.d01 .hint { padding: var(--space-sm) var(--space-md); color: var(--color-muted); font-size: var(--text-sm); border-top: var(--rule-w) solid var(--color-rule); }
+@container (max-width: 36rem) { .d01 .top { padding: var(--space-sm) var(--space-md); } .d01 .sheet { grid-template-columns: 13rem minmax(calc(var(--bar) * 16), 1fr); min-inline-size: calc(13rem + var(--bar) * 16); } .d01 .head { left: calc(13rem + (100% - 13rem) / 16 * 5); } .d01 .chips { grid-template-columns: repeat(10, 1fr); } }
+
+/* ===== 02 Tabbed tray ===== */
+.d02 { --bar: 2.75rem; --lab: 10rem; }
+.d02 .scroll { overflow-x: auto; }
+.d02 .grid { display: grid; grid-template-columns: var(--lab) minmax(calc(var(--bar) * 16), 1fr); min-inline-size: calc(var(--lab) + var(--bar) * 16); position: relative; }
+.d02 .corner { position: sticky; left: 0; z-index: 2; display: flex; align-items: center; gap: var(--space-sm); padding: var(--space-xs) var(--space-md); background: var(--color-paper); border-bottom: var(--rule-w) solid var(--color-rule); }
+.d02 .play { display: inline-flex; align-items: center; justify-content: center; gap: var(--space-xs); inline-size: 5rem; block-size: 2rem; border: var(--rule-w) solid var(--color-ink); border-radius: 2px; background: var(--color-paper-2); font-weight: 600; font-size: var(--text-sm); transition: background-color var(--dur-micro) var(--ease-out); }
+.d02 .play:hover { background: var(--color-paper-3); }
+.d02 .play i { inline-size: 0; block-size: 0; border: 0.32rem solid transparent; border-left: 0.52rem solid currentColor; border-right: 0; }
+.d02 .corner .fig { font-size: var(--text-xs); color: var(--color-muted); }
+.d02 .ruler { display: grid; grid-template-columns: repeat(16, 1fr); counter-reset: n; border-bottom: var(--rule-w) solid var(--color-rule); cursor: pointer; }
+.d02 .ruler li { counter-increment: n; position: relative; padding: var(--space-xs) 0 var(--space-xs) var(--space-xs); font-family: var(--font-outlier); font-size: var(--text-xs); color: var(--color-muted); }
+.d02 .ruler li::before { content: counter(n); }
+.d02 .ruler li::after { content: ""; position: absolute; left: 0; bottom: 0; block-size: 0.4rem; border-left: var(--rule-w) solid var(--color-muted); }
+.d02 .ruler li:hover { color: var(--color-ink); }
+.d02 .name { position: sticky; left: 0; z-index: 2; display: flex; align-items: center; padding: 0 var(--space-md); border: 0; border-bottom: var(--rule-w) solid var(--color-rule); background: var(--color-paper); text-align: left; font-weight: 500; transition: background-color var(--dur-micro) var(--ease-out); }
+.d02 .name:hover { background: var(--color-paper-3); }
+.d02 .name[aria-pressed="true"] { background: var(--color-ink); color: var(--color-accent-ink); }
+.d02 .lane { display: grid; grid-template-columns: repeat(16, 1fr); gap: 0 var(--space-3xs); align-items: stretch; padding: var(--space-2xs) 0; min-block-size: 3rem; border-bottom: var(--rule-w) solid var(--color-rule); background: repeating-linear-gradient(to right, transparent 0, transparent calc(100% / 16 - var(--rule-w)), var(--color-paper-3) calc(100% / 16 - var(--rule-w)), var(--color-paper-3) calc(100% / 16)); cursor: copy; }
+.d02 .b { padding: 0 var(--space-sm); border: 0; border-radius: 2px; background: var(--color-ink); color: var(--color-accent-ink); text-align: left; font-family: var(--font-outlier); cursor: grab; transition: background-color var(--dur-micro) var(--ease-out); }
+.d02 .b:hover { background: var(--color-muted); }
+.d02 .head { position: absolute; top: 0; bottom: 0; left: calc(var(--lab) + (100% - var(--lab)) / 16 * 5); inline-size: 0; border-left: 2px dashed var(--color-ink); margin-left: -1px; pointer-events: none; z-index: 1; }
+.d02 .tray { background: var(--color-paper-2); border-top: var(--rule-w) solid var(--color-ink); }
+.d02 .tabs { display: flex; flex-wrap: wrap; border-bottom: var(--rule-w) solid var(--color-rule); }
+.d02 .tabs button { padding: var(--space-sm) var(--space-lg); border: 0; border-right: var(--rule-w) solid var(--color-rule); background: transparent; font-weight: 500; transition: background-color var(--dur-micro) var(--ease-out); }
+.d02 .tabs button:hover { background: var(--color-paper-3); }
+.d02 .tabs button[aria-selected="true"] { background: var(--color-paper); box-shadow: inset 0 -3px 0 var(--color-ink); font-weight: 600; }
+.d02 .tiles { display: grid; grid-template-columns: repeat(10, minmax(0, 1fr)); gap: var(--space-xs); padding: var(--space-md) var(--space-lg); }
+.d02 .tiles button { display: grid; place-items: center; aspect-ratio: 5 / 4; border: var(--rule-w) solid var(--color-ink); border-radius: 2px; background: var(--color-paper); font-family: var(--font-outlier); font-size: var(--text-xl); transition: background-color var(--dur-micro) var(--ease-out), color var(--dur-micro) var(--ease-out); }
+.d02 .tiles button:hover:not(:disabled) { background: var(--color-paper-3); }
+.d02 .tiles button:disabled { border-color: var(--color-rule); background: transparent; color: var(--color-muted); }
+.d02 .tiles button[aria-pressed="true"] { background: var(--color-ink); color: var(--color-accent-ink); }
+.d02 .note { padding: 0 var(--space-lg) var(--space-md); color: var(--color-muted); font-size: var(--text-sm); }
+@container (max-width: 44rem) { .d02 { --lab: 7.5rem; } .d02 .tiles { grid-template-columns: repeat(5, minmax(0, 1fr)); padding-inline: var(--space-md); } .d02 .tabs button { padding-inline: var(--space-md); } .d02 .note { padding-inline: var(--space-md); } }
+
+/* ===== 03 Side bin ===== */
+.d03 { --bar: 2.75rem; --lab: 8.5rem; }
+.d03 .bar { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-sm) var(--space-md); padding: var(--space-sm) var(--space-lg); border-bottom: var(--rule-w) solid var(--color-rule); }
+.d03 .bar h3 { margin-right: auto; font-size: var(--text-xl); line-height: 1.2; }
+.d03 .bar .fig { font-size: var(--text-sm); color: var(--color-muted); }
+.d03 .go { inline-size: 2.5rem; block-size: 2.5rem; padding: 0; border: var(--rule-w) solid var(--color-ink); border-radius: 50%; background: var(--color-ink); display: grid; place-items: center; transition: background-color var(--dur-micro) var(--ease-out); }
+.d03 .go:hover { background: var(--color-muted); }
+.d03 .go i { inline-size: 0; block-size: 0; margin-left: 0.15rem; border: 0.4rem solid transparent; border-left: 0.65rem solid var(--color-accent-ink); border-right: 0; }
+.d03 .cols { display: grid; grid-template-columns: minmax(0, 1fr) 15rem; }
+.d03 .arr { min-inline-size: 0; overflow-x: auto; }
+.d03 .rows { position: relative; min-inline-size: calc(var(--lab) + var(--bar) * 16); }
+.d03 .tl { display: grid; grid-template-columns: var(--lab) repeat(16, minmax(var(--bar), 1fr)); counter-reset: k; border-bottom: var(--rule-w) solid var(--color-rule); cursor: pointer; }
+.d03 .tl li { counter-increment: k; padding: var(--space-xs) 0 var(--space-xs) var(--space-2xs); font-family: var(--font-outlier); font-size: var(--text-xs); color: var(--color-muted); }
+.d03 .tl::before { content: ""; }
+.d03 .tl li:nth-child(odd)::before { content: counter(k); }
+.d03 .tl li:hover { color: var(--color-ink); }
+.d03 .row { display: grid; grid-template-columns: var(--lab) repeat(16, minmax(var(--bar), 1fr)); min-block-size: 4.25rem; border-bottom: var(--rule-w) solid var(--color-rule); background: repeating-linear-gradient(to right, transparent 0, transparent calc(100% / 16 - var(--rule-w)), var(--color-paper-3) calc(100% / 16 - var(--rule-w)), var(--color-paper-3) calc(100% / 16)) var(--lab) 0 / calc(100% - var(--lab)) 100% no-repeat; }
+.d03 .row > b { grid-column: 1; grid-row: 1; align-self: stretch; display: flex; align-items: center; padding: 0 var(--space-md); font-weight: 500; background: var(--color-paper); position: sticky; left: 0; z-index: 2; border-right: var(--rule-w) solid var(--color-rule); }
+.d03 .row.on > b { background: var(--color-paper-2); box-shadow: inset 4px 0 0 var(--color-ink); font-weight: 600; }
+.d03 .p { grid-row: 1; margin: var(--space-xs) var(--space-3xs); padding: var(--space-xs) var(--space-sm); border: var(--rule-w) solid var(--color-ink); border-radius: 0; background: var(--color-paper-2); text-align: left; align-self: stretch; font-family: var(--font-outlier); font-size: var(--text-lg); cursor: grab; transition: background-color var(--dur-micro) var(--ease-out); }
+.d03 .p:hover { background: var(--color-paper-3); }
+.d03 .flag { position: absolute; top: 0; bottom: 0; left: calc(var(--lab) + (100% - var(--lab)) / 16 * 5); inline-size: 2px; margin-left: -1px; background: var(--color-ink); pointer-events: none; z-index: 1; }
+.d03 .flag::before { content: "6"; position: absolute; top: 0; left: 0; padding: 0 var(--space-xs); background: var(--color-ink); color: var(--color-accent-ink); font-family: var(--font-outlier); font-size: var(--text-xs); line-height: 1.6; }
+.d03 .bin { border-left: var(--rule-w) solid var(--color-rule); background: var(--color-paper-2); display: grid; grid-template-rows: auto minmax(0, 1fr); }
+.d03 .bin h4 { padding: var(--space-md); border-bottom: var(--rule-w) solid var(--color-rule); font-size: var(--text-lg); line-height: 1.2; }
+.d03 .list { max-block-size: 22rem; overflow-y: auto; }
+.d03 .list button { display: flex; justify-content: space-between; align-items: center; inline-size: 100%; padding: var(--space-xs) var(--space-md); border: 0; border-bottom: var(--rule-w) solid var(--color-paper-3); background: transparent; text-align: left; transition: background-color var(--dur-micro) var(--ease-out); }
+.d03 .list button:hover:not(:disabled) { background: var(--color-paper-3); }
+.d03 .list button:disabled { color: var(--color-muted); }
+.d03 .list .n { font-family: var(--font-outlier); }
+.d03 .list .s { font-size: var(--text-sm); color: var(--color-muted); }
+.d03 .list button[aria-pressed="true"] { background: var(--color-ink); color: var(--color-accent-ink); }
+.d03 .list button[aria-pressed="true"] .s { color: var(--color-accent-ink); }
+@container (max-width: 46rem) { .d03 .cols { grid-template-columns: minmax(0, 1fr); } .d03 .bin { border-left: 0; border-top: var(--rule-w) solid var(--color-ink); } .d03 .list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); max-block-size: none; } .d03 .bar { padding-inline: var(--space-md); } }
+
+/* ===== 04 Map and menu ===== */
+.d04 { --bar: 3rem; --lab: 7rem; }
+.d04 .hd { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-sm) var(--space-md); padding: var(--space-sm) var(--space-lg); background: var(--color-paper-2); }
+.d04 .hd h3 { font-size: var(--text-xl); line-height: 1.2; margin-right: auto; }
+.d04 .hd .fig { font-size: var(--text-sm); color: var(--color-muted); }
+.d04 .hd button { display: inline-flex; align-items: center; gap: var(--space-xs); padding: var(--space-xs) var(--space-md); border: var(--rule-w) solid var(--color-ink); border-radius: 2px; background: var(--color-paper); font-weight: 600; transition: background-color var(--dur-micro) var(--ease-out); }
+.d04 .hd button:hover { background: var(--color-paper-3); }
+.d04 .hd button i { inline-size: 0; block-size: 0; border: 0.35rem solid transparent; border-left: 0.58rem solid currentColor; border-right: 0; }
+.d04 .map { position: relative; display: grid; gap: var(--space-2xs); padding: var(--space-sm) var(--space-lg) var(--space-md); border-block: var(--rule-w) solid var(--color-rule); background: var(--color-paper-3); }
+.d04 .map p { font-size: var(--text-sm); color: var(--color-muted); }
+.d04 .strip { position: relative; display: grid; gap: var(--space-3xs); padding: var(--space-xs) 0; cursor: pointer; }
+.d04 .strip i { position: relative; display: block; block-size: 4px; }
+.d04 .strip i::after { content: ""; position: absolute; top: 0; bottom: 0; left: calc(100% / 256 * (var(--s) - 1)); inline-size: calc(100% / 256 * var(--n)); background: var(--color-muted); }
+.d04 .strip i.two::before { content: ""; position: absolute; top: 0; bottom: 0; left: calc(100% / 256 * (var(--s2) - 1)); inline-size: calc(100% / 256 * var(--n2)); background: var(--color-muted); }
+.d04 .view { position: absolute; top: 0; bottom: 0; left: 0; inline-size: calc(100% / 256 * 16); border: 2px solid var(--color-ink); background: transparent; pointer-events: none; }
+.d04 .ph { position: absolute; top: -3px; bottom: -3px; left: calc(100% / 256 * 5); inline-size: 2px; background: var(--color-ink); pointer-events: none; }
+.d04 .scroll { overflow-x: auto; }
+.d04 .sheet { position: relative; display: grid; grid-template-columns: var(--lab) minmax(calc(var(--bar) * 16), 1fr); min-inline-size: calc(var(--lab) + var(--bar) * 16); }
+.d04 .ruler { grid-column: 2; display: grid; grid-template-columns: repeat(16, 1fr); counter-reset: q; border-bottom: var(--rule-w) solid var(--color-rule); cursor: pointer; }
+.d04 .ruler li { counter-increment: q; padding: var(--space-xs) var(--space-xs) var(--space-xs); font-family: var(--font-outlier); font-size: var(--text-xs); color: var(--color-muted); border-left: var(--rule-w) solid var(--color-paper-3); }
+.d04 .ruler li:nth-child(4n+1) { border-left-color: var(--color-rule); color: var(--color-ink); }
+.d04 .ruler li::before { content: counter(q); }
+.d04 .nm { position: sticky; left: 0; z-index: 2; display: flex; align-items: center; padding: 0 var(--space-md); background: var(--color-paper); border-bottom: var(--rule-w) solid var(--color-rule); font-size: var(--text-sm); font-weight: 500; }
+.d04 .ln { position: relative; display: grid; grid-template-columns: repeat(16, 1fr); gap: 0; align-items: stretch; padding: var(--space-xs) 0; min-block-size: 3.5rem; border-bottom: var(--rule-w) solid var(--color-rule); background: repeating-linear-gradient(to right, transparent 0, transparent calc(100% / 16 - var(--rule-w)), var(--color-paper-3) calc(100% / 16 - var(--rule-w)), var(--color-paper-3) calc(100% / 16)); }
+.d04 .ln button.k { margin-right: var(--space-3xs); padding: 0 var(--space-sm); border: var(--rule-w) solid var(--color-ink); border-radius: 1.25rem; background: var(--color-paper-2); text-align: left; font-family: var(--font-outlier); cursor: grab; transition: background-color var(--dur-micro) var(--ease-out); }
+.d04 .ln button.k:hover { background: var(--color-paper-3); }
+.d04 .slot { grid-row: 1; margin: 0 var(--space-3xs); border: 2px dashed var(--color-ink); background: var(--color-paper-2); }
+.d04 .menu { position: absolute; z-index: 5; bottom: calc(100% - var(--space-xs)); left: calc(100% / 16 * 2); inline-size: 12rem; padding: var(--space-2xs); border: var(--rule-w) solid var(--color-ink); border-radius: 2px; background: var(--color-paper-2); }
+.d04 .menu p { padding: var(--space-xs) var(--space-sm); font-size: var(--text-sm); color: var(--color-muted); }
+.d04 .menu button { display: flex; justify-content: space-between; inline-size: 100%; padding: var(--space-xs) var(--space-sm); border: 0; border-radius: 2px; background: transparent; text-align: left; transition: background-color var(--dur-micro) var(--ease-out), color var(--dur-micro) var(--ease-out); }
+.d04 .menu button:hover { background: var(--color-ink); color: var(--color-accent-ink); }
+.d04 .menu button span { font-family: var(--font-outlier); }
+.d04 .after { padding: var(--space-md) var(--space-lg); font-size: var(--text-sm); color: var(--color-muted); }
+@container (max-width: 40rem) { .d04 .hd, .d04 .map, .d04 .after { padding-inline: var(--space-md); } .d04 { --lab: 5.5rem; } }
+
+/* ===== 05 Focus lane ===== */
+.d05 { --bar: 3rem; --lab: 7.5rem; }
+.d05 .scroll { overflow-x: auto; }
+.d05 .stack { position: relative; min-inline-size: calc(var(--lab) + var(--bar) * 16); }
+.d05 .mast { position: sticky; left: 0; display: flex; align-items: center; justify-content: space-between; gap: var(--space-md); padding: var(--space-md) var(--space-lg); max-inline-size: 100cqw; }
+.d05 .mast h3 { font-size: var(--text-2xl); line-height: 1.1; }
+.d05 .mast div { display: flex; align-items: center; gap: var(--space-md); }
+.d05 .mast .fig { font-size: var(--text-sm); color: var(--color-muted); }
+.d05 .mast button { padding: var(--space-xs) var(--space-lg); border: var(--rule-w) solid var(--color-ink); border-radius: 2px; background: var(--color-ink); color: var(--color-accent-ink); font-weight: 600; transition: background-color var(--dur-micro) var(--ease-out); }
+.d05 .mast button:hover { background: var(--color-muted); }
+.d05 .axis { display: grid; grid-template-columns: var(--lab) repeat(16, minmax(0, 1fr)); counter-reset: z; border-top: var(--rule-w) solid var(--color-rule); border-bottom: var(--rule-w) solid var(--color-ink); background: var(--color-paper-2); cursor: pointer; }
+.d05 .axis li { counter-increment: z; padding: var(--space-xs) 0 var(--space-xs) var(--space-xs); font-family: var(--font-outlier); font-size: var(--text-xs); color: var(--color-muted); }
+.d05 .axis li:first-child { grid-column: 2; }
+.d05 .axis li::before { content: counter(z); }
+.d05 .axis li:hover { color: var(--color-ink); background: var(--color-paper-3); }
+.d05 .fold { display: grid; grid-template-columns: var(--lab) repeat(16, minmax(0, 1fr)); align-items: stretch; inline-size: 100%; padding: 0; border: 0; border-bottom: var(--rule-w) solid var(--color-rule); background: transparent; text-align: left; min-block-size: 2.25rem; transition: background-color var(--dur-micro) var(--ease-out); }
+.d05 .fold:hover { background: var(--color-paper-3); }
+.d05 .fold b { grid-column: 1; position: sticky; left: 0; z-index: 2; display: flex; align-items: center; padding: 0 var(--space-md); background: var(--color-paper); font-size: var(--text-sm); font-weight: 500; }
+.d05 .fold:hover b { background: var(--color-paper-3); }
+.d05 .fold i { grid-row: 1; align-self: center; block-size: 1.25rem; margin: 0 var(--space-3xs); background: var(--color-muted); }
+.d05 .open { border-block: var(--rule-w) solid var(--color-ink); background: var(--color-paper-2); }
+.d05 .pick { position: sticky; left: 0; display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-xs) var(--space-md); padding: var(--space-md) var(--space-lg); max-inline-size: 100cqw; }
+.d05 .pick h4 { font-size: var(--text-xl); line-height: 1.2; margin-right: var(--space-sm); }
+.d05 .pick ul { display: flex; flex-wrap: wrap; gap: var(--space-2xs); }
+.d05 .pick button { inline-size: 2.25rem; block-size: 2.25rem; padding: 0; border: var(--rule-w) solid var(--color-ink); border-radius: 2px; background: var(--color-paper); font-family: var(--font-outlier); font-size: var(--text-sm); transition: background-color var(--dur-micro) var(--ease-out), color var(--dur-micro) var(--ease-out); }
+.d05 .pick button:hover:not(:disabled) { background: var(--color-paper-3); }
+.d05 .pick button:disabled { border-color: var(--color-rule); background: transparent; color: var(--color-muted); }
+.d05 .pick button[aria-pressed="true"] { background: var(--color-ink); color: var(--color-accent-ink); }
+.d05 .big { display: grid; grid-template-columns: var(--lab) repeat(16, minmax(0, 1fr)); min-block-size: 8rem; padding-bottom: var(--space-md); }
+.d05 .big b { grid-column: 1; grid-row: 1; position: sticky; left: 0; z-index: 2; padding: var(--space-xs) var(--space-md); font-size: var(--text-sm); font-weight: 500; background: var(--color-paper-2); }
+.d05 .big .bg { grid-column: 2 / span 16; grid-row: 1; background: repeating-linear-gradient(to right, transparent 0, transparent calc(100% / 16 - var(--rule-w)), var(--color-rule) calc(100% / 16 - var(--rule-w)), var(--color-rule) calc(100% / 16)); cursor: copy; }
+.d05 .big .m { grid-row: 1; position: relative; margin: 0 var(--space-3xs); padding: var(--space-sm); border: var(--rule-w) solid var(--color-ink); border-radius: 2px; background: var(--color-paper); text-align: left; font-family: var(--font-outlier); font-size: var(--text-2xl); line-height: 1; cursor: grab; transition: background-color var(--dur-micro) var(--ease-out); }
+.d05 .big .m:hover { background: var(--color-paper-3); }
+.d05 .big .m.on { background: var(--color-ink); color: var(--color-accent-ink); }
+.d05 .big .m.on :focus-visible { outline-color: var(--color-accent-ink); }
+.d05 .big .m .n { padding: 0; border: 0; background: transparent; font: inherit; color: inherit; text-align: left; cursor: grab; }
+.d05 .big .m .x { position: absolute; right: var(--space-xs); bottom: var(--space-xs); padding: var(--space-3xs) var(--space-xs); border: var(--rule-w) solid var(--color-accent-ink); border-radius: 2px; background: transparent; font-family: var(--font-body); font-size: var(--text-xs); }
+.d05 .big .m .x:hover { background: var(--color-accent-ink); color: var(--color-ink); }
+.d05 .ph { position: absolute; top: 0; bottom: 0; left: calc(var(--lab) + (100% - var(--lab)) / 16 * 5); inline-size: 2px; margin-left: -1px; background: var(--color-ink); pointer-events: none; z-index: 1; }
+@container (max-width: 40rem) { .d05 { --lab: 5.5rem; } .d05 .mast, .d05 .pick { padding-inline: var(--space-md); } .d05 .big .m { font-size: var(--text-xl); } }
+
+/* ===== 06 Banded ===== */
+.d06 { --bar: 2.75rem; }
+.d06 .scroll { overflow-x: auto; }
+.d06 .page { min-inline-size: calc(var(--bar) * 16); }
+.d06 .intro { position: sticky; left: 0; display: flex; flex-wrap: wrap; align-items: baseline; gap: var(--space-xs) var(--space-lg); max-inline-size: 100cqw; padding: var(--space-lg) var(--space-lg) var(--space-md); }
+.d06 .intro h3 { margin-right: auto; font-size: var(--text-3xl); line-height: 1; letter-spacing: -0.015em; }
+.d06 .intro .fig { font-size: var(--text-sm); color: var(--color-muted); }
+.d06 .intro button { align-self: center; padding: var(--space-xs) var(--space-lg); border: var(--rule-w) solid var(--color-ink); border-radius: 0; background: var(--color-paper-2); font-weight: 600; transition: background-color var(--dur-micro) var(--ease-out); }
+.d06 .intro button:hover { background: var(--color-paper-3); }
+.d06 .tl { display: grid; grid-template-columns: repeat(16, 1fr); counter-reset: w; border-block: var(--rule-w) solid var(--color-ink); background: var(--color-paper-2); cursor: pointer; }
+.d06 .tl li { counter-increment: w; padding: var(--space-2xs) var(--space-xs); border-left: var(--rule-w) solid var(--color-rule); font-family: var(--font-outlier); font-size: var(--text-xs); color: var(--color-muted); }
+.d06 .tl li:first-child { border-left: 0; }
+.d06 .tl li::before { content: counter(w); }
+.d06 .tl li:hover { background: var(--color-paper-3); color: var(--color-ink); }
+.d06 .band { border-bottom: var(--rule-w) solid var(--color-rule); }
+.d06 .hdr { position: sticky; left: 0; display: flex; align-items: center; gap: var(--space-lg); max-inline-size: 100cqw; padding: var(--space-sm) var(--space-lg) var(--space-xs); }
+.d06 .hdr h4 { flex: none; min-inline-size: 9.5rem; font-size: var(--text-xl); line-height: 1.2; }
+.d06 .pats { display: flex; overflow-x: auto; border: var(--rule-w) solid var(--color-rule); border-radius: 2px; background: var(--color-paper-2); }
+.d06 .pats button { flex: none; inline-size: 2rem; block-size: 1.75rem; padding: 0; border: 0; border-right: var(--rule-w) solid var(--color-paper-3); background: transparent; font-family: var(--font-outlier); font-size: var(--text-xs); transition: background-color var(--dur-micro) var(--ease-out); }
+.d06 .pats button:last-child { border-right: 0; }
+.d06 .pats button:hover:not(:disabled) { background: var(--color-paper-3); }
+.d06 .pats button:disabled { background: var(--color-paper-3); color: var(--color-muted); opacity: 1; cursor: not-allowed; }
+.d06 .pats button[aria-pressed="true"] { background: var(--color-ink); color: var(--color-accent-ink); }
+.d06 .trk { position: relative; display: grid; grid-template-columns: repeat(16, 1fr); align-items: stretch; min-block-size: 3.5rem; padding: var(--space-xs) 0 var(--space-sm); background: repeating-linear-gradient(to right, transparent 0, transparent calc(100% / 16 - var(--rule-w)), var(--color-paper-3) calc(100% / 16 - var(--rule-w)), var(--color-paper-3) calc(100% / 16)); cursor: copy; }
+.d06 .trk::after { content: ""; position: absolute; top: 0; bottom: 0; left: calc(100% / 16 * 5); inline-size: 2px; margin-left: -1px; background: var(--color-ink); pointer-events: none; }
+.d06 .trk button { margin: 0 var(--space-3xs); padding: var(--space-xs) var(--space-sm); border: var(--rule-w) solid var(--color-rule); border-top: 3px solid var(--color-ink); border-radius: 0; background: var(--color-paper-2); text-align: left; font-family: var(--font-outlier); cursor: grab; transition: background-color var(--dur-micro) var(--ease-out); }
+.d06 .trk button:hover { background: var(--color-paper-3); }
+@container (max-width: 44rem) { .d06 .hdr { flex-wrap: wrap; gap: var(--space-xs); padding-inline: var(--space-md); } .d06 .intro { padding-inline: var(--space-md); } .d06 .intro h3 { font-size: var(--text-2xl); } .d06 .pats { max-inline-size: calc(100cqw - var(--space-lg) * 2); } }
+
+/* ===== 07 Matrix ===== */
+.d07 { --bar: 2.5rem; --lab: 8rem; }
+.d07 .bar { display: flex; align-items: center; gap: var(--space-md); padding: var(--space-xs) var(--space-md); background: var(--color-ink); color: var(--color-accent-ink); }
+.d07 .bar h3 { margin-right: auto; font-size: var(--text-lg); line-height: 1.2; }
+.d07 .bar output { font-family: var(--font-outlier); font-size: var(--text-xl); }
+.d07 .bar button { padding: var(--space-2xs) var(--space-md); border: var(--rule-w) solid var(--color-accent-ink); border-radius: 2px; background: transparent; font-weight: 600; transition: background-color var(--dur-micro) var(--ease-out), color var(--dur-micro) var(--ease-out); }
+.d07 .bar button:hover { background: var(--color-accent-ink); color: var(--color-ink); }
+.d07 .bar :focus-visible { outline-color: var(--color-accent-ink); }
+.d07 .scroll { overflow-x: auto; }
+.d07 .lanes { position: relative; display: grid; grid-template-columns: var(--lab) minmax(calc(var(--bar) * 16), 1fr); min-inline-size: calc(var(--lab) + var(--bar) * 16); }
+.d07 .ticks { grid-column: 2; display: grid; grid-template-columns: repeat(16, 1fr); counter-reset: t; border-bottom: var(--rule-w) solid var(--color-rule); cursor: pointer; }
+.d07 .ticks li { counter-increment: t; text-align: center; padding: var(--space-3xs) 0; border-left: var(--rule-w) solid var(--color-paper-3); font-family: var(--font-outlier); font-size: var(--text-xs); color: var(--color-muted); }
+.d07 .ticks li::before { content: counter(t); }
+.d07 .ticks li:hover { background: var(--color-paper-3); color: var(--color-ink); }
+.d07 .who { position: sticky; left: 0; z-index: 2; display: flex; align-items: center; padding: 0 var(--space-sm); background: var(--color-paper); border-bottom: var(--rule-w) solid var(--color-paper-3); font-size: var(--text-sm); }
+.d07 .who.on { font-weight: 600; background: var(--color-paper-3); }
+.d07 .cells { position: relative; display: grid; grid-template-columns: repeat(16, 1fr); align-items: center; block-size: 2.25rem; border-bottom: var(--rule-w) solid var(--color-paper-3); background: repeating-linear-gradient(to right, transparent 0, transparent calc(100% / 16 - var(--rule-w)), var(--color-paper-3) calc(100% / 16 - var(--rule-w)), var(--color-paper-3) calc(100% / 16)); }
+.d07 .cells button { block-size: 1.5rem; margin: 0 var(--space-3xs); padding: 0 var(--space-xs); border: 0; border-bottom: 2px solid var(--color-ink); background: var(--color-paper-2); text-align: left; font-family: var(--font-outlier); font-size: var(--text-xs); line-height: 1.5rem; cursor: grab; transition: background-color var(--dur-micro) var(--ease-out); }
+.d07 .cells button:hover { background: var(--color-paper-3); }
+.d07 .playhead { position: absolute; top: 0; bottom: 0; left: calc(var(--lab) + (100% - var(--lab)) / 16 * 5); inline-size: 2px; margin-left: -1px; background: var(--color-ink); pointer-events: none; z-index: 1; }
+.d07 .pal { padding: var(--space-md); border-top: var(--rule-w) solid var(--color-ink); background: var(--color-paper-2); overflow-x: auto; }
+.d07 .pal h4 { margin-bottom: var(--space-sm); font-size: var(--text-md); line-height: 1.2; }
+.d07 .mx { border-collapse: separate; border-spacing: var(--space-3xs); }
+.d07 .mx th { font-weight: 400; font-size: var(--text-xs); color: var(--color-muted); text-align: center; }
+.d07 .mx thead th { font-family: var(--font-outlier); }
+.d07 .mx tbody th { padding-right: var(--space-md); text-align: left; font-size: var(--text-sm); color: var(--color-ink); white-space: nowrap; }
+.d07 .mx td { padding: 0; }
+.d07 .mx button { display: block; inline-size: 1.75rem; block-size: 1.75rem; padding: 0; border: var(--rule-w) solid var(--color-ink); border-radius: 2px; background: var(--color-paper); transition: background-color var(--dur-micro) var(--ease-out); }
+.d07 .mx button:hover:not(:disabled) { background: var(--color-ink); }
+.d07 .mx button:disabled { border-color: var(--color-rule); border-style: dotted; background: transparent; }
+.d07 .mx button[aria-pressed="true"] { background: var(--color-ink); }
+@container (max-width: 40rem) { .d07 { --lab: 6.5rem; } .d07 .bar { padding-inline: var(--space-md); } }
+
+/* ===== 08 Brush bar ===== */
+.d08 { --bar: 3.5rem; --lab: 9rem; }
+.d08 .tools { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-sm) var(--space-lg); padding: var(--space-sm) var(--space-lg); background: var(--color-paper-2); border-bottom: var(--rule-w) solid var(--color-ink); }
+.d08 .go { display: inline-flex; align-items: center; gap: var(--space-xs); block-size: 2.5rem; padding: 0 var(--space-lg); border: var(--rule-w) solid var(--color-ink); border-radius: 2px; background: var(--color-ink); color: var(--color-accent-ink); font-weight: 600; transition: background-color var(--dur-micro) var(--ease-out); }
+.d08 .go:hover { background: var(--color-muted); }
+.d08 .go i { inline-size: 0; block-size: 0; border: 0.35rem solid transparent; border-left: 0.58rem solid currentColor; border-right: 0; }
+.d08 .at { font-size: var(--text-sm); color: var(--color-muted); }
+.d08 .brush { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-sm); margin-left: auto; }
+.d08 .brush > span { font-size: var(--text-sm); color: var(--color-muted); }
+.d08 .who { display: flex; border: var(--rule-w) solid var(--color-rule); border-radius: 2px; overflow: clip; }
+.d08 .who button { padding: var(--space-xs) var(--space-sm); border: 0; border-right: var(--rule-w) solid var(--color-rule); background: var(--color-paper); font-size: var(--text-sm); transition: background-color var(--dur-micro) var(--ease-out), color var(--dur-micro) var(--ease-out); }
+.d08 .who button:last-child { border-right: 0; }
+.d08 .who button:hover { background: var(--color-paper-3); }
+.d08 .who button[aria-pressed="true"] { background: var(--color-ink); color: var(--color-accent-ink); }
+.d08 .step { display: flex; align-items: stretch; border: var(--rule-w) solid var(--color-ink); border-radius: 2px; background: var(--color-paper); }
+.d08 .step button { inline-size: 2.25rem; border: 0; background: transparent; display: grid; place-items: center; transition: background-color var(--dur-micro) var(--ease-out); }
+.d08 .step button:hover { background: var(--color-paper-3); }
+.d08 .step button i { inline-size: 0.5rem; block-size: 0.5rem; border-left: 2px solid currentColor; border-bottom: 2px solid currentColor; transform: rotate(45deg); margin-left: 0.2rem; }
+.d08 .step button.nx i { transform: rotate(-135deg); margin-left: -0.2rem; }
+.d08 .step output { display: grid; place-items: center; min-inline-size: 3rem; border-inline: var(--rule-w) solid var(--color-rule); font-family: var(--font-outlier); font-size: var(--text-xl); }
+.d08 .scroll { overflow-x: auto; }
+.d08 .sheet { position: relative; display: grid; grid-template-columns: var(--lab) minmax(calc(var(--bar) * 16), 1fr); min-inline-size: calc(var(--lab) + var(--bar) * 16); }
+.d08 .nums { grid-column: 2; display: grid; grid-template-columns: repeat(16, 1fr); counter-reset: m; cursor: pointer; }
+.d08 .nums li { counter-increment: m; padding: var(--space-sm) var(--space-xs) var(--space-xs); font-family: var(--font-outlier); font-size: var(--text-sm); color: var(--color-muted); }
+.d08 .nums li::before { content: counter(m); }
+.d08 .nums li:hover { color: var(--color-ink); }
+.d08 .lbl { position: sticky; left: 0; z-index: 2; display: flex; align-items: center; padding: 0 var(--space-lg); background: var(--color-paper); border-top: var(--rule-w) solid var(--color-rule); font-weight: 600; font-size: var(--text-lg); }
+.d08 .lbl.cur { box-shadow: inset 0 0 0 2px var(--color-ink); }
+.d08 .row { position: relative; display: grid; grid-template-columns: repeat(16, 1fr); gap: 0; min-block-size: 5.5rem; padding: var(--space-xs) 0; border-top: var(--rule-w) solid var(--color-rule); background: repeating-linear-gradient(to right, transparent 0, transparent calc(100% / 16 - var(--rule-w)), var(--color-paper-3) calc(100% / 16 - var(--rule-w)), var(--color-paper-3) calc(100% / 16)); cursor: copy; }
+.d08 .row button { margin: 0 var(--space-3xs); padding: var(--space-sm); border: 0; border-radius: 2px; background: var(--color-ink); color: var(--color-accent-ink); text-align: left; font-family: var(--font-outlier); font-size: var(--text-xl); line-height: 1; cursor: grab; transition: background-color var(--dur-micro) var(--ease-out); }
+.d08 .row button:hover { background: var(--color-muted); }
+.d08 .row .ghost { margin: 0 var(--space-3xs); padding: var(--space-sm); border: 2px dashed var(--color-ink); border-radius: 2px; font-family: var(--font-outlier); font-size: var(--text-xl); line-height: 1; color: var(--color-muted); }
+.d08 .at-head { position: absolute; top: 0; bottom: 0; left: calc(var(--lab) + (100% - var(--lab)) / 16 * 5); inline-size: 2px; margin-left: -1px; background: var(--color-ink); pointer-events: none; z-index: 1; }
+@container (max-width: 48rem) { .d08 .brush { margin-left: 0; } .d08 .tools { padding-inline: var(--space-md); } .d08 { --lab: 6.5rem; } .d08 .lbl { padding: 0 var(--space-sm); font-size: var(--text-md); } }
+
+/* ===== 09 Systems ===== */
+.d09 { --lab: 6.5rem; }
+.d09 .ribbon { display: grid; gap: var(--space-sm); padding: var(--space-md) var(--space-lg); background: var(--color-paper-2); border-bottom: var(--rule-w) solid var(--color-ink); }
+.d09 .r1 { display: flex; flex-wrap: wrap; align-items: baseline; gap: var(--space-xs) var(--space-lg); }
+.d09 .r1 h3 { margin-right: auto; font-size: var(--text-2xl); line-height: 1.1; }
+.d09 .r1 .fig { font-size: var(--text-sm); color: var(--color-muted); }
+.d09 .r1 button { align-self: center; padding: var(--space-xs) var(--space-lg); border: var(--rule-w) solid var(--color-ink); border-radius: 2px; background: var(--color-paper); font-weight: 600; transition: background-color var(--dur-micro) var(--ease-out); }
+.d09 .r1 button:hover { background: var(--color-paper-3); }
+.d09 .r2 { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-sm) var(--space-md); }
+.d09 .r2 label { font-size: var(--text-sm); color: var(--color-muted); }
+.d09 .r2 select { padding: var(--space-xs) var(--space-md) var(--space-xs) var(--space-sm); border: var(--rule-w) solid var(--color-ink); border-radius: 2px; background: var(--color-paper); font-weight: 500; cursor: pointer; }
+.d09 .r2 ul { display: flex; flex-wrap: wrap; gap: var(--space-xs); }
+.d09 .r2 li button { min-inline-size: 3rem; block-size: 2.5rem; padding: 0 var(--space-sm); border: var(--rule-w) solid var(--color-ink); border-radius: 2px; background: var(--color-paper); font-family: var(--font-outlier); font-size: var(--text-lg); transition: background-color var(--dur-micro) var(--ease-out), color var(--dur-micro) var(--ease-out); }
+.d09 .r2 li button:hover { background: var(--color-paper-3); }
+.d09 .r2 li button[aria-pressed="true"] { background: var(--color-ink); color: var(--color-accent-ink); }
+.d09 .r2 p { font-size: var(--text-sm); color: var(--color-muted); }
+.d09 .sys { position: relative; padding: var(--space-md) var(--space-lg) var(--space-lg); }
+.d09 .sys + .sys { border-top: var(--rule-w) solid var(--color-rule); }
+.d09 .sys > ol { display: grid; grid-template-columns: var(--lab) repeat(8, minmax(0, 1fr)); counter-reset: s; cursor: pointer; }
+.d09 .sys > ol::before { content: ""; }
+.d09 .sys > ol li { counter-increment: s; padding: 0 0 var(--space-2xs) var(--space-xs); border-left: var(--rule-w) solid var(--color-rule); font-family: var(--font-outlier); font-size: var(--text-xs); color: var(--color-muted); }
+.d09 .sys > ol li::before { content: counter(s); }
+.d09 .sys > ol li:hover { color: var(--color-ink); }
+.d09 .sys.two > ol { counter-reset: s 8; }
+.d09 .lane { display: grid; grid-template-columns: var(--lab) minmax(0, 1fr); align-items: stretch; border-top: var(--rule-w) solid var(--color-rule); }
+.d09 .lane:last-of-type { border-bottom: var(--rule-w) solid var(--color-ink); }
+.d09 .lane b { display: flex; align-items: center; padding-right: var(--space-sm); font-size: var(--text-sm); font-weight: 500; line-height: 1.25; }
+.d09 .lane div { position: relative; display: grid; grid-template-columns: repeat(8, minmax(0, 1fr)); min-block-size: 3rem; padding: var(--space-2xs) 0; border-left: var(--rule-w) solid var(--color-rule); background: repeating-linear-gradient(to right, transparent 0, transparent calc(100% / 8 - var(--rule-w)), var(--color-paper-3) calc(100% / 8 - var(--rule-w)), var(--color-paper-3) calc(100% / 8)); cursor: copy; }
+.d09 .lane button { margin: 0 var(--space-3xs); padding: var(--space-2xs) var(--space-sm); border: var(--rule-w) solid var(--color-ink); border-radius: 2px; background: var(--color-paper-2); text-align: left; font-family: var(--font-outlier); cursor: grab; transition: background-color var(--dur-micro) var(--ease-out); }
+.d09 .lane button:hover { background: var(--color-paper-3); }
+.d09 .sys .play-at { position: absolute; top: var(--space-md); bottom: var(--space-lg); left: calc(var(--space-lg) + var(--lab) + (100% - var(--space-lg) * 2 - var(--lab)) / 8 * 5); inline-size: 2px; margin-left: -1px; background: var(--color-ink); pointer-events: none; }
+.d09 .sys .end { position: absolute; top: var(--space-md); bottom: var(--space-lg); left: calc(var(--space-lg) + var(--lab) + (100% - var(--space-lg) * 2 - var(--lab)) / 8 * 4); border-left: 2px dashed var(--color-muted); pointer-events: none; }
+.d09 .sys .end::after { content: "Song ends"; position: absolute; top: 0; left: var(--space-xs); font-size: var(--text-xs); color: var(--color-muted); white-space: nowrap; }
+@container (max-width: 36rem) { .d09 { --lab: 4.5rem; } .d09 .ribbon, .d09 .sys { padding-inline: var(--space-md); } .d09 .sys .play-at { left: calc(var(--space-md) + var(--lab) + (100% - var(--space-md) * 2 - var(--lab)) / 8 * 5); } .d09 .sys .end { left: calc(var(--space-md) + var(--lab) + (100% - var(--space-md) * 2 - var(--lab)) / 8 * 4); } .d09 .lane button { padding-inline: var(--space-xs); } }
+
+/* ===== 10 Floating dock ===== */
+.d10 { --bar: 3.25rem; --lab: 2.75rem; }
+.d10 .stage { position: relative; }
+.d10 .deck { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-md) var(--space-lg); padding: var(--space-lg); }
+.d10 .big { inline-size: 3.5rem; block-size: 3.5rem; padding: 0; border: 0; border-radius: 50%; background: var(--color-ink); display: grid; place-items: center; transition: background-color var(--dur-micro) var(--ease-out); }
+.d10 .big:hover { background: var(--color-muted); }
+.d10 .big i { inline-size: 0; block-size: 0; margin-left: 0.2rem; border: 0.55rem solid transparent; border-left: 0.9rem solid var(--color-accent-ink); border-right: 0; }
+.d10 .read { display: flex; align-items: baseline; gap: var(--space-sm); }
+.d10 .read strong { font-family: var(--font-display); font-weight: 700; font-size: var(--text-4xl); line-height: 1; letter-spacing: -0.02em; }
+.d10 .read span { color: var(--color-muted); }
+.d10 .deck h3 { margin-left: auto; font-size: var(--text-xl); line-height: 1.2; color: var(--color-muted); }
+.d10 .scroll { overflow-x: auto; }
+.d10 .sheet { position: relative; display: grid; grid-template-columns: var(--lab) minmax(calc(var(--bar) * 16), 1fr); min-inline-size: calc(var(--lab) + var(--bar) * 16); padding-bottom: var(--space-3xl); }
+.d10 .beats { grid-column: 2; display: grid; grid-template-columns: repeat(16, 1fr); counter-reset: j; border-top: var(--rule-w) solid var(--color-ink); cursor: pointer; }
+.d10 .beats li { counter-increment: j; position: relative; block-size: 2.5rem; padding: var(--space-2xs) var(--space-xs); border-left: var(--rule-w) solid var(--color-ink); font-family: var(--font-outlier); font-size: var(--text-sm); background-image: linear-gradient(to right, var(--color-rule) var(--rule-w), transparent var(--rule-w)); background-size: 25% 0.5rem; background-position: 0 100%; background-repeat: repeat-x; }
+.d10 .beats li::before { content: counter(j); }
+.d10 .beats li:hover { background-color: var(--color-paper-3); }
+.d10 .tag { display: flex; align-items: center; justify-content: center; writing-mode: vertical-rl; transform: rotate(180deg); padding: var(--space-xs) 0; border-top: var(--rule-w) solid var(--color-rule); background: var(--color-paper-2); font-size: var(--text-sm); font-weight: 500; position: sticky; left: 0; z-index: 2; }
+.d10 .ln { display: grid; grid-template-columns: repeat(16, 1fr); align-items: stretch; min-block-size: 6rem; padding: var(--space-xs) 0; border-top: var(--rule-w) solid var(--color-rule); background: repeating-linear-gradient(to right, transparent 0, transparent calc(100% / 16 - var(--rule-w)), var(--color-paper-3) calc(100% / 16 - var(--rule-w)), var(--color-paper-3) calc(100% / 16)); cursor: copy; }
+.d10 .ln button { margin: 0 var(--space-3xs); padding: var(--space-sm); border: var(--rule-w) solid var(--color-ink); border-radius: 0; background: var(--color-paper); text-align: left; font-family: var(--font-outlier); font-size: var(--text-lg); line-height: 1; cursor: grab; transition: background-color var(--dur-micro) var(--ease-out); }
+.d10 .ln button:hover { background: var(--color-paper-3); }
+.d10 .ln button.pk { background: var(--color-ink); color: var(--color-accent-ink); }
+.d10 .cursor { position: absolute; top: 0; bottom: 0; left: calc(var(--lab) + (100% - var(--lab)) / 16 * 5); inline-size: 2px; margin-left: -1px; background: var(--color-ink); pointer-events: none; z-index: 1; }
+.d10 .dock { position: absolute; left: 50%; bottom: var(--space-md); z-index: 4; display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: var(--space-sm) var(--space-md); inline-size: max-content; max-inline-size: calc(100% - var(--space-lg)); transform: translateX(-50%); padding: var(--space-xs) var(--space-sm); border: 2px solid var(--color-ink); border-radius: 2px; background: var(--color-paper-2); }
+.d10 .dock .seg { display: flex; flex-wrap: wrap; gap: var(--space-3xs); }
+.d10 .dock .seg button { padding: var(--space-xs) var(--space-sm); border: 0; border-radius: 2px; background: transparent; font-size: var(--text-sm); font-weight: 500; transition: background-color var(--dur-micro) var(--ease-out); }
+.d10 .dock .seg button:hover { background: var(--color-paper-3); }
+.d10 .dock .seg button[aria-current="true"] { box-shadow: inset 0 -3px 0 var(--color-ink); font-weight: 600; }
+.d10 .dock ul { display: flex; gap: var(--space-2xs); padding-left: var(--space-md); border-left: var(--rule-w) solid var(--color-rule); }
+.d10 .dock ul button { inline-size: 2.5rem; block-size: 2.5rem; padding: 0; border: var(--rule-w) solid var(--color-ink); border-radius: 2px; background: var(--color-paper); font-family: var(--font-outlier); font-size: var(--text-lg); transition: background-color var(--dur-micro) var(--ease-out), color var(--dur-micro) var(--ease-out); }
+.d10 .dock ul button:hover { background: var(--color-paper-3); }
+.d10 .dock ul button[aria-pressed="true"] { background: var(--color-ink); color: var(--color-accent-ink); }
+@container (max-width: 40rem) { .d10 .deck { padding: var(--space-md); } .d10 .read strong { font-size: var(--text-3xl); } .d10 .deck h3 { margin-left: 0; } .d10 .dock ul { padding-left: 0; border-left: 0; } }
+
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="page-head">
+  <h1>Song page: ten layouts</h1>
+  <p>Fonts and palette are the decided Bone and black, the same in every design. Only the arrangement changes. The song shown is sample content: twelve bars in 4/4, five lanes, the playhead at bar 6. Each design is hand written.</p>
+  <nav class="index" aria-label="Designs">
+    <a href="#d01"><span>01</span>Rail pickers</a>
+    <a href="#d02"><span>02</span>Tabbed tray</a>
+    <a href="#d03"><span>03</span>Side bin</a>
+    <a href="#d04"><span>04</span>Map and menu</a>
+    <a href="#d05"><span>05</span>Focus lane</a>
+    <a href="#d06"><span>06</span>Banded</a>
+    <a href="#d07"><span>07</span>Matrix</a>
+    <a href="#d08"><span>08</span>Brush bar</a>
+    <a href="#d09"><span>09</span>Systems</a>
+    <a href="#d10"><span>10</span>Floating dock</a>
+  </nav>
+</header>
+
+<section class="look d01" id="d01">
+  <div class="meta">
+    <h2><span class="fig">01</span>Rail pickers</h2>
+    <p>Every lane carries its own twenty pattern chips in its left rail, so the picker is always beside the lane it fills. Play sits in a slim top bar.</p>
+  </div>
+  <div class="frame">
+    <header class="top">
+      <h3>Song</h3>
+      <p class="pos fig">Bar 6 of 12, ends at bar 12</p>
+      <button type="button" class="play" aria-pressed="false"><span class="tri"></span>Play</button>
+    </header>
+    <div class="scroll">
+      <div class="sheet">
+        <div class="corner">Instrument and its patterns</div>
+        <ol class="ruler" aria-label="Timeline, click a bar to move the playhead"><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li></ol>
+
+        <div class="rail">
+          <h4>Drums</h4>
+          <div class="chips" role="group" aria-label="Drums patterns">
+            <button type="button">1</button><button type="button">2</button><button type="button">3</button><button type="button" disabled>4</button><button type="button">5</button><button type="button" disabled>6</button><button type="button" disabled>7</button><button type="button" disabled>8</button><button type="button" disabled>9</button><button type="button" disabled>10</button>
+            <button type="button" disabled>11</button><button type="button" disabled>12</button><button type="button" disabled>13</button><button type="button" disabled>14</button><button type="button" disabled>15</button><button type="button" disabled>16</button><button type="button" disabled>17</button><button type="button" disabled>18</button><button type="button" disabled>19</button><button type="button" disabled>20</button>
+          </div>
+        </div>
+        <div class="track">
+          <button type="button" class="blk" style="grid-column: 1 / span 1">1</button><button type="button" class="blk" style="grid-column: 2 / span 1">1</button><button type="button" class="blk" style="grid-column: 3 / span 1">1</button><button type="button" class="blk" style="grid-column: 4 / span 1">2</button><button type="button" class="blk" style="grid-column: 5 / span 2">3</button><button type="button" class="blk" style="grid-column: 7 / span 1">1</button><button type="button" class="blk" style="grid-column: 8 / span 1">1</button><button type="button" class="blk" style="grid-column: 9 / span 1">2</button><button type="button" class="blk" style="grid-column: 10 / span 2">3</button>
+        </div>
+
+        <div class="rail">
+          <h4>Bass</h4>
+          <div class="chips" role="group" aria-label="Bass patterns">
+            <button type="button">1</button><button type="button">2</button><button type="button">3</button><button type="button" disabled>4</button><button type="button" disabled>5</button><button type="button" disabled>6</button><button type="button" disabled>7</button><button type="button" disabled>8</button><button type="button" disabled>9</button><button type="button" disabled>10</button>
+            <button type="button" disabled>11</button><button type="button" disabled>12</button><button type="button" disabled>13</button><button type="button" disabled>14</button><button type="button" disabled>15</button><button type="button" disabled>16</button><button type="button" disabled>17</button><button type="button" disabled>18</button><button type="button" disabled>19</button><button type="button" disabled>20</button>
+          </div>
+        </div>
+        <div class="track">
+          <button type="button" class="blk" style="grid-column: 1 / span 2">1</button><button type="button" class="blk" style="grid-column: 3 / span 2">1</button><button type="button" class="blk sel" style="grid-column: 5 / span 4" aria-pressed="true">2</button><button type="button" class="blk" style="grid-column: 9 / span 2">1</button><button type="button" class="blk" style="grid-column: 11 / span 2">3</button>
+        </div>
+
+        <div class="rail">
+          <h4>Rhythm Guitar</h4>
+          <div class="chips" role="group" aria-label="Rhythm Guitar patterns">
+            <button type="button">1</button><button type="button" aria-pressed="true">2</button><button type="button" disabled>3</button><button type="button">4</button><button type="button" disabled>5</button><button type="button" disabled>6</button><button type="button" disabled>7</button><button type="button" disabled>8</button><button type="button" disabled>9</button><button type="button" disabled>10</button>
+            <button type="button" disabled>11</button><button type="button" disabled>12</button><button type="button" disabled>13</button><button type="button" disabled>14</button><button type="button" disabled>15</button><button type="button" disabled>16</button><button type="button" disabled>17</button><button type="button" disabled>18</button><button type="button" disabled>19</button><button type="button" disabled>20</button>
+          </div>
+        </div>
+        <div class="track">
+          <button type="button" class="blk" style="grid-column: 3 / span 4">1</button><button type="button" class="blk" style="grid-column: 7 / span 2">2</button><button type="button" class="blk" style="grid-column: 9 / span 4">1</button>
+        </div>
+
+        <div class="rail">
+          <h4>Lead Guitar</h4>
+          <div class="chips" role="group" aria-label="Lead Guitar patterns">
+            <button type="button">1</button><button type="button">2</button><button type="button" disabled>3</button><button type="button" disabled>4</button><button type="button" disabled>5</button><button type="button" disabled>6</button><button type="button" disabled>7</button><button type="button" disabled>8</button><button type="button" disabled>9</button><button type="button" disabled>10</button>
+            <button type="button" disabled>11</button><button type="button" disabled>12</button><button type="button" disabled>13</button><button type="button" disabled>14</button><button type="button" disabled>15</button><button type="button" disabled>16</button><button type="button" disabled>17</button><button type="button" disabled>18</button><button type="button" disabled>19</button><button type="button" disabled>20</button>
+          </div>
+        </div>
+        <div class="track">
+          <button type="button" class="blk" style="grid-column: 5 / span 4">1</button><button type="button" class="blk" style="grid-column: 11 / span 2">2</button>
+        </div>
+
+        <div class="rail">
+          <h4>Keys</h4>
+          <div class="chips" role="group" aria-label="Keys patterns">
+            <button type="button">1</button><button type="button">2</button><button type="button">3</button><button type="button" disabled>4</button><button type="button" disabled>5</button><button type="button" disabled>6</button><button type="button" disabled>7</button><button type="button" disabled>8</button><button type="button" disabled>9</button><button type="button" disabled>10</button>
+            <button type="button" disabled>11</button><button type="button" disabled>12</button><button type="button" disabled>13</button><button type="button" disabled>14</button><button type="button" disabled>15</button><button type="button" disabled>16</button><button type="button" disabled>17</button><button type="button" disabled>18</button><button type="button" disabled>19</button><button type="button" disabled>20</button>
+          </div>
+        </div>
+        <div class="track">
+          <button type="button" class="blk" style="grid-column: 1 / span 8">1</button><button type="button" class="blk" style="grid-column: 9 / span 4">2</button>
+        </div>
+
+        <span class="head" aria-hidden="true"></span>
+      </div>
+    </div>
+    <p class="hint">Dashed chips are empty patterns and cannot be placed. Select a chip, then click an empty bar. Scroll sideways for bars 17 to 256.</p>
+  </div>
+</section>
+
+<section class="look d02" id="d02">
+  <div class="meta">
+    <h2><span class="fig">02</span>Tabbed tray</h2>
+    <p>The lanes stay low and plain, with only a name beside each. One tray under them, with a tab per instrument, shows the chosen instrument&rsquo;s twenty patterns as large tiles. Play sits in the corner above the names.</p>
+  </div>
+  <div class="frame">
+    <div class="scroll">
+      <div class="grid">
+        <div class="corner"><button type="button" class="play"><i></i>Play</button><span class="fig">Bar 6</span></div>
+        <ol class="ruler" aria-label="Timeline, click a bar to move the playhead"><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li></ol>
+
+        <button type="button" class="name" aria-pressed="false">Drums</button>
+        <div class="lane">
+          <button type="button" class="b" style="grid-column: 1 / span 1">1</button><button type="button" class="b" style="grid-column: 2 / span 1">1</button><button type="button" class="b" style="grid-column: 3 / span 1">1</button><button type="button" class="b" style="grid-column: 4 / span 1">2</button><button type="button" class="b" style="grid-column: 5 / span 2">3</button><button type="button" class="b" style="grid-column: 7 / span 1">1</button><button type="button" class="b" style="grid-column: 8 / span 1">1</button><button type="button" class="b" style="grid-column: 9 / span 1">2</button><button type="button" class="b" style="grid-column: 10 / span 2">3</button>
+        </div>
+
+        <button type="button" class="name" aria-pressed="false">Bass</button>
+        <div class="lane">
+          <button type="button" class="b" style="grid-column: 1 / span 2">1</button><button type="button" class="b" style="grid-column: 3 / span 2">1</button><button type="button" class="b" style="grid-column: 5 / span 4">2</button><button type="button" class="b" style="grid-column: 9 / span 2">1</button><button type="button" class="b" style="grid-column: 11 / span 2">3</button>
+        </div>
+
+        <button type="button" class="name" aria-pressed="true">Rhythm Guitar</button>
+        <div class="lane">
+          <button type="button" class="b" style="grid-column: 3 / span 4">1</button><button type="button" class="b" style="grid-column: 7 / span 2">2</button><button type="button" class="b" style="grid-column: 9 / span 4">1</button>
+        </div>
+
+        <button type="button" class="name" aria-pressed="false">Lead Guitar</button>
+        <div class="lane">
+          <button type="button" class="b" style="grid-column: 5 / span 4">1</button><button type="button" class="b" style="grid-column: 11 / span 2">2</button>
+        </div>
+
+        <button type="button" class="name" aria-pressed="false">Keys</button>
+        <div class="lane">
+          <button type="button" class="b" style="grid-column: 1 / span 8">1</button><button type="button" class="b" style="grid-column: 9 / span 4">2</button>
+        </div>
+
+        <span class="head" aria-hidden="true"></span>
+      </div>
+    </div>
+
+    <div class="tray">
+      <div class="tabs" role="tablist" aria-label="Instrument">
+        <button type="button" role="tab" aria-selected="false">Drums</button><button type="button" role="tab" aria-selected="false">Bass</button><button type="button" role="tab" aria-selected="true">Rhythm Guitar</button><button type="button" role="tab" aria-selected="false">Lead Guitar</button><button type="button" role="tab" aria-selected="false">Keys</button>
+      </div>
+      <div class="tiles" role="tabpanel" aria-label="Rhythm Guitar patterns">
+        <button type="button">1</button><button type="button" aria-pressed="true">2</button><button type="button" disabled>3</button><button type="button">4</button><button type="button" disabled>5</button><button type="button" disabled>6</button><button type="button" disabled>7</button><button type="button" disabled>8</button><button type="button" disabled>9</button><button type="button" disabled>10</button>
+        <button type="button" disabled>11</button><button type="button" disabled>12</button><button type="button" disabled>13</button><button type="button" disabled>14</button><button type="button" disabled>15</button><button type="button" disabled>16</button><button type="button" disabled>17</button><button type="button" disabled>18</button><button type="button" disabled>19</button><button type="button" disabled>20</button>
+      </div>
+      <p class="note">Rhythm Guitar pattern 2 is ready to place. Greyed tiles are empty.</p>
+    </div>
+  </div>
+</section>
+
+<section class="look d03" id="d03">
+  <div class="meta">
+    <h2><span class="fig">03</span>Side bin</h2>
+    <p>Lanes take the width. A fixed column on the right lists the patterns of whichever lane is selected, one row each, like a library. On a narrow window the list drops under the lanes.</p>
+  </div>
+  <div class="frame">
+    <header class="bar">
+      <h3>Song</h3>
+      <span class="fig">Bar 6 of 12</span>
+      <button type="button" class="go" aria-label="Play"><i></i></button>
+    </header>
+    <div class="cols">
+      <div class="arr">
+        <div class="rows">
+          <ol class="tl" aria-label="Timeline, click a bar to move the playhead"><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li></ol>
+
+          <div class="row"><b>Drums</b>
+            <button type="button" class="p" style="grid-column: 2 / span 1">1</button><button type="button" class="p" style="grid-column: 3 / span 1">1</button><button type="button" class="p" style="grid-column: 4 / span 1">1</button><button type="button" class="p" style="grid-column: 5 / span 1">2</button><button type="button" class="p" style="grid-column: 6 / span 2">3</button><button type="button" class="p" style="grid-column: 8 / span 1">1</button><button type="button" class="p" style="grid-column: 9 / span 1">1</button><button type="button" class="p" style="grid-column: 10 / span 1">2</button><button type="button" class="p" style="grid-column: 11 / span 2">3</button>
+          </div>
+          <div class="row"><b>Bass</b>
+            <button type="button" class="p" style="grid-column: 2 / span 2">1</button><button type="button" class="p" style="grid-column: 4 / span 2">1</button><button type="button" class="p" style="grid-column: 6 / span 4">2</button><button type="button" class="p" style="grid-column: 10 / span 2">1</button><button type="button" class="p" style="grid-column: 12 / span 2">3</button>
+          </div>
+          <div class="row on"><b>Rhythm Guitar</b>
+            <button type="button" class="p" style="grid-column: 4 / span 4">1</button><button type="button" class="p" style="grid-column: 8 / span 2">2</button><button type="button" class="p" style="grid-column: 10 / span 4">1</button>
+          </div>
+          <div class="row"><b>Lead Guitar</b>
+            <button type="button" class="p" style="grid-column: 6 / span 4">1</button><button type="button" class="p" style="grid-column: 12 / span 2">2</button>
+          </div>
+          <div class="row"><b>Keys</b>
+            <button type="button" class="p" style="grid-column: 2 / span 8">1</button><button type="button" class="p" style="grid-column: 10 / span 4">2</button>
+          </div>
+          <span class="flag" aria-hidden="true"></span>
+        </div>
+      </div>
+
+      <aside class="bin" aria-label="Patterns of the selected lane">
+        <h4>Rhythm Guitar patterns</h4>
+        <ol class="list">
+          <li><button type="button"><span class="n">1</span><span class="s">Ready</span></button></li>
+          <li><button type="button" aria-pressed="true"><span class="n">2</span><span class="s">Selected</span></button></li>
+          <li><button type="button" disabled><span class="n">3</span><span class="s">Empty</span></button></li>
+          <li><button type="button"><span class="n">4</span><span class="s">Ready</span></button></li>
+          <li><button type="button" disabled><span class="n">5</span><span class="s">Empty</span></button></li>
+          <li><button type="button" disabled><span class="n">6</span><span class="s">Empty</span></button></li>
+          <li><button type="button" disabled><span class="n">7</span><span class="s">Empty</span></button></li>
+          <li><button type="button" disabled><span class="n">8</span><span class="s">Empty</span></button></li>
+          <li><button type="button" disabled><span class="n">9</span><span class="s">Empty</span></button></li>
+          <li><button type="button" disabled><span class="n">10</span><span class="s">Empty</span></button></li>
+          <li><button type="button" disabled><span class="n">11</span><span class="s">Empty</span></button></li>
+          <li><button type="button" disabled><span class="n">12</span><span class="s">Empty</span></button></li>
+          <li><button type="button" disabled><span class="n">13</span><span class="s">Empty</span></button></li>
+          <li><button type="button" disabled><span class="n">14</span><span class="s">Empty</span></button></li>
+          <li><button type="button" disabled><span class="n">15</span><span class="s">Empty</span></button></li>
+          <li><button type="button" disabled><span class="n">16</span><span class="s">Empty</span></button></li>
+          <li><button type="button" disabled><span class="n">17</span><span class="s">Empty</span></button></li>
+          <li><button type="button" disabled><span class="n">18</span><span class="s">Empty</span></button></li>
+          <li><button type="button" disabled><span class="n">19</span><span class="s">Empty</span></button></li>
+          <li><button type="button" disabled><span class="n">20</span><span class="s">Empty</span></button></li>
+        </ol>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<section class="look d04" id="d04">
+  <div class="meta">
+    <h2><span class="fig">04</span>Map and menu</h2>
+    <p>A thin map of all 256 bars sits above the lanes, with a frame showing the bars in view. There is no picker panel at all: clicking an empty bar opens a short menu of that instrument&rsquo;s ready patterns.</p>
+  </div>
+  <div class="frame">
+    <header class="hd">
+      <h3>Song</h3>
+      <span class="fig">Bar 6 of 12</span>
+      <button type="button"><i></i>Play</button>
+    </header>
+    <div class="map">
+      <p>All 256 bars</p>
+      <div class="strip" role="group" aria-label="Song map, click to scroll the view">
+        <i style="--s: 1; --n: 11"></i>
+        <i style="--s: 1; --n: 12"></i>
+        <i style="--s: 3; --n: 10"></i>
+        <i class="two" style="--s: 5; --n: 4; --s2: 11; --n2: 2"></i>
+        <i style="--s: 1; --n: 12"></i>
+        <span class="view" aria-hidden="true"></span>
+        <span class="ph" aria-hidden="true"></span>
+      </div>
+    </div>
+    <div class="scroll">
+      <div class="sheet">
+        <span aria-hidden="true"></span>
+        <ol class="ruler" aria-label="Timeline, click a bar to move the playhead"><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li></ol>
+
+        <b class="nm">Drums</b>
+        <div class="ln">
+          <button type="button" class="k" style="grid-column: 1 / span 1">1</button><button type="button" class="k" style="grid-column: 2 / span 1">1</button><button type="button" class="k" style="grid-column: 3 / span 1">1</button><button type="button" class="k" style="grid-column: 4 / span 1">2</button><button type="button" class="k" style="grid-column: 5 / span 2">3</button><button type="button" class="k" style="grid-column: 7 / span 1">1</button><button type="button" class="k" style="grid-column: 8 / span 1">1</button><button type="button" class="k" style="grid-column: 9 / span 1">2</button><button type="button" class="k" style="grid-column: 10 / span 2">3</button>
+        </div>
+        <b class="nm">Bass</b>
+        <div class="ln">
+          <button type="button" class="k" style="grid-column: 1 / span 2">1</button><button type="button" class="k" style="grid-column: 3 / span 2">1</button><button type="button" class="k" style="grid-column: 5 / span 4">2</button><button type="button" class="k" style="grid-column: 9 / span 2">1</button><button type="button" class="k" style="grid-column: 11 / span 2">3</button>
+        </div>
+        <b class="nm">Rhythm Guitar</b>
+        <div class="ln">
+          <button type="button" class="k" style="grid-column: 3 / span 4">1</button><button type="button" class="k" style="grid-column: 7 / span 2">2</button><button type="button" class="k" style="grid-column: 9 / span 4">1</button>
+        </div>
+        <b class="nm">Lead Guitar</b>
+        <div class="ln">
+          <span class="slot" style="grid-column: 3 / span 1"></span>
+          <button type="button" class="k" style="grid-column: 5 / span 4">1</button><button type="button" class="k" style="grid-column: 11 / span 2">2</button>
+          <div class="menu" role="menu" aria-label="Place a Lead Guitar pattern at bar 3">
+            <p>Lead Guitar, bar 3</p>
+            <button type="button" role="menuitem">Pattern <span>1</span></button>
+            <button type="button" role="menuitem">Pattern <span>2</span></button>
+          </div>
+        </div>
+        <b class="nm">Keys</b>
+        <div class="ln">
+          <button type="button" class="k" style="grid-column: 1 / span 8">1</button><button type="button" class="k" style="grid-column: 9 / span 4">2</button>
+        </div>
+      </div>
+    </div>
+    <p class="after">Only ready patterns are listed. Empty patterns cannot be placed.</p>
+  </div>
+</section>
+
+<section class="look d05" id="d05">
+  <div class="meta">
+    <h2><span class="fig">05</span>Focus lane</h2>
+    <p>One lane is open at a time. It grows tall, shows its twenty patterns above it, and gives its blocks room for a Remove action. The other four fold to thin strips that still show where their blocks fall; click a strip to open it.</p>
+  </div>
+  <div class="frame">
+    <div class="scroll">
+      <div class="stack">
+        <header class="mast">
+          <h3>Song</h3>
+          <div><span class="fig">Bar 6 of 12</span><button type="button">Play</button></div>
+        </header>
+        <ol class="axis" aria-label="Timeline, click a bar to move the playhead"><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li></ol>
+
+        <button type="button" class="fold" aria-label="Open Drums"><b>Drums</b><i style="grid-column: 2 / span 11"></i></button>
+        <button type="button" class="fold" aria-label="Open Bass"><b>Bass</b><i style="grid-column: 2 / span 12"></i></button>
+
+        <div class="open">
+          <div class="pick">
+            <h4>Rhythm Guitar</h4>
+            <ul role="group" aria-label="Rhythm Guitar patterns">
+              <li><button type="button">1</button></li><li><button type="button" aria-pressed="true">2</button></li><li><button type="button" disabled>3</button></li><li><button type="button">4</button></li><li><button type="button" disabled>5</button></li><li><button type="button" disabled>6</button></li><li><button type="button" disabled>7</button></li><li><button type="button" disabled>8</button></li><li><button type="button" disabled>9</button></li><li><button type="button" disabled>10</button></li><li><button type="button" disabled>11</button></li><li><button type="button" disabled>12</button></li><li><button type="button" disabled>13</button></li><li><button type="button" disabled>14</button></li><li><button type="button" disabled>15</button></li><li><button type="button" disabled>16</button></li><li><button type="button" disabled>17</button></li><li><button type="button" disabled>18</button></li><li><button type="button" disabled>19</button></li><li><button type="button" disabled>20</button></li>
+            </ul>
+          </div>
+          <div class="big">
+            <b>Rhythm Guitar</b>
+            <span class="bg"></span>
+            <button type="button" class="m" style="grid-column: 4 / span 4">1</button>
+            <button type="button" class="m" style="grid-column: 8 / span 2">2</button>
+            <div class="m on" style="grid-column: 10 / span 4"><button type="button" class="n" aria-pressed="true">1</button><button type="button" class="x">Remove</button></div>
+          </div>
+        </div>
+
+        <button type="button" class="fold" aria-label="Open Lead Guitar"><b>Lead Guitar</b><i style="grid-column: 6 / span 4"></i><i style="grid-column: 12 / span 2"></i></button>
+        <button type="button" class="fold" aria-label="Open Keys"><b>Keys</b><i style="grid-column: 2 / span 12"></i></button>
+
+        <span class="ph" aria-hidden="true"></span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="look d06" id="d06">
+  <div class="meta">
+    <h2><span class="fig">06</span>Banded</h2>
+    <p>Each instrument is a full-width band: its name and a single strip of twenty pattern cells on top, its track below. With no side column, all sixteen bars get the whole width.</p>
+  </div>
+  <div class="frame">
+    <div class="scroll">
+      <div class="page">
+        <header class="intro">
+          <h3>Song</h3>
+          <span class="fig">Bar 6 of 12</span>
+          <button type="button">Play</button>
+        </header>
+        <ol class="tl" aria-label="Timeline, click a bar to move the playhead"><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li></ol>
+
+        <section class="band" aria-label="Drums">
+          <div class="hdr"><h4>Drums</h4>
+            <div class="pats" role="group" aria-label="Drums patterns"><button type="button">1</button><button type="button">2</button><button type="button">3</button><button type="button" disabled>4</button><button type="button">5</button><button type="button" disabled>6</button><button type="button" disabled>7</button><button type="button" disabled>8</button><button type="button" disabled>9</button><button type="button" disabled>10</button><button type="button" disabled>11</button><button type="button" disabled>12</button><button type="button" disabled>13</button><button type="button" disabled>14</button><button type="button" disabled>15</button><button type="button" disabled>16</button><button type="button" disabled>17</button><button type="button" disabled>18</button><button type="button" disabled>19</button><button type="button" disabled>20</button></div>
+          </div>
+          <div class="trk">
+            <button type="button" style="grid-column: 1 / span 1">1</button><button type="button" style="grid-column: 2 / span 1">1</button><button type="button" style="grid-column: 3 / span 1">1</button><button type="button" style="grid-column: 4 / span 1">2</button><button type="button" style="grid-column: 5 / span 2">3</button><button type="button" style="grid-column: 7 / span 1">1</button><button type="button" style="grid-column: 8 / span 1">1</button><button type="button" style="grid-column: 9 / span 1">2</button><button type="button" style="grid-column: 10 / span 2">3</button>
+          </div>
+        </section>
+
+        <section class="band" aria-label="Bass">
+          <div class="hdr"><h4>Bass</h4>
+            <div class="pats" role="group" aria-label="Bass patterns"><button type="button">1</button><button type="button">2</button><button type="button">3</button><button type="button" disabled>4</button><button type="button" disabled>5</button><button type="button" disabled>6</button><button type="button" disabled>7</button><button type="button" disabled>8</button><button type="button" disabled>9</button><button type="button" disabled>10</button><button type="button" disabled>11</button><button type="button" disabled>12</button><button type="button" disabled>13</button><button type="button" disabled>14</button><button type="button" disabled>15</button><button type="button" disabled>16</button><button type="button" disabled>17</button><button type="button" disabled>18</button><button type="button" disabled>19</button><button type="button" disabled>20</button></div>
+          </div>
+          <div class="trk">
+            <button type="button" style="grid-column: 1 / span 2">1</button><button type="button" style="grid-column: 3 / span 2">1</button><button type="button" style="grid-column: 5 / span 4">2</button><button type="button" style="grid-column: 9 / span 2">1</button><button type="button" style="grid-column: 11 / span 2">3</button>
+          </div>
+        </section>
+
+        <section class="band" aria-label="Rhythm Guitar">
+          <div class="hdr"><h4>Rhythm Guitar</h4>
+            <div class="pats" role="group" aria-label="Rhythm Guitar patterns"><button type="button">1</button><button type="button" aria-pressed="true">2</button><button type="button" disabled>3</button><button type="button">4</button><button type="button" disabled>5</button><button type="button" disabled>6</button><button type="button" disabled>7</button><button type="button" disabled>8</button><button type="button" disabled>9</button><button type="button" disabled>10</button><button type="button" disabled>11</button><button type="button" disabled>12</button><button type="button" disabled>13</button><button type="button" disabled>14</button><button type="button" disabled>15</button><button type="button" disabled>16</button><button type="button" disabled>17</button><button type="button" disabled>18</button><button type="button" disabled>19</button><button type="button" disabled>20</button></div>
+          </div>
+          <div class="trk">
+            <button type="button" style="grid-column: 3 / span 4">1</button><button type="button" style="grid-column: 7 / span 2">2</button><button type="button" style="grid-column: 9 / span 4">1</button>
+          </div>
+        </section>
+
+        <section class="band" aria-label="Lead Guitar">
+          <div class="hdr"><h4>Lead Guitar</h4>
+            <div class="pats" role="group" aria-label="Lead Guitar patterns"><button type="button">1</button><button type="button">2</button><button type="button" disabled>3</button><button type="button" disabled>4</button><button type="button" disabled>5</button><button type="button" disabled>6</button><button type="button" disabled>7</button><button type="button" disabled>8</button><button type="button" disabled>9</button><button type="button" disabled>10</button><button type="button" disabled>11</button><button type="button" disabled>12</button><button type="button" disabled>13</button><button type="button" disabled>14</button><button type="button" disabled>15</button><button type="button" disabled>16</button><button type="button" disabled>17</button><button type="button" disabled>18</button><button type="button" disabled>19</button><button type="button" disabled>20</button></div>
+          </div>
+          <div class="trk">
+            <button type="button" style="grid-column: 5 / span 4">1</button><button type="button" style="grid-column: 11 / span 2">2</button>
+          </div>
+        </section>
+
+        <section class="band" aria-label="Keys">
+          <div class="hdr"><h4>Keys</h4>
+            <div class="pats" role="group" aria-label="Keys patterns"><button type="button">1</button><button type="button">2</button><button type="button">3</button><button type="button" disabled>4</button><button type="button" disabled>5</button><button type="button" disabled>6</button><button type="button" disabled>7</button><button type="button" disabled>8</button><button type="button" disabled>9</button><button type="button" disabled>10</button><button type="button" disabled>11</button><button type="button" disabled>12</button><button type="button" disabled>13</button><button type="button" disabled>14</button><button type="button" disabled>15</button><button type="button" disabled>16</button><button type="button" disabled>17</button><button type="button" disabled>18</button><button type="button" disabled>19</button><button type="button" disabled>20</button></div>
+          </div>
+          <div class="trk">
+            <button type="button" style="grid-column: 1 / span 8">1</button><button type="button" style="grid-column: 9 / span 4">2</button>
+          </div>
+        </section>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="look d07" id="d07">
+  <div class="meta">
+    <h2><span class="fig">07</span>Matrix</h2>
+    <p>Dense low lanes on top, and under them one grid of all one hundred patterns: a row per instrument, a column per number. Filled cells are ready to place and the selected one is solid ink.</p>
+  </div>
+  <div class="frame">
+    <header class="bar">
+      <h3>Song</h3>
+      <output class="fig">Bar 6 of 12</output>
+      <button type="button">Play</button>
+    </header>
+    <div class="scroll">
+      <div class="lanes">
+        <span aria-hidden="true"></span>
+        <ol class="ticks" aria-label="Timeline, click a bar to move the playhead"><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li></ol>
+        <span class="who">Drums</span>
+        <div class="cells"><button type="button" style="grid-column: 1 / span 1">1</button><button type="button" style="grid-column: 2 / span 1">1</button><button type="button" style="grid-column: 3 / span 1">1</button><button type="button" style="grid-column: 4 / span 1">2</button><button type="button" style="grid-column: 5 / span 2">3</button><button type="button" style="grid-column: 7 / span 1">1</button><button type="button" style="grid-column: 8 / span 1">1</button><button type="button" style="grid-column: 9 / span 1">2</button><button type="button" style="grid-column: 10 / span 2">3</button></div>
+        <span class="who">Bass</span>
+        <div class="cells"><button type="button" style="grid-column: 1 / span 2">1</button><button type="button" style="grid-column: 3 / span 2">1</button><button type="button" style="grid-column: 5 / span 4">2</button><button type="button" style="grid-column: 9 / span 2">1</button><button type="button" style="grid-column: 11 / span 2">3</button></div>
+        <span class="who on">Rhythm Guitar</span>
+        <div class="cells"><button type="button" style="grid-column: 3 / span 4">1</button><button type="button" style="grid-column: 7 / span 2">2</button><button type="button" style="grid-column: 9 / span 4">1</button></div>
+        <span class="who">Lead Guitar</span>
+        <div class="cells"><button type="button" style="grid-column: 5 / span 4">1</button><button type="button" style="grid-column: 11 / span 2">2</button></div>
+        <span class="who">Keys</span>
+        <div class="cells"><button type="button" style="grid-column: 1 / span 8">1</button><button type="button" style="grid-column: 9 / span 4">2</button></div>
+        <span class="playhead" aria-hidden="true"></span>
+      </div>
+    </div>
+    <div class="pal">
+      <h4>Pick a pattern to place</h4>
+      <table class="mx">
+        <thead><tr><td></td><th scope="col">1</th><th scope="col">2</th><th scope="col">3</th><th scope="col">4</th><th scope="col">5</th><th scope="col">6</th><th scope="col">7</th><th scope="col">8</th><th scope="col">9</th><th scope="col">10</th><th scope="col">11</th><th scope="col">12</th><th scope="col">13</th><th scope="col">14</th><th scope="col">15</th><th scope="col">16</th><th scope="col">17</th><th scope="col">18</th><th scope="col">19</th><th scope="col">20</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Drums</th><td><button type="button" aria-label="Drums 1"></button></td><td><button type="button" aria-label="Drums 2"></button></td><td><button type="button" aria-label="Drums 3"></button></td><td><button type="button" aria-label="Drums 4" disabled></button></td><td><button type="button" aria-label="Drums 5"></button></td><td><button type="button" aria-label="Drums 6" disabled></button></td><td><button type="button" aria-label="Drums 7" disabled></button></td><td><button type="button" aria-label="Drums 8" disabled></button></td><td><button type="button" aria-label="Drums 9" disabled></button></td><td><button type="button" aria-label="Drums 10" disabled></button></td><td><button type="button" aria-label="Drums 11" disabled></button></td><td><button type="button" aria-label="Drums 12" disabled></button></td><td><button type="button" aria-label="Drums 13" disabled></button></td><td><button type="button" aria-label="Drums 14" disabled></button></td><td><button type="button" aria-label="Drums 15" disabled></button></td><td><button type="button" aria-label="Drums 16" disabled></button></td><td><button type="button" aria-label="Drums 17" disabled></button></td><td><button type="button" aria-label="Drums 18" disabled></button></td><td><button type="button" aria-label="Drums 19" disabled></button></td><td><button type="button" aria-label="Drums 20" disabled></button></td></tr>
+          <tr><th scope="row">Bass</th><td><button type="button" aria-label="Bass 1"></button></td><td><button type="button" aria-label="Bass 2"></button></td><td><button type="button" aria-label="Bass 3"></button></td><td><button type="button" aria-label="Bass 4" disabled></button></td><td><button type="button" aria-label="Bass 5" disabled></button></td><td><button type="button" aria-label="Bass 6" disabled></button></td><td><button type="button" aria-label="Bass 7" disabled></button></td><td><button type="button" aria-label="Bass 8" disabled></button></td><td><button type="button" aria-label="Bass 9" disabled></button></td><td><button type="button" aria-label="Bass 10" disabled></button></td><td><button type="button" aria-label="Bass 11" disabled></button></td><td><button type="button" aria-label="Bass 12" disabled></button></td><td><button type="button" aria-label="Bass 13" disabled></button></td><td><button type="button" aria-label="Bass 14" disabled></button></td><td><button type="button" aria-label="Bass 15" disabled></button></td><td><button type="button" aria-label="Bass 16" disabled></button></td><td><button type="button" aria-label="Bass 17" disabled></button></td><td><button type="button" aria-label="Bass 18" disabled></button></td><td><button type="button" aria-label="Bass 19" disabled></button></td><td><button type="button" aria-label="Bass 20" disabled></button></td></tr>
+          <tr><th scope="row">Rhythm Guitar</th><td><button type="button" aria-label="Rhythm Guitar 1"></button></td><td><button type="button" aria-label="Rhythm Guitar 2" aria-pressed="true"></button></td><td><button type="button" aria-label="Rhythm Guitar 3" disabled></button></td><td><button type="button" aria-label="Rhythm Guitar 4"></button></td><td><button type="button" aria-label="Rhythm Guitar 5" disabled></button></td><td><button type="button" aria-label="Rhythm Guitar 6" disabled></button></td><td><button type="button" aria-label="Rhythm Guitar 7" disabled></button></td><td><button type="button" aria-label="Rhythm Guitar 8" disabled></button></td><td><button type="button" aria-label="Rhythm Guitar 9" disabled></button></td><td><button type="button" aria-label="Rhythm Guitar 10" disabled></button></td><td><button type="button" aria-label="Rhythm Guitar 11" disabled></button></td><td><button type="button" aria-label="Rhythm Guitar 12" disabled></button></td><td><button type="button" aria-label="Rhythm Guitar 13" disabled></button></td><td><button type="button" aria-label="Rhythm Guitar 14" disabled></button></td><td><button type="button" aria-label="Rhythm Guitar 15" disabled></button></td><td><button type="button" aria-label="Rhythm Guitar 16" disabled></button></td><td><button type="button" aria-label="Rhythm Guitar 17" disabled></button></td><td><button type="button" aria-label="Rhythm Guitar 18" disabled></button></td><td><button type="button" aria-label="Rhythm Guitar 19" disabled></button></td><td><button type="button" aria-label="Rhythm Guitar 20" disabled></button></td></tr>
+          <tr><th scope="row">Lead Guitar</th><td><button type="button" aria-label="Lead Guitar 1"></button></td><td><button type="button" aria-label="Lead Guitar 2"></button></td><td><button type="button" aria-label="Lead Guitar 3" disabled></button></td><td><button type="button" aria-label="Lead Guitar 4" disabled></button></td><td><button type="button" aria-label="Lead Guitar 5" disabled></button></td><td><button type="button" aria-label="Lead Guitar 6" disabled></button></td><td><button type="button" aria-label="Lead Guitar 7" disabled></button></td><td><button type="button" aria-label="Lead Guitar 8" disabled></button></td><td><button type="button" aria-label="Lead Guitar 9" disabled></button></td><td><button type="button" aria-label="Lead Guitar 10" disabled></button></td><td><button type="button" aria-label="Lead Guitar 11" disabled></button></td><td><button type="button" aria-label="Lead Guitar 12" disabled></button></td><td><button type="button" aria-label="Lead Guitar 13" disabled></button></td><td><button type="button" aria-label="Lead Guitar 14" disabled></button></td><td><button type="button" aria-label="Lead Guitar 15" disabled></button></td><td><button type="button" aria-label="Lead Guitar 16" disabled></button></td><td><button type="button" aria-label="Lead Guitar 17" disabled></button></td><td><button type="button" aria-label="Lead Guitar 18" disabled></button></td><td><button type="button" aria-label="Lead Guitar 19" disabled></button></td><td><button type="button" aria-label="Lead Guitar 20" disabled></button></td></tr>
+          <tr><th scope="row">Keys</th><td><button type="button" aria-label="Keys 1"></button></td><td><button type="button" aria-label="Keys 2"></button></td><td><button type="button" aria-label="Keys 3"></button></td><td><button type="button" aria-label="Keys 4" disabled></button></td><td><button type="button" aria-label="Keys 5" disabled></button></td><td><button type="button" aria-label="Keys 6" disabled></button></td><td><button type="button" aria-label="Keys 7" disabled></button></td><td><button type="button" aria-label="Keys 8" disabled></button></td><td><button type="button" aria-label="Keys 9" disabled></button></td><td><button type="button" aria-label="Keys 10" disabled></button></td><td><button type="button" aria-label="Keys 11" disabled></button></td><td><button type="button" aria-label="Keys 12" disabled></button></td><td><button type="button" aria-label="Keys 13" disabled></button></td><td><button type="button" aria-label="Keys 14" disabled></button></td><td><button type="button" aria-label="Keys 15" disabled></button></td><td><button type="button" aria-label="Keys 16" disabled></button></td><td><button type="button" aria-label="Keys 17" disabled></button></td><td><button type="button" aria-label="Keys 18" disabled></button></td><td><button type="button" aria-label="Keys 19" disabled></button></td><td><button type="button" aria-label="Keys 20" disabled></button></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<section class="look d08" id="d08">
+  <div class="meta">
+    <h2><span class="fig">08</span>Brush bar</h2>
+    <p>The whole picker is one tool in the top bar: choose the instrument, then step through its ready patterns with the arrows. Empty patterns are skipped. The lanes below are tall, clean and carry nothing but their blocks, with a dashed ghost showing where the brush would land.</p>
+  </div>
+  <div class="frame">
+    <div class="tools" role="toolbar" aria-label="Song tools">
+      <button type="button" class="go"><i></i>Play</button>
+      <span class="at fig">Bar 6 of 12</span>
+      <div class="brush">
+        <span>Place</span>
+        <div class="who" role="group" aria-label="Instrument">
+          <button type="button" aria-pressed="false">Drums</button><button type="button" aria-pressed="false">Bass</button><button type="button" aria-pressed="true">Rhythm Guitar</button><button type="button" aria-pressed="false">Lead Guitar</button><button type="button" aria-pressed="false">Keys</button>
+        </div>
+        <div class="step" role="group" aria-label="Ready pattern">
+          <button type="button" aria-label="Previous ready pattern"><i></i></button>
+          <output>2</output>
+          <button type="button" class="nx" aria-label="Next ready pattern"><i></i></button>
+        </div>
+      </div>
+    </div>
+    <div class="scroll">
+      <div class="sheet">
+        <span aria-hidden="true"></span>
+        <ol class="nums" aria-label="Timeline, click a bar to move the playhead"><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li></ol>
+
+        <span class="lbl">Drums</span>
+        <div class="row"><button type="button" style="grid-column: 1 / span 1">1</button><button type="button" style="grid-column: 2 / span 1">1</button><button type="button" style="grid-column: 3 / span 1">1</button><button type="button" style="grid-column: 4 / span 1">2</button><button type="button" style="grid-column: 5 / span 2">3</button><button type="button" style="grid-column: 7 / span 1">1</button><button type="button" style="grid-column: 8 / span 1">1</button><button type="button" style="grid-column: 9 / span 1">2</button><button type="button" style="grid-column: 10 / span 2">3</button></div>
+        <span class="lbl">Bass</span>
+        <div class="row"><button type="button" style="grid-column: 1 / span 2">1</button><button type="button" style="grid-column: 3 / span 2">1</button><button type="button" style="grid-column: 5 / span 4">2</button><button type="button" style="grid-column: 9 / span 2">1</button><button type="button" style="grid-column: 11 / span 2">3</button></div>
+        <span class="lbl cur">Rhythm Guitar</span>
+        <div class="row"><span class="ghost" style="grid-column: 1 / span 2">2</span><button type="button" style="grid-column: 3 / span 4">1</button><button type="button" style="grid-column: 7 / span 2">2</button><button type="button" style="grid-column: 9 / span 4">1</button></div>
+        <span class="lbl">Lead Guitar</span>
+        <div class="row"><button type="button" style="grid-column: 5 / span 4">1</button><button type="button" style="grid-column: 11 / span 2">2</button></div>
+        <span class="lbl">Keys</span>
+        <div class="row"><button type="button" style="grid-column: 1 / span 8">1</button><button type="button" style="grid-column: 9 / span 4">2</button></div>
+        <span class="at-head" aria-hidden="true"></span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="look d09" id="d09">
+  <div class="meta">
+    <h2><span class="fig">09</span>Systems</h2>
+    <p>The song wraps like a score: eight bars to a row, each row a full set of five lanes. Nothing scrolls sideways, and the whole arrangement reads top to bottom. A ribbon above holds the picker, which lists only ready patterns.</p>
+  </div>
+  <div class="frame">
+    <header class="ribbon">
+      <div class="r1">
+        <h3>Song</h3>
+        <span class="fig">Bar 6 of 12</span>
+        <button type="button">Play</button>
+      </div>
+      <div class="r2">
+        <label for="d09-inst">Place from</label>
+        <select id="d09-inst"><option>Drums</option><option>Bass</option><option selected>Rhythm Guitar</option><option>Lead Guitar</option><option>Keys</option></select>
+        <ul aria-label="Ready Rhythm Guitar patterns"><li><button type="button" aria-pressed="false">1</button></li><li><button type="button" aria-pressed="true">2</button></li><li><button type="button" aria-pressed="false">4</button></li></ul>
+        <p>Then click an empty bar.</p>
+      </div>
+    </header>
+
+    <section class="sys" aria-label="Bars 1 to 8">
+      <ol aria-label="Timeline, click a bar to move the playhead"><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li></ol>
+      <div class="lane"><b>Drums</b><div><button type="button" style="grid-column: 1 / span 1">1</button><button type="button" style="grid-column: 2 / span 1">1</button><button type="button" style="grid-column: 3 / span 1">1</button><button type="button" style="grid-column: 4 / span 1">2</button><button type="button" style="grid-column: 5 / span 2">3</button><button type="button" style="grid-column: 7 / span 1">1</button><button type="button" style="grid-column: 8 / span 1">1</button></div></div>
+      <div class="lane"><b>Bass</b><div><button type="button" style="grid-column: 1 / span 2">1</button><button type="button" style="grid-column: 3 / span 2">1</button><button type="button" style="grid-column: 5 / span 4">2</button></div></div>
+      <div class="lane"><b>Rhythm Guitar</b><div><button type="button" style="grid-column: 3 / span 4">1</button><button type="button" style="grid-column: 7 / span 2">2</button></div></div>
+      <div class="lane"><b>Lead Guitar</b><div><button type="button" style="grid-column: 5 / span 4">1</button></div></div>
+      <div class="lane"><b>Keys</b><div><button type="button" style="grid-column: 1 / span 8">1</button></div></div>
+      <span class="play-at" aria-hidden="true"></span>
+    </section>
+
+    <section class="sys two" aria-label="Bars 9 to 16">
+      <ol aria-label="Timeline, click a bar to move the playhead"><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li></ol>
+      <div class="lane"><b>Drums</b><div><button type="button" style="grid-column: 1 / span 1">2</button><button type="button" style="grid-column: 2 / span 2">3</button></div></div>
+      <div class="lane"><b>Bass</b><div><button type="button" style="grid-column: 1 / span 2">1</button><button type="button" style="grid-column: 3 / span 2">3</button></div></div>
+      <div class="lane"><b>Rhythm Guitar</b><div><button type="button" style="grid-column: 1 / span 4">1</button></div></div>
+      <div class="lane"><b>Lead Guitar</b><div><button type="button" style="grid-column: 3 / span 2">2</button></div></div>
+      <div class="lane"><b>Keys</b><div><button type="button" style="grid-column: 1 / span 4">2</button></div></div>
+      <span class="end" aria-hidden="true"></span>
+    </section>
+  </div>
+</section>
+
+<section class="look d10" id="d10">
+  <div class="meta">
+    <h2><span class="fig">10</span>Floating dock</h2>
+    <p>A big transport readout leads, then lanes run edge to edge with their names set sideways in a slim strip. The picker is a small dock floating at the bottom: pick an instrument, pick a ready pattern, click an empty bar.</p>
+  </div>
+  <div class="frame">
+    <div class="stage">
+      <header class="deck">
+        <button type="button" class="big" aria-label="Play"><i></i></button>
+        <p class="read"><strong class="fig">Bar 6</strong><span>of 12</span></p>
+        <h3>Song</h3>
+      </header>
+      <div class="scroll">
+        <div class="sheet">
+          <span aria-hidden="true"></span>
+          <ol class="beats" aria-label="Timeline, click a bar to move the playhead"><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li></ol>
+
+          <b class="tag">Drums</b>
+          <div class="ln"><button type="button" style="grid-column: 1 / span 1">1</button><button type="button" style="grid-column: 2 / span 1">1</button><button type="button" style="grid-column: 3 / span 1">1</button><button type="button" style="grid-column: 4 / span 1">2</button><button type="button" style="grid-column: 5 / span 2">3</button><button type="button" style="grid-column: 7 / span 1">1</button><button type="button" style="grid-column: 8 / span 1">1</button><button type="button" style="grid-column: 9 / span 1">2</button><button type="button" style="grid-column: 10 / span 2">3</button></div>
+          <b class="tag">Bass</b>
+          <div class="ln"><button type="button" style="grid-column: 1 / span 2">1</button><button type="button" style="grid-column: 3 / span 2">1</button><button type="button" class="pk" style="grid-column: 5 / span 4" aria-pressed="true">2</button><button type="button" style="grid-column: 9 / span 2">1</button><button type="button" style="grid-column: 11 / span 2">3</button></div>
+          <b class="tag">Rhythm Guitar</b>
+          <div class="ln"><button type="button" style="grid-column: 3 / span 4">1</button><button type="button" style="grid-column: 7 / span 2">2</button><button type="button" style="grid-column: 9 / span 4">1</button></div>
+          <b class="tag">Lead Guitar</b>
+          <div class="ln"><button type="button" style="grid-column: 5 / span 4">1</button><button type="button" style="grid-column: 11 / span 2">2</button></div>
+          <b class="tag">Keys</b>
+          <div class="ln"><button type="button" style="grid-column: 1 / span 8">1</button><button type="button" style="grid-column: 9 / span 4">2</button></div>
+          <span class="cursor" aria-hidden="true"></span>
+        </div>
+      </div>
+      <div class="dock" role="group" aria-label="Pattern to place">
+        <div class="seg"><button type="button">Drums</button><button type="button">Bass</button><button type="button" aria-current="true">Rhythm Guitar</button><button type="button">Lead Guitar</button><button type="button">Keys</button></div>
+        <ul aria-label="Ready Rhythm Guitar patterns"><li><button type="button" aria-pressed="false">1</button></li><li><button type="button" aria-pressed="true">2</button></li><li><button type="button" aria-pressed="false">4</button></li></ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+</div>
+</body>
+</html>
