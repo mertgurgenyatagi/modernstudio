@@ -14,7 +14,9 @@ The specification phase is closed. It was built through 15 questionnaires, and e
 4. [patterns-and-song.md](patterns-and-song.md) — patterns and the Song timeline.
 5. [sound.md](sound.md) — sound source, envelopes, mixer.
 6. [editing-and-project.md](editing-and-project.md) — undo, playback, saving, export, packaging.
-7. [open-items.md](open-items.md) — everything undecided or decided by assumption. Read before building.
+7. [pages.md](pages.md) — the names of the pages and what each contains.
+8. [stack.md](stack.md) — the chosen tech stack and the installed tooling.
+9. [open-items.md](open-items.md) — everything undecided or decided by assumption. Read before building.
 
 ## Where the truth lives
 
@@ -22,4 +24,4 @@ If a doc and a questionnaire answer disagree, the answer file wins, unless a lat
 
 ## Next
 
-Recommend a tech stack (none was chosen), then build the audition tool to pick the General MIDI instruments, then build the app. The full described scope is wanted in the first build.
+The stack is chosen. Next: decide the page designs, then build the audition tool to pick the General MIDI instruments, then build the app. The full described scope is wanted in the first build.
