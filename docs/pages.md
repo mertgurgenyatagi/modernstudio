@@ -2,7 +2,7 @@
 
 The names of the app's pages and what each one contains. Nothing here says how a page looks. Everything is taken from the other docs.
 
-There are three kinds of page: the Mixer, the Song page, and one page per instrument (five in all).
+There are three kinds of page: the Mixer, the Song page, and the instrument pages. There are three instrument pages for five instruments: Drums, one Guitar page that serves Bass, Rhythm Guitar and Lead Guitar, and Keys.
 
 ## Mixer
 
@@ -23,7 +23,7 @@ Song mode. See [patterns-and-song.md](patterns-and-song.md).
 
 ## Instrument pages
 
-One page per instrument, five in all: **Drums**, **Bass**, **Rhythm Guitar**, **Lead Guitar** and **Keys**. Each page has two parts.
+Three pages for five instruments: **Drums**, **Guitar** (which serves **Bass**, **Rhythm Guitar** and **Lead Guitar**, chosen on the page) and **Keys**. Bass and the two guitars share one page because they differ only in their strings. Each instrument still has its own 20 patterns, notes, fret count and envelope. Each page has two parts.
 
 ### Notes (Pattern mode)
 
@@ -45,7 +45,7 @@ See [sound.md](sound.md).
 
 See [instrument-layouts.md](instrument-layouts.md).
 
-| Page | Note editor |
+| Instrument | Note editor |
 | --- | --- |
 | Drums | Rows from bottom to top: kick, snare, hi-hat, open hi-hat, crash. Hits have no length. |
 | Bass | String layout, 4 strings: E1, A1, D2, G2. |
@@ -53,7 +53,7 @@ See [instrument-layouts.md](instrument-layouts.md).
 | Lead Guitar | Identical to Rhythm Guitar. |
 | Keys | Regular piano roll, C2 to C6. |
 
-On the string pages, the fret count (5, 7 or 12) is also chosen here and applies to the whole instrument.
+On the Guitar page, the instrument (Bass, Rhythm Guitar or Lead Guitar) is chosen on the page, and the fret count (5, 7 or 12) is also chosen here and applies to the whole instrument.
 
 ## Not pages
 
@@ -63,5 +63,6 @@ On the string pages, the fret count (5, 7 or 12) is also chosen here and applies
 ## Assumptions
 
 - The docs say each instrument has its own page for editing notes and its envelope, and that Pattern mode builds patterns for one instrument. This doc treats these as the same page.
+- Bass, Rhythm Guitar and Lead Guitar are one page by the user's decision on 2026-11-08, not by a questionnaire answer. Switching instrument on that page swaps in that instrument's own patterns, notes, fret count and envelope; this swap is assumed.
 - The docs do not say where the transport controls (play, stop), the metronome toggle, the undo control, or the switch between pages and modes are placed.
 - The volume is on both the Mixer and the instrument pages in this doc. The docs list volume under the instrument's settings and under the mixer, so it is one setting shown in both places.

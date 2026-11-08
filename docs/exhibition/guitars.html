@@ -1,0 +1,1183 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>modernstudio guitar page designs</title>
+<meta name="description" content="Twelve layouts for the combined Bass, Rhythm Guitar and Lead Guitar page of modernstudio, in the decided Bone and black look.">
+<link rel="icon" href="data:,">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Piazzolla:wght@700&family=Golos+Text:wght@400;500;600&family=Fragment+Mono&display=swap">
+<style>
+/* Hallmark · shape: app screen · genre: modern-minimal · theme: custom (Bone and black, locked by docs/design.md)
+ * paper: oklch 96.5% 0.006 90 · accent: the ink itself · display: Piazzolla 700 · body: Golos Text · figures: Fragment Mono
+ * nav: none, one combined string page alone · signature: the string editor, each string a block of rows with the open string highlighted and fret numbers on the placed notes · states: default, hover, focus, active, pressed, disabled
+ * axes: mixed/mixed/mixed · posture: restrained, ink fills only the selected pattern, the selected option, the placed notes and the Play control · contrast: pass · v2.0.0 */
+/* Hallmark · pre-emit critique: P4 H4 E4 S4 R4 V5 · weakest: S, the string rows, the beat lines and the control set are fixed by the docs, so the twelve differ in where the instrument switch, patterns, tools and envelope sit and in how the strings are labelled; each design has its own markup and rules */
+/* Hallmark · answered F4 · the filled ink style marks only a selected pattern, a selected option, a placed note or the Play control, never a primary action, and each design is a separate layout being compared */
+/* Hallmark · answered F7 · the note and the beat line recipes repeat across designs on purpose: only the arrangement around them differs between the twelve */
+/* Hallmark · waive 37 · three families only (Piazzolla, Golos Text, Fragment Mono), flagged by the page loading one stylesheet for all three · the project fixed exactly these three in docs/design.md */
+
+:root {
+  --color-paper: oklch(96.5% 0.006 90);  --color-paper-2: oklch(99% 0.004 90);  --color-paper-3: oklch(94% 0.006 90);
+  --color-ink: oklch(18% 0.006 90);  --color-muted: oklch(44% 0.006 90);  --color-rule: oklch(79% 0.006 90);
+  --color-accent: oklch(18% 0.006 90);  --color-accent-ink: oklch(97% 0.005 90);  --color-focus: oklch(18% 0.006 90);
+  --font-display: "Piazzolla", ui-serif, serif;
+  --font-body: "Golos Text", ui-sans-serif, sans-serif;
+  --font-outlier: "Fragment Mono", ui-monospace, monospace;
+
+  --space-3xs: 2px; --space-2xs: 4px; --space-xs: 8px; --space-sm: 12px; --space-md: 16px; --space-lg: 24px; --space-lgx: 32px; --space-xl: 40px; --space-2xl: 64px; --space-3xl: 96px;
+  --text-xs: 0.75rem; --text-sm: 0.8125rem; --text-md: 0.9375rem; --text-lg: 1.0625rem; --text-xl: 1.2rem; --text-2xl: 1.5rem; --text-3xl: 2.25rem; --text-4xl: 3.5rem; --text-5xl: 6rem;
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --dur-micro: 120ms;
+  --container: 1360px; --gutter: 24px;
+  --rule-w: 1px;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html, body { overflow-x: clip; }
+html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; scrollbar-color: var(--color-muted) var(--color-paper-3); caret-color: var(--color-ink); }
+body { margin: 0; background: var(--color-paper-3); color: var(--color-ink); font-family: var(--font-body); font-size: var(--text-md); line-height: 1.5; font-synthesis: none; }
+h1, h2, h3, h4, p, ul, ol, dl, dd, figure { margin: 0; }
+h1, h2, h3, h4 { text-wrap: balance; overflow-wrap: break-word; min-width: 0; }
+ul, ol { padding: 0; list-style: none; }
+a { color: inherit; }
+::selection { background: var(--color-ink); color: var(--color-accent-ink); }
+
+.wrap { width: 100%; max-width: var(--container); margin: 0 auto; padding: var(--space-xl) var(--gutter) var(--space-3xl); }
+
+/* page header */
+.page-head { display: grid; gap: var(--space-md); max-width: 70ch; margin-bottom: var(--space-2xl); }
+.page-head h1 { font-family: var(--font-display); font-weight: 700; font-size: var(--text-3xl); line-height: 1.1; letter-spacing: -0.015em; }
+.page-head p { color: var(--color-muted); max-width: 62ch; }
+.index { display: grid; grid-template-columns: repeat(auto-fill, minmax(11rem, 1fr)); gap: 0 var(--space-md); max-width: 62rem; margin-top: var(--space-xs); }
+.index a { display: block; padding: var(--space-xs) 0; text-decoration: none; border-bottom: 1px solid var(--color-rule); }
+.index a span { font-family: var(--font-outlier); color: var(--color-muted); margin-right: var(--space-xs); }
+.index a:hover { border-bottom-color: var(--color-ink); }
+.index a:active { transform: translateY(1px); }
+.index a:focus-visible { outline: 3px solid var(--color-focus); outline-offset: 2px; }
+
+/* the frame around each design */
+.look { margin-top: var(--space-3xl); scroll-margin-top: var(--space-lg); }
+.meta { display: grid; gap: var(--space-xs); margin-bottom: var(--space-md); max-width: 70ch; }
+.meta h2 { font-family: var(--font-display); font-weight: 700; font-size: var(--text-2xl); line-height: 1.15; }
+.meta h2 .fig { margin-right: var(--space-xs); }
+.meta p { max-width: 62ch; }
+.frame { container-type: inline-size; background: var(--color-paper); color: var(--color-ink); border: var(--rule-w) solid var(--color-rule); overflow: clip; }
+.frame :is(button, input, output, select) { font: inherit; color: inherit; }
+.frame button { cursor: pointer; }
+.frame button:active { transform: translateY(1px); }
+.frame button:disabled { opacity: 0.45; cursor: not-allowed; }
+.frame button:disabled:active { transform: none; }
+.frame :focus-visible { outline: 3px solid var(--color-focus); outline-offset: 2px; }
+.frame h3, .frame h4 { font-family: var(--font-display); font-weight: 700; }
+.frame .fig { font-family: var(--font-outlier); font-variant-numeric: tabular-nums; }
+.frame .sr { position: absolute; inline-size: 1px; block-size: 1px; overflow: clip; clip-path: inset(50%); white-space: nowrap; }
+.frame input[type="range"] { accent-color: var(--color-ink); }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition: none !important; animation: none !important; scroll-behavior: auto !important; }
+  .index a:active, .frame button:active { transform: none; }
+}
+@media (max-width: 40rem) { :root { --gutter: 16px; } }
+
+/* ===== 01 Plain bands ===== */
+.d01 { --h: 1.3rem; }
+.d01 .top { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--space-sm) var(--space-md); padding: var(--space-sm) var(--space-lg); background: var(--color-paper-2); border-bottom: var(--rule-w) solid var(--color-rule); }
+.d01 .who { display: inline-flex; border: var(--rule-w) solid var(--color-ink); border-radius: 2px; }
+.d01 .who button { block-size: 2.25rem; padding: 0 var(--space-md); border: 0; border-left: var(--rule-w) solid var(--color-rule); background: var(--color-paper); font-weight: 500; transition: background-color var(--dur-micro) var(--ease-out); }
+.d01 .who button:first-child { border-left: 0; }
+.d01 .who button:hover { background: var(--color-paper-3); }
+.d01 .who button[aria-pressed="true"] { background: var(--color-ink); color: var(--color-accent-ink); }
+.d01 .acts { display: flex; gap: var(--space-xs); }
+.d01 .btn { display: inline-flex; align-items: center; gap: var(--space-xs); block-size: 2.25rem; padding: 0 var(--space-md); border: var(--rule-w) solid var(--color-ink); border-radius: 2px; background: var(--color-paper); font-weight: 600; transition: background-color var(--dur-micro) var(--ease-out); }
+.d01 .btn:hover { background: var(--color-paper-3); }
+.d01 .btn.go { background: var(--color-ink); color: var(--color-accent-ink); }
+.d01 .btn.go:hover { background: var(--color-muted); }
+.d01 .btn i { inline-size: 0; block-size: 0; border: 0.4rem solid transparent; border-left: 0.65rem solid currentColor; border-right: 0; }
+.d01 .pats { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-sm) var(--space-lg); padding: var(--space-md) var(--space-lg); border-bottom: var(--rule-w) solid var(--color-rule); }
+.d01 .pats > p { color: var(--color-muted); font-size: var(--text-sm); }
+.d01 .chips { display: flex; flex-wrap: wrap; flex: 1 1 24rem; gap: var(--space-2xs); }
+.d01 .chips button { inline-size: 2rem; block-size: 2rem; padding: 0; border: var(--rule-w) solid var(--color-rule); border-radius: 2px; background: transparent; color: var(--color-muted); font-family: var(--font-outlier); font-size: var(--text-xs); transition: background-color var(--dur-micro) var(--ease-out); }
+.d01 .chips button.has { border-color: var(--color-ink); background: var(--color-paper-2); color: var(--color-ink); }
+.d01 .chips button:hover { background: var(--color-paper-3); }
+.d01 .chips button[aria-pressed="true"] { background: var(--color-ink); border-color: var(--color-ink); color: var(--color-accent-ink); }
+.d01 .copy { block-size: 2rem; padding: 0 var(--space-sm); border: var(--rule-w) solid var(--color-rule); border-radius: 2px; background: transparent; font-size: var(--text-sm); }
+.d01 .copy:hover { border-color: var(--color-ink); }
+.d01 .scroll { overflow-x: auto; }
+.d01 .ed { min-inline-size: 40rem; padding: var(--space-md) var(--space-lg) var(--space-lg); }
+.d01 .beats { display: grid; grid-template-columns: repeat(4, 1fr); margin-left: 4.5rem; }
+.d01 .beats li { padding: 0 0 var(--space-2xs) var(--space-xs); border-left: var(--rule-w) solid var(--color-rule); font-family: var(--font-outlier); font-size: var(--text-xs); color: var(--color-muted); }
+.d01 .str { display: grid; grid-template-columns: 4.5rem minmax(0, 1fr); }
+.d01 .str + .str { border-top: var(--rule-w) solid var(--color-ink); }
+.d01 .str:first-of-type { border-top: var(--rule-w) solid var(--color-ink); }
+.d01 .str:last-child { border-bottom: var(--rule-w) solid var(--color-ink); }
+.d01 .lab { display: grid; grid-auto-rows: var(--h); font-family: var(--font-outlier); font-size: var(--text-xs); color: var(--color-muted); }
+.d01 .lab li { display: flex; align-items: center; padding-left: var(--space-xs); }
+.d01 .lab li:first-child { background: var(--color-paper-3); color: var(--color-ink); }
+.d01 .cells { display: grid; grid-template-columns: repeat(16, minmax(0, 1fr)); grid-template-rows: repeat(8, var(--h)); background:
+  linear-gradient(to right, var(--color-rule) 1px, transparent 1px) 0 0 / 25% 100%,
+  linear-gradient(to right, var(--color-paper-3) 1px, transparent 1px) 0 0 / 6.25% 100%,
+  linear-gradient(to bottom, var(--color-paper-3) 1px, transparent 1px) 0 0 / 100% var(--h),
+  linear-gradient(var(--color-paper-3) 0 0) 0 0 / 100% var(--h) no-repeat; }
+.d01 .n { grid-row: calc(var(--r) + 1); grid-column: var(--c) / span var(--l); margin: var(--space-3xs); padding: 0; border: 0; border-radius: 2px; background: var(--color-ink); color: var(--color-accent-ink); font-family: var(--font-outlier); font-size: var(--text-xs); line-height: 1; transition: background-color var(--dur-micro) var(--ease-out); }
+.d01 .n:hover { background: var(--color-muted); }
+.d01 .foot { display: grid; grid-template-columns: repeat(3, auto) 1fr; align-items: end; gap: var(--space-md) var(--space-lg); padding: var(--space-md) var(--space-lg); background: var(--color-paper-2); border-top: var(--rule-w) solid var(--color-ink); }
+.d01 .foot p { margin-bottom: var(--space-2xs); color: var(--color-muted); font-size: var(--text-sm); }
+.d01 .seg { display: inline-flex; border: var(--rule-w) solid var(--color-ink); border-radius: 2px; }
+.d01 .seg button { block-size: 2rem; padding: 0 var(--space-sm); border: 0; border-left: var(--rule-w) solid var(--color-rule); background: var(--color-paper); font-size: var(--text-sm); transition: background-color var(--dur-micro) var(--ease-out); }
+.d01 .seg button:first-child { border-left: 0; }
+.d01 .seg button:hover { background: var(--color-paper-3); }
+.d01 .seg button[aria-pressed="true"] { background: var(--color-ink); color: var(--color-accent-ink); }
+.d01 .tg { block-size: 2rem; padding: 0 var(--space-sm); border: var(--rule-w) solid var(--color-ink); border-radius: 2px; background: var(--color-paper); font-size: var(--text-sm); }
+.d01 .tg:hover { background: var(--color-paper-3); }
+.d01 .tg[aria-pressed="true"] { background: var(--color-ink); color: var(--color-accent-ink); }
+.d01 .env { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--space-md) var(--space-lg); padding-top: var(--space-md); border-top: var(--rule-w) solid var(--color-rule); }
+.d01 .env label { display: grid; grid-template-columns: 1fr auto; gap: var(--space-2xs) var(--space-sm); font-size: var(--text-sm); color: var(--color-muted); }
+.d01 .env input { grid-column: 1 / -1; inline-size: 100%; }
+.d01 .env output { color: var(--color-ink); }
+@container (max-width: 44rem) { .d01 .foot { grid-template-columns: 1fr; } .d01 .env { grid-template-columns: repeat(2, minmax(0, 1fr)); } .d01 .top, .d01 .pats, .d01 .foot { padding-inline: var(--space-md); } .d01 .ed { padding-inline: var(--space-md); } }
+
+/* ===== 02 Folder tabs ===== */
+.d02 { --h: 1.5rem; }
+.d02 .shelf { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: var(--space-sm); padding: var(--space-md) var(--space-lg) 0; background: var(--color-paper-3); }
+.d02 .tabs { display: flex; gap: var(--space-2xs); }
+.d02 .tabs button { padding: var(--space-sm) var(--space-lg); border: var(--rule-w) solid var(--color-rule); border-bottom: 0; border-radius: 2px 2px 0 0; background: var(--color-paper); color: var(--color-muted); font-weight: 500; transition: background-color var(--dur-micro) var(--ease-out); }
+.d02 .tabs button:hover { background: var(--color-paper-2); color: var(--color-ink); }
+.d02 .tabs button[aria-selected="true"] { margin-bottom: -1px; padding-block: var(--space-md) var(--space-sm); border-color: var(--color-ink); background: var(--color-paper-2); color: var(--color-ink); font-weight: 600; }
+.d02 .acts { display: flex; gap: var(--space-xs); padding-bottom: var(--space-xs); }
+.d02 .acts button { block-size: 2.25rem; padding: 0 var(--space-md); border: var(--rule-w) solid var(--color-rule); border-radius: 2px; background: var(--color-paper-2); font-weight: 500; transition: border-color var(--dur-micro) var(--ease-out); }
+.d02 .acts button:hover { border-color: var(--color-ink); }
+.d02 .acts .go { display: inline-flex; align-items: center; gap: var(--space-xs); border-color: var(--color-ink); background: var(--color-ink); color: var(--color-accent-ink); font-weight: 600; }
+.d02 .acts .go i { inline-size: 0; block-size: 0; border: 0.38rem solid transparent; border-left: 0.62rem solid currentColor; border-right: 0; }
+.d02 .sheet { background: var(--color-paper-2); border-top: var(--rule-w) solid var(--color-ink); }
+.d02 .parts { display: flex; gap: var(--space-lg); padding: 0 var(--space-lg); border-bottom: var(--rule-w) solid var(--color-rule); }
+.d02 .parts button { padding: var(--space-sm) 0 var(--space-xs); border: 0; border-bottom: 2px solid transparent; background: transparent; color: var(--color-muted); font-weight: 500; }
+.d02 .parts button:hover { color: var(--color-ink); }
+.d02 .parts button[aria-selected="true"] { border-bottom-color: var(--color-ink); color: var(--color-ink); font-weight: 600; }
+.d02 .pbar { display: flex; flex-wrap: wrap; gap: var(--space-2xs); align-items: center; padding: var(--space-sm) var(--space-lg); }
+.d02 .pbar button { inline-size: 1.9rem; block-size: 1.9rem; padding: 0; border: var(--rule-w) solid var(--color-rule); border-radius: 50%; background: transparent; color: var(--color-muted); font-family: var(--font-outlier); font-size: var(--text-xs); transition: background-color var(--dur-micro) var(--ease-out); }
+.d02 .pbar button.has { border-color: var(--color-ink); color: var(--color-ink); }
+.d02 .pbar button:hover { background: var(--color-paper-3); }
+.d02 .pbar button[aria-pressed="true"] { background: var(--color-ink); border-color: var(--color-ink); color: var(--color-accent-ink); }
+.d02 .pbar .more { inline-size: auto; margin-left: var(--space-sm); padding: 0 var(--space-sm); border-radius: 2px; border-color: var(--color-rule); color: var(--color-ink); font-family: var(--font-body); font-size: var(--text-sm); }
+.d02 .tools { display: flex; flex-wrap: wrap; gap: var(--space-sm) var(--space-lg); padding: 0 var(--space-lg) var(--space-md); }
+.d02 .tools div { display: flex; align-items: center; gap: var(--space-xs); }
+.d02 .tools p { color: var(--color-muted); font-size: var(--text-sm); }
+.d02 .tools .g { display: inline-flex; border-bottom: var(--rule-w) solid var(--color-rule); }
+.d02 .tools .g button { block-size: 2rem; padding: 0 var(--space-sm); border: 0; border-bottom: 2px solid transparent; background: transparent; font-size: var(--text-sm); transition: background-color var(--dur-micro) var(--ease-out); }
+.d02 .tools .g button:hover { background: var(--color-paper-3); }
+.d02 .tools .g button[aria-pressed="true"] { border-bottom-color: var(--color-ink); font-weight: 600; }
+.d02 .tools .tg { block-size: 2rem; padding: 0 var(--space-sm); border: var(--rule-w) solid var(--color-rule); border-radius: 2px; background: transparent; font-size: var(--text-sm); }
+.d02 .tools .tg:hover { border-color: var(--color-ink); }
+.d02 .tools .tg[aria-pressed="true"] { background: var(--color-ink); border-color: var(--color-ink); color: var(--color-accent-ink); }
+.d02 .scroll { overflow-x: auto; border-top: var(--rule-w) solid var(--color-rule); }
+.d02 .ed { min-inline-size: 36rem; padding: var(--space-md) var(--space-lg) var(--space-lg); background: var(--color-paper-3); }
+.d02 .beats { display: grid; grid-template-columns: repeat(4, 1fr); margin-left: 6.5rem; }
+.d02 .beats li { padding: 0 0 var(--space-2xs) var(--space-xs); font-family: var(--font-outlier); font-size: var(--text-xs); color: var(--color-muted); }
+.d02 .str { display: grid; grid-template-columns: 3.5rem 3rem minmax(0, 1fr); margin-top: var(--space-xs); background: var(--color-paper); border: var(--rule-w) solid var(--color-rule); }
+.d02 .nm { display: flex; align-items: flex-start; padding: var(--space-xs) var(--space-sm); font-family: var(--font-outlier); font-size: var(--text-md); }
+.d02 .fr { display: grid; grid-auto-rows: var(--h); font-family: var(--font-outlier); font-size: var(--text-xs); color: var(--color-muted); }
+.d02 .fr li { display: flex; align-items: center; }
+.d02 .fr li:first-child { color: var(--color-ink); }
+.d02 .cells { display: grid; grid-template-columns: repeat(16, minmax(0, 1fr)); grid-template-rows: repeat(8, var(--h)); border-left: var(--rule-w) solid var(--color-rule); background:
+  linear-gradient(to right, var(--color-rule) 1px, transparent 1px) 0 0 / 25% 100%,
+  linear-gradient(to right, var(--color-paper-3) 1px, transparent 1px) 0 0 / 6.25% 100%,
+  linear-gradient(var(--color-paper-3) 0 0) 0 0 / 100% var(--h) no-repeat; }
+.d02 .n { grid-row: calc(var(--r) + 1); grid-column: var(--c) / span var(--l); margin: var(--space-3xs); padding: 0; border: 0; border-radius: 2px; background: var(--color-ink); color: var(--color-accent-ink); font-family: var(--font-outlier); font-size: var(--text-xs); line-height: 1; transition: background-color var(--dur-micro) var(--ease-out); }
+.d02 .n:hover { background: var(--color-muted); }
+@container (max-width: 44rem) { .d02 .shelf, .d02 .parts, .d02 .pbar, .d02 .tools { padding-inline: var(--space-md); } .d02 .tabs button { padding-inline: var(--space-sm); } .d02 .ed { padding-inline: var(--space-md); } }
+
+/* ===== 03 Left rail ===== */
+.d03 { --h: 1.25rem; }
+.d03 .machine { display: grid; grid-template-columns: 14rem minmax(0, 1fr); }
+.d03 .rail { display: grid; align-content: start; gap: var(--space-lg); padding: var(--space-lg) var(--space-md); background: var(--color-paper-2); border-right: var(--rule-w) solid var(--color-ink); }
+.d03 .rail p { margin-bottom: var(--space-xs); color: var(--color-muted); font-size: var(--text-sm); }
+.d03 .stack { display: grid; gap: var(--space-2xs); }
+.d03 .stack button { display: block; inline-size: 100%; padding: var(--space-xs) var(--space-sm); border: var(--rule-w) solid var(--color-rule); border-radius: 2px; background: transparent; text-align: left; font-size: var(--text-sm); transition: background-color var(--dur-micro) var(--ease-out); }
+.d03 .stack button:hover { background: var(--color-paper-3); }
+.d03 .stack button[aria-pressed="true"] { background: var(--color-ink); border-color: var(--color-ink); color: var(--color-accent-ink); }
+.d03 .row3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-2xs); }
+.d03 .row4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--space-2xs); }
+.d03 .row3 button, .d03 .row4 button { padding: var(--space-xs) 0; border: var(--rule-w) solid var(--color-rule); border-radius: 2px; background: transparent; font-size: var(--text-sm); transition: background-color var(--dur-micro) var(--ease-out); }
+.d03 .row3 button:hover, .d03 .row4 button:hover { background: var(--color-paper-3); }
+.d03 .row3 button[aria-pressed="true"], .d03 .row4 button[aria-pressed="true"] { background: var(--color-ink); border-color: var(--color-ink); color: var(--color-accent-ink); }
+.d03 .nums { display: grid; grid-template-columns: repeat(5, 1fr); gap: var(--space-2xs); }
+.d03 .nums button { aspect-ratio: 1; padding: 0; border: var(--rule-w) solid var(--color-rule); border-radius: 2px; background: transparent; color: var(--color-muted); font-family: var(--font-outlier); font-size: var(--text-xs); transition: background-color var(--dur-micro) var(--ease-out); }
+.d03 .nums button.has { border-color: var(--color-ink); color: var(--color-ink); }
+.d03 .nums button:hover { background: var(--color-paper-3); }
+.d03 .nums button[aria-pressed="true"] { background: var(--color-ink); border-color: var(--color-ink); color: var(--color-accent-ink); }
+.d03 .rail .wide { display: block; inline-size: 100%; margin-top: var(--space-xs); padding: var(--space-xs); border: var(--rule-w) solid var(--color-ink); border-radius: 2px; background: transparent; font-size: var(--text-sm); }
+.d03 .rail .wide:hover { background: var(--color-paper-3); }
+.d03 .rail .wide[aria-pressed="true"] { background: var(--color-ink); color: var(--color-accent-ink); }
+.d03 .main { display: grid; grid-template-rows: auto minmax(0, 1fr) auto; min-inline-size: 0; }
+.d03 .bar { display: flex; justify-content: space-between; align-items: center; gap: var(--space-sm); padding: var(--space-sm) var(--space-lg); border-bottom: var(--rule-w) solid var(--color-rule); }
+.d03 .bar h3 { font-size: var(--text-xl); line-height: 1.2; }
+.d03 .bar div { display: flex; gap: var(--space-xs); }
+.d03 .bar button { block-size: 2.25rem; padding: 0 var(--space-md); border: var(--rule-w) solid var(--color-ink); border-radius: 2px; background: var(--color-paper-2); font-weight: 500; transition: background-color var(--dur-micro) var(--ease-out); }
+.d03 .bar button:hover { background: var(--color-paper-3); }
+.d03 .bar .go { display: inline-flex; align-items: center; gap: var(--space-xs); background: var(--color-ink); color: var(--color-accent-ink); font-weight: 600; }
+.d03 .bar .go:hover { background: var(--color-muted); }
+.d03 .bar .go i { inline-size: 0; block-size: 0; border: 0.38rem solid transparent; border-left: 0.62rem solid currentColor; border-right: 0; }
+.d03 .scroll { overflow-x: auto; }
+.d03 .ed { min-inline-size: 34rem; padding: var(--space-md) var(--space-lg); }
+.d03 .beats { display: grid; grid-template-columns: repeat(4, 1fr); margin-left: 3rem; }
+.d03 .beats li { padding: 0 0 var(--space-2xs) var(--space-xs); border-left: var(--rule-w) solid var(--color-rule); font-family: var(--font-outlier); font-size: var(--text-xs); color: var(--color-muted); }
+.d03 .str { display: grid; grid-template-columns: 3rem minmax(0, 1fr); }
+.d03 .str:nth-of-type(odd) { background: var(--color-paper-3); }
+.d03 .lab { display: grid; grid-auto-rows: var(--h); padding-left: var(--space-xs); font-family: var(--font-outlier); font-size: var(--text-xs); color: var(--color-muted); }
+.d03 .lab li { display: flex; align-items: center; }
+.d03 .lab li:first-child { color: var(--color-ink); font-size: var(--text-sm); }
+.d03 .cells { display: grid; grid-template-columns: repeat(16, minmax(0, 1fr)); grid-template-rows: repeat(8, var(--h)); background:
+  linear-gradient(to right, var(--color-rule) 1px, transparent 1px) 0 0 / 25% 100%,
+  linear-gradient(to bottom, var(--color-ink) 1px, transparent 1px) 0 0 / 100% calc(var(--h) * 8) no-repeat; }
+.d03 .n { grid-row: calc(var(--r) + 1); grid-column: var(--c) / span var(--l); margin: var(--space-3xs); padding: 0; border: 0; border-radius: 2px; background: var(--color-ink); color: var(--color-accent-ink); font-family: var(--font-outlier); font-size: var(--text-xs); line-height: 1; transition: background-color var(--dur-micro) var(--ease-out); }
+.d03 .n:hover { background: var(--color-muted); }
+.d03 .env { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--space-lg); padding: var(--space-md) var(--space-lg); background: var(--color-paper-2); border-top: var(--rule-w) solid var(--color-rule); }
+.d03 .env label { display: grid; grid-template-columns: 1fr auto; gap: var(--space-2xs); font-size: var(--text-sm); color: var(--color-muted); }
+.d03 .env input { grid-column: 1 / -1; inline-size: 100%; }
+.d03 .env output { color: var(--color-ink); }
+@container (max-width: 46rem) { .d03 .machine { grid-template-columns: minmax(0, 1fr); } .d03 .rail { grid-template-columns: repeat(2, minmax(0, 1fr)); border-right: 0; border-bottom: var(--rule-w) solid var(--color-ink); } .d03 .env { grid-template-columns: repeat(2, minmax(0, 1fr)); } .d03 .bar, .d03 .ed, .d03 .env { padding-inline: var(--space-md); } }
+
+/* ===== 04 Paint palette ===== */
+.d04 { --h: 1.2rem; }
+.d04 .paint { display: grid; grid-template-columns: 9.5rem minmax(0, 1fr) 11rem; grid-template-areas: "head head head" "pats pats pats" "pal ed fad" "foot foot foot"; }
+.d04 .head { grid-area: head; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--space-sm); padding: var(--space-sm) var(--space-lg); background: var(--color-paper-2); border-bottom: var(--rule-w) solid var(--color-rule); }
+.d04 .who { display: inline-flex; gap: var(--space-2xs); }
+.d04 .who button { block-size: 2.25rem; padding: 0 var(--space-md); border: var(--rule-w) solid var(--color-rule); border-radius: 2px; background: transparent; font-weight: 500; transition: background-color var(--dur-micro) var(--ease-out); }
+.d04 .who button:hover { background: var(--color-paper-3); }
+.d04 .who button[aria-pressed="true"] { background: var(--color-ink); border-color: var(--color-ink); color: var(--color-accent-ink); }
+.d04 .acts { display: flex; gap: var(--space-xs); }
+.d04 .acts button { block-size: 2.25rem; padding: 0 var(--space-md); border: var(--rule-w) solid var(--color-ink); border-radius: 2px; background: var(--color-paper); font-weight: 500; transition: background-color var(--dur-micro) var(--ease-out); }
+.d04 .acts button:hover { background: var(--color-paper-3); }
+.d04 .acts .go { display: inline-flex; align-items: center; gap: var(--space-xs); background: var(--color-ink); color: var(--color-accent-ink); font-weight: 600; }
+.d04 .acts .go:hover { background: var(--color-muted); }
+.d04 .acts .go i { inline-size: 0; block-size: 0; border: 0.38rem solid transparent; border-left: 0.62rem solid currentColor; border-right: 0; }
+.d04 .pats { grid-area: pats; display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2xs); padding: var(--space-sm) var(--space-lg); border-bottom: var(--rule-w) solid var(--color-rule); }
+.d04 .pats button { inline-size: 2rem; block-size: 2rem; padding: 0; border: var(--rule-w) solid var(--color-rule); border-radius: 2px; background: transparent; color: var(--color-muted); font-family: var(--font-outlier); font-size: var(--text-xs); transition: background-color var(--dur-micro) var(--ease-out); }
+.d04 .pats button.has { border-color: var(--color-ink); color: var(--color-ink); }
+.d04 .pats button:hover { background: var(--color-paper-3); }
+.d04 .pats button[aria-pressed="true"] { background: var(--color-ink); border-color: var(--color-ink); color: var(--color-accent-ink); }
+.d04 .pats .cp { inline-size: auto; margin-left: var(--space-sm); padding: 0 var(--space-sm); border-color: var(--color-ink); color: var(--color-ink); font-family: var(--font-body); font-size: var(--text-sm); }
+.d04 .pal { grid-area: pal; display: grid; align-content: start; gap: var(--space-2xs); padding: var(--space-md) var(--space-sm); background: var(--color-paper-2); border-right: var(--rule-w) solid var(--color-ink); }
+.d04 .pal p { padding: 0 var(--space-xs) var(--space-2xs); color: var(--color-muted); font-size: var(--text-sm); }
+.d04 .pal button { display: grid; gap: var(--space-2xs); padding: var(--space-xs); border: var(--rule-w) solid transparent; border-radius: 2px; background: transparent; text-align: left; font-size: var(--text-sm); transition: background-color var(--dur-micro) var(--ease-out); }
+.d04 .pal button:hover { background: var(--color-paper-3); }
+.d04 .pal button[aria-pressed="true"] { background: var(--color-ink); color: var(--color-accent-ink); }
+.d04 .pal i { display: block; inline-size: calc(var(--w) * 1%); min-inline-size: 3px; block-size: 6px; background: currentColor; }
+.d04 .ed { grid-area: ed; min-inline-size: 0; overflow-x: auto; padding: var(--space-md) var(--space-md) var(--space-md) var(--space-lg); }
+.d04 .ed > div { min-inline-size: 30rem; }
+.d04 .beats { display: grid; grid-template-columns: repeat(4, 1fr); margin-left: 2.25rem; }
+.d04 .beats li { padding: 0 0 var(--space-2xs) var(--space-xs); border-left: var(--rule-w) solid var(--color-rule); font-family: var(--font-outlier); font-size: var(--text-xs); color: var(--color-muted); }
+.d04 .str { display: grid; grid-template-columns: 2.25rem minmax(0, 1fr); margin-bottom: var(--space-xs); }
+.d04 .str > b { padding-top: var(--space-3xs); font-family: var(--font-outlier); font-weight: 400; font-size: var(--text-sm); }
+.d04 .cells { display: grid; grid-template-columns: repeat(16, minmax(0, 1fr)); grid-template-rows: repeat(8, var(--h)); border-top: 2px solid var(--color-ink); background:
+  linear-gradient(to right, var(--color-rule) 1px, transparent 1px) 0 0 / 25% 100%,
+  linear-gradient(to bottom, var(--color-paper-3) 1px, transparent 1px) 0 0 / 100% var(--h); }
+.d04 .n { grid-row: calc(var(--r) + 1); grid-column: var(--c) / span var(--l); margin: var(--space-3xs); padding: 0; border: 0; border-radius: 2px; background: var(--color-ink); color: var(--color-accent-ink); font-family: var(--font-outlier); font-size: var(--text-xs); line-height: 1; transition: background-color var(--dur-micro) var(--ease-out); }
+.d04 .n:hover { background: var(--color-muted); }
+.d04 .fad { grid-area: fad; display: grid; grid-template-columns: repeat(4, 1fr); align-content: start; justify-items: center; gap: var(--space-xs) 0; padding: var(--space-md) var(--space-xs); background: var(--color-paper-2); border-left: var(--rule-w) solid var(--color-ink); }
+.d04 .fad label { display: grid; justify-items: center; gap: var(--space-xs); font-size: var(--text-xs); color: var(--color-muted); }
+.d04 .fad output { order: -1; color: var(--color-ink); font-size: var(--text-sm); }
+.d04 .fad input { writing-mode: vertical-lr; direction: rtl; inline-size: 1.5rem; block-size: 11rem; margin: 0; }
+.d04 .foot { grid-area: foot; display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-sm) var(--space-lg); padding: var(--space-sm) var(--space-lg); border-top: var(--rule-w) solid var(--color-ink); background: var(--color-paper-2); }
+.d04 .foot div { display: flex; align-items: center; gap: var(--space-xs); }
+.d04 .foot p { color: var(--color-muted); font-size: var(--text-sm); }
+.d04 .foot .seg { display: inline-flex; gap: var(--space-2xs); }
+.d04 .foot button { block-size: 2rem; padding: 0 var(--space-sm); border: var(--rule-w) solid var(--color-rule); border-radius: 2px; background: transparent; font-size: var(--text-sm); transition: background-color var(--dur-micro) var(--ease-out); }
+.d04 .foot button:hover { background: var(--color-paper-3); }
+.d04 .foot button[aria-pressed="true"] { background: var(--color-ink); border-color: var(--color-ink); color: var(--color-accent-ink); }
+@container (max-width: 48rem) { .d04 .paint { grid-template-columns: minmax(0, 1fr); grid-template-areas: "head" "pats" "pal" "ed" "fad" "foot"; } .d04 .pal { grid-template-columns: repeat(3, minmax(0, 1fr)); border-right: 0; border-bottom: var(--rule-w) solid var(--color-ink); } .d04 .pal p { grid-column: 1 / -1; } .d04 .fad { grid-template-columns: repeat(4, 5rem); justify-content: center; border-left: 0; border-top: var(--rule-w) solid var(--color-ink); } .d04 .head, .d04 .pats, .d04 .foot { padding-inline: var(--space-md); } }
+
+/* ===== 05 Sentence bar ===== */
+.d05 { --h: 1.15rem; }
+.d05 .say { display: grid; gap: var(--space-md); padding: var(--space-lg); background: var(--color-paper-2); border-bottom: var(--rule-w) solid var(--color-ink); }
+.d05 .line { font-family: var(--font-display); font-weight: 700; font-size: var(--text-2xl); line-height: 2.1; text-wrap: pretty; }
+.d05 .line select { appearance: none; padding: 0 var(--space-lg) 0 var(--space-2xs); border: 0; border-bottom: 2px solid var(--color-ink); border-radius: 0; background: transparent linear-gradient(45deg, transparent 50%, var(--color-ink) 50%) calc(100% - 0.8rem) 55% / 0.45rem 0.45rem no-repeat; font-family: var(--font-body); font-weight: 600; font-size: var(--text-xl); cursor: pointer; transition: background-color var(--dur-micro) var(--ease-out); }
+.d05 .line select:hover { background-color: var(--color-paper-3); }
+.d05 .more { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-sm) var(--space-lg); }
+.d05 .more label { display: inline-flex; align-items: center; gap: var(--space-xs); font-size: var(--text-sm); }
+.d05 .more input[type="checkbox"] { inline-size: 1.1rem; block-size: 1.1rem; accent-color: var(--color-ink); }
+.d05 .more button { block-size: 2.25rem; padding: 0 var(--space-md); border: var(--rule-w) solid var(--color-rule); border-radius: 2px; background: transparent; font-weight: 500; transition: border-color var(--dur-micro) var(--ease-out); }
+.d05 .more button:hover { border-color: var(--color-ink); }
+.d05 .more .push { margin-left: auto; }
+.d05 .more .go { display: inline-flex; align-items: center; gap: var(--space-xs); border-color: var(--color-ink); background: var(--color-ink); color: var(--color-accent-ink); font-weight: 600; }
+.d05 .more .go:hover { background: var(--color-muted); }
+.d05 .more .go i { inline-size: 0; block-size: 0; border: 0.38rem solid transparent; border-left: 0.62rem solid currentColor; border-right: 0; }
+.d05 .scroll { overflow-x: auto; }
+.d05 .ed { min-inline-size: 34rem; padding: var(--space-md) var(--space-lg) var(--space-lg); }
+.d05 .beats { display: grid; grid-template-columns: repeat(4, 1fr); }
+.d05 .beats li { padding: 0 0 var(--space-2xs) var(--space-xs); border-left: var(--rule-w) solid var(--color-rule); font-family: var(--font-outlier); font-size: var(--text-xs); color: var(--color-muted); }
+.d05 .s { margin-top: var(--space-xs); }
+.d05 .cap { display: flex; align-items: baseline; gap: var(--space-xs); padding-bottom: var(--space-3xs); font-size: var(--text-sm); color: var(--color-muted); }
+.d05 .cap b { font-family: var(--font-outlier); font-weight: 400; font-size: var(--text-md); color: var(--color-ink); }
+.d05 .cells { display: grid; grid-template-columns: repeat(16, minmax(0, 1fr)); grid-template-rows: repeat(8, var(--h)); border-block: var(--rule-w) solid var(--color-ink); background:
+  linear-gradient(to right, var(--color-rule) 1px, transparent 1px) 0 0 / 25% 100%,
+  linear-gradient(to right, var(--color-paper-3) 1px, transparent 1px) 0 0 / 6.25% 100%,
+  linear-gradient(var(--color-paper-3) 0 0) 0 0 / 100% var(--h) no-repeat; }
+.d05 .n { grid-row: calc(var(--r) + 1); grid-column: var(--c) / span var(--l); margin: var(--space-3xs); padding: 0; border: 0; border-radius: 2px; background: var(--color-ink); color: var(--color-accent-ink); font-family: var(--font-outlier); font-size: var(--text-xs); line-height: 1; transition: background-color var(--dur-micro) var(--ease-out); }
+.d05 .n:hover { background: var(--color-muted); }
+.d05 .snd { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--space-lg); padding: var(--space-md) var(--space-lg); background: var(--color-paper-2); border-top: var(--rule-w) solid var(--color-rule); }
+.d05 .snd label { display: grid; grid-template-columns: auto minmax(0, 1fr) 2ch; align-items: center; gap: var(--space-xs); font-size: var(--text-sm); color: var(--color-muted); }
+.d05 .snd output { color: var(--color-ink); text-align: right; }
+@container (max-width: 44rem) { .d05 .snd { grid-template-columns: repeat(2, minmax(0, 1fr)); } .d05 .say, .d05 .ed, .d05 .snd { padding-inline: var(--space-md); } .d05 .line { font-size: var(--text-xl); } }
+
+/* ===== 06 Title switcher ===== */
+.d06 { --h: 1.5rem; }
+.d06 .page { display: grid; gap: var(--space-xl); padding: var(--space-xl) var(--space-xl) var(--space-xl); background: var(--color-paper-2); }
+.d06 .mast { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: var(--space-md); }
+.d06 .titles { display: flex; flex-wrap: wrap; align-items: baseline; gap: var(--space-xs) var(--space-lg); }
+.d06 .titles button { padding: 0 0 var(--space-2xs); border: 0; border-bottom: 3px solid transparent; background: transparent; color: var(--color-muted); font-size: var(--text-2xl); font-weight: 500; line-height: 1.2; transition: color var(--dur-micro) var(--ease-out); }
+.d06 .titles button:hover { color: var(--color-ink); }
+.d06 .titles button[aria-current="true"] { border-bottom-color: var(--color-ink); color: var(--color-ink); font-size: var(--text-3xl); font-weight: 600; }
+.d06 .acts { display: flex; gap: var(--space-xs); }
+.d06 .acts button { block-size: 2.5rem; padding: 0 var(--space-lg); border: var(--rule-w) solid var(--color-rule); border-radius: 2px; background: transparent; font-weight: 500; transition: border-color var(--dur-micro) var(--ease-out); }
+.d06 .acts button:hover { border-color: var(--color-ink); }
+.d06 .acts .go { display: inline-flex; align-items: center; gap: var(--space-xs); border-color: var(--color-ink); background: var(--color-ink); color: var(--color-accent-ink); font-weight: 600; }
+.d06 .acts .go:hover { background: var(--color-muted); }
+.d06 .acts .go i { inline-size: 0; block-size: 0; border: 0.4rem solid transparent; border-left: 0.65rem solid currentColor; border-right: 0; }
+.d06 .pn { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2xs); }
+.d06 .pn button { inline-size: 2.5rem; block-size: 2.5rem; padding: 0; border: var(--rule-w) solid transparent; border-radius: 50%; background: transparent; color: var(--color-muted); font-family: var(--font-outlier); font-size: var(--text-md); transition: background-color var(--dur-micro) var(--ease-out); }
+.d06 .pn button.has { color: var(--color-ink); }
+.d06 .pn button:hover { background: var(--color-paper-3); }
+.d06 .pn button[aria-pressed="true"] { background: var(--color-ink); color: var(--color-accent-ink); }
+.d06 .pn .cp { inline-size: auto; margin-left: var(--space-md); padding: 0 var(--space-xs); border-radius: 0; border-bottom: var(--rule-w) solid var(--color-ink); color: var(--color-ink); font-family: var(--font-body); font-size: var(--text-sm); }
+.d06 .scroll { overflow-x: auto; }
+.d06 .ed { min-inline-size: 34rem; }
+.d06 .beats { display: grid; grid-template-columns: repeat(4, 1fr); margin-left: 3rem; }
+.d06 .beats li { padding: 0 0 var(--space-2xs) var(--space-xs); border-left: var(--rule-w) solid var(--color-rule); font-family: var(--font-outlier); font-size: var(--text-xs); color: var(--color-muted); }
+.d06 .str { display: grid; grid-template-columns: 3rem minmax(0, 1fr); margin-bottom: var(--space-sm); }
+.d06 .str > b { font-family: var(--font-outlier); font-weight: 400; font-size: var(--text-md); padding-top: var(--space-3xs); }
+.d06 .cells { display: grid; grid-template-columns: repeat(16, minmax(0, 1fr)); grid-template-rows: repeat(8, var(--h)); background: var(--color-paper-3);
+  background-image: linear-gradient(to right, var(--color-rule) 1px, transparent 1px), linear-gradient(to bottom, var(--color-paper) 1px, transparent 1px);
+  background-size: 25% 100%, 100% var(--h); }
+.d06 .n { grid-row: calc(var(--r) + 1); grid-column: var(--c) / span var(--l); margin: var(--space-3xs); padding: 0; border: 0; border-radius: 2px; background: var(--color-ink); color: var(--color-accent-ink); font-family: var(--font-outlier); font-size: var(--text-sm); line-height: 1; transition: background-color var(--dur-micro) var(--ease-out); }
+.d06 .n:hover { background: var(--color-muted); }
+.d06 .quiet { display: grid; grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr)); gap: var(--space-lg) var(--space-xl); }
+.d06 .quiet p { margin-bottom: var(--space-xs); color: var(--color-muted); font-size: var(--text-sm); }
+.d06 .opts { display: flex; flex-wrap: wrap; gap: var(--space-2xs) var(--space-md); }
+.d06 .opts button { padding: var(--space-3xs) 0; border: 0; border-bottom: 2px solid transparent; background: transparent; transition: border-color var(--dur-micro) var(--ease-out); }
+.d06 .opts button:hover { border-bottom-color: var(--color-rule); }
+.d06 .opts button[aria-pressed="true"] { border-bottom-color: var(--color-ink); font-weight: 600; }
+.d06 .snd { display: grid; grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr)); gap: var(--space-lg); padding-top: var(--space-lg); border-top: var(--rule-w) solid var(--color-rule); }
+.d06 .snd label { display: grid; grid-template-columns: 1fr auto; gap: var(--space-xs); font-size: var(--text-sm); color: var(--color-muted); }
+.d06 .snd input { grid-column: 1 / -1; inline-size: 100%; }
+.d06 .snd output { color: var(--color-ink); }
+@container (max-width: 44rem) { .d06 .page { padding: var(--space-lg) var(--space-md); } .d06 .titles button[aria-current="true"] { font-size: var(--text-2xl); } .d06 .titles button { font-size: var(--text-lg); } }
+
+/* ===== 07 Right spine ===== */
+.d07 { --h: 1.1rem; }
+.d07 .bar { display: grid; gap: var(--space-sm); padding: var(--space-sm) var(--space-lg) var(--space-md); background: var(--color-paper-2); border-bottom: var(--rule-w) solid var(--color-ink); }
+.d07 .r1, .d07 .r2 { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--space-sm) var(--space-lg); }
+.d07 .who { display: inline-flex; border-bottom: var(--rule-w) solid var(--color-rule); }
+.d07 .who button { padding: var(--space-xs) var(--space-md); border: 0; border-bottom: 3px solid transparent; background: transparent; font-weight: 500; transition: background-color var(--dur-micro) var(--ease-out); }
+.d07 .who button:hover { background: var(--color-paper-3); }
+.d07 .who button[aria-pressed="true"] { border-bottom-color: var(--color-ink); font-weight: 600; }
+.d07 .acts { display: flex; gap: var(--space-xs); }
+.d07 .acts button { block-size: 2.25rem; padding: 0 var(--space-md); border: var(--rule-w) solid var(--color-ink); border-radius: 2px; background: var(--color-paper); font-weight: 500; transition: background-color var(--dur-micro) var(--ease-out); }
+.d07 .acts button:hover { background: var(--color-paper-3); }
+.d07 .acts .go { display: inline-flex; align-items: center; gap: var(--space-xs); background: var(--color-ink); color: var(--color-accent-ink); font-weight: 600; }
+.d07 .acts .go:hover { background: var(--color-muted); }
+.d07 .acts .go i { inline-size: 0; block-size: 0; border: 0.38rem solid transparent; border-left: 0.62rem solid currentColor; border-right: 0; }
+.d07 .r2 > div { display: flex; align-items: center; gap: var(--space-xs); }
+.d07 .r2 p { color: var(--color-muted); font-size: var(--text-sm); }
+.d07 .pill { display: inline-flex; border: var(--rule-w) solid var(--color-rule); border-radius: 2px; }
+.d07 .pill button { block-size: 2rem; padding: 0 var(--space-sm); border: 0; border-left: var(--rule-w) solid var(--color-rule); background: transparent; font-size: var(--text-sm); transition: background-color var(--dur-micro) var(--ease-out); }
+.d07 .pill button:first-child { border-left: 0; }
+.d07 .pill button:hover { background: var(--color-paper-3); }
+.d07 .pill button[aria-pressed="true"] { background: var(--color-ink); color: var(--color-accent-ink); }
+.d07 .tg { block-size: 2rem; padding: 0 var(--space-sm); border: var(--rule-w) solid var(--color-rule); border-radius: 2px; background: transparent; font-size: var(--text-sm); }
+.d07 .tg:hover { border-color: var(--color-ink); }
+.d07 .tg[aria-pressed="true"] { background: var(--color-ink); border-color: var(--color-ink); color: var(--color-accent-ink); }
+.d07 .body { display: grid; grid-template-columns: minmax(0, 1fr) 5.5rem; grid-template-areas: "ed spine" "env spine"; }
+.d07 .scroll { grid-area: ed; overflow-x: auto; }
+.d07 .ed { min-inline-size: 36rem; padding: var(--space-md) var(--space-md) var(--space-md) var(--space-lg); }
+.d07 .beats { display: grid; grid-template-columns: repeat(4, 1fr); margin-left: 3.25rem; }
+.d07 .beats li { padding: 0 0 var(--space-2xs) var(--space-xs); border-left: var(--rule-w) solid var(--color-rule); font-family: var(--font-outlier); font-size: var(--text-xs); color: var(--color-muted); }
+.d07 .str { display: grid; grid-template-columns: 3.25rem minmax(0, 1fr); border-top: 2px solid var(--color-ink); }
+.d07 .str:last-child { border-bottom: 2px solid var(--color-ink); }
+.d07 .lab { display: grid; grid-auto-rows: var(--h); text-align: right; padding-right: var(--space-xs); font-family: var(--font-outlier); font-size: var(--text-xs); color: var(--color-muted); }
+.d07 .lab li { display: flex; align-items: center; justify-content: flex-end; }
+.d07 .lab li:first-child { color: var(--color-ink); }
+.d07 .cells { display: grid; grid-template-columns: repeat(16, minmax(0, 1fr)); grid-template-rows: repeat(8, var(--h)); background:
+  linear-gradient(to right, var(--color-rule) 1px, transparent 1px) 0 0 / 25% 100%,
+  linear-gradient(to bottom, var(--color-paper-3) 1px, transparent 1px) 0 0 / 100% var(--h); }
+.d07 .n { grid-row: calc(var(--r) + 1); grid-column: var(--c) / span var(--l); margin: var(--space-3xs); padding: 0; border: 0; border-radius: 2px; background: var(--color-ink); color: var(--color-accent-ink); font-family: var(--font-outlier); font-size: var(--text-xs); line-height: 1; transition: background-color var(--dur-micro) var(--ease-out); }
+.d07 .n:hover { background: var(--color-muted); }
+.d07 .env { grid-area: env; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--space-lg); padding: var(--space-md) var(--space-lg); border-top: var(--rule-w) solid var(--color-rule); }
+.d07 .env label { display: grid; grid-template-columns: 1fr auto; gap: var(--space-2xs); font-size: var(--text-sm); color: var(--color-muted); }
+.d07 .env input { grid-column: 1 / -1; inline-size: 100%; }
+.d07 .env output { color: var(--color-ink); }
+.d07 .spine { grid-area: spine; display: grid; align-content: start; justify-items: center; gap: var(--space-2xs); padding: var(--space-md) var(--space-xs); background: var(--color-paper-2); border-left: var(--rule-w) solid var(--color-ink); }
+.d07 .spine p { margin-bottom: var(--space-2xs); color: var(--color-muted); font-size: var(--text-sm); }
+.d07 .spine button { inline-size: 2.75rem; block-size: 2rem; padding: 0; border: var(--rule-w) solid var(--color-rule); border-radius: 2px; background: transparent; color: var(--color-muted); font-family: var(--font-outlier); font-size: var(--text-sm); transition: background-color var(--dur-micro) var(--ease-out); }
+.d07 .spine button.has { border-color: var(--color-ink); color: var(--color-ink); }
+.d07 .spine button:hover { background: var(--color-paper-3); }
+.d07 .spine button[aria-pressed="true"] { background: var(--color-ink); border-color: var(--color-ink); color: var(--color-accent-ink); }
+.d07 .spine .cp { inline-size: 4.5rem; block-size: auto; margin-top: var(--space-xs); padding: var(--space-2xs); border-color: var(--color-ink); color: var(--color-ink); font-family: var(--font-body); font-size: var(--text-xs); line-height: 1.3; }
+@container (max-width: 46rem) { .d07 .body { grid-template-columns: minmax(0, 1fr); grid-template-areas: "spine" "ed" "env"; } .d07 .spine { grid-template-columns: repeat(10, 1fr); border-left: 0; border-bottom: var(--rule-w) solid var(--color-ink); } .d07 .spine p, .d07 .spine .cp { grid-column: 1 / -1; } .d07 .spine button:not(.cp) { inline-size: 100%; } .d07 .env { grid-template-columns: repeat(2, minmax(0, 1fr)); } .d07 .bar, .d07 .env { padding-inline: var(--space-md); } }
+
+/* ===== 08 Menu bar ===== */
+.d08 { --h: 1.25rem; }
+.d08 .bar { display: flex; flex-wrap: wrap; align-items: stretch; gap: var(--space-2xs); padding: var(--space-xs) var(--space-md); background: var(--color-paper-2); border-bottom: var(--rule-w) solid var(--color-ink); }
+.d08 .mw { position: relative; display: flex; }
+.d08 .m { display: grid; gap: var(--space-3xs); padding: var(--space-2xs) var(--space-md) var(--space-2xs) var(--space-sm); border: var(--rule-w) solid transparent; border-radius: 2px; background: transparent; text-align: left; line-height: 1.25; transition: background-color var(--dur-micro) var(--ease-out), border-color var(--dur-micro) var(--ease-out); }
+.d08 .m small { color: var(--color-muted); font-size: var(--text-xs); }
+.d08 .m b { display: inline-flex; align-items: center; gap: var(--space-xs); font-weight: 600; font-size: var(--text-md); }
+.d08 .m b::after { content: ""; inline-size: 0.4rem; block-size: 0.4rem; border-right: 2px solid currentColor; border-bottom: 2px solid currentColor; transform: translateY(-2px) rotate(45deg); }
+.d08 .m:hover { background: var(--color-paper-3); }
+.d08 .m[aria-expanded="true"] { border-color: var(--color-ink); background: var(--color-paper); }
+.d08 .m.plain b::after { display: none; }
+.d08 .m.plain[aria-pressed="true"] { background: var(--color-ink); color: var(--color-accent-ink); }
+.d08 .m.plain[aria-pressed="true"] small { color: inherit; }
+.d08 .gap { flex: 1 1 1rem; }
+.d08 .go, .d08 .undo { align-self: center; block-size: 2.25rem; padding: 0 var(--space-md); border: var(--rule-w) solid var(--color-ink); border-radius: 2px; background: var(--color-paper); font-weight: 500; transition: background-color var(--dur-micro) var(--ease-out); }
+.d08 .undo:hover { background: var(--color-paper-3); }
+.d08 .go { display: inline-flex; align-items: center; gap: var(--space-xs); margin-left: var(--space-2xs); background: var(--color-ink); color: var(--color-accent-ink); font-weight: 600; }
+.d08 .go:hover { background: var(--color-muted); }
+.d08 .go i { inline-size: 0; block-size: 0; border: 0.38rem solid transparent; border-left: 0.62rem solid currentColor; border-right: 0; }
+.d08 .pop { position: absolute; z-index: 2; inset-block-start: calc(100% + 2px); inset-inline-start: 0; inline-size: 19rem; display: grid; gap: var(--space-sm); padding: var(--space-md); border: 2px solid var(--color-ink); border-radius: 2px; background: var(--color-paper-2); }
+.d08 .pop .g { display: grid; grid-template-columns: repeat(5, 1fr); gap: var(--space-2xs); }
+.d08 .pop .g button { aspect-ratio: 1; padding: 0; border: var(--rule-w) solid var(--color-rule); border-radius: 2px; background: transparent; color: var(--color-muted); font-family: var(--font-outlier); font-size: var(--text-sm); transition: background-color var(--dur-micro) var(--ease-out); }
+.d08 .pop .g button.has { border-color: var(--color-ink); color: var(--color-ink); }
+.d08 .pop .g button:hover { background: var(--color-paper-3); }
+.d08 .pop .g button[aria-pressed="true"] { background: var(--color-ink); border-color: var(--color-ink); color: var(--color-accent-ink); }
+.d08 .pop .cp { padding: var(--space-xs); border: var(--rule-w) solid var(--color-ink); border-radius: 2px; background: transparent; font-size: var(--text-sm); }
+.d08 .pop .cp:hover { background: var(--color-paper-3); }
+.d08 .scroll { overflow-x: auto; }
+.d08 .ed { min-inline-size: 34rem; padding: var(--space-md) 0 var(--space-lg); }
+.d08 .beats { display: grid; grid-template-columns: repeat(4, 1fr); margin-left: 3.5rem; margin-right: var(--space-md); }
+.d08 .beats li { padding: 0 0 var(--space-2xs) var(--space-xs); font-family: var(--font-outlier); font-size: var(--text-xs); color: var(--color-muted); }
+.d08 .str { display: grid; grid-template-columns: 3.5rem minmax(0, 1fr) var(--space-md); border-top: var(--rule-w) solid var(--color-ink); }
+.d08 .str:last-child { border-bottom: var(--rule-w) solid var(--color-ink); }
+.d08 .str > b { padding: var(--space-3xs) 0 0 var(--space-md); font-family: var(--font-outlier); font-weight: 400; font-size: var(--text-sm); }
+.d08 .cells { display: grid; grid-template-columns: repeat(16, minmax(0, 1fr)); grid-template-rows: repeat(8, var(--h)); background:
+  linear-gradient(to right, var(--color-rule) 1px, transparent 1px) 0 0 / 25% 100%,
+  linear-gradient(to bottom, var(--color-paper-3) 1px, transparent 1px) 0 0 / 100% var(--h); }
+.d08 .n { grid-row: calc(var(--r) + 1); grid-column: var(--c) / span var(--l); margin: var(--space-3xs); padding: 0; border: 0; border-radius: 2px; background: var(--color-ink); color: var(--color-accent-ink); font-family: var(--font-outlier); font-size: var(--text-xs); line-height: 1; transition: background-color var(--dur-micro) var(--ease-out); }
+.d08 .n:hover { background: var(--color-muted); }
+@container (max-width: 44rem) { .d08 .bar { padding-inline: var(--space-sm); } .d08 .gap { display: none; } .d08 .pop { inline-size: min(19rem, calc(100cqi - 2rem)); } }
+
+/* ===== 09 Bottom dock ===== */
+.d09 { --h: 1.2rem; }
+.d09 .top { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-sm) var(--space-md); padding: var(--space-sm) var(--space-lg); background: var(--color-paper-2); border-bottom: var(--rule-w) solid var(--color-rule); }
+.d09 .top button { block-size: 2.5rem; padding: 0 var(--space-lg); border: var(--rule-w) solid var(--color-ink); border-radius: 2px; background: var(--color-paper); font-weight: 500; transition: background-color var(--dur-micro) var(--ease-out); }
+.d09 .top button:hover { background: var(--color-paper-3); }
+.d09 .top .go { display: inline-flex; align-items: center; gap: var(--space-xs); background: var(--color-ink); color: var(--color-accent-ink); font-weight: 600; }
+.d09 .top .go:hover { background: var(--color-muted); }
+.d09 .top .go i { inline-size: 0; block-size: 0; border: 0.4rem solid transparent; border-left: 0.65rem solid currentColor; border-right: 0; }
+.d09 .who { display: inline-flex; margin-left: auto; gap: var(--space-2xs); }
+.d09 .who button { block-size: 2.25rem; padding: 0 var(--space-md); border: var(--rule-w) solid var(--color-rule); background: transparent; }
+.d09 .who button[aria-pressed="true"] { border-color: var(--color-ink); background: var(--color-ink); color: var(--color-accent-ink); }
+.d09 .who button[aria-pressed="true"]:hover { background: var(--color-muted); }
+.d09 .scroll { overflow-x: auto; background: var(--color-paper-3); }
+.d09 .ed { min-inline-size: 34rem; padding: var(--space-md) var(--space-lg); }
+.d09 .beats { display: grid; grid-template-columns: repeat(4, 1fr); margin-left: 3.25rem; }
+.d09 .beats li { padding: 0 0 var(--space-2xs) var(--space-xs); border-left: var(--rule-w) solid var(--color-rule); font-family: var(--font-outlier); font-size: var(--text-xs); color: var(--color-muted); }
+.d09 .str { display: grid; grid-template-columns: 3.25rem minmax(0, 1fr); margin-top: var(--space-2xs); background: var(--color-paper); border: var(--rule-w) solid var(--color-rule); }
+.d09 .str > b { display: flex; align-items: center; justify-content: center; border-right: var(--rule-w) solid var(--color-rule); font-family: var(--font-outlier); font-weight: 400; font-size: var(--text-sm); }
+.d09 .cells { display: grid; grid-template-columns: repeat(16, minmax(0, 1fr)); grid-template-rows: repeat(8, var(--h)); background:
+  linear-gradient(to right, var(--color-rule) 1px, transparent 1px) 0 0 / 25% 100%,
+  linear-gradient(to bottom, var(--color-paper-3) 1px, transparent 1px) 0 0 / 100% var(--h); }
+.d09 .n { grid-row: calc(var(--r) + 1); grid-column: var(--c) / span var(--l); margin: var(--space-3xs); padding: 0; border: 0; border-radius: 2px; background: var(--color-ink); color: var(--color-accent-ink); font-family: var(--font-outlier); font-size: var(--text-xs); line-height: 1; transition: background-color var(--dur-micro) var(--ease-out); }
+.d09 .n:hover { background: var(--color-muted); }
+.d09 .dock { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr) minmax(0, 1fr); border-top: 2px solid var(--color-ink); background: var(--color-paper-2); }
+.d09 .dock > section { display: grid; align-content: start; gap: var(--space-sm); padding: var(--space-md) var(--space-lg); }
+.d09 .dock > section + section { border-left: var(--rule-w) solid var(--color-ink); }
+.d09 .dock p { color: var(--color-muted); font-size: var(--text-sm); }
+.d09 .nums { display: grid; grid-template-columns: repeat(10, 1fr); gap: var(--space-2xs); }
+.d09 .nums button { aspect-ratio: 1; padding: 0; border: var(--rule-w) solid var(--color-rule); border-radius: 2px; background: transparent; color: var(--color-muted); font-family: var(--font-outlier); font-size: var(--text-xs); transition: background-color var(--dur-micro) var(--ease-out); }
+.d09 .nums button.has { border-color: var(--color-ink); color: var(--color-ink); }
+.d09 .nums button:hover { background: var(--color-paper-3); }
+.d09 .nums button[aria-pressed="true"] { background: var(--color-ink); border-color: var(--color-ink); color: var(--color-accent-ink); }
+.d09 .dock .cp { justify-self: start; block-size: 2rem; padding: 0 var(--space-sm); border: var(--rule-w) solid var(--color-ink); border-radius: 2px; background: transparent; font-size: var(--text-sm); }
+.d09 .dock .cp:hover { background: var(--color-paper-3); }
+.d09 .tl { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-2xs); }
+.d09 .tl.four { grid-template-columns: repeat(4, 1fr); }
+.d09 .tl.one { grid-template-columns: 1fr; }
+.d09 .tl button { padding: var(--space-xs) var(--space-2xs); border: var(--rule-w) solid var(--color-rule); border-radius: 2px; background: transparent; font-size: var(--text-sm); transition: background-color var(--dur-micro) var(--ease-out); }
+.d09 .tl button:hover { background: var(--color-paper-3); }
+.d09 .tl button[aria-pressed="true"] { background: var(--color-ink); border-color: var(--color-ink); color: var(--color-accent-ink); }
+.d09 .dock .fl { display: grid; gap: var(--space-xs); }
+.d09 .dock .fl label { display: grid; grid-template-columns: 4.5rem minmax(0, 1fr) 2ch; align-items: center; gap: var(--space-xs); font-size: var(--text-sm); color: var(--color-muted); }
+.d09 .dock .fl output { color: var(--color-ink); text-align: right; }
+@container (max-width: 56rem) { .d09 .dock { grid-template-columns: minmax(0, 1fr); } .d09 .dock > section + section { border-left: 0; border-top: var(--rule-w) solid var(--color-rule); } .d09 .top, .d09 .ed { padding-inline: var(--space-md); } .d09 .who { margin-left: 0; } }
+
+/* ===== 10 Numbered steps ===== */
+.d10 { --h: 1.3rem; }
+.d10 .head { display: flex; justify-content: flex-end; gap: var(--space-xs); padding: var(--space-sm) var(--space-lg); background: var(--color-paper-2); border-bottom: var(--rule-w) solid var(--color-rule); }
+.d10 .head button { block-size: 2.25rem; padding: 0 var(--space-md); border: var(--rule-w) solid var(--color-ink); border-radius: 2px; background: var(--color-paper); font-weight: 500; transition: background-color var(--dur-micro) var(--ease-out); }
+.d10 .head button:hover { background: var(--color-paper-3); }
+.d10 .head .go { display: inline-flex; align-items: center; gap: var(--space-xs); background: var(--color-ink); color: var(--color-accent-ink); font-weight: 600; }
+.d10 .head .go:hover { background: var(--color-muted); }
+.d10 .head .go i { inline-size: 0; block-size: 0; border: 0.38rem solid transparent; border-left: 0.62rem solid currentColor; border-right: 0; }
+.d10 .steps { counter-reset: step; max-inline-size: 60rem; margin-inline: auto; padding: var(--space-md) var(--space-lg) var(--space-xl); }
+.d10 .steps > li { display: grid; grid-template-columns: 4rem minmax(0, 1fr); gap: var(--space-md); padding-block: var(--space-lg); border-bottom: var(--rule-w) solid var(--color-rule); }
+.d10 .steps > li:last-child { border-bottom: 0; }
+.d10 .steps > li::before { counter-increment: step; content: counter(step); font-family: var(--font-display); font-weight: 700; font-size: var(--text-4xl); line-height: 1; color: var(--color-rule); }
+.d10 .steps > li.here::before { color: var(--color-ink); }
+.d10 .st { display: grid; gap: var(--space-md); min-inline-size: 0; }
+.d10 .st h3 { font-size: var(--text-xl); line-height: 1.2; }
+.d10 .big { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-xs); }
+.d10 .big button { display: grid; gap: var(--space-3xs); padding: var(--space-sm) var(--space-md); border: var(--rule-w) solid var(--color-rule); border-radius: 2px; background: transparent; text-align: left; font-weight: 600; transition: background-color var(--dur-micro) var(--ease-out); }
+.d10 .big button span { font-weight: 400; font-size: var(--text-sm); color: var(--color-muted); }
+.d10 .big button:hover { background: var(--color-paper-3); }
+.d10 .big button[aria-pressed="true"] { background: var(--color-ink); border-color: var(--color-ink); color: var(--color-accent-ink); }
+.d10 .big button[aria-pressed="true"] span { color: inherit; }
+.d10 .chips { display: flex; flex-wrap: wrap; gap: var(--space-2xs); }
+.d10 .chips button { inline-size: 2.25rem; block-size: 2.25rem; padding: 0; border: var(--rule-w) solid var(--color-rule); border-radius: 2px; background: transparent; color: var(--color-muted); font-family: var(--font-outlier); font-size: var(--text-sm); transition: background-color var(--dur-micro) var(--ease-out); }
+.d10 .chips button.has { border-color: var(--color-ink); color: var(--color-ink); }
+.d10 .chips button:hover { background: var(--color-paper-3); }
+.d10 .chips button[aria-pressed="true"] { background: var(--color-ink); border-color: var(--color-ink); color: var(--color-accent-ink); }
+.d10 .chips .cp { inline-size: auto; margin-left: var(--space-sm); padding: 0 var(--space-sm); border-color: var(--color-ink); color: var(--color-ink); font-family: var(--font-body); font-size: var(--text-sm); }
+.d10 .ask { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-xs) var(--space-sm); }
+.d10 .ask p { color: var(--color-muted); font-size: var(--text-sm); margin-right: var(--space-xs); }
+.d10 .ask button { block-size: 2.25rem; padding: 0 var(--space-md); border: var(--rule-w) solid var(--color-rule); border-radius: 2px; background: transparent; transition: background-color var(--dur-micro) var(--ease-out); }
+.d10 .ask button:hover { background: var(--color-paper-3); }
+.d10 .ask button[aria-pressed="true"] { background: var(--color-ink); border-color: var(--color-ink); color: var(--color-accent-ink); }
+.d10 .ask .gap { margin-left: var(--space-lg); }
+.d10 .scroll { overflow-x: auto; }
+.d10 .ed { min-inline-size: 34rem; }
+.d10 .beats { display: grid; grid-template-columns: repeat(4, 1fr); margin-left: 4.5rem; }
+.d10 .beats li { padding: 0 0 var(--space-2xs) var(--space-xs); border-left: var(--rule-w) solid var(--color-rule); font-family: var(--font-outlier); font-size: var(--text-xs); color: var(--color-muted); }
+.d10 .str { display: grid; grid-template-columns: 4.5rem minmax(0, 1fr); margin-top: var(--space-xs); border: var(--rule-w) solid var(--color-ink); }
+.d10 .lab { display: grid; grid-auto-rows: var(--h); font-family: var(--font-outlier); font-size: var(--text-xs); color: var(--color-muted); background: var(--color-paper-3); }
+.d10 .lab li { display: flex; align-items: center; padding-left: var(--space-xs); }
+.d10 .lab li:first-child { background: var(--color-ink); color: var(--color-accent-ink); }
+.d10 .cells { display: grid; grid-template-columns: repeat(16, minmax(0, 1fr)); grid-template-rows: repeat(8, var(--h)); background:
+  linear-gradient(to right, var(--color-rule) 1px, transparent 1px) 0 0 / 25% 100%,
+  linear-gradient(to right, var(--color-paper-3) 1px, transparent 1px) 0 0 / 6.25% 100%,
+  linear-gradient(to bottom, var(--color-paper-3) 1px, transparent 1px) 0 0 / 100% var(--h); }
+.d10 .n { grid-row: calc(var(--r) + 1); grid-column: var(--c) / span var(--l); margin: var(--space-3xs); padding: 0; border: 0; border-radius: 2px; background: var(--color-ink); color: var(--color-accent-ink); font-family: var(--font-outlier); font-size: var(--text-xs); line-height: 1; transition: background-color var(--dur-micro) var(--ease-out); }
+.d10 .n:hover { background: var(--color-muted); }
+.d10 .snd { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--space-lg); }
+.d10 .snd label { display: grid; grid-template-columns: 1fr auto; gap: var(--space-2xs); font-size: var(--text-sm); color: var(--color-muted); }
+.d10 .snd input { grid-column: 1 / -1; inline-size: 100%; }
+.d10 .snd output { color: var(--color-ink); }
+@container (max-width: 44rem) { .d10 .steps { padding-inline: var(--space-md); } .d10 .steps > li { grid-template-columns: minmax(0, 1fr); gap: var(--space-xs); } .d10 .steps > li::before { font-size: var(--text-3xl); } .d10 .big { grid-template-columns: minmax(0, 1fr); } .d10 .snd { grid-template-columns: repeat(2, minmax(0, 1fr)); } .d10 .head { padding-inline: var(--space-md); } }
+
+/* ===== 11 String cards ===== */
+.d11 { --h: 1.1rem; }
+.d11 .shell { display: grid; grid-template-columns: minmax(0, 1fr) 15rem; }
+.d11 .main { display: grid; align-content: start; gap: var(--space-md); min-inline-size: 0; padding: var(--space-md) var(--space-lg) var(--space-lg); background: var(--color-paper-3); }
+.d11 .rowa { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--space-sm) var(--space-md); }
+.d11 .nums { display: flex; flex-wrap: wrap; gap: var(--space-2xs); }
+.d11 .nums button { inline-size: 1.9rem; block-size: 1.9rem; padding: 0; border: var(--rule-w) solid var(--color-rule); border-radius: 2px; background: var(--color-paper); color: var(--color-muted); font-family: var(--font-outlier); font-size: var(--text-xs); transition: background-color var(--dur-micro) var(--ease-out); }
+.d11 .nums button.has { border-color: var(--color-ink); color: var(--color-ink); }
+.d11 .nums button:hover { background: var(--color-paper-2); }
+.d11 .nums button[aria-pressed="true"] { background: var(--color-ink); border-color: var(--color-ink); color: var(--color-accent-ink); }
+.d11 .rowa .cp { block-size: 1.9rem; padding: 0 var(--space-sm); border: var(--rule-w) solid var(--color-ink); border-radius: 2px; background: var(--color-paper); font-size: var(--text-sm); }
+.d11 .rowa .cp:hover { background: var(--color-paper-2); }
+.d11 .acts { display: flex; gap: var(--space-xs); }
+.d11 .acts button { block-size: 2.25rem; padding: 0 var(--space-md); border: var(--rule-w) solid var(--color-ink); border-radius: 2px; background: var(--color-paper); font-weight: 500; transition: background-color var(--dur-micro) var(--ease-out); }
+.d11 .acts button:hover { background: var(--color-paper-2); }
+.d11 .acts .go { display: inline-flex; align-items: center; gap: var(--space-xs); background: var(--color-ink); color: var(--color-accent-ink); font-weight: 600; }
+.d11 .acts .go:hover { background: var(--color-muted); }
+.d11 .acts .go i { inline-size: 0; block-size: 0; border: 0.38rem solid transparent; border-left: 0.62rem solid currentColor; border-right: 0; }
+.d11 .seg { display: inline-flex; gap: var(--space-2xs); }
+.d11 .seg button { block-size: 2rem; padding: 0 var(--space-sm); border: var(--rule-w) solid var(--color-rule); border-radius: 2px; background: var(--color-paper); font-size: var(--text-sm); transition: background-color var(--dur-micro) var(--ease-out); }
+.d11 .seg button:hover { background: var(--color-paper-2); }
+.d11 .seg button[aria-pressed="true"] { background: var(--color-ink); border-color: var(--color-ink); color: var(--color-accent-ink); }
+.d11 .tags { display: flex; flex-wrap: wrap; gap: var(--space-xs) var(--space-lg); align-items: center; }
+.d11 .tags div { display: flex; align-items: center; gap: var(--space-xs); }
+.d11 .tags p { color: var(--color-muted); font-size: var(--text-sm); }
+.d11 .scroll { overflow-x: auto; }
+.d11 .cards { display: grid; gap: var(--space-sm); min-inline-size: 34rem; }
+.d11 .beats { display: grid; grid-template-columns: repeat(4, 1fr); margin-left: var(--space-xl); }
+.d11 .beats li { padding: 0 0 var(--space-2xs) var(--space-xs); font-family: var(--font-outlier); font-size: var(--text-xs); color: var(--color-muted); }
+.d11 .card { background: var(--color-paper); border: var(--rule-w) solid var(--color-rule); border-radius: 2px; }
+.d11 .card header { display: flex; align-items: baseline; gap: var(--space-xs); padding: var(--space-2xs) var(--space-sm); background: var(--color-paper-2); border-bottom: var(--rule-w) solid var(--color-rule); }
+.d11 .card header b { font-family: var(--font-outlier); font-weight: 400; font-size: var(--text-md); }
+.d11 .card header span { color: var(--color-muted); font-size: var(--text-xs); }
+.d11 .body { display: grid; grid-template-columns: 2.5rem minmax(0, 1fr); }
+.d11 .fr { display: grid; grid-auto-rows: var(--h); padding-left: var(--space-sm); font-family: var(--font-outlier); font-size: var(--text-xs); color: var(--color-muted); }
+.d11 .fr li { display: flex; align-items: center; }
+.d11 .cells { display: grid; grid-template-columns: repeat(16, minmax(0, 1fr)); grid-template-rows: repeat(8, var(--h)); border-left: var(--rule-w) solid var(--color-rule); background:
+  linear-gradient(to right, var(--color-rule) 1px, transparent 1px) 0 0 / 25% 100%,
+  linear-gradient(to bottom, var(--color-paper-3) 1px, transparent 1px) 0 0 / 100% var(--h),
+  linear-gradient(var(--color-paper-3) 0 0) 0 0 / 100% var(--h) no-repeat; }
+.d11 .n { grid-row: calc(var(--r) + 1); grid-column: var(--c) / span var(--l); margin: var(--space-3xs); padding: 0; border: 0; border-radius: 2px; background: var(--color-ink); color: var(--color-accent-ink); font-family: var(--font-outlier); font-size: var(--text-xs); line-height: 1; transition: background-color var(--dur-micro) var(--ease-out); }
+.d11 .n:hover { background: var(--color-muted); }
+.d11 .side { display: grid; align-content: start; gap: var(--space-lg); padding: var(--space-md); background: var(--color-paper-2); border-left: var(--rule-w) solid var(--color-ink); }
+.d11 .side p { margin-bottom: var(--space-xs); color: var(--color-muted); font-size: var(--text-sm); }
+.d11 .radio { display: grid; gap: var(--space-2xs); }
+.d11 .radio button { padding: var(--space-xs) var(--space-sm); border: var(--rule-w) solid var(--color-rule); border-radius: 2px; background: transparent; text-align: left; font-size: var(--text-sm); transition: background-color var(--dur-micro) var(--ease-out); }
+.d11 .radio button:hover { background: var(--color-paper-3); }
+.d11 .radio button[aria-pressed="true"] { background: var(--color-ink); border-color: var(--color-ink); color: var(--color-accent-ink); }
+.d11 .side .three { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-2xs); }
+.d11 .side .three button { padding: var(--space-xs) 0; border: var(--rule-w) solid var(--color-rule); border-radius: 2px; background: transparent; font-size: var(--text-sm); transition: background-color var(--dur-micro) var(--ease-out); }
+.d11 .side .three button:hover { background: var(--color-paper-3); }
+.d11 .side .three button[aria-pressed="true"] { background: var(--color-ink); border-color: var(--color-ink); color: var(--color-accent-ink); }
+.d11 .side .wide { display: block; inline-size: 100%; margin-top: var(--space-xs); padding: var(--space-xs); border: var(--rule-w) solid var(--color-ink); border-radius: 2px; background: transparent; font-size: var(--text-sm); }
+.d11 .side .wide:hover { background: var(--color-paper-3); }
+.d11 .side .wide[aria-pressed="true"] { background: var(--color-ink); color: var(--color-accent-ink); }
+.d11 .side label { display: grid; grid-template-columns: 1fr auto; gap: var(--space-2xs); margin-bottom: var(--space-sm); font-size: var(--text-sm); color: var(--color-muted); }
+.d11 .side label input { grid-column: 1 / -1; inline-size: 100%; }
+.d11 .side output { color: var(--color-ink); }
+@container (max-width: 50rem) { .d11 .shell { grid-template-columns: minmax(0, 1fr); } .d11 .side { grid-template-columns: repeat(2, minmax(0, 1fr)); border-left: 0; border-top: var(--rule-w) solid var(--color-ink); } .d11 .main { padding-inline: var(--space-md); } }
+
+/* ===== 12 Narrow column ===== */
+.d12 { --h: 1.5rem; }
+.d12 .frame { background: var(--color-paper-3); }
+.d12 .col { display: grid; gap: var(--space-lg); max-inline-size: 38rem; margin-inline: auto; padding: var(--space-lg) var(--space-md) var(--space-xl); background: var(--color-paper-2); border-inline: var(--rule-w) solid var(--color-rule); }
+.d12 .top { display: grid; grid-template-columns: minmax(0, 1fr) 6rem; gap: var(--space-xs); }
+.d12 .top button { block-size: 3.25rem; border: var(--rule-w) solid var(--color-ink); border-radius: 2px; background: var(--color-paper); font-weight: 500; transition: background-color var(--dur-micro) var(--ease-out); }
+.d12 .top button:hover { background: var(--color-paper-3); }
+.d12 .top .go { display: inline-flex; align-items: center; justify-content: center; gap: var(--space-sm); background: var(--color-ink); color: var(--color-accent-ink); font-size: var(--text-xl); font-weight: 600; }
+.d12 .top .go:hover { background: var(--color-muted); }
+.d12 .top .go i { inline-size: 0; block-size: 0; border: 0.5rem solid transparent; border-left: 0.8rem solid currentColor; border-right: 0; }
+.d12 .grp { display: grid; gap: var(--space-xs); }
+.d12 .grp > p { color: var(--color-muted); font-size: var(--text-sm); }
+.d12 .opt { display: grid; grid-template-columns: repeat(var(--n), minmax(0, 1fr)); gap: var(--space-xs); }
+.d12 .opt button { block-size: 3rem; padding: 0 var(--space-2xs); border: var(--rule-w) solid var(--color-rule); border-radius: 2px; background: transparent; font-size: var(--text-md); transition: background-color var(--dur-micro) var(--ease-out); }
+.d12 .opt button.has { border-color: var(--color-ink); }
+.d12 .opt button:hover { background: var(--color-paper-3); }
+.d12 .opt button[aria-pressed="true"] { background: var(--color-ink); border-color: var(--color-ink); color: var(--color-accent-ink); }
+.d12 .opt.fig button { font-family: var(--font-outlier); color: var(--color-muted); }
+.d12 .opt.fig button.has { color: var(--color-ink); }
+.d12 .opt.fig button[aria-pressed="true"] { color: var(--color-accent-ink); }
+.d12 .wide { block-size: 3rem; border: var(--rule-w) solid var(--color-ink); border-radius: 2px; background: transparent; font-size: var(--text-md); }
+.d12 .wide:hover { background: var(--color-paper-3); }
+.d12 .wide[aria-pressed="true"] { background: var(--color-ink); color: var(--color-accent-ink); }
+.d12 .scroll { overflow-x: auto; border: var(--rule-w) solid var(--color-ink); background: var(--color-paper); }
+.d12 .ed { min-inline-size: 44rem; }
+.d12 .beats { display: grid; grid-template-columns: repeat(4, 1fr); margin-left: 3.5rem; border-bottom: var(--rule-w) solid var(--color-rule); }
+.d12 .beats li { padding: var(--space-2xs) var(--space-xs); border-left: var(--rule-w) solid var(--color-rule); font-family: var(--font-outlier); font-size: var(--text-xs); color: var(--color-muted); }
+.d12 .str { display: grid; grid-template-columns: 3.5rem minmax(0, 1fr); border-bottom: var(--rule-w) solid var(--color-ink); }
+.d12 .str:last-child { border-bottom: 0; }
+.d12 .str > b { position: sticky; inset-inline-start: 0; z-index: 1; padding: var(--space-xs) 0 0 var(--space-sm); background: var(--color-paper-3); border-right: var(--rule-w) solid var(--color-rule); font-family: var(--font-outlier); font-weight: 400; font-size: var(--text-md); }
+.d12 .cells { display: grid; grid-template-columns: repeat(16, minmax(0, 1fr)); grid-template-rows: repeat(8, var(--h)); background:
+  linear-gradient(to right, var(--color-rule) 1px, transparent 1px) 0 0 / 25% 100%,
+  linear-gradient(to bottom, var(--color-paper-3) 1px, transparent 1px) 0 0 / 100% var(--h); }
+.d12 .n { grid-row: calc(var(--r) + 1); grid-column: var(--c) / span var(--l); margin: var(--space-3xs); padding: 0; border: 0; border-radius: 2px; background: var(--color-ink); color: var(--color-accent-ink); font-family: var(--font-outlier); font-size: var(--text-sm); line-height: 1; transition: background-color var(--dur-micro) var(--ease-out); }
+.d12 .n:hover { background: var(--color-muted); }
+.d12 .snd { display: grid; gap: var(--space-md); }
+.d12 .snd label { display: grid; grid-template-columns: 5rem minmax(0, 1fr) 2ch; align-items: center; gap: var(--space-sm); color: var(--color-muted); }
+.d12 .snd output { color: var(--color-ink); text-align: right; }
+.d12 .snd input { block-size: 2rem; }
+
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="page-head">
+  <h1>Guitar page: twelve layouts</h1>
+  <p>One page serves Bass, Rhythm Guitar and Lead Guitar, because the three differ only in their strings: four for Bass, six for the two guitars. A choice of instrument sits on the page and everything else is shared. Fonts and palette are the decided Bone and black. Only the arrangement changes. Each design shows the editor for one of the three, one bar of sixteenth steps, seven frets, and sample notes, pattern numbers and envelope values made up to fill the screen. Each design is hand written.</p>
+  <nav class="index" aria-label="Designs">
+    <a href="#d01"><span>01</span>Plain bands</a>
+    <a href="#d02"><span>02</span>Folder tabs</a>
+    <a href="#d03"><span>03</span>Left rail</a>
+    <a href="#d04"><span>04</span>Paint palette</a>
+    <a href="#d05"><span>05</span>Sentence bar</a>
+    <a href="#d06"><span>06</span>Title switcher</a>
+    <a href="#d07"><span>07</span>Right spine</a>
+    <a href="#d08"><span>08</span>Menu bar</a>
+    <a href="#d09"><span>09</span>Bottom dock</a>
+    <a href="#d10"><span>10</span>Numbered steps</a>
+    <a href="#d11"><span>11</span>String cards</a>
+    <a href="#d12"><span>12</span>Narrow column</a>
+  </nav>
+</header>
+
+<section class="look d01" id="d01">
+  <div class="meta">
+    <h2><span class="fig">01</span>Plain bands</h2>
+    <p>The baseline. Three bands, top to bottom: the instrument choice with Undo and Play, all twenty patterns in one row, then the editor. One strip under the editor holds everything else. Every row is labelled with its pitch. Shown with Rhythm Guitar.</p>
+  </div>
+  <div class="frame">
+    <header class="top">
+      <div class="who" role="group" aria-label="Instrument"><button type="button" aria-pressed="false">Bass</button><button type="button" aria-pressed="true">Rhythm Guitar</button><button type="button" aria-pressed="false">Lead Guitar</button></div>
+      <div class="acts"><button type="button" class="btn">Undo</button><button type="button" class="btn go"><i></i>Play</button></div>
+    </header>
+    <div class="pats">
+      <p>Pattern</p>
+      <div class="chips" role="group" aria-label="Patterns">
+        <button type="button" class="has" aria-pressed="true">1</button><button type="button" class="has">2</button><button type="button" class="has">3</button><button type="button">4</button><button type="button" class="has">5</button><button type="button">6</button><button type="button">7</button><button type="button">8</button><button type="button">9</button><button type="button">10</button><button type="button">11</button><button type="button">12</button><button type="button">13</button><button type="button">14</button><button type="button">15</button><button type="button">16</button><button type="button">17</button><button type="button">18</button><button type="button">19</button><button type="button">20</button>
+      </div>
+      <button type="button" class="copy">Copy notes to&hellip;</button>
+    </div>
+    <div class="scroll">
+      <div class="ed">
+        <ol class="beats" aria-label="Beats"><li>1</li><li>2</li><li>3</li><li>4</li></ol>
+        <div class="str"><ol class="lab"><li>E2</li><li>F2</li><li>F#2</li><li>G2</li><li>G#2</li><li>A2</li><li>Bb2</li><li>B2</li></ol><div class="cells" role="group" aria-label="E2 string"><button type="button" class="n" style="--r:0;--c:5;--l:2">0</button></div></div>
+        <div class="str"><ol class="lab"><li>A2</li><li>Bb2</li><li>B2</li><li>C3</li><li>C#3</li><li>D3</li><li>Eb3</li><li>E3</li></ol><div class="cells" role="group" aria-label="A2 string"><button type="button" class="n" style="--r:0;--c:1;--l:2">0</button><button type="button" class="n" style="--r:2;--c:5;--l:2">2</button><button type="button" class="n" style="--r:0;--c:9;--l:1">0</button></div></div>
+        <div class="str"><ol class="lab"><li>D3</li><li>Eb3</li><li>E3</li><li>F3</li><li>F#3</li><li>G3</li><li>Ab3</li><li>A3</li></ol><div class="cells" role="group" aria-label="D3 string"><button type="button" class="n" style="--r:2;--c:1;--l:2">2</button><button type="button" class="n" style="--r:2;--c:5;--l:2">2</button><button type="button" class="n" style="--r:2;--c:9;--l:1">2</button></div></div>
+        <div class="str"><ol class="lab"><li>G3</li><li>Ab3</li><li>A3</li><li>Bb3</li><li>B3</li><li>C4</li><li>Db4</li><li>D4</li></ol><div class="cells" role="group" aria-label="G3 string"><button type="button" class="n" style="--r:2;--c:1;--l:2">2</button><button type="button" class="n" style="--r:0;--c:5;--l:2">0</button><button type="button" class="n" style="--r:2;--c:9;--l:1">2</button><button type="button" class="n" style="--r:0;--c:11;--l:1">0</button><button type="button" class="n" style="--r:2;--c:12;--l:1">2</button></div></div>
+        <div class="str"><ol class="lab"><li>B3</li><li>C4</li><li>C#4</li><li>D4</li><li>Eb4</li><li>E4</li><li>F4</li><li>F#4</li></ol><div class="cells" role="group" aria-label="B3 string"><button type="button" class="n" style="--r:1;--c:1;--l:2">1</button><button type="button" class="n" style="--r:1;--c:9;--l:1">1</button><button type="button" class="n" style="--r:0;--c:13;--l:2">0</button></div></div>
+        <div class="str"><ol class="lab"><li>E4</li><li>F4</li><li>F#4</li><li>G4</li><li>G#4</li><li>A4</li><li>Bb4</li><li>B4</li></ol><div class="cells" role="group" aria-label="E4 string"><button type="button" class="n" style="--r:3;--c:15;--l:2">3</button></div></div>
+      </div>
+    </div>
+    <div class="foot">
+      <div><p>Length</p><div class="seg" role="group" aria-label="Pattern length"><button type="button" aria-pressed="true">1x</button><button type="button">2x</button><button type="button">4x</button><button type="button">8x</button></div></div>
+      <div><p>Note value</p><div class="seg" role="group" aria-label="Note value"><button type="button">Whole</button><button type="button">Half</button><button type="button">Quarter</button><button type="button" aria-pressed="true">16th</button><button type="button">Third</button><button type="button">Half of a third</button></div></div>
+      <div><p>Frets</p><div class="seg" role="group" aria-label="Frets"><button type="button">5</button><button type="button" aria-pressed="true">7</button><button type="button">12</button></div></div>
+      <div><p>View</p><button type="button" class="tg" aria-pressed="false">Show whole pattern</button></div>
+      <div class="env">
+        <label>Volume<output>70</output><input type="range" min="0" max="100" value="70"></label>
+        <label>Attack<output>4</output><input type="range" min="0" max="100" value="4"></label>
+        <label>Decay<output>50</output><input type="range" min="0" max="100" value="50"></label>
+        <label>Release<output>35</output><input type="range" min="0" max="100" value="35"></label>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="look d02" id="d02">
+  <div class="meta">
+    <h2><span class="fig">02</span>Folder tabs</h2>
+    <p>The instrument is a row of folder tabs, so choosing Bass, Rhythm or Lead is the first and only thing at the top. Inside, two parts, Notes and Envelope, switch like a second set of tabs, so the editor never shares the screen with sliders. Rows are numbered by fret, with the string named beside them. Shown with Bass, four strings, on the Notes part.</p>
+  </div>
+  <div class="frame">
+    <div class="shelf">
+      <div class="tabs" role="tablist" aria-label="Instrument"><button type="button" role="tab" aria-selected="true">Bass</button><button type="button" role="tab" aria-selected="false">Rhythm Guitar</button><button type="button" role="tab" aria-selected="false">Lead Guitar</button></div>
+      <div class="acts"><button type="button">Undo</button><button type="button" class="go"><i></i>Play</button></div>
+    </div>
+    <div class="sheet">
+      <div class="parts" role="tablist" aria-label="Part"><button type="button" role="tab" aria-selected="true">Notes</button><button type="button" role="tab" aria-selected="false">Envelope</button></div>
+      <div class="pbar" role="group" aria-label="Patterns">
+        <button type="button" class="has">1</button><button type="button" class="has" aria-pressed="true">2</button><button type="button" class="has">3</button><button type="button">4</button><button type="button" class="has">5</button><button type="button">6</button><button type="button">7</button><button type="button">8</button><button type="button">9</button><button type="button">10</button><button type="button">11</button><button type="button">12</button><button type="button">13</button><button type="button">14</button><button type="button">15</button><button type="button">16</button><button type="button">17</button><button type="button">18</button><button type="button">19</button><button type="button">20</button><button type="button" class="more">Copy notes to&hellip;</button>
+      </div>
+      <div class="tools">
+        <div><p>Length</p><span class="g" role="group" aria-label="Pattern length"><button type="button" aria-pressed="true">1x</button><button type="button">2x</button><button type="button">4x</button><button type="button">8x</button></span></div>
+        <div><p>Note</p><span class="g" role="group" aria-label="Note value"><button type="button">Whole</button><button type="button">Half</button><button type="button">Quarter</button><button type="button" aria-pressed="true">16th</button><button type="button">Third</button><button type="button">Half of a third</button></span></div>
+        <div><p>Frets</p><span class="g" role="group" aria-label="Frets"><button type="button">5</button><button type="button" aria-pressed="true">7</button><button type="button">12</button></span></div>
+        <div><button type="button" class="tg" aria-pressed="false">Show whole pattern</button></div>
+      </div>
+      <div class="scroll">
+        <div class="ed">
+          <ol class="beats" aria-label="Beats"><li>1</li><li>2</li><li>3</li><li>4</li></ol>
+          <div class="str"><b class="nm">E1</b><ol class="fr"><li>0</li><li>1</li><li>2</li><li>3</li><li>4</li><li>5</li><li>6</li><li>7</li></ol><div class="cells" role="group" aria-label="E1 string"><button type="button" class="n" style="--r:0;--c:1;--l:2">0</button><button type="button" class="n" style="--r:3;--c:4;--l:1">3</button><button type="button" class="n" style="--r:0;--c:15;--l:2">0</button></div></div>
+          <div class="str"><b class="nm">A1</b><ol class="fr"><li>0</li><li>1</li><li>2</li><li>3</li><li>4</li><li>5</li><li>6</li><li>7</li></ol><div class="cells" role="group" aria-label="A1 string"><button type="button" class="n" style="--r:0;--c:5;--l:2">0</button><button type="button" class="n" style="--r:2;--c:8;--l:1">2</button><button type="button" class="n" style="--r:0;--c:13;--l:2">0</button></div></div>
+          <div class="str"><b class="nm">D2</b><ol class="fr"><li>0</li><li>1</li><li>2</li><li>3</li><li>4</li><li>5</li><li>6</li><li>7</li></ol><div class="cells" role="group" aria-label="D2 string"><button type="button" class="n" style="--r:0;--c:9;--l:2">0</button><button type="button" class="n" style="--r:2;--c:12;--l:1">2</button></div></div>
+          <div class="str"><b class="nm">G2</b><ol class="fr"><li>0</li><li>1</li><li>2</li><li>3</li><li>4</li><li>5</li><li>6</li><li>7</li></ol><div class="cells" role="group" aria-label="G2 string"></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="look d03" id="d03">
+  <div class="meta">
+    <h2><span class="fig">03</span>Left rail</h2>
+    <p>Every choice lives in one column on the left, read top to bottom: instrument, pattern, length, note value, frets, whole-pattern view. The editor and a four-slider strip take the rest. Strings alternate in tint, and each row is named by the open pitch and then fret numbers. Shown with Rhythm Guitar.</p>
+  </div>
+  <div class="frame">
+    <div class="machine">
+      <aside class="rail" aria-label="Choices">
+        <div><p>Instrument</p><div class="stack" role="group" aria-label="Instrument"><button type="button" aria-pressed="false">Bass</button><button type="button" aria-pressed="true">Rhythm Guitar</button><button type="button" aria-pressed="false">Lead Guitar</button></div></div>
+        <div><p>Pattern</p><div class="nums" role="group" aria-label="Patterns"><button type="button" class="has">1</button><button type="button" class="has">2</button><button type="button" class="has" aria-pressed="true">3</button><button type="button">4</button><button type="button" class="has">5</button><button type="button">6</button><button type="button">7</button><button type="button">8</button><button type="button">9</button><button type="button">10</button><button type="button">11</button><button type="button">12</button><button type="button">13</button><button type="button">14</button><button type="button">15</button><button type="button">16</button><button type="button">17</button><button type="button">18</button><button type="button">19</button><button type="button">20</button></div><button type="button" class="wide">Copy notes to&hellip;</button></div>
+        <div><p>Length</p><div class="row4" role="group" aria-label="Pattern length"><button type="button" aria-pressed="true">1x</button><button type="button">2x</button><button type="button">4x</button><button type="button">8x</button></div></div>
+        <div><p>Note value</p><div class="stack" role="group" aria-label="Note value"><button type="button" aria-pressed="false">Whole</button><button type="button" aria-pressed="false">Half</button><button type="button" aria-pressed="false">Quarter</button><button type="button" aria-pressed="true">16th</button><button type="button" aria-pressed="false">Third</button><button type="button" aria-pressed="false">Half of a third</button></div></div>
+        <div><p>Frets</p><div class="row3" role="group" aria-label="Frets"><button type="button" aria-pressed="false">5</button><button type="button" aria-pressed="true">7</button><button type="button" aria-pressed="false">12</button></div><button type="button" class="wide" aria-pressed="false">Show whole pattern</button></div>
+      </aside>
+      <div class="main">
+        <header class="bar"><h3>Rhythm Guitar</h3><div><button type="button">Undo</button><button type="button" class="go"><i></i>Play</button></div></header>
+        <div class="scroll">
+          <div class="ed">
+            <ol class="beats" aria-label="Beats"><li>1</li><li>2</li><li>3</li><li>4</li></ol>
+            <div class="str"><ol class="lab"><li>E2</li><li>1</li><li>2</li><li>3</li><li>4</li><li>5</li><li>6</li><li>7</li></ol><div class="cells" role="group" aria-label="E2 string"><button type="button" class="n" style="--r:0;--c:5;--l:2">0</button></div></div>
+            <div class="str"><ol class="lab"><li>A2</li><li>1</li><li>2</li><li>3</li><li>4</li><li>5</li><li>6</li><li>7</li></ol><div class="cells" role="group" aria-label="A2 string"><button type="button" class="n" style="--r:0;--c:1;--l:2">0</button><button type="button" class="n" style="--r:2;--c:5;--l:2">2</button><button type="button" class="n" style="--r:0;--c:9;--l:1">0</button></div></div>
+            <div class="str"><ol class="lab"><li>D3</li><li>1</li><li>2</li><li>3</li><li>4</li><li>5</li><li>6</li><li>7</li></ol><div class="cells" role="group" aria-label="D3 string"><button type="button" class="n" style="--r:2;--c:1;--l:2">2</button><button type="button" class="n" style="--r:2;--c:5;--l:2">2</button><button type="button" class="n" style="--r:2;--c:9;--l:1">2</button></div></div>
+            <div class="str"><ol class="lab"><li>G3</li><li>1</li><li>2</li><li>3</li><li>4</li><li>5</li><li>6</li><li>7</li></ol><div class="cells" role="group" aria-label="G3 string"><button type="button" class="n" style="--r:2;--c:1;--l:2">2</button><button type="button" class="n" style="--r:0;--c:5;--l:2">0</button><button type="button" class="n" style="--r:2;--c:9;--l:1">2</button><button type="button" class="n" style="--r:0;--c:11;--l:1">0</button><button type="button" class="n" style="--r:2;--c:12;--l:1">2</button></div></div>
+            <div class="str"><ol class="lab"><li>B3</li><li>1</li><li>2</li><li>3</li><li>4</li><li>5</li><li>6</li><li>7</li></ol><div class="cells" role="group" aria-label="B3 string"><button type="button" class="n" style="--r:1;--c:1;--l:2">1</button><button type="button" class="n" style="--r:1;--c:9;--l:1">1</button><button type="button" class="n" style="--r:0;--c:13;--l:2">0</button></div></div>
+            <div class="str"><ol class="lab"><li>E4</li><li>1</li><li>2</li><li>3</li><li>4</li><li>5</li><li>6</li><li>7</li></ol><div class="cells" role="group" aria-label="E4 string"><button type="button" class="n" style="--r:3;--c:15;--l:2">3</button></div></div>
+          </div>
+        </div>
+        <div class="env">
+          <label>Volume<output>70</output><input type="range" min="0" max="100" value="70"></label>
+          <label>Attack<output>4</output><input type="range" min="0" max="100" value="4"></label>
+          <label>Decay<output>50</output><input type="range" min="0" max="100" value="50"></label>
+          <label>Release<output>35</output><input type="range" min="0" max="100" value="35"></label>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="look d04" id="d04">
+  <div class="meta">
+    <h2><span class="fig">04</span>Paint palette</h2>
+    <p>Built like a drawing tool. The note values are a palette down the left, each with a bar that is as long as the note. Four vertical faders stand on the right. Patterns run across the top, and length, frets and the whole-pattern view sit in a foot strip. Rows are marked only by the open string. Shown with Lead Guitar.</p>
+  </div>
+  <div class="frame">
+    <div class="paint">
+      <header class="head">
+        <div class="who" role="group" aria-label="Instrument"><button type="button" aria-pressed="false">Bass</button><button type="button" aria-pressed="false">Rhythm Guitar</button><button type="button" aria-pressed="true">Lead Guitar</button></div>
+        <div class="acts"><button type="button">Undo</button><button type="button" class="go"><i></i>Play</button></div>
+      </header>
+      <div class="pats" role="group" aria-label="Patterns"><button type="button" class="has">1</button><button type="button" class="has">2</button><button type="button" class="has">3</button><button type="button">4</button><button type="button" class="has" aria-pressed="true">5</button><button type="button">6</button><button type="button">7</button><button type="button">8</button><button type="button">9</button><button type="button">10</button><button type="button">11</button><button type="button">12</button><button type="button">13</button><button type="button">14</button><button type="button">15</button><button type="button">16</button><button type="button">17</button><button type="button">18</button><button type="button">19</button><button type="button">20</button><button type="button" class="cp">Copy notes to&hellip;</button></div>
+      <div class="pal" role="group" aria-label="Note value">
+        <p>Note value</p>
+        <button type="button" aria-pressed="false"><i style="--w:100"></i>Whole</button>
+        <button type="button" aria-pressed="false"><i style="--w:50"></i>Half</button>
+        <button type="button" aria-pressed="false"><i style="--w:25"></i>Quarter</button>
+        <button type="button" aria-pressed="true"><i style="--w:12.5"></i>16th</button>
+        <button type="button" aria-pressed="false"><i style="--w:8.3"></i>Third</button>
+        <button type="button" aria-pressed="false"><i style="--w:4.2"></i>Half of a third</button>
+      </div>
+      <div class="ed">
+        <div>
+          <ol class="beats" aria-label="Beats"><li>1</li><li>2</li><li>3</li><li>4</li></ol>
+          <div class="str"><b>E2</b><div class="cells" role="group" aria-label="E2 string"></div></div>
+          <div class="str"><b>A2</b><div class="cells" role="group" aria-label="A2 string"></div></div>
+          <div class="str"><b>D3</b><div class="cells" role="group" aria-label="D3 string"></div></div>
+          <div class="str"><b>G3</b><div class="cells" role="group" aria-label="G3 string"><button type="button" class="n" style="--r:2;--c:11;--l:2">2</button></div></div>
+          <div class="str"><b>B3</b><div class="cells" role="group" aria-label="B3 string"><button type="button" class="n" style="--r:3;--c:7;--l:1">3</button><button type="button" class="n" style="--r:1;--c:9;--l:1">1</button><button type="button" class="n" style="--r:0;--c:13;--l:2">0</button></div></div>
+          <div class="str"><b>E4</b><div class="cells" role="group" aria-label="E4 string"><button type="button" class="n" style="--r:0;--c:1;--l:1">0</button><button type="button" class="n" style="--r:3;--c:3;--l:1">3</button><button type="button" class="n" style="--r:5;--c:5;--l:2">5</button><button type="button" class="n" style="--r:0;--c:15;--l:1">0</button></div></div>
+        </div>
+      </div>
+      <div class="fad" role="group" aria-label="Envelope">
+        <label>Vol<output>80</output><input type="range" min="0" max="100" value="80" aria-label="Volume"></label>
+        <label>Att<output>2</output><input type="range" min="0" max="100" value="2" aria-label="Attack"></label>
+        <label>Dec<output>30</output><input type="range" min="0" max="100" value="30" aria-label="Decay"></label>
+        <label>Rel<output>45</output><input type="range" min="0" max="100" value="45" aria-label="Release"></label>
+      </div>
+      <div class="foot">
+        <div><p>Length</p><span class="seg" role="group" aria-label="Pattern length"><button type="button" aria-pressed="true">1x</button><button type="button">2x</button><button type="button">4x</button><button type="button">8x</button></span></div>
+        <div><p>Frets</p><span class="seg" role="group" aria-label="Frets"><button type="button">5</button><button type="button" aria-pressed="true">7</button><button type="button">12</button></span></div>
+        <div><button type="button" aria-pressed="false">Show whole pattern</button></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="look d05" id="d05">
+  <div class="meta">
+    <h2><span class="fig">05</span>Sentence bar</h2>
+    <p>The settings are one readable sentence, and each underlined word is a menu: instrument, pattern, length, note value, frets. A second line holds the whole-pattern tick, Copy, Undo and Play. The editor follows, with each string captioned by its open pitch, and the four sliders sit in a single row at the foot. Shown with Rhythm Guitar.</p>
+  </div>
+  <div class="frame">
+    <div class="say">
+      <p class="line">Editing <select aria-label="Instrument"><option>Bass</option><option selected>Rhythm Guitar</option><option>Lead Guitar</option></select>, pattern <select aria-label="Pattern"><option>1</option><option>2</option><option selected>3</option><option>4 empty</option><option>5</option><option>6 empty</option><option>7 empty</option><option>8 empty</option><option>9 empty</option><option>10 empty</option><option>11 empty</option><option>12 empty</option><option>13 empty</option><option>14 empty</option><option>15 empty</option><option>16 empty</option><option>17 empty</option><option>18 empty</option><option>19 empty</option><option>20 empty</option></select>, <select aria-label="Pattern length"><option selected>1x</option><option>2x</option><option>4x</option><option>8x</option></select> long. Placing <select aria-label="Note value"><option>whole</option><option>half</option><option>quarter</option><option selected>16th</option><option>third</option><option>half of a third</option></select> notes on <select aria-label="Frets"><option>5</option><option selected>7</option><option>12</option></select> frets.</p>
+      <div class="more">
+        <label><input type="checkbox"> Show the whole pattern</label>
+        <button type="button">Copy notes to&hellip;</button>
+        <button type="button" class="push">Undo</button>
+        <button type="button" class="go"><i></i>Play</button>
+      </div>
+    </div>
+    <div class="scroll">
+      <div class="ed">
+        <ol class="beats" aria-label="Beats"><li>1</li><li>2</li><li>3</li><li>4</li></ol>
+        <div class="s"><p class="cap"><b>E2</b> open string</p><div class="cells" role="group" aria-label="E2 string"><button type="button" class="n" style="--r:0;--c:5;--l:2">0</button></div></div>
+        <div class="s"><p class="cap"><b>A2</b> open string</p><div class="cells" role="group" aria-label="A2 string"><button type="button" class="n" style="--r:0;--c:1;--l:2">0</button><button type="button" class="n" style="--r:2;--c:5;--l:2">2</button><button type="button" class="n" style="--r:0;--c:9;--l:1">0</button></div></div>
+        <div class="s"><p class="cap"><b>D3</b> open string</p><div class="cells" role="group" aria-label="D3 string"><button type="button" class="n" style="--r:2;--c:1;--l:2">2</button><button type="button" class="n" style="--r:2;--c:5;--l:2">2</button><button type="button" class="n" style="--r:2;--c:9;--l:1">2</button></div></div>
+        <div class="s"><p class="cap"><b>G3</b> open string</p><div class="cells" role="group" aria-label="G3 string"><button type="button" class="n" style="--r:2;--c:1;--l:2">2</button><button type="button" class="n" style="--r:0;--c:5;--l:2">0</button><button type="button" class="n" style="--r:2;--c:9;--l:1">2</button><button type="button" class="n" style="--r:0;--c:11;--l:1">0</button><button type="button" class="n" style="--r:2;--c:12;--l:1">2</button></div></div>
+        <div class="s"><p class="cap"><b>B3</b> open string</p><div class="cells" role="group" aria-label="B3 string"><button type="button" class="n" style="--r:1;--c:1;--l:2">1</button><button type="button" class="n" style="--r:1;--c:9;--l:1">1</button><button type="button" class="n" style="--r:0;--c:13;--l:2">0</button></div></div>
+        <div class="s"><p class="cap"><b>E4</b> open string</p><div class="cells" role="group" aria-label="E4 string"><button type="button" class="n" style="--r:3;--c:15;--l:2">3</button></div></div>
+      </div>
+    </div>
+    <div class="snd">
+      <label>Volume<input type="range" min="0" max="100" value="70"><output>70</output></label>
+      <label>Attack<input type="range" min="0" max="100" value="4"><output>4</output></label>
+      <label>Decay<input type="range" min="0" max="100" value="50"><output>50</output></label>
+      <label>Release<input type="range" min="0" max="100" value="35"><output>35</output></label>
+    </div>
+  </div>
+</section>
+
+<section class="look d06" id="d06">
+  <div class="meta">
+    <h2><span class="fig">06</span>Title switcher</h2>
+    <p>The page title is the switch. The chosen instrument is set large with an underline, and the other two are smaller words you click to change over. Everything else is quiet and has air around it: patterns as a row of bare numbers, the editor, then plain underlined text options, then the sliders. Shown with Bass.</p>
+  </div>
+  <div class="frame">
+    <div class="page">
+      <header class="mast">
+        <div class="titles" role="group" aria-label="Instrument"><button type="button" aria-current="true">Bass</button><button type="button">Rhythm Guitar</button><button type="button">Lead Guitar</button></div>
+        <div class="acts"><button type="button">Undo</button><button type="button" class="go"><i></i>Play</button></div>
+      </header>
+      <div class="pn" role="group" aria-label="Patterns"><button type="button" class="has">1</button><button type="button" class="has">2</button><button type="button" class="has" aria-pressed="true">3</button><button type="button">4</button><button type="button" class="has">5</button><button type="button">6</button><button type="button">7</button><button type="button">8</button><button type="button">9</button><button type="button">10</button><button type="button">11</button><button type="button">12</button><button type="button">13</button><button type="button">14</button><button type="button">15</button><button type="button">16</button><button type="button">17</button><button type="button">18</button><button type="button">19</button><button type="button">20</button><button type="button" class="cp">Copy notes to&hellip;</button></div>
+      <div class="scroll">
+        <div class="ed">
+          <ol class="beats" aria-label="Beats"><li>1</li><li>2</li><li>3</li><li>4</li></ol>
+          <div class="str"><b>E1</b><div class="cells" role="group" aria-label="E1 string"><button type="button" class="n" style="--r:0;--c:1;--l:2">0</button><button type="button" class="n" style="--r:3;--c:4;--l:1">3</button><button type="button" class="n" style="--r:0;--c:15;--l:2">0</button></div></div>
+          <div class="str"><b>A1</b><div class="cells" role="group" aria-label="A1 string"><button type="button" class="n" style="--r:0;--c:5;--l:2">0</button><button type="button" class="n" style="--r:2;--c:8;--l:1">2</button><button type="button" class="n" style="--r:0;--c:13;--l:2">0</button></div></div>
+          <div class="str"><b>D2</b><div class="cells" role="group" aria-label="D2 string"><button type="button" class="n" style="--r:0;--c:9;--l:2">0</button><button type="button" class="n" style="--r:2;--c:12;--l:1">2</button></div></div>
+          <div class="str"><b>G2</b><div class="cells" role="group" aria-label="G2 string"></div></div>
+        </div>
+      </div>
+      <div class="quiet">
+        <div><p>Length</p><div class="opts" role="group" aria-label="Pattern length"><button type="button" aria-pressed="true">1x</button><button type="button">2x</button><button type="button">4x</button><button type="button">8x</button></div></div>
+        <div><p>Note value</p><div class="opts" role="group" aria-label="Note value"><button type="button">Whole</button><button type="button">Half</button><button type="button">Quarter</button><button type="button" aria-pressed="true">16th</button><button type="button">Third</button><button type="button">Half of a third</button></div></div>
+        <div><p>Frets</p><div class="opts" role="group" aria-label="Frets"><button type="button">5</button><button type="button" aria-pressed="true">7</button><button type="button">12</button></div></div>
+        <div><p>View</p><div class="opts"><button type="button" aria-pressed="false">Show whole pattern</button></div></div>
+      </div>
+      <div class="snd">
+        <label>Volume<output>85</output><input type="range" min="0" max="100" value="85"></label>
+        <label>Attack<output>3</output><input type="range" min="0" max="100" value="3"></label>
+        <label>Decay<output>45</output><input type="range" min="0" max="100" value="45"></label>
+        <label>Release<output>25</output><input type="range" min="0" max="100" value="25"></label>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="look d07" id="d07">
+  <div class="meta">
+    <h2><span class="fig">07</span>Right spine</h2>
+    <p>The twenty patterns stand in one tall column down the right edge, like a spine, so changing pattern never moves your eye off the editor. A two-row bar on top carries the instrument, Undo and Play, and then length, note value, frets and the whole-pattern view. The sliders run under the editor. Every row is labelled with its pitch. Shown with Rhythm Guitar.</p>
+  </div>
+  <div class="frame">
+    <header class="bar">
+      <div class="r1">
+        <div class="who" role="group" aria-label="Instrument"><button type="button" aria-pressed="false">Bass</button><button type="button" aria-pressed="true">Rhythm Guitar</button><button type="button" aria-pressed="false">Lead Guitar</button></div>
+        <div class="acts"><button type="button">Undo</button><button type="button" class="go"><i></i>Play</button></div>
+      </div>
+      <div class="r2">
+        <div><p>Length</p><span class="pill" role="group" aria-label="Pattern length"><button type="button" aria-pressed="true">1x</button><button type="button">2x</button><button type="button">4x</button><button type="button">8x</button></span></div>
+        <div><p>Note value</p><span class="pill" role="group" aria-label="Note value"><button type="button">Whole</button><button type="button">Half</button><button type="button">Quarter</button><button type="button" aria-pressed="true">16th</button><button type="button">Third</button><button type="button">Half of a third</button></span></div>
+        <div><p>Frets</p><span class="pill" role="group" aria-label="Frets"><button type="button">5</button><button type="button" aria-pressed="true">7</button><button type="button">12</button></span></div>
+        <div><button type="button" class="tg" aria-pressed="false">Show whole pattern</button></div>
+      </div>
+    </header>
+    <div class="body">
+      <div class="scroll">
+        <div class="ed">
+          <ol class="beats" aria-label="Beats"><li>1</li><li>2</li><li>3</li><li>4</li></ol>
+          <div class="str"><ol class="lab"><li>E2</li><li>F2</li><li>F#2</li><li>G2</li><li>G#2</li><li>A2</li><li>Bb2</li><li>B2</li></ol><div class="cells" role="group" aria-label="E2 string"><button type="button" class="n" style="--r:0;--c:5;--l:2">0</button></div></div>
+          <div class="str"><ol class="lab"><li>A2</li><li>Bb2</li><li>B2</li><li>C3</li><li>C#3</li><li>D3</li><li>Eb3</li><li>E3</li></ol><div class="cells" role="group" aria-label="A2 string"><button type="button" class="n" style="--r:0;--c:1;--l:2">0</button><button type="button" class="n" style="--r:2;--c:5;--l:2">2</button><button type="button" class="n" style="--r:0;--c:9;--l:1">0</button></div></div>
+          <div class="str"><ol class="lab"><li>D3</li><li>Eb3</li><li>E3</li><li>F3</li><li>F#3</li><li>G3</li><li>Ab3</li><li>A3</li></ol><div class="cells" role="group" aria-label="D3 string"><button type="button" class="n" style="--r:2;--c:1;--l:2">2</button><button type="button" class="n" style="--r:2;--c:5;--l:2">2</button><button type="button" class="n" style="--r:2;--c:9;--l:1">2</button></div></div>
+          <div class="str"><ol class="lab"><li>G3</li><li>Ab3</li><li>A3</li><li>Bb3</li><li>B3</li><li>C4</li><li>Db4</li><li>D4</li></ol><div class="cells" role="group" aria-label="G3 string"><button type="button" class="n" style="--r:2;--c:1;--l:2">2</button><button type="button" class="n" style="--r:0;--c:5;--l:2">0</button><button type="button" class="n" style="--r:2;--c:9;--l:1">2</button><button type="button" class="n" style="--r:0;--c:11;--l:1">0</button><button type="button" class="n" style="--r:2;--c:12;--l:1">2</button></div></div>
+          <div class="str"><ol class="lab"><li>B3</li><li>C4</li><li>C#4</li><li>D4</li><li>Eb4</li><li>E4</li><li>F4</li><li>F#4</li></ol><div class="cells" role="group" aria-label="B3 string"><button type="button" class="n" style="--r:1;--c:1;--l:2">1</button><button type="button" class="n" style="--r:1;--c:9;--l:1">1</button><button type="button" class="n" style="--r:0;--c:13;--l:2">0</button></div></div>
+          <div class="str"><ol class="lab"><li>E4</li><li>F4</li><li>F#4</li><li>G4</li><li>G#4</li><li>A4</li><li>Bb4</li><li>B4</li></ol><div class="cells" role="group" aria-label="E4 string"><button type="button" class="n" style="--r:3;--c:15;--l:2">3</button></div></div>
+        </div>
+      </div>
+      <div class="env">
+        <label>Volume<output>70</output><input type="range" min="0" max="100" value="70"></label>
+        <label>Attack<output>4</output><input type="range" min="0" max="100" value="4"></label>
+        <label>Decay<output>50</output><input type="range" min="0" max="100" value="50"></label>
+        <label>Release<output>35</output><input type="range" min="0" max="100" value="35"></label>
+      </div>
+      <aside class="spine" role="group" aria-label="Patterns">
+        <p>Pattern</p>
+        <button type="button" class="has" aria-pressed="true">1</button><button type="button" class="has">2</button><button type="button" class="has">3</button><button type="button">4</button><button type="button" class="has">5</button><button type="button">6</button><button type="button">7</button><button type="button">8</button><button type="button">9</button><button type="button">10</button><button type="button">11</button><button type="button">12</button><button type="button">13</button><button type="button">14</button><button type="button">15</button><button type="button">16</button><button type="button">17</button><button type="button">18</button><button type="button">19</button><button type="button">20</button>
+        <button type="button" class="cp">Copy notes to&hellip;</button>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<section class="look d08" id="d08">
+  <div class="meta">
+    <h2><span class="fig">08</span>Menu bar</h2>
+    <p>The least on screen. One slim bar of menus, each showing its current value: instrument, pattern, length, note value, frets and sound. The editor gets the whole width and nearly all the height. A menu opens on a small panel; the Pattern panel is drawn open here, with its twenty numbers and Copy. Shown with Lead Guitar.</p>
+  </div>
+  <div class="frame">
+    <header class="bar">
+      <div class="mw"><button type="button" class="m" aria-haspopup="true" aria-expanded="false"><small>Instrument</small><b>Lead Guitar</b></button></div>
+      <div class="mw">
+        <button type="button" class="m" aria-haspopup="true" aria-expanded="true"><small>Pattern</small><b>5</b></button>
+        <div class="pop" role="group" aria-label="Patterns">
+          <div class="g"><button type="button" class="has">1</button><button type="button" class="has">2</button><button type="button" class="has">3</button><button type="button">4</button><button type="button" class="has" aria-pressed="true">5</button><button type="button">6</button><button type="button">7</button><button type="button">8</button><button type="button">9</button><button type="button">10</button><button type="button">11</button><button type="button">12</button><button type="button">13</button><button type="button">14</button><button type="button">15</button><button type="button">16</button><button type="button">17</button><button type="button">18</button><button type="button">19</button><button type="button">20</button></div>
+          <button type="button" class="cp">Copy notes to&hellip;</button>
+        </div>
+      </div>
+      <div class="mw"><button type="button" class="m" aria-haspopup="true" aria-expanded="false"><small>Length</small><b>1x</b></button></div>
+      <div class="mw"><button type="button" class="m" aria-haspopup="true" aria-expanded="false"><small>Note value</small><b>16th</b></button></div>
+      <div class="mw"><button type="button" class="m" aria-haspopup="true" aria-expanded="false"><small>Frets</small><b>7</b></button></div>
+      <div class="mw"><button type="button" class="m" aria-haspopup="true" aria-expanded="false"><small>Envelope</small><b>Sound</b></button></div>
+      <div class="mw"><button type="button" class="m plain" aria-pressed="false"><small>View</small><b>Whole pattern</b></button></div>
+      <span class="gap"></span>
+      <button type="button" class="undo">Undo</button>
+      <button type="button" class="go"><i></i>Play</button>
+    </header>
+    <div class="scroll">
+      <div class="ed">
+        <ol class="beats" aria-label="Beats"><li>1</li><li>2</li><li>3</li><li>4</li></ol>
+        <div class="str"><b>E2</b><div class="cells" role="group" aria-label="E2 string"></div><span></span></div>
+        <div class="str"><b>A2</b><div class="cells" role="group" aria-label="A2 string"></div><span></span></div>
+        <div class="str"><b>D3</b><div class="cells" role="group" aria-label="D3 string"></div><span></span></div>
+        <div class="str"><b>G3</b><div class="cells" role="group" aria-label="G3 string"><button type="button" class="n" style="--r:2;--c:11;--l:2">2</button></div><span></span></div>
+        <div class="str"><b>B3</b><div class="cells" role="group" aria-label="B3 string"><button type="button" class="n" style="--r:3;--c:7;--l:1">3</button><button type="button" class="n" style="--r:1;--c:9;--l:1">1</button><button type="button" class="n" style="--r:0;--c:13;--l:2">0</button></div><span></span></div>
+        <div class="str"><b>E4</b><div class="cells" role="group" aria-label="E4 string"><button type="button" class="n" style="--r:0;--c:1;--l:1">0</button><button type="button" class="n" style="--r:3;--c:3;--l:1">3</button><button type="button" class="n" style="--r:5;--c:5;--l:2">5</button><button type="button" class="n" style="--r:0;--c:15;--l:1">0</button></div><span></span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="look d09" id="d09">
+  <div class="meta">
+    <h2><span class="fig">09</span>Bottom dock</h2>
+    <p>Play comes first at the top left, with Undo, and the instrument choice at the right. The editor fills the middle, each string a band with its name in a cell beside it. Under it a dock of three equal panels, side by side: Patterns, Tools, and Envelope. Shown with Rhythm Guitar.</p>
+  </div>
+  <div class="frame">
+    <header class="top">
+      <button type="button" class="go"><i></i>Play</button>
+      <button type="button">Undo</button>
+      <div class="who" role="group" aria-label="Instrument"><button type="button" aria-pressed="false">Bass</button><button type="button" aria-pressed="true">Rhythm Guitar</button><button type="button" aria-pressed="false">Lead Guitar</button></div>
+    </header>
+    <div class="scroll">
+      <div class="ed">
+        <ol class="beats" aria-label="Beats"><li>1</li><li>2</li><li>3</li><li>4</li></ol>
+        <div class="str"><b>E2</b><div class="cells" role="group" aria-label="E2 string"><button type="button" class="n" style="--r:0;--c:5;--l:2">0</button></div></div>
+        <div class="str"><b>A2</b><div class="cells" role="group" aria-label="A2 string"><button type="button" class="n" style="--r:0;--c:1;--l:2">0</button><button type="button" class="n" style="--r:2;--c:5;--l:2">2</button><button type="button" class="n" style="--r:0;--c:9;--l:1">0</button></div></div>
+        <div class="str"><b>D3</b><div class="cells" role="group" aria-label="D3 string"><button type="button" class="n" style="--r:2;--c:1;--l:2">2</button><button type="button" class="n" style="--r:2;--c:5;--l:2">2</button><button type="button" class="n" style="--r:2;--c:9;--l:1">2</button></div></div>
+        <div class="str"><b>G3</b><div class="cells" role="group" aria-label="G3 string"><button type="button" class="n" style="--r:2;--c:1;--l:2">2</button><button type="button" class="n" style="--r:0;--c:5;--l:2">0</button><button type="button" class="n" style="--r:2;--c:9;--l:1">2</button><button type="button" class="n" style="--r:0;--c:11;--l:1">0</button><button type="button" class="n" style="--r:2;--c:12;--l:1">2</button></div></div>
+        <div class="str"><b>B3</b><div class="cells" role="group" aria-label="B3 string"><button type="button" class="n" style="--r:1;--c:1;--l:2">1</button><button type="button" class="n" style="--r:1;--c:9;--l:1">1</button><button type="button" class="n" style="--r:0;--c:13;--l:2">0</button></div></div>
+        <div class="str"><b>E4</b><div class="cells" role="group" aria-label="E4 string"><button type="button" class="n" style="--r:3;--c:15;--l:2">3</button></div></div>
+      </div>
+    </div>
+    <div class="dock">
+      <section aria-label="Patterns">
+        <p>Pattern</p>
+        <div class="nums" role="group" aria-label="Patterns"><button type="button" class="has">1</button><button type="button" class="has" aria-pressed="true">2</button><button type="button" class="has">3</button><button type="button">4</button><button type="button" class="has">5</button><button type="button">6</button><button type="button">7</button><button type="button">8</button><button type="button">9</button><button type="button">10</button><button type="button">11</button><button type="button">12</button><button type="button">13</button><button type="button">14</button><button type="button">15</button><button type="button">16</button><button type="button">17</button><button type="button">18</button><button type="button">19</button><button type="button">20</button></div>
+        <button type="button" class="cp">Copy notes to&hellip;</button>
+      </section>
+      <section aria-label="Tools">
+        <p>Length</p>
+        <div class="tl four" role="group" aria-label="Pattern length"><button type="button" aria-pressed="true">1x</button><button type="button">2x</button><button type="button">4x</button><button type="button">8x</button></div>
+        <p>Note value</p>
+        <div class="tl" role="group" aria-label="Note value"><button type="button">Whole</button><button type="button">Half</button><button type="button">Quarter</button><button type="button" aria-pressed="true">16th</button><button type="button">Third</button><button type="button">Half of a third</button></div>
+        <p>Frets</p>
+        <div class="tl" role="group" aria-label="Frets"><button type="button">5</button><button type="button" aria-pressed="true">7</button><button type="button">12</button></div>
+        <div class="tl one"><button type="button" aria-pressed="false">Show whole pattern</button></div>
+      </section>
+      <section aria-label="Envelope">
+        <p>Envelope</p>
+        <div class="fl">
+          <label>Volume<input type="range" min="0" max="100" value="70"><output>70</output></label>
+          <label>Attack<input type="range" min="0" max="100" value="4"><output>4</output></label>
+          <label>Decay<input type="range" min="0" max="100" value="50"><output>50</output></label>
+          <label>Release<input type="range" min="0" max="100" value="35"><output>35</output></label>
+        </div>
+      </section>
+    </div>
+  </div>
+</section>
+
+<section class="look d10" id="d10">
+  <div class="meta">
+    <h2><span class="fig">10</span>Numbered steps</h2>
+    <p>A page that tells you what to do in order. Five numbered steps run down one column: choose the instrument, choose a pattern and its length, choose a note value and frets, place the notes, shape the sound. Undo and Play wait in a bar on top. Nothing is hidden and nothing needs a manual. Shown with Bass.</p>
+  </div>
+  <div class="frame">
+    <header class="head"><button type="button">Undo</button><button type="button" class="go"><i></i>Play</button></header>
+    <ol class="steps">
+      <li>
+        <div class="st"><h3>Pick the instrument</h3>
+          <div class="big" role="group" aria-label="Instrument"><button type="button" aria-pressed="true">Bass<span>4 strings</span></button><button type="button" aria-pressed="false">Rhythm Guitar<span>6 strings</span></button><button type="button" aria-pressed="false">Lead Guitar<span>6 strings</span></button></div>
+        </div>
+      </li>
+      <li>
+        <div class="st"><h3>Pick a pattern</h3>
+          <div class="chips" role="group" aria-label="Patterns"><button type="button" class="has" aria-pressed="true">1</button><button type="button" class="has">2</button><button type="button" class="has">3</button><button type="button">4</button><button type="button" class="has">5</button><button type="button">6</button><button type="button">7</button><button type="button">8</button><button type="button">9</button><button type="button">10</button><button type="button">11</button><button type="button">12</button><button type="button">13</button><button type="button">14</button><button type="button">15</button><button type="button">16</button><button type="button">17</button><button type="button">18</button><button type="button">19</button><button type="button">20</button><button type="button" class="cp">Copy notes to&hellip;</button></div>
+          <div class="ask"><p>Length</p><span role="group" aria-label="Pattern length"><button type="button" aria-pressed="true">1x</button> <button type="button">2x</button> <button type="button">4x</button> <button type="button">8x</button></span></div>
+        </div>
+      </li>
+      <li>
+        <div class="st"><h3>Pick a note value</h3>
+          <div class="ask" role="group" aria-label="Note value"><button type="button">Whole</button><button type="button">Half</button><button type="button">Quarter</button><button type="button" aria-pressed="true">16th</button><button type="button">Third</button><button type="button">Half of a third</button></div>
+          <div class="ask"><p>Frets</p><span role="group" aria-label="Frets"><button type="button">5</button> <button type="button" aria-pressed="true">7</button> <button type="button">12</button></span><button type="button" class="gap" aria-pressed="false">Show whole pattern</button></div>
+        </div>
+      </li>
+      <li class="here">
+        <div class="st"><h3>Place the notes</h3>
+          <div class="scroll">
+            <div class="ed">
+              <ol class="beats" aria-label="Beats"><li>1</li><li>2</li><li>3</li><li>4</li></ol>
+              <div class="str"><ol class="lab"><li>E1</li><li>F1</li><li>F#1</li><li>G1</li><li>G#1</li><li>A1</li><li>Bb1</li><li>B1</li></ol><div class="cells" role="group" aria-label="E1 string"><button type="button" class="n" style="--r:0;--c:1;--l:2">0</button><button type="button" class="n" style="--r:3;--c:4;--l:1">3</button><button type="button" class="n" style="--r:0;--c:15;--l:2">0</button></div></div>
+              <div class="str"><ol class="lab"><li>A1</li><li>Bb1</li><li>B1</li><li>C2</li><li>C#2</li><li>D2</li><li>Eb2</li><li>E2</li></ol><div class="cells" role="group" aria-label="A1 string"><button type="button" class="n" style="--r:0;--c:5;--l:2">0</button><button type="button" class="n" style="--r:2;--c:8;--l:1">2</button><button type="button" class="n" style="--r:0;--c:13;--l:2">0</button></div></div>
+              <div class="str"><ol class="lab"><li>D2</li><li>Eb2</li><li>E2</li><li>F2</li><li>F#2</li><li>G2</li><li>Ab2</li><li>A2</li></ol><div class="cells" role="group" aria-label="D2 string"><button type="button" class="n" style="--r:0;--c:9;--l:2">0</button><button type="button" class="n" style="--r:2;--c:12;--l:1">2</button></div></div>
+              <div class="str"><ol class="lab"><li>G2</li><li>Ab2</li><li>A2</li><li>Bb2</li><li>B2</li><li>C3</li><li>Db3</li><li>D3</li></ol><div class="cells" role="group" aria-label="G2 string"></div></div>
+            </div>
+          </div>
+        </div>
+      </li>
+      <li>
+        <div class="st"><h3>Shape the sound</h3>
+          <div class="snd">
+            <label>Volume<output>85</output><input type="range" min="0" max="100" value="85"></label>
+            <label>Attack<output>3</output><input type="range" min="0" max="100" value="3"></label>
+            <label>Decay<output>45</output><input type="range" min="0" max="100" value="45"></label>
+            <label>Release<output>25</output><input type="range" min="0" max="100" value="25"></label>
+          </div>
+        </div>
+      </li>
+    </ol>
+  </div>
+</section>
+
+<section class="look d11" id="d11">
+  <div class="meta">
+    <h2><span class="fig">11</span>String cards</h2>
+    <p>Each string is its own card with a header naming it, so you never lose which string you are on. Patterns, length and note value sit above the cards. A narrow panel on the right holds what you set once: the instrument, the frets, the whole-pattern view and the four sliders. Shown with Lead Guitar.</p>
+  </div>
+  <div class="frame">
+    <div class="shell">
+      <div class="main">
+        <div class="rowa">
+          <div class="nums" role="group" aria-label="Patterns"><button type="button" class="has">1</button><button type="button" class="has">2</button><button type="button" class="has">3</button><button type="button">4</button><button type="button" class="has" aria-pressed="true">5</button><button type="button">6</button><button type="button">7</button><button type="button">8</button><button type="button">9</button><button type="button">10</button><button type="button">11</button><button type="button">12</button><button type="button">13</button><button type="button">14</button><button type="button">15</button><button type="button">16</button><button type="button">17</button><button type="button">18</button><button type="button">19</button><button type="button">20</button></div>
+          <button type="button" class="cp">Copy notes to&hellip;</button>
+          <div class="acts"><button type="button">Undo</button><button type="button" class="go"><i></i>Play</button></div>
+        </div>
+        <div class="tags">
+          <div><p>Length</p><span class="seg" role="group" aria-label="Pattern length"><button type="button" aria-pressed="true">1x</button><button type="button">2x</button><button type="button">4x</button><button type="button">8x</button></span></div>
+          <div><p>Note value</p><span class="seg" role="group" aria-label="Note value"><button type="button">Whole</button><button type="button">Half</button><button type="button">Quarter</button><button type="button" aria-pressed="true">16th</button><button type="button">Third</button><button type="button">Half of a third</button></span></div>
+        </div>
+        <div class="scroll">
+          <div class="cards">
+            <ol class="beats" aria-label="Beats"><li>1</li><li>2</li><li>3</li><li>4</li></ol>
+            <article class="card"><header><b>E2</b><span>open string</span></header><div class="body"><ol class="fr"><li>0</li><li>1</li><li>2</li><li>3</li><li>4</li><li>5</li><li>6</li><li>7</li></ol><div class="cells" role="group" aria-label="E2 string"></div></div></article>
+            <article class="card"><header><b>A2</b><span>open string</span></header><div class="body"><ol class="fr"><li>0</li><li>1</li><li>2</li><li>3</li><li>4</li><li>5</li><li>6</li><li>7</li></ol><div class="cells" role="group" aria-label="A2 string"></div></div></article>
+            <article class="card"><header><b>D3</b><span>open string</span></header><div class="body"><ol class="fr"><li>0</li><li>1</li><li>2</li><li>3</li><li>4</li><li>5</li><li>6</li><li>7</li></ol><div class="cells" role="group" aria-label="D3 string"></div></div></article>
+            <article class="card"><header><b>G3</b><span>open string</span></header><div class="body"><ol class="fr"><li>0</li><li>1</li><li>2</li><li>3</li><li>4</li><li>5</li><li>6</li><li>7</li></ol><div class="cells" role="group" aria-label="G3 string"><button type="button" class="n" style="--r:2;--c:11;--l:2">2</button></div></div></article>
+            <article class="card"><header><b>B3</b><span>open string</span></header><div class="body"><ol class="fr"><li>0</li><li>1</li><li>2</li><li>3</li><li>4</li><li>5</li><li>6</li><li>7</li></ol><div class="cells" role="group" aria-label="B3 string"><button type="button" class="n" style="--r:3;--c:7;--l:1">3</button><button type="button" class="n" style="--r:1;--c:9;--l:1">1</button><button type="button" class="n" style="--r:0;--c:13;--l:2">0</button></div></div></article>
+            <article class="card"><header><b>E4</b><span>open string</span></header><div class="body"><ol class="fr"><li>0</li><li>1</li><li>2</li><li>3</li><li>4</li><li>5</li><li>6</li><li>7</li></ol><div class="cells" role="group" aria-label="E4 string"><button type="button" class="n" style="--r:0;--c:1;--l:1">0</button><button type="button" class="n" style="--r:3;--c:3;--l:1">3</button><button type="button" class="n" style="--r:5;--c:5;--l:2">5</button><button type="button" class="n" style="--r:0;--c:15;--l:1">0</button></div></div></article>
+          </div>
+        </div>
+      </div>
+      <aside class="side" aria-label="Settings">
+        <div><p>Instrument</p><div class="radio" role="group" aria-label="Instrument"><button type="button" aria-pressed="false">Bass</button><button type="button" aria-pressed="false">Rhythm Guitar</button><button type="button" aria-pressed="true">Lead Guitar</button></div></div>
+        <div><p>Frets</p><div class="three" role="group" aria-label="Frets"><button type="button">5</button><button type="button" aria-pressed="true">7</button><button type="button">12</button></div><button type="button" class="wide" aria-pressed="false">Show whole pattern</button></div>
+        <div><p>Envelope</p>
+          <label>Volume<output>80</output><input type="range" min="0" max="100" value="80"></label>
+          <label>Attack<output>2</output><input type="range" min="0" max="100" value="2"></label>
+          <label>Decay<output>30</output><input type="range" min="0" max="100" value="30"></label>
+          <label>Release<output>45</output><input type="range" min="0" max="100" value="45"></label>
+        </div>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<section class="look d12" id="d12">
+  <div class="meta">
+    <h2><span class="fig">12</span>Narrow column</h2>
+    <p>One centred column, a phone-sized width, with large buttons and plenty of room between groups. Play is the widest control, at the top. The choices follow in a fixed order, then the editor in a box that scrolls sideways with the string names held in place, then the sliders. The same page at any window width. Shown with Rhythm Guitar.</p>
+  </div>
+  <div class="frame">
+    <div class="col">
+      <div class="top"><button type="button" class="go"><i></i>Play</button><button type="button">Undo</button></div>
+      <div class="grp"><p>Instrument</p><div class="opt" style="--n:3" role="group" aria-label="Instrument"><button type="button" aria-pressed="false">Bass</button><button type="button" aria-pressed="true">Rhythm</button><button type="button" aria-pressed="false">Lead</button></div></div>
+      <div class="grp"><p>Pattern</p><div class="opt fig" style="--n:5" role="group" aria-label="Patterns"><button type="button" class="has" aria-pressed="true">1</button><button type="button" class="has">2</button><button type="button" class="has">3</button><button type="button">4</button><button type="button" class="has">5</button><button type="button">6</button><button type="button">7</button><button type="button">8</button><button type="button">9</button><button type="button">10</button><button type="button">11</button><button type="button">12</button><button type="button">13</button><button type="button">14</button><button type="button">15</button><button type="button">16</button><button type="button">17</button><button type="button">18</button><button type="button">19</button><button type="button">20</button></div><button type="button" class="wide">Copy notes to&hellip;</button></div>
+      <div class="grp"><p>Length</p><div class="opt" style="--n:4" role="group" aria-label="Pattern length"><button type="button" aria-pressed="true">1x</button><button type="button">2x</button><button type="button">4x</button><button type="button">8x</button></div></div>
+      <div class="grp"><p>Note value</p><div class="opt" style="--n:3" role="group" aria-label="Note value"><button type="button">Whole</button><button type="button">Half</button><button type="button">Quarter</button><button type="button" aria-pressed="true">16th</button><button type="button">Third</button><button type="button">Half of a third</button></div></div>
+      <div class="grp"><p>Frets</p><div class="opt" style="--n:3" role="group" aria-label="Frets"><button type="button">5</button><button type="button" aria-pressed="true">7</button><button type="button">12</button></div><button type="button" class="wide" aria-pressed="false">Show whole pattern</button></div>
+      <div class="scroll">
+        <div class="ed">
+          <ol class="beats" aria-label="Beats"><li>1</li><li>2</li><li>3</li><li>4</li></ol>
+          <div class="str"><b>E2</b><div class="cells" role="group" aria-label="E2 string"><button type="button" class="n" style="--r:0;--c:5;--l:2">0</button></div></div>
+          <div class="str"><b>A2</b><div class="cells" role="group" aria-label="A2 string"><button type="button" class="n" style="--r:0;--c:1;--l:2">0</button><button type="button" class="n" style="--r:2;--c:5;--l:2">2</button><button type="button" class="n" style="--r:0;--c:9;--l:1">0</button></div></div>
+          <div class="str"><b>D3</b><div class="cells" role="group" aria-label="D3 string"><button type="button" class="n" style="--r:2;--c:1;--l:2">2</button><button type="button" class="n" style="--r:2;--c:5;--l:2">2</button><button type="button" class="n" style="--r:2;--c:9;--l:1">2</button></div></div>
+          <div class="str"><b>G3</b><div class="cells" role="group" aria-label="G3 string"><button type="button" class="n" style="--r:2;--c:1;--l:2">2</button><button type="button" class="n" style="--r:0;--c:5;--l:2">0</button><button type="button" class="n" style="--r:2;--c:9;--l:1">2</button><button type="button" class="n" style="--r:0;--c:11;--l:1">0</button><button type="button" class="n" style="--r:2;--c:12;--l:1">2</button></div></div>
+          <div class="str"><b>B3</b><div class="cells" role="group" aria-label="B3 string"><button type="button" class="n" style="--r:1;--c:1;--l:2">1</button><button type="button" class="n" style="--r:1;--c:9;--l:1">1</button><button type="button" class="n" style="--r:0;--c:13;--l:2">0</button></div></div>
+          <div class="str"><b>E4</b><div class="cells" role="group" aria-label="E4 string"><button type="button" class="n" style="--r:3;--c:15;--l:2">3</button></div></div>
+        </div>
+      </div>
+      <div class="snd">
+        <label>Volume<input type="range" min="0" max="100" value="70"><output>70</output></label>
+        <label>Attack<input type="range" min="0" max="100" value="4"><output>4</output></label>
+        <label>Decay<input type="range" min="0" max="100" value="50"><output>50</output></label>
+        <label>Release<input type="range" min="0" max="100" value="35"><output>35</output></label>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+</div>
+</body>
+</html>

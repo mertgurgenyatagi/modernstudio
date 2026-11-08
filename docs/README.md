@@ -17,7 +17,7 @@ The specification phase is closed. It was built through 15 questionnaires, and e
 7. [pages.md](pages.md) — the names of the pages and what each contains.
 8. [stack.md](stack.md) — the chosen tech stack and the installed tooling.
 9. [design.md](design.md) — the decided palette and fonts (Bone and black). Not a layout or page design.
-10. [page-designs.md](page-designs.md) — the decided layout of each page, picked one at a time. So far: the Mixer (the Ledger), the Song page (the Brush bar) and the Drums page (the Pad machine).
+10. [page-designs.md](page-designs.md) — the decided layout of each page, picked one at a time. So far: the Mixer (the Ledger), the Song page (the Brush bar), the Drums page (the Pad machine) and the Guitar page (the String cards), one page for Bass, Rhythm Guitar and Lead Guitar.
 11. [open-items.md](open-items.md) — everything undecided or decided by assumption. Read before building.
 
 ## Where the truth lives
@@ -26,4 +26,4 @@ If a doc and a questionnaire answer disagree, the answer file wins, unless a lat
 
 ## Next
 
-The stack is chosen, and so are the palette, the fonts, and the Mixer, Song and Drums layouts. Next: decide the remaining page designs one page at a time (the guitar pages next), then build the audition tool to pick the General MIDI instruments, then build the app. The full described scope is wanted in the first build.
+The stack is chosen, and so are the palette, the fonts, and the Mixer, Song, Drums and Guitar layouts. Next: decide the last page design, Keys, then build the audition tool to pick the General MIDI instruments, then build the app. The full described scope is wanted in the first build.

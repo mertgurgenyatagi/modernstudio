@@ -107,3 +107,44 @@ None of this is in the questionnaire answers. Change it if wrong.
 ### Where to look
 
 The drawn version is design 03 in [exhibition/drums.html](exhibition/drums.html). The other nine stay there as the record of what was considered.
+
+## Guitar: the String cards
+
+Chosen on 2026-11-08 from [exhibition/guitars.html](exhibition/guitars.html), design 11. Twelve designs were built. None was opened in a browser; they were only checked with the static lint, so the picked layout is unseen rendered. The guiding principle was simplicity and ease of use.
+
+### What it is
+
+One page for Bass, Rhythm Guitar and Lead Guitar, because the three differ only in their strings. Each string is its own card with a header naming it, so you never lose which string you are on. What you set once (instrument, frets, envelope) sits in a narrow panel at the right.
+
+### Layout
+
+- **Two columns.** A main column on the paper-3 ground, and a 15rem panel at the right with a paper-2 ground and a 1px ink rule between them.
+- **Pattern row, top of the main column.** The twenty pattern numbers in one row of small squares, then "Copy notes to…", then at the far right Undo and Play (filled ink). A pattern that has notes has an ink outline and ink figures. An empty pattern has a grey outline and grey figures, and can still be selected. The selected pattern is ink-filled.
+- **Tools row, under it.** Two labelled groups of small buttons: Length (1x, 2x, 4x, 8x) and Note value (Whole, Half, Quarter, 16th, Third, Half of a third). The chosen one in each is ink-filled.
+- **Beat numbers.** 1 to 4 above the cards.
+- **String cards, top to bottom, lowest pitch first.** Bass has four: E1, A1, D2, G2. Rhythm Guitar and Lead Guitar have six: E2, A2, D3, G3, B3, E4. Each card is a bordered block with a header strip holding the string name in the figure face and the words "open string" in grey. Below the header, a narrow left column of fret numbers 0 to 7, then sixteen columns of steps with a line at each beat. The row for fret 0, the open string, is tinted. A placed note is an ink-filled square showing its fret number, as wide as its length.
+- **Side panel, top to bottom.**
+  - **Instrument:** three stacked choices, Bass, Rhythm Guitar, Lead Guitar. The chosen one is ink-filled.
+  - **Frets:** 5, 7 or 12 as three buttons, with a "Show whole pattern" button under them.
+  - **Envelope:** Volume, Attack, Decay and Release, each a name, a number and a slider.
+- **Narrow windows.** The panel moves under the main column, in two columns. The cards scroll sideways as one piece. The page itself never scrolls sideways.
+
+### Assumed in the design
+
+None of this is in the questionnaire answers. Change it if wrong.
+
+- Bass, Rhythm Guitar and Lead Guitar are one page. This is the user's decision, not a questionnaire answer. The instrument is a three-way choice in the side panel, because the docs place it nowhere.
+- Switching instrument swaps in that instrument's own patterns, notes, fret count and envelope. Bass shows four cards, the guitars six.
+- Rows are labelled by fret number, 0 to 7. The example in [instrument-layouts.md](instrument-layouts.md) names the pitch on every row (E2, F2, F#2 and so on); this design shows the pitch only in the card header, as the open string. Pitch names on every row could be added without changing the layout.
+- With 5 or 12 frets the cards would have 6 or 13 rows. Neither is drawn.
+- Sixteen steps per bar are drawn because 16th is the note value shown as chosen. How the grid changes for Whole, Half, Quarter, Third and Half of a third is not drawn. Nor is a 2x, 4x or 8x pattern; the cards would scroll sideways, or "Show whole pattern" would fit them all.
+- The Guitar page carries its own Undo and Play, as the Mixer, Song and Drums pages do. [pages.md](pages.md) says where the transport and undo belong is not specified.
+- "Show whole pattern" is a button that stays pressed when on. "Copy notes to…" is a button, and the picker that follows it is not drawn.
+- Empty patterns are selectable, because a pattern becomes active when the first note is placed in it.
+- The envelope values are shown on a 0 to 100 scale with no unit.
+- The sample notes, the active pattern numbers (1, 2, 3 and 5) and the envelope values in the exhibition are made up to fill the screen.
+- Corner shape, line weight and row height are this page's own and are not a decision for other pages.
+
+### Where to look
+
+The drawn version is design 11 in [exhibition/guitars.html](exhibition/guitars.html), shown with Lead Guitar. The other eleven stay there as the record of what was considered.
