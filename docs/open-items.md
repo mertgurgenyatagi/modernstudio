@@ -28,3 +28,12 @@ Not yet decided, or decided by assumption.
 - MIDI import merges only exact repeats when it builds patterns. A file played by a human has few, so it can need more than 120 patterns on one instrument, in which case the lane is cut. Merging near repeats is not designed. Also not handled: MIDI format 2, SMPTE time, and meters other than 4/4 and 3/4.
 - MIDI reading and writing: own small code or a library is not decided ([midi-import.md](midi-import.md)). The Python in [tools/midi-prototype/](../tools/midi-prototype/) is a reference, not part of the app.
 - Questionnaire 17 was published but never answered, because the user closed the questionnaire step. Its questions are left to the builder's judgement: whether Undo restores notes deleted by a meter change, whether Delete removes selected notes in the instrument editors, whether copying notes into a pattern replaces or adds to its notes, whether the third value shows only third steps, and whether Keys labels every row or only the Cs.
+- Project model assumptions (plan24 step 2, see [project-model.md](project-model.md)):
+  - Undo restores notes deleted by a meter change, since the history holds whole-project snapshots (this settles that part of the questionnaire 17 question).
+  - Copying notes into a pattern replaces the target's notes by default; the model also supports adding. The target keeps its own length. The third value showing only third steps and whether Keys labels every row are still open and belong to the pages.
+  - Notes on frets above a lowered fret count are kept, hidden, and return when the count is raised, the same as notes outside a shortened pattern. This settles the fret-count question above for the model; the page may still want to warn.
+  - A Song block is as long as its pattern. Lengthening a pattern is refused if one of its blocks would then overlap the next block or pass bar 256, and the page must say so. Shortening always works and leaves a gap.
+  - A meter switch also deletes notes that were already hidden past the end of a shortened pattern, if they lie beyond the new bar, and shortens notes that run past the new end.
+  - Bass has a fret count like the guitars (5, 7 or 12, default 7). Drums and Keys have none.
+  - Defaults: volume 80, master volume 80, attack, decay and release 0 (the recorded sound unshaped). The audio engine (step 4) gives the 0 to 100 numbers their meaning and may change these defaults.
+  - Isolate is not saved with the project. Undo keeps at most 1000 steps. The next set of patterns opens 20 at a time.
