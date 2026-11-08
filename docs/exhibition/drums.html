@@ -1,0 +1,1090 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>modernstudio drums designs</title>
+<meta name="description" content="Ten layouts for the modernstudio Drums page, in the decided Bone and black look.">
+<link rel="icon" href="data:,">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Piazzolla:wght@700&family=Golos+Text:wght@400;500;600&family=Fragment+Mono&display=swap">
+<style>
+/* Hallmark · shape: app screen · genre: modern-minimal · theme: custom (Bone and black, locked by docs/design.md)
+ * paper: oklch 96.5% 0.006 90 · accent: the ink itself · display: Piazzolla 700 · body: Golos Text · figures: Fragment Mono
+ * nav: none, the Drums page alone · signature: the five-row drum grid with its hits placed on the step lines · states: default, hover, focus, active, pressed, disabled
+ * axes: mixed/mixed/mixed · posture: restrained, ink fills only the selected pattern, the selected option, the hits and the running Play button · contrast: pass · v2.0.0 */
+/* Hallmark · pre-emit critique: P4 H4 E4 S4 R4 V5 · weakest: S, the five rows, the step lines and the control set are fixed by the docs, so the designs differ in where patterns, tools and envelope sit and in how the grid is drawn; each design has its own markup and rules */
+/* Hallmark · answered F4 · the filled ink style marks only a selected pattern, a selected option, a placed hit or the Play control, never a primary action, and each design is a separate layout being compared */
+/* Hallmark · answered F7 · the row, step line and hit recipes repeat across designs on purpose: only the arrangement around them differs between the ten */
+/* Hallmark · waive 37 · three families only (Piazzolla, Golos Text, Fragment Mono), flagged by the page loading one stylesheet for all three · the project fixed exactly these three in docs/design.md */
+
+:root {
+  --color-paper: oklch(96.5% 0.006 90);  --color-paper-2: oklch(99% 0.004 90);  --color-paper-3: oklch(94% 0.006 90);
+  --color-ink: oklch(18% 0.006 90);  --color-muted: oklch(44% 0.006 90);  --color-rule: oklch(79% 0.006 90);
+  --color-accent: oklch(18% 0.006 90);  --color-accent-ink: oklch(97% 0.005 90);  --color-focus: oklch(18% 0.006 90);
+  --font-display: "Piazzolla", ui-serif, serif;
+  --font-body: "Golos Text", ui-sans-serif, sans-serif;
+  --font-outlier: "Fragment Mono", ui-monospace, monospace;
+
+  --space-3xs: 2px; --space-2xs: 4px; --space-xs: 8px; --space-sm: 12px; --space-md: 16px; --space-lg: 24px; --space-lgx: 32px; --space-xl: 40px; --space-2xl: 64px; --space-3xl: 96px;
+  --text-xs: 0.75rem; --text-sm: 0.8125rem; --text-md: 0.9375rem; --text-lg: 1.0625rem; --text-xl: 1.2rem; --text-2xl: 1.5rem; --text-3xl: 2.25rem; --text-4xl: 3.5rem; --text-5xl: 6rem;
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --dur-micro: 120ms;
+  --container: 1360px; --gutter: 24px;
+  --rule-w: 1px;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html, body { overflow-x: clip; }
+html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; scrollbar-color: var(--color-muted) var(--color-paper-3); caret-color: var(--color-ink); }
+body { margin: 0; background: var(--color-paper-3); color: var(--color-ink); font-family: var(--font-body); font-size: var(--text-md); line-height: 1.5; font-synthesis: none; }
+h1, h2, h3, h4, p, ul, ol, dl, dd, figure { margin: 0; }
+h1, h2, h3, h4 { text-wrap: balance; overflow-wrap: break-word; min-width: 0; }
+ul, ol { padding: 0; list-style: none; }
+a { color: inherit; }
+::selection { background: var(--color-ink); color: var(--color-accent-ink); }
+
+.wrap { width: 100%; max-width: var(--container); margin: 0 auto; padding: var(--space-xl) var(--gutter) var(--space-3xl); }
+
+/* page header */
+.page-head { display: grid; gap: var(--space-md); max-width: 70ch; margin-bottom: var(--space-2xl); }
+.page-head h1 { font-family: var(--font-display); font-weight: 700; font-size: var(--text-3xl); line-height: 1.1; letter-spacing: -0.015em; }
+.page-head p { color: var(--color-muted); max-width: 62ch; }
+.index { display: grid; grid-template-columns: repeat(auto-fill, minmax(11rem, 1fr)); gap: 0 var(--space-md); max-width: 62rem; margin-top: var(--space-xs); }
+.index a { display: block; padding: var(--space-xs) 0; text-decoration: none; border-bottom: 1px solid var(--color-rule); }
+.index a span { font-family: var(--font-outlier); color: var(--color-muted); margin-right: var(--space-xs); }
+.index a:hover { border-bottom-color: var(--color-ink); }
+.index a:active { transform: translateY(1px); }
+.index a:focus-visible { outline: 3px solid var(--color-focus); outline-offset: 2px; }
+
+/* the frame around each design */
+.look { margin-top: var(--space-3xl); scroll-margin-top: var(--space-lg); }
+.meta { display: grid; gap: var(--space-xs); margin-bottom: var(--space-md); max-width: 70ch; }
+.meta h2 { font-family: var(--font-display); font-weight: 700; font-size: var(--text-2xl); line-height: 1.15; }
+.meta h2 .fig { margin-right: var(--space-xs); }
+.meta p { max-width: 62ch; }
+.frame { container-type: inline-size; background: var(--color-paper); color: var(--color-ink); border: var(--rule-w) solid var(--color-rule); overflow: clip; }
+.frame :is(button, input, output, select) { font: inherit; color: inherit; }
+.frame button { cursor: pointer; }
+.frame button:active { transform: translateY(1px); }
+.frame button:disabled { opacity: 0.45; cursor: not-allowed; }
+.frame button:disabled:active { transform: none; }
+.frame :focus-visible { outline: 3px solid var(--color-focus); outline-offset: 2px; }
+.frame h3, .frame h4 { font-family: var(--font-display); font-weight: 700; }
+.frame .fig { font-family: var(--font-outlier); font-variant-numeric: tabular-nums; }
+.frame .sr { position: absolute; inline-size: 1px; block-size: 1px; overflow: clip; clip-path: inset(50%); white-space: nowrap; }
+.frame input[type="range"] { accent-color: var(--color-ink); }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition: none !important; animation: none !important; scroll-behavior: auto !important; }
+  .index a:active, .frame button:active { transform: none; }
+}
+@media (max-width: 40rem) { :root { --gutter: 16px; } }
+
+/* ===== 01 Bands ===== */
+.d01 .top { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-sm) var(--space-sm); padding: var(--space-sm) var(--space-lg); background: var(--color-paper-2); border-bottom: var(--rule-w) solid var(--color-rule); }
+.d01 .top h3 { margin-right: auto; font-size: var(--text-xl); line-height: 1.2; }
+.d01 .btn { display: inline-flex; align-items: center; gap: var(--space-xs); block-size: 2.25rem; padding: 0 var(--space-md); border: var(--rule-w) solid var(--color-ink); border-radius: 2px; background: var(--color-paper); font-weight: 600; transition: background-color var(--dur-micro) var(--ease-out); }
+.d01 .btn:hover { background: var(--color-paper-3); }
+.d01 .btn .tri { inline-size: 0; block-size: 0; border: 0.4rem solid transparent; border-left: 0.65rem solid currentColor; border-right: 0; }
+.d01 .picker { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-sm) var(--space-lg); padding: var(--space-md) var(--space-lg); border-bottom: var(--rule-w) solid var(--color-rule); }
+.d01 .picker > p { color: var(--color-muted); font-size: var(--text-sm); }
+.d01 .chips { display: flex; flex-wrap: wrap; flex: 1 1 24rem; gap: var(--space-2xs); }
+.d01 .chips button { inline-size: 2rem; block-size: 2rem; padding: 0; border: var(--rule-w) solid var(--color-rule); border-radius: 2px; background: transparent; color: var(--color-muted); font-family: var(--font-outlier); font-size: var(--text-xs); transition: background-color var(--dur-micro) var(--ease-out), color var(--dur-micro) var(--ease-out); }
+.d01 .chips button.has { border-color: var(--color-ink); background: var(--color-paper-2); color: var(--color-ink); }
+.d01 .chips button:hover { background: var(--color-paper-3); }
+.d01 .chips button[aria-pressed="true"] { background: var(--color-ink); border-color: var(--color-ink); color: var(--color-accent-ink); }
+.d01 .copy { block-size: 2rem; padding: 0 var(--space-sm); border: var(--rule-w) solid var(--color-rule); border-radius: 2px; background: transparent; font-size: var(--text-sm); }
+.d01 .copy:hover { border-color: var(--color-ink); }
+.d01 .scroll { overflow-x: auto; }
+.d01 .ed { min-inline-size: 40rem; padding: var(--space-md) var(--space-lg) var(--space-lg); }
+.d01 .ruler { display: grid; grid-template-columns: repeat(4, 1fr); margin-left: 7rem; }
+.d01 .ruler li { padding: 0 0 var(--space-2xs) var(--space-xs); border-left: var(--rule-w) solid var(--color-rule); font-family: var(--font-outlier); font-size: var(--text-xs); color: var(--color-muted); }
+.d01 .row { display: grid; grid-template-columns: 7rem 1fr; border-top: var(--rule-w) solid var(--color-rule); }
+.d01 .row:last-child { border-bottom: var(--rule-w) solid var(--color-rule); }
+.d01 .row b { display: flex; align-items: center; font-weight: 500; }
+.d01 .track { display: grid; grid-template-columns: repeat(16, 1fr); min-block-size: 2.75rem; background: linear-gradient(to right, var(--color-rule) 1px, transparent 1px) 0 0 / 25% 100%, linear-gradient(to right, var(--color-paper-3) 1px, transparent 1px) 0 0 / 6.25% 100%; }
+.d01 .h { grid-row: 1; justify-self: center; align-self: center; inline-size: 1.1rem; block-size: 1.1rem; padding: 0; border: 0; border-radius: 2px; background: var(--color-ink); transition: background-color var(--dur-micro) var(--ease-out); }
+.d01 .h:hover { background: var(--color-muted); }
+.d01 .foot { display: grid; grid-template-columns: repeat(3, auto) 1fr; align-items: end; gap: var(--space-md) var(--space-lg); padding: var(--space-md) var(--space-lg); background: var(--color-paper-2); border-top: var(--rule-w) solid var(--color-ink); }
+.d01 .foot p { margin-bottom: var(--space-2xs); color: var(--color-muted); font-size: var(--text-sm); }
+.d01 .seg { display: inline-flex; border: var(--rule-w) solid var(--color-ink); border-radius: 2px; }
+.d01 .seg button { block-size: 2rem; padding: 0 var(--space-sm); border: 0; border-left: var(--rule-w) solid var(--color-rule); background: var(--color-paper); font-size: var(--text-sm); transition: background-color var(--dur-micro) var(--ease-out); }
+.d01 .seg button:first-child { border-left: 0; }
+.d01 .seg button:hover { background: var(--color-paper-3); }
+.d01 .seg button[aria-pressed="true"] { background: var(--color-ink); color: var(--color-accent-ink); }
+.d01 .tg { block-size: 2rem; padding: 0 var(--space-sm); border: var(--rule-w) solid var(--color-ink); border-radius: 2px; background: var(--color-paper); font-size: var(--text-sm); }
+.d01 .tg:hover { background: var(--color-paper-3); }
+.d01 .tg[aria-pressed="true"] { background: var(--color-ink); color: var(--color-accent-ink); }
+.d01 .env { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--space-md) var(--space-lg); padding-top: var(--space-md); border-top: var(--rule-w) solid var(--color-rule); }
+.d01 .env label { display: grid; grid-template-columns: 1fr auto; gap: var(--space-2xs) var(--space-sm); font-size: var(--text-sm); color: var(--color-muted); }
+.d01 .env input { grid-column: 1 / -1; inline-size: 100%; }
+.d01 .env output { color: var(--color-ink); font-size: var(--text-sm); }
+@container (max-width: 44rem) { .d01 .foot { grid-template-columns: 1fr; } .d01 .env { grid-template-columns: repeat(2, minmax(0, 1fr)); } .d01 .top, .d01 .picker, .d01 .foot { padding-inline: var(--space-md); } .d01 .ed { padding-inline: var(--space-md); } }
+
+/* ===== 02 Three columns ===== */
+.d02 .bar { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-sm); padding: var(--space-sm) var(--space-lg); border-bottom: var(--rule-w) solid var(--color-ink); }
+.d02 .bar h3 { margin-right: auto; font-size: var(--text-xl); line-height: 1.2; }
+.d02 .bar button { block-size: 2.25rem; padding: 0 var(--space-md); border: var(--rule-w) solid var(--color-rule); border-radius: 2px; background: var(--color-paper-2); font-weight: 500; transition: background-color var(--dur-micro) var(--ease-out), border-color var(--dur-micro) var(--ease-out); }
+.d02 .bar button:hover { border-color: var(--color-ink); }
+.d02 .bar .go { display: inline-flex; align-items: center; gap: var(--space-xs); border-color: var(--color-ink); background: var(--color-ink); color: var(--color-accent-ink); font-weight: 600; }
+.d02 .bar .go:hover { background: var(--color-muted); }
+.d02 .bar .go i { inline-size: 0; block-size: 0; border: 0.38rem solid transparent; border-left: 0.62rem solid currentColor; border-right: 0; }
+.d02 .cols { display: grid; grid-template-columns: 13rem minmax(0, 1fr) 14.5rem; }
+.d02 .pats { display: grid; align-content: start; gap: var(--space-md); padding: var(--space-md); background: var(--color-paper-2); border-right: var(--rule-w) solid var(--color-rule); }
+.d02 .pats h4, .d02 .fad h4 { font-size: var(--text-lg); line-height: 1.2; }
+.d02 .grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--space-2xs); }
+.d02 .grid button { aspect-ratio: 1; padding: 0; border: var(--rule-w) solid var(--color-rule); border-radius: 50%; background: transparent; color: var(--color-muted); font-family: var(--font-outlier); font-size: var(--text-sm); transition: background-color var(--dur-micro) var(--ease-out); }
+.d02 .grid button.has { border-color: var(--color-ink); color: var(--color-ink); }
+.d02 .grid button:hover { background: var(--color-paper-3); }
+.d02 .grid button[aria-pressed="true"] { background: var(--color-ink); border-color: var(--color-ink); color: var(--color-accent-ink); }
+.d02 .len { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--space-2xs); }
+.d02 .len button { block-size: 2rem; padding: 0; border: var(--rule-w) solid var(--color-rule); border-radius: 2px; background: var(--color-paper); font-size: var(--text-sm); }
+.d02 .len button:hover { border-color: var(--color-ink); }
+.d02 .len button[aria-pressed="true"] { background: var(--color-ink); border-color: var(--color-ink); color: var(--color-accent-ink); }
+.d02 .cp { padding: var(--space-xs) var(--space-sm); border: var(--rule-w) dashed var(--color-muted); border-radius: 2px; background: transparent; font-size: var(--text-sm); text-align: left; }
+.d02 .cp:hover { border-color: var(--color-ink); border-style: solid; }
+.d02 .mid { min-inline-size: 0; display: grid; align-content: start; }
+.d02 .tools { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-sm) var(--space-md); padding: var(--space-md); border-bottom: var(--rule-w) solid var(--color-rule); }
+.d02 .tools p { color: var(--color-muted); font-size: var(--text-sm); }
+.d02 .vals { display: flex; flex-wrap: wrap; gap: var(--space-2xs); margin-right: auto; }
+.d02 .vals button { block-size: 2rem; padding: 0 var(--space-sm); border: var(--rule-w) solid var(--color-rule); border-radius: 999px; background: var(--color-paper); font-size: var(--text-sm); transition: background-color var(--dur-micro) var(--ease-out); }
+.d02 .vals button:hover { border-color: var(--color-ink); }
+.d02 .vals button[aria-pressed="true"] { background: var(--color-ink); border-color: var(--color-ink); color: var(--color-accent-ink); }
+.d02 .sw { display: inline-flex; align-items: center; gap: var(--space-xs); block-size: 2rem; padding: 0 var(--space-sm) 0 var(--space-xs); border: 0; background: transparent; font-size: var(--text-sm); }
+.d02 .sw span { inline-size: 1.75rem; block-size: 1rem; border: var(--rule-w) solid var(--color-ink); border-radius: 999px; position: relative; }
+.d02 .sw span::after { content: ""; position: absolute; top: 2px; left: 2px; inline-size: 0.6rem; block-size: 0.6rem; border-radius: 50%; background: var(--color-ink); transition: transform var(--dur-micro) var(--ease-out); }
+.d02 .sw[aria-pressed="true"] span::after { transform: translateX(0.75rem); }
+.d02 .scroll { overflow-x: auto; }
+.d02 .roll { min-inline-size: 36rem; padding: var(--space-md); }
+.d02 .lane { display: grid; grid-template-columns: 6.5rem 1fr; align-items: stretch; }
+.d02 .lane:nth-child(odd) { background: var(--color-paper-2); }
+.d02 .lane b { display: flex; align-items: center; padding-left: var(--space-xs); font-weight: 500; font-size: var(--text-sm); }
+.d02 .t { display: grid; grid-template-columns: repeat(16, 1fr); min-block-size: 3rem; background: linear-gradient(to right, var(--color-rule) 1px, transparent 1px) 0 0 / 25% 100%, linear-gradient(to right, var(--color-paper-3) 2px, transparent 2px) 0 0 / 6.25% 100%; }
+.d02 .d { grid-row: 1; justify-self: center; align-self: center; inline-size: 1.3rem; block-size: 1.3rem; padding: 0; border: 0; border-radius: 50%; background: var(--color-ink); transition: transform var(--dur-micro) var(--ease-out); }
+.d02 .d:hover { background: var(--color-muted); }
+.d02 .beats { display: grid; grid-template-columns: repeat(4, 1fr); margin-left: 6.5rem; padding-top: var(--space-2xs); }
+.d02 .beats li { padding-left: var(--space-xs); font-family: var(--font-outlier); font-size: var(--text-xs); color: var(--color-muted); }
+.d02 .fad { display: grid; align-content: start; gap: var(--space-md); padding: var(--space-md); background: var(--color-paper-2); border-left: var(--rule-w) solid var(--color-rule); }
+.d02 .faders { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--space-xs); }
+.d02 .faders label { display: grid; justify-items: center; gap: var(--space-xs); font-size: var(--text-xs); color: var(--color-muted); }
+.d02 .faders output { color: var(--color-ink); font-size: var(--text-xs); }
+.d02 .faders input { writing-mode: vertical-lr; direction: rtl; inline-size: 1.5rem; block-size: 11rem; margin: 0; }
+@container (max-width: 56rem) {
+  .d02 .cols { grid-template-columns: minmax(0, 1fr); }
+  .d02 .pats { border-right: 0; border-bottom: var(--rule-w) solid var(--color-rule); }
+  .d02 .grid { grid-template-columns: repeat(10, 1fr); }
+  .d02 .fad { border-left: 0; border-top: var(--rule-w) solid var(--color-rule); }
+  .d02 .faders input { block-size: 7rem; }
+  .d02 .bar { padding-inline: var(--space-md); }
+}
+
+/* ===== 03 Pad machine ===== */
+.d03 .top { display: flex; align-items: center; gap: var(--space-xs); padding: var(--space-sm) var(--space-md) 0; }
+.d03 .top h3 { margin-right: auto; font-size: var(--text-xl); line-height: 1.2; }
+.d03 .top button { block-size: 2.25rem; padding: 0 var(--space-md); border: var(--rule-w) solid var(--color-ink); border-radius: 0; background: var(--color-paper-2); font-weight: 600; transition: background-color var(--dur-micro) var(--ease-out); }
+.d03 .top button:hover { background: var(--color-paper-3); }
+.d03 .top .run { display: inline-flex; align-items: center; gap: var(--space-xs); background: var(--color-ink); color: var(--color-accent-ink); }
+.d03 .top .run:hover { background: var(--color-muted); }
+.d03 .top .run i { inline-size: 0; block-size: 0; border: 0.38rem solid transparent; border-left: 0.62rem solid currentColor; border-right: 0; }
+.d03 .m { display: grid; grid-template-columns: 11rem minmax(0, 1fr); grid-template-areas: "bank bank" "side pads" "env env"; margin: var(--space-md); border: 2px solid var(--color-ink); background: var(--color-paper-2); }
+.d03 .bank { grid-area: bank; display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: var(--space-md); padding: var(--space-sm) var(--space-md); border-bottom: var(--rule-w) solid var(--color-ink); }
+.d03 .bank h4 { font-size: var(--text-lg); }
+.d03 .chips { display: grid; grid-template-columns: repeat(10, minmax(0, 1fr)); gap: var(--space-2xs); }
+.d03 .chips button { block-size: 1.9rem; padding: 0; border: var(--rule-w) solid var(--color-rule); border-radius: 0; background: var(--color-paper); color: var(--color-muted); font-family: var(--font-outlier); font-size: var(--text-xs); }
+.d03 .chips button.has { border-color: var(--color-ink); color: var(--color-ink); }
+.d03 .chips button:hover { background: var(--color-paper-3); }
+.d03 .chips button[aria-pressed="true"] { background: var(--color-ink); color: var(--color-accent-ink); }
+.d03 .cp { block-size: 1.9rem; padding: 0 var(--space-sm); border: var(--rule-w) solid var(--color-ink); border-radius: 0; background: var(--color-paper); font-size: var(--text-sm); }
+.d03 .cp:hover { background: var(--color-paper-3); }
+.d03 .side { grid-area: side; display: grid; align-content: start; gap: var(--space-md); padding: var(--space-md); border-right: var(--rule-w) solid var(--color-ink); }
+.d03 .side h4 { margin-bottom: var(--space-xs); font-size: var(--text-md); }
+.d03 .lens { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-2xs); }
+.d03 .vals { display: grid; gap: var(--space-2xs); }
+.d03 .side button { block-size: 2rem; padding: 0 var(--space-sm); border: var(--rule-w) solid var(--color-rule); border-radius: 0; background: var(--color-paper); text-align: left; font-size: var(--text-sm); transition: background-color var(--dur-micro) var(--ease-out); }
+.d03 .side button:hover { border-color: var(--color-ink); }
+.d03 .side button[aria-pressed="true"] { background: var(--color-ink); border-color: var(--color-ink); color: var(--color-accent-ink); }
+.d03 .pads { grid-area: pads; min-inline-size: 0; overflow-x: auto; }
+.d03 .board { min-inline-size: 34rem; padding: var(--space-md); }
+.d03 .nums { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--space-xs); margin: 0 0 var(--space-2xs) calc(var(--space-3xl) + var(--space-sm)); }
+.d03 .nums li { font-family: var(--font-outlier); font-size: var(--text-xs); color: var(--color-muted); }
+.d03 .r { display: grid; grid-template-columns: 6rem 1fr; align-items: center; gap: var(--space-sm); margin-bottom: var(--space-xs); }
+.d03 .r b { font-weight: 500; font-size: var(--text-sm); }
+.d03 .q { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--space-xs); }
+.d03 .g { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--space-2xs); }
+.d03 .g button { block-size: 2.5rem; padding: 0; border: var(--rule-w) solid var(--color-rule); border-radius: 2px; background: var(--color-paper); transition: background-color var(--dur-micro) var(--ease-out); }
+.d03 .g button:hover { background: var(--color-paper-3); }
+.d03 .g button[aria-pressed="true"] { background: var(--color-ink); border-color: var(--color-ink); }
+.d03 .env { grid-area: env; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); border-top: var(--rule-w) solid var(--color-ink); }
+.d03 .env label { display: grid; grid-template-columns: 1fr auto; gap: var(--space-2xs) var(--space-sm); padding: var(--space-sm) var(--space-md); border-left: var(--rule-w) solid var(--color-rule); font-size: var(--text-sm); }
+.d03 .env label:first-child { border-left: 0; }
+.d03 .env input { grid-column: 1 / -1; inline-size: 100%; }
+@container (max-width: 46rem) {
+  .d03 .m { grid-template-columns: minmax(0, 1fr); grid-template-areas: "bank" "side" "pads" "env"; }
+  .d03 .bank { grid-template-columns: minmax(0, 1fr); }
+  .d03 .side { grid-template-columns: 1fr 1fr; border-right: 0; border-bottom: var(--rule-w) solid var(--color-ink); }
+  .d03 .env { grid-template-columns: 1fr 1fr; }
+  .d03 .env label:nth-child(3) { border-left: 0; }
+}
+
+/* ===== 04 Tabs ===== */
+.d04 .cap { margin: var(--space-md) 0 var(--space-xs); color: var(--color-muted); font-size: var(--text-sm); }
+.d04 .head { display: flex; align-items: center; gap: var(--space-sm); padding: var(--space-md) var(--space-lg) 0; }
+.d04 .head h3 { margin-right: auto; font-size: var(--text-xl); line-height: 1.2; }
+.d04 .head button { block-size: 2.25rem; padding: 0 var(--space-md); border: var(--rule-w) solid var(--color-ink); border-radius: 2px; background: var(--color-paper-2); font-weight: 600; transition: background-color var(--dur-micro) var(--ease-out); }
+.d04 .head button:hover { background: var(--color-paper-3); }
+.d04 .tabs { display: flex; margin-top: var(--space-sm); padding: 0 var(--space-lg); border-bottom: var(--rule-w) solid var(--color-rule); }
+.d04 .tabs button { margin-bottom: -1px; padding: var(--space-sm) var(--space-lg); border: 0; border-bottom: 3px solid transparent; background: transparent; font-weight: 500; transition: border-color var(--dur-micro) var(--ease-out); }
+.d04 .tabs button:hover { border-bottom-color: var(--color-rule); }
+.d04 .tabs button[aria-selected="true"] { border-bottom-color: var(--color-ink); font-weight: 600; }
+.d04 .panel { padding: var(--space-lg); }
+.d04 .bar { display: flex; flex-wrap: wrap; align-items: end; gap: var(--space-md) var(--space-lg); margin-bottom: var(--space-md); padding-bottom: var(--space-md); border-bottom: var(--rule-w) solid var(--color-rule); }
+.d04 .fld { display: grid; gap: var(--space-2xs); color: var(--color-muted); font-size: var(--text-sm); }
+.d04 .step { display: flex; }
+.d04 .step button { inline-size: 2.25rem; block-size: 2.25rem; padding: 0; border: var(--rule-w) solid var(--color-ink); background: var(--color-paper-2); position: relative; transition: background-color var(--dur-micro) var(--ease-out); }
+.d04 .step button:hover { background: var(--color-paper-3); }
+.d04 .step button::before { content: ""; position: absolute; top: 50%; left: 50%; inline-size: 0.5rem; block-size: 0.5rem; border-style: solid; border-color: var(--color-ink); border-width: 2px 2px 0 0; }
+.d04 .step .prev { border-radius: 2px 0 0 2px; border-right: 0; }
+.d04 .step .prev::before { transform: translate(-30%, -50%) rotate(-135deg); }
+.d04 .step .next { border-radius: 0 2px 2px 0; border-left: 0; }
+.d04 .step .next::before { transform: translate(-70%, -50%) rotate(45deg); }
+.d04 select { block-size: 2.25rem; min-inline-size: 7.5rem; padding: 0 var(--space-sm); border: var(--rule-w) solid var(--color-ink); border-radius: 0; background: var(--color-paper-2); }
+.d04 .seg { display: inline-flex; border: var(--rule-w) solid var(--color-ink); border-radius: 2px; }
+.d04 .seg button { block-size: 2.25rem; padding: 0 var(--space-md); border: 0; border-left: var(--rule-w) solid var(--color-rule); background: var(--color-paper-2); transition: background-color var(--dur-micro) var(--ease-out); }
+.d04 .seg button:first-child { border-left: 0; }
+.d04 .seg button:hover { background: var(--color-paper-3); }
+.d04 .seg button[aria-pressed="true"] { background: var(--color-ink); color: var(--color-accent-ink); }
+.d04 .check { display: inline-flex; align-items: center; gap: var(--space-xs); block-size: 2.25rem; }
+.d04 .check input { inline-size: 1.1rem; block-size: 1.1rem; accent-color: var(--color-ink); }
+.d04 .cp { block-size: 2.25rem; padding: 0 var(--space-md); border: var(--rule-w) solid var(--color-rule); border-radius: 2px; background: transparent; }
+.d04 .cp:hover { border-color: var(--color-ink); }
+.d04 .scroll { overflow-x: auto; }
+.d04 .stave { min-inline-size: 38rem; }
+.d04 .nums { display: grid; grid-template-columns: repeat(4, 1fr); margin-left: 6.5rem; }
+.d04 .nums li { padding-left: var(--space-xs); font-family: var(--font-outlier); font-size: var(--text-xs); color: var(--color-muted); }
+.d04 .line { display: grid; grid-template-columns: 6.5rem 1fr; }
+.d04 .line b { align-self: center; padding-right: var(--space-md); text-align: right; font-weight: 500; }
+.d04 .tr { display: grid; grid-template-columns: repeat(16, 1fr); min-block-size: 3.25rem; background: linear-gradient(var(--color-ink), var(--color-ink)) 0 50% / 100% 1px no-repeat, linear-gradient(to right, var(--color-ink) 1px, transparent 1px) 0 50% / 6.25% 0.7rem repeat-x, linear-gradient(to right, var(--color-rule) 1px, transparent 1px) 0 0 / 25% 100% repeat-x; }
+.d04 .x { grid-row: 1; justify-self: center; align-self: center; inline-size: 1.05rem; block-size: 1.05rem; padding: 0; border: 0; background: var(--color-ink); transform: rotate(45deg); outline-offset: 4px; transition: background-color var(--dur-micro) var(--ease-out); }
+.d04 .x:hover { background: var(--color-muted); }
+.d04 .x:active { transform: rotate(45deg) translateY(1px); }
+.d04 .set { display: grid; gap: var(--space-lg); max-inline-size: 44rem; }
+.d04 .set label { display: grid; grid-template-columns: 6.5rem minmax(0, 1fr) 4.5rem; align-items: center; gap: var(--space-md); font-weight: 500; }
+.d04 .set input[type="number"] { block-size: 2.25rem; padding: 0 var(--space-sm); border: var(--rule-w) solid var(--color-ink); border-radius: 0; background: var(--color-paper-2); text-align: right; font-family: var(--font-outlier); }
+@container (max-width: 40rem) { .d04 .panel { padding: var(--space-md); } .d04 .head, .d04 .tabs { padding-inline: var(--space-md); } .d04 .set label { grid-template-columns: 1fr 4.5rem; } .d04 .set input[type="range"] { grid-column: 1 / -1; grid-row: 2; } }
+
+/* ===== 05 Docks and rails ===== */
+.d05 .top { display: flex; align-items: center; gap: var(--space-xs); padding: var(--space-xs) var(--space-md); border-bottom: var(--rule-w) solid var(--color-ink); }
+.d05 .top h3 { margin-right: auto; font-size: var(--text-lg); line-height: 1.2; }
+.d05 .top button { block-size: 2rem; padding: 0 var(--space-sm); border: 0; border-radius: 2px; background: transparent; font-weight: 500; transition: background-color var(--dur-micro) var(--ease-out); }
+.d05 .top button:hover { background: var(--color-paper-3); }
+.d05 .top .go { display: inline-flex; align-items: center; gap: var(--space-xs); background: var(--color-ink); color: var(--color-accent-ink); font-weight: 600; }
+.d05 .top .go:hover { background: var(--color-muted); }
+.d05 .top .go i { inline-size: 0; block-size: 0; border: 0.34rem solid transparent; border-left: 0.56rem solid currentColor; border-right: 0; }
+.d05 .stage { display: grid; grid-template-columns: 3rem minmax(0, 1fr) 13.5rem; }
+.d05 .rail { display: grid; grid-auto-rows: 1.75rem; align-content: start; padding: var(--space-xs) 0; border-right: var(--rule-w) solid var(--color-rule); background: var(--color-paper-2); }
+.d05 .rail button { padding: 0; border: 0; border-left: 3px solid transparent; background: transparent; color: var(--color-muted); font-family: var(--font-outlier); font-size: var(--text-xs); transition: background-color var(--dur-micro) var(--ease-out); }
+.d05 .rail button.has { color: var(--color-ink); font-weight: 400; }
+.d05 .rail button:hover { background: var(--color-paper-3); }
+.d05 .rail button[aria-pressed="true"] { border-left-color: var(--color-ink); background: var(--color-ink); color: var(--color-accent-ink); }
+.d05 .mid { position: relative; min-inline-size: 0; display: grid; align-content: space-between; }
+.d05 .scroll { overflow-x: auto; }
+.d05 .rows { min-inline-size: 34rem; padding: var(--space-md) var(--space-md) 0; }
+.d05 .rw { display: grid; grid-template-columns: minmax(0, 1fr) 6rem; }
+.d05 .rw + .rw { border-top: var(--rule-w) solid var(--color-rule); }
+.d05 .rw b { display: flex; align-items: center; padding-left: var(--space-md); font-weight: 500; font-size: var(--text-sm); }
+.d05 .tk { display: grid; grid-template-columns: repeat(16, 1fr); min-block-size: 3.75rem; background: linear-gradient(to right, var(--color-rule) 1px, transparent 1px) 0 0 / 25% 100% repeat-x; }
+.d05 .tk button { grid-row: 1; justify-self: center; align-self: center; inline-size: 0.55rem; block-size: 2.4rem; padding: 0; border: 0; border-radius: 1px; background: var(--color-ink); transition: background-color var(--dur-micro) var(--ease-out); }
+.d05 .tk button:hover { background: var(--color-muted); }
+.d05 .dock { position: sticky; bottom: var(--space-md); justify-self: center; display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: var(--space-xs) var(--space-md); margin: var(--space-lg) var(--space-md) var(--space-md); padding: var(--space-xs) var(--space-sm); border: var(--rule-w) solid var(--color-ink); border-radius: 4px; background: var(--color-paper-2); }
+.d05 .dock .grp { display: flex; align-items: center; gap: var(--space-2xs); }
+.d05 .dock .grp + .grp { padding-left: var(--space-md); border-left: var(--rule-w) solid var(--color-rule); }
+.d05 .dock span { margin-right: var(--space-2xs); color: var(--color-muted); font-size: var(--text-sm); }
+.d05 .dock button { block-size: 1.9rem; padding: 0 var(--space-xs); border: 0; border-radius: 2px; background: transparent; font-size: var(--text-sm); transition: background-color var(--dur-micro) var(--ease-out); }
+.d05 .dock button:hover { background: var(--color-paper-3); }
+.d05 .dock button[aria-pressed="true"] { background: var(--color-ink); color: var(--color-accent-ink); }
+.d05 .drawer { padding: var(--space-md); border-left: var(--rule-w) solid var(--color-rule); background: var(--color-paper-2); }
+.d05 .drawer h4 { margin-bottom: var(--space-md); font-size: var(--text-lg); }
+.d05 .drawer label { display: grid; grid-template-columns: 1fr auto; gap: var(--space-2xs) var(--space-sm); margin-bottom: var(--space-lg); font-size: var(--text-sm); }
+.d05 .drawer input { grid-column: 1 / -1; inline-size: 100%; }
+@container (max-width: 52rem) {
+  .d05 .stage { grid-template-columns: 2.75rem minmax(0, 1fr); }
+  .d05 .drawer { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 var(--space-lg); border-left: 0; border-top: var(--rule-w) solid var(--color-rule); }
+  .d05 .drawer h4 { grid-column: 1 / -1; }
+  .d05 .dock { position: static; }
+}
+
+/* ===== 06 Kit lanes ===== */
+.d06 .top { display: flex; flex-wrap: wrap; align-items: end; gap: var(--space-md) var(--space-xl); padding: var(--space-lg) var(--space-xl) var(--space-md); }
+.d06 .who { display: flex; align-items: end; gap: var(--space-md); margin-right: auto; }
+.d06 .who h3 { align-self: start; font-size: var(--text-2xl); line-height: 1.2; }
+.d06 .who .big { font-family: var(--font-outlier); font-size: var(--text-5xl); line-height: 0.85; letter-spacing: -0.03em; }
+.d06 .who .arr { display: flex; gap: var(--space-2xs); padding-bottom: var(--space-2xs); }
+.d06 .who .arr button { inline-size: 2.5rem; block-size: 2.5rem; padding: 0; border: var(--rule-w) solid var(--color-rule); border-radius: 50%; background: transparent; position: relative; transition: border-color var(--dur-micro) var(--ease-out); }
+.d06 .who .arr button:hover { border-color: var(--color-ink); }
+.d06 .who .arr button::before { content: ""; position: absolute; top: 50%; left: 50%; inline-size: 0.5rem; block-size: 0.5rem; border-style: solid; border-color: var(--color-ink); border-width: 2px 2px 0 0; }
+.d06 .who .arr .p::before { transform: translate(-30%, -50%) rotate(-135deg); }
+.d06 .who .arr .n::before { transform: translate(-70%, -50%) rotate(45deg); }
+.d06 .acts { display: flex; align-items: center; gap: var(--space-lg); }
+.d06 .acts .undo { padding: 0; border: 0; background: transparent; font-weight: 500; text-decoration: underline; text-underline-offset: 4px; text-decoration-color: var(--color-rule); }
+.d06 .acts .undo:hover { text-decoration-color: var(--color-ink); }
+.d06 .acts .play { display: inline-flex; align-items: center; gap: var(--space-sm); block-size: 3rem; padding: 0 var(--space-xl); border: 0; border-radius: 999px; background: var(--color-ink); color: var(--color-accent-ink); font-weight: 600; transition: background-color var(--dur-micro) var(--ease-out); }
+.d06 .acts .play:hover { background: var(--color-muted); }
+.d06 .acts .play i { inline-size: 0; block-size: 0; border: 0.4rem solid transparent; border-left: 0.66rem solid currentColor; border-right: 0; }
+.d06 .nums { display: flex; flex-wrap: wrap; gap: var(--space-2xs) var(--space-xs); padding: 0 var(--space-xl) var(--space-lg); }
+.d06 .nums button { min-inline-size: 2.25rem; block-size: 2.25rem; padding: 0 var(--space-2xs); border: 0; border-radius: 999px; background: transparent; color: var(--color-muted); font-family: var(--font-outlier); font-size: var(--text-md); transition: background-color var(--dur-micro) var(--ease-out); }
+.d06 .nums button.has { color: var(--color-ink); text-decoration: underline; text-underline-offset: 5px; text-decoration-color: var(--color-ink); }
+.d06 .nums button:hover { background: var(--color-paper-3); }
+.d06 .nums button[aria-pressed="true"] { background: var(--color-ink); color: var(--color-accent-ink); text-decoration: none; }
+.d06 .scroll { overflow-x: auto; border-top: var(--rule-w) solid var(--color-ink); }
+.d06 .lanes { min-inline-size: 42rem; }
+.d06 .lane { display: grid; grid-template-columns: 12rem minmax(0, 1fr); border-bottom: var(--rule-w) solid var(--color-rule); }
+.d06 .lane h4 { display: flex; align-items: center; padding-left: var(--space-xl); font-size: var(--text-2xl); line-height: 1.1; font-weight: 700; }
+.d06 .tr { display: grid; grid-template-columns: repeat(16, 1fr); min-block-size: 5.5rem; padding-right: var(--space-xl); background: linear-gradient(to right, var(--color-ink) 1px, transparent 1px) 0 100% / 25% 0.9rem repeat-x, linear-gradient(to right, var(--color-rule) 1px, transparent 1px) 0 100% / 6.25% 0.45rem repeat-x; background-origin: border-box; background-clip: border-box; }
+.d06 .tr button { grid-row: 1; margin: var(--space-sm) 0.35rem; padding: 0; border: 0; border-radius: 2px; background: var(--color-ink); transition: background-color var(--dur-micro) var(--ease-out); }
+.d06 .tr button:hover { background: var(--color-muted); }
+.d06 .bot { display: grid; grid-template-columns: repeat(3, minmax(0, auto)) minmax(0, 1fr); gap: var(--space-lg) var(--space-2xl); padding: var(--space-xl); }
+.d06 .bot h4 { margin-bottom: var(--space-sm); font-size: var(--text-lg); }
+.d06 .tx { display: flex; flex-wrap: wrap; gap: var(--space-2xs) var(--space-md); }
+.d06 .tx button { padding: var(--space-2xs) 0; border: 0; border-bottom: 2px solid transparent; background: transparent; color: var(--color-muted); font-size: var(--text-md); transition: color var(--dur-micro) var(--ease-out), border-color var(--dur-micro) var(--ease-out); }
+.d06 .tx button:hover { color: var(--color-ink); border-bottom-color: var(--color-rule); }
+.d06 .tx button[aria-pressed="true"] { color: var(--color-ink); border-bottom-color: var(--color-ink); font-weight: 600; }
+.d06 .sl { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--space-lg); }
+.d06 .sl label { display: grid; grid-template-columns: 1fr auto; gap: var(--space-2xs) var(--space-sm); font-size: var(--text-sm); color: var(--color-muted); }
+.d06 .sl output { color: var(--color-ink); }
+.d06 .sl input { grid-column: 1 / -1; inline-size: 100%; }
+.d06 .sl-wrap { grid-column: 1 / -1; padding-top: var(--space-lg); border-top: var(--rule-w) solid var(--color-rule); }
+@container (max-width: 52rem) { .d06 .top, .d06 .nums, .d06 .bot { padding-inline: var(--space-md); } .d06 .lane h4 { padding-left: var(--space-md); font-size: var(--text-xl); } .d06 .lane { grid-template-columns: 8.5rem minmax(0, 1fr); } .d06 .tr { padding-right: var(--space-md); } .d06 .bot { grid-template-columns: minmax(0, 1fr); gap: var(--space-lg); } .d06 .sl { grid-template-columns: repeat(2, minmax(0, 1fr)); } .d06 .who .big { font-size: var(--text-4xl); } }
+
+/* ===== 07 Filmstrip ===== */
+.d07 .top { display: flex; align-items: center; gap: var(--space-xs); padding: var(--space-sm) var(--space-lg); background: var(--color-paper-2); border-bottom: var(--rule-w) solid var(--color-rule); }
+.d07 .top h3 { margin-right: auto; font-size: var(--text-xl); line-height: 1.2; }
+.d07 .top button { block-size: 2.25rem; padding: 0 var(--space-md); border: var(--rule-w) solid var(--color-ink); border-radius: 2px; background: var(--color-paper); font-weight: 600; transition: background-color var(--dur-micro) var(--ease-out); }
+.d07 .top button:hover { background: var(--color-paper-3); }
+.d07 .film { overflow-x: auto; padding: var(--space-md) var(--space-lg); background: var(--color-paper-3); border-bottom: var(--rule-w) solid var(--color-rule); }
+.d07 .film ol { display: flex; gap: var(--space-xs); inline-size: max-content; }
+.d07 .film button { display: grid; grid-template-rows: auto 1fr; gap: var(--space-2xs); inline-size: 5.25rem; block-size: 5.25rem; padding: var(--space-xs); border: var(--rule-w) dashed var(--color-rule); border-radius: 2px; background: transparent; color: var(--color-muted); text-align: left; transition: background-color var(--dur-micro) var(--ease-out); }
+.d07 .film button.w2 { inline-size: 10.5rem; }
+.d07 .film button.has { border-style: solid; border-color: var(--color-ink); background: var(--color-paper-2); color: var(--color-ink); }
+.d07 .film button:hover { background: var(--color-paper); }
+.d07 .film button[aria-pressed="true"] { background: var(--color-ink); border-color: var(--color-ink); color: var(--color-accent-ink); }
+.d07 .film .n { font-family: var(--font-outlier); font-size: var(--text-xs); line-height: 1; }
+.d07 .film .m { display: grid; grid-template-rows: repeat(5, 1fr); grid-template-columns: repeat(16, 1fr); align-items: center; justify-items: center; }
+.d07 .film .w2 .m { grid-template-columns: repeat(32, 1fr); }
+.d07 .film .m i { inline-size: 3px; block-size: 3px; background: currentColor; }
+.d07 .work { padding: var(--space-lg); }
+.d07 .tools { display: flex; flex-wrap: wrap; align-items: end; gap: var(--space-md) var(--space-xl); margin-bottom: var(--space-lg); }
+.d07 .tools h4 { margin-right: auto; font-size: var(--text-xl); line-height: 1.2; }
+.d07 .grp { display: grid; gap: var(--space-2xs); color: var(--color-muted); font-size: var(--text-sm); }
+.d07 .seg { display: inline-flex; flex-wrap: wrap; gap: var(--space-2xs); }
+.d07 .seg button, .d07 .tools .btn { block-size: 2rem; padding: 0 var(--space-sm); border: var(--rule-w) solid var(--color-rule); border-radius: 2px; background: var(--color-paper-2); color: var(--color-ink); font-size: var(--text-sm); transition: background-color var(--dur-micro) var(--ease-out); }
+.d07 .seg button:hover, .d07 .tools .btn:hover { border-color: var(--color-ink); }
+.d07 .seg button[aria-pressed="true"], .d07 .tools .btn[aria-pressed="true"] { background: var(--color-ink); border-color: var(--color-ink); color: var(--color-accent-ink); }
+.d07 .scroll { overflow-x: auto; }
+.d07 .sheet { min-inline-size: 48rem; }
+.d07 .bars { display: grid; grid-template-columns: repeat(2, 1fr); margin-left: 6.5rem; }
+.d07 .bars li { padding: 0 0 var(--space-2xs) var(--space-xs); border-left: var(--rule-w) solid var(--color-ink); font-size: var(--text-xs); color: var(--color-muted); }
+.d07 .rw { display: grid; grid-template-columns: 6.5rem 1fr; border-top: var(--rule-w) solid var(--color-rule); }
+.d07 .rw:last-child { border-bottom: var(--rule-w) solid var(--color-rule); }
+.d07 .rw b { display: flex; align-items: center; font-weight: 500; }
+.d07 .tk { display: grid; grid-template-columns: repeat(32, 1fr); min-block-size: 2.5rem; background: linear-gradient(to right, var(--color-ink) 1px, transparent 1px) 0 0 / 50% 100% repeat-x, linear-gradient(to right, var(--color-rule) 1px, transparent 1px) 0 0 / 12.5% 100% repeat-x, linear-gradient(to right, var(--color-paper-3) 1px, transparent 1px) 0 0 / 3.125% 100% repeat-x; }
+.d07 .tk button { grid-row: 1; justify-self: center; align-self: center; inline-size: 0.8rem; block-size: 0.8rem; padding: 0; border: 0; border-radius: 1px; background: var(--color-ink); transition: background-color var(--dur-micro) var(--ease-out); }
+.d07 .tk button:hover { background: var(--color-muted); }
+.d07 .env { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--space-lg); margin-top: var(--space-lg); padding-top: var(--space-md); border-top: var(--rule-w) solid var(--color-ink); }
+.d07 .env label { display: grid; grid-template-columns: 1fr auto; gap: var(--space-2xs) var(--space-sm); font-size: var(--text-sm); color: var(--color-muted); }
+.d07 .env output { color: var(--color-ink); }
+.d07 .env input { grid-column: 1 / -1; inline-size: 100%; }
+@container (max-width: 44rem) { .d07 .top, .d07 .film, .d07 .work { padding-inline: var(--space-md); } .d07 .env { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+
+/* ===== 08 Sentence bar ===== */
+.d08 .top { display: flex; align-items: center; gap: var(--space-sm); padding: var(--space-md) var(--space-xl); border-bottom: var(--rule-w) solid var(--color-rule); }
+.d08 .top h3 { margin-right: auto; font-size: var(--text-2xl); line-height: 1.2; }
+.d08 .top button { block-size: 2.5rem; padding: 0 var(--space-lg); border: var(--rule-w) solid var(--color-ink); border-radius: 999px; background: transparent; font-weight: 500; transition: background-color var(--dur-micro) var(--ease-out), color var(--dur-micro) var(--ease-out); }
+.d08 .top button:hover { background: var(--color-paper-3); }
+.d08 .top .go { display: inline-flex; align-items: center; gap: var(--space-xs); background: var(--color-ink); color: var(--color-accent-ink); font-weight: 600; }
+.d08 .top .go:hover { background: var(--color-muted); }
+.d08 .top .go i { inline-size: 0; block-size: 0; border: 0.36rem solid transparent; border-left: 0.6rem solid currentColor; border-right: 0; }
+.d08 .s { padding: var(--space-lg) var(--space-xl); font-size: var(--text-2xl); line-height: 2.3; font-weight: 500; }
+.d08 .s.small { padding-top: 0; font-size: var(--text-lg); line-height: 2.6; color: var(--color-muted); }
+.d08 select, .d08 input[type="number"] { padding: 0 var(--space-2xs); border: 0; border-bottom: 2px solid var(--color-ink); border-radius: 0; background: transparent; color: var(--color-ink); font: inherit; font-weight: 600; transition: background-color var(--dur-micro) var(--ease-out); }
+.d08 select:hover, .d08 input[type="number"]:hover { background: var(--color-paper-3); }
+.d08 input[type="number"] { inline-size: 3.6ch; font-family: var(--font-outlier); text-align: center; }
+.d08 .s.small select { font-size: var(--text-lg); }
+.d08 .s button { padding: 0 var(--space-sm); border: var(--rule-w) solid var(--color-ink); border-radius: 999px; background: transparent; color: var(--color-ink); font-size: var(--text-md); line-height: 1.9; transition: background-color var(--dur-micro) var(--ease-out); }
+.d08 .s button:hover { background: var(--color-paper-3); }
+.d08 .s button[aria-pressed="true"] { background: var(--color-ink); color: var(--color-accent-ink); }
+.d08 .scroll { overflow-x: auto; padding: 0 var(--space-xl); }
+.d08 .sheet { min-inline-size: 36rem; padding-bottom: var(--space-md); }
+.d08 .nums { display: grid; grid-template-columns: repeat(4, 1fr); }
+.d08 .nums li { padding-left: var(--space-xs); border-left: var(--rule-w) solid var(--color-ink); font-family: var(--font-outlier); font-size: var(--text-xs); color: var(--color-muted); }
+.d08 .rw { padding-top: var(--space-xs); }
+.d08 .rw h4 { font-family: var(--font-body); font-weight: 500; font-size: var(--text-sm); color: var(--color-muted); }
+.d08 .tk { display: grid; grid-template-columns: repeat(16, 1fr); min-block-size: 2.5rem; border-bottom: var(--rule-w) solid var(--color-rule); background: linear-gradient(to right, var(--color-rule) 1px, transparent 1px) 0 0 / 25% 100% repeat-x; }
+.d08 .tk button { grid-row: 1; justify-self: center; align-self: center; inline-size: 1.15rem; block-size: 1.15rem; padding: 0; border: 3px double var(--color-paper); border-radius: 50%; background: var(--color-ink); outline: 1px solid var(--color-ink); transition: background-color var(--dur-micro) var(--ease-out); }
+.d08 .tk button:hover { background: var(--color-muted); }
+@container (max-width: 44rem) { .d08 .top, .d08 .s, .d08 .scroll { padding-inline: var(--space-md); } .d08 .s { font-size: var(--text-xl); } .d08 .s.small { font-size: var(--text-md); } }
+
+/* ===== 09 Numbered column ===== */
+.d09 .col { max-inline-size: 54rem; margin-inline: auto; padding: var(--space-lg) var(--space-lg) var(--space-xl); }
+.d09 .top { display: flex; align-items: center; gap: var(--space-sm); padding-bottom: var(--space-md); border-bottom: var(--rule-w) solid var(--color-ink); }
+.d09 .top h3 { margin-right: auto; font-size: var(--text-3xl); line-height: 1.1; }
+.d09 .top button { block-size: 2.25rem; padding: 0 var(--space-md); border: var(--rule-w) solid var(--color-ink); border-radius: 2px; background: var(--color-paper-2); font-weight: 500; transition: background-color var(--dur-micro) var(--ease-out); }
+.d09 .top button:hover { background: var(--color-paper-3); }
+.d09 .top .go { display: inline-flex; align-items: center; gap: var(--space-xs); background: var(--color-ink); color: var(--color-accent-ink); font-weight: 600; }
+.d09 .top .go:hover { background: var(--color-muted); }
+.d09 .top .go i { inline-size: 0; block-size: 0; border: 0.34rem solid transparent; border-left: 0.56rem solid currentColor; border-right: 0; }
+.d09 .st { display: grid; grid-template-columns: 3rem minmax(0, 1fr); gap: 0 var(--space-md); padding: var(--space-lg) 0; border-bottom: var(--rule-w) solid var(--color-rule); }
+.d09 .st > .fig { padding-top: 0.2rem; color: var(--color-muted); font-size: var(--text-lg); }
+.d09 .st h4 { margin-bottom: var(--space-md); font-size: var(--text-xl); line-height: 1.2; }
+.d09 .chips { display: grid; grid-template-columns: repeat(10, minmax(0, 1fr)); gap: var(--space-2xs); }
+.d09 .chips button { block-size: 2.5rem; padding: 0; border: var(--rule-w) solid var(--color-rule); border-radius: 2px; background: transparent; color: var(--color-muted); font-family: var(--font-outlier); transition: background-color var(--dur-micro) var(--ease-out); }
+.d09 .chips button.has { border-color: var(--color-ink); background: var(--color-paper-2); color: var(--color-ink); }
+.d09 .chips button:hover { background: var(--color-paper-3); }
+.d09 .chips button[aria-pressed="true"] { background: var(--color-ink); border-color: var(--color-ink); color: var(--color-accent-ink); }
+.d09 .row { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-sm) var(--space-lg); margin-top: var(--space-md); }
+.d09 .seg { display: inline-flex; flex-wrap: wrap; gap: var(--space-2xs); }
+.d09 .seg button, .d09 .row > button { block-size: 2.25rem; padding: 0 var(--space-md); border: var(--rule-w) solid var(--color-rule); border-radius: 2px; background: var(--color-paper-2); transition: background-color var(--dur-micro) var(--ease-out); }
+.d09 .seg button:hover, .d09 .row > button:hover { border-color: var(--color-ink); }
+.d09 .seg button[aria-pressed="true"], .d09 .row > button[aria-pressed="true"] { background: var(--color-ink); border-color: var(--color-ink); color: var(--color-accent-ink); }
+.d09 .lbl { color: var(--color-muted); font-size: var(--text-sm); }
+.d09 .scroll { overflow-x: auto; }
+.d09 .stripe { min-inline-size: 30rem; }
+.d09 .nums { display: grid; grid-template-columns: repeat(4, 1fr); margin-left: var(--space-3xl); }
+.d09 .nums li { padding-left: var(--space-xs); font-family: var(--font-outlier); font-size: var(--text-xs); color: var(--color-muted); }
+.d09 .ln { display: grid; grid-template-columns: 6rem 1fr; align-items: stretch; }
+.d09 .ln:nth-of-type(odd) { background: var(--color-paper-3); }
+.d09 .ln b { display: flex; align-items: center; padding-left: var(--space-xs); font-weight: 500; font-size: var(--text-sm); }
+.d09 .tk { display: grid; grid-template-columns: repeat(16, 1fr); min-block-size: 2.5rem; background: linear-gradient(to right, var(--color-muted) 1px, transparent 1px) 0 0 / 25% 100% repeat-x; }
+.d09 .tk button { grid-row: 1; margin: 0.8rem 0.12rem; padding: 0; border: 0; border-radius: 999px; background: var(--color-ink); transition: background-color var(--dur-micro) var(--ease-out); }
+.d09 .tk button:hover { background: var(--color-muted); }
+.d09 .env { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-md) var(--space-xl); }
+.d09 .env label { display: grid; grid-template-columns: 1fr auto; gap: var(--space-2xs) var(--space-sm); font-weight: 500; }
+.d09 .env input { grid-column: 1 / -1; inline-size: 100%; }
+.d09 .env output { font-family: var(--font-outlier); font-weight: 400; }
+@container (max-width: 40rem) { .d09 .col { padding-inline: var(--space-md); } .d09 .st { grid-template-columns: 1.75rem minmax(0, 1fr); gap: 0 var(--space-xs); } .d09 .chips { grid-template-columns: repeat(5, minmax(0, 1fr)); } .d09 .env { grid-template-columns: minmax(0, 1fr); } }
+
+/* ===== 10 Pattern ledger ===== */
+.d10 .top { display: flex; align-items: center; gap: var(--space-xs); padding: var(--space-sm) var(--space-lg); background: var(--color-paper-2); border-bottom: var(--rule-w) solid var(--color-ink); }
+.d10 .top h3 { margin-right: auto; font-size: var(--text-xl); line-height: 1.2; }
+.d10 .top button { block-size: 2.25rem; padding: 0 var(--space-md); border: var(--rule-w) solid var(--color-ink); border-radius: 2px; background: var(--color-paper); font-weight: 600; transition: background-color var(--dur-micro) var(--ease-out); }
+.d10 .top button:hover { background: var(--color-paper-3); }
+.d10 .body { display: grid; grid-template-columns: 19rem minmax(0, 1fr); }
+.d10 .led { max-block-size: 33rem; overflow-y: auto; border-right: var(--rule-w) solid var(--color-rule); }
+.d10 .led table { inline-size: 100%; border-collapse: collapse; }
+.d10 .led caption { padding: var(--space-sm) var(--space-md); text-align: left; font-family: var(--font-display); font-weight: 700; font-size: var(--text-lg); background: var(--color-paper); }
+.d10 .led th, .d10 .led td { padding: 0 var(--space-md); block-size: 2.1rem; text-align: left; font-weight: 400; border-top: var(--rule-w) solid var(--color-rule); }
+.d10 .led thead th { position: sticky; top: 0; background: var(--color-paper); color: var(--color-muted); font-size: var(--text-sm); border-top: 0; border-bottom: var(--rule-w) solid var(--color-ink); }
+.d10 .led tbody th button { inline-size: 100%; padding: 0; border: 0; background: transparent; text-align: left; font-family: var(--font-outlier); font-size: var(--text-md); }
+.d10 .led td { font-size: var(--text-sm); color: var(--color-muted); }
+.d10 .led tr.has td { color: var(--color-ink); }
+.d10 .led tbody tr { cursor: pointer; transition: background-color var(--dur-micro) var(--ease-out); }
+.d10 .led tbody tr:hover { background: var(--color-paper-3); }
+.d10 .led tbody tr.on { background: var(--color-ink); color: var(--color-accent-ink); }
+.d10 .led tbody tr.on td { color: var(--color-accent-ink); }
+.d10 .led tbody tr.on th button { color: var(--color-accent-ink); }
+.d10 .led tbody tr.on :focus-visible { outline-color: var(--color-accent-ink); outline-offset: -3px; }
+.d10 .work { min-inline-size: 0; display: grid; align-content: start; }
+.d10 .tools { display: flex; flex-wrap: wrap; align-items: end; gap: var(--space-sm) var(--space-lg); padding: var(--space-md) var(--space-lg); border-bottom: var(--rule-w) solid var(--color-rule); }
+.d10 .grp { display: grid; gap: var(--space-2xs); color: var(--color-muted); font-size: var(--text-sm); }
+.d10 .seg { display: inline-flex; border: var(--rule-w) solid var(--color-ink); border-radius: 2px; }
+.d10 .seg button { block-size: 2rem; padding: 0 var(--space-sm); border: 0; border-left: var(--rule-w) solid var(--color-rule); background: var(--color-paper-2); font-size: var(--text-sm); transition: background-color var(--dur-micro) var(--ease-out); }
+.d10 .seg button:first-child { border-left: 0; }
+.d10 .seg button:hover { background: var(--color-paper-3); }
+.d10 .seg button[aria-pressed="true"] { background: var(--color-ink); color: var(--color-accent-ink); }
+.d10 .tools > button { block-size: 2rem; padding: 0 var(--space-sm); border: var(--rule-w) solid var(--color-rule); border-radius: 2px; background: transparent; font-size: var(--text-sm); }
+.d10 .tools > button:hover { border-color: var(--color-ink); }
+.d10 .tools > button[aria-pressed="true"] { background: var(--color-ink); border-color: var(--color-ink); color: var(--color-accent-ink); }
+.d10 .scroll { overflow-x: auto; }
+.d10 .sheet { min-inline-size: 32rem; padding: var(--space-md) var(--space-lg); }
+.d10 .nums { display: grid; grid-template-columns: repeat(4, 1fr); margin-left: 6.5rem; }
+.d10 .nums li { padding-left: var(--space-xs); font-family: var(--font-outlier); font-size: var(--text-xs); color: var(--color-muted); }
+.d10 .rw { display: grid; grid-template-columns: 6.5rem 1fr; border-top: var(--rule-w) solid var(--color-rule); }
+.d10 .rw:last-child { border-bottom: var(--rule-w) solid var(--color-rule); }
+.d10 .rw b { display: flex; align-items: center; font-weight: 500; }
+.d10 .tk { display: grid; grid-template-columns: repeat(16, 1fr); min-block-size: 2.75rem; background: linear-gradient(to right, var(--color-rule) 1px, transparent 1px) 0 0 / 25% 100% repeat-x, linear-gradient(to right, var(--color-paper-3) 1px, transparent 1px) 0 0 / 6.25% 100% repeat-x; }
+.d10 .tk button { grid-row: 1; justify-self: center; align-self: center; inline-size: 1rem; block-size: 1rem; padding: 0; border: 0; border-radius: 0; background: var(--color-ink); transition: background-color var(--dur-micro) var(--ease-out); }
+.d10 .tk button:hover { background: var(--color-muted); }
+.d10 .spec { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); border-top: var(--rule-w) solid var(--color-ink); }
+.d10 .spec label { display: grid; gap: var(--space-2xs); padding: var(--space-md) var(--space-lg); border-left: var(--rule-w) solid var(--color-rule); font-size: var(--text-sm); color: var(--color-muted); }
+.d10 .spec label:first-child { border-left: 0; }
+.d10 .spec output { color: var(--color-ink); font-family: var(--font-outlier); font-size: var(--text-3xl); line-height: 1.1; }
+.d10 .spec input { inline-size: 100%; }
+@container (max-width: 52rem) { .d10 .body { grid-template-columns: minmax(0, 1fr); } .d10 .led { max-block-size: 15rem; border-right: 0; border-bottom: var(--rule-w) solid var(--color-rule); } .d10 .spec { grid-template-columns: repeat(2, minmax(0, 1fr)); } .d10 .spec label:nth-child(3) { border-left: 0; } .d10 .top, .d10 .tools, .d10 .sheet { padding-inline: var(--space-md); } }
+
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="page-head">
+  <h1>Drums page: ten layouts</h1>
+  <p>Fonts and palette are the decided Bone and black, the same in every design. Only the arrangement changes. Every design has the five rows from top to bottom as crash, open hi-hat, hi-hat, snare, kick, and the same sample beat in 4/4, shown as sixteenth steps. The beat, the pattern numbers and the envelope values are sample content. Each design is hand written.</p>
+  <nav class="index" aria-label="Designs">
+    <a href="#d01"><span>01</span>Bands</a>
+    <a href="#d02"><span>02</span>Three columns</a>
+    <a href="#d03"><span>03</span>Pad machine</a>
+    <a href="#d04"><span>04</span>Tabs</a>
+    <a href="#d05"><span>05</span>Docks and rails</a>
+    <a href="#d06"><span>06</span>Kit lanes</a>
+    <a href="#d07"><span>07</span>Filmstrip</a>
+    <a href="#d08"><span>08</span>Sentence bar</a>
+    <a href="#d09"><span>09</span>Numbered column</a>
+    <a href="#d10"><span>10</span>Pattern ledger</a>
+  </nav>
+</header>
+
+<section class="look d01" id="d01">
+  <div class="meta">
+    <h2><span class="fig">01</span>Bands</h2>
+    <p>Three plain bands, top to bottom. All twenty patterns sit in one row above the editor, the editor takes the middle, and one strip under it holds length, note value, the whole-pattern toggle and the envelope.</p>
+  </div>
+  <div class="frame">
+    <header class="top">
+      <h3>Drums</h3>
+      <button type="button" class="btn">Undo</button>
+      <button type="button" class="btn"><span class="tri"></span>Play</button>
+    </header>
+    <div class="picker">
+      <p>Pattern</p>
+      <div class="chips" role="group" aria-label="Drum patterns">
+        <button type="button" class="has" aria-pressed="true">1</button><button type="button" class="has">2</button><button type="button" class="has">3</button><button type="button">4</button><button type="button" class="has">5</button><button type="button">6</button><button type="button">7</button><button type="button">8</button><button type="button">9</button><button type="button">10</button><button type="button">11</button><button type="button">12</button><button type="button">13</button><button type="button">14</button><button type="button">15</button><button type="button">16</button><button type="button">17</button><button type="button">18</button><button type="button">19</button><button type="button">20</button>
+      </div>
+      <button type="button" class="copy">Copy notes to&hellip;</button>
+    </div>
+    <div class="scroll">
+      <div class="ed">
+        <ol class="ruler" aria-label="Beats"><li>1</li><li>2</li><li>3</li><li>4</li></ol>
+        <div class="row"><b>Crash</b><div class="track" role="group" aria-label="Crash hits"><button type="button" class="h" style="grid-column: 1" aria-label="Step 1"></button></div></div>
+        <div class="row"><b>Open hi-hat</b><div class="track" role="group" aria-label="Open hi-hat hits"><button type="button" class="h" style="grid-column: 15" aria-label="Step 15"></button></div></div>
+        <div class="row"><b>Hi-hat</b><div class="track" role="group" aria-label="Hi-hat hits"><button type="button" class="h" style="grid-column: 1" aria-label="Step 1"></button><button type="button" class="h" style="grid-column: 3" aria-label="Step 3"></button><button type="button" class="h" style="grid-column: 5" aria-label="Step 5"></button><button type="button" class="h" style="grid-column: 7" aria-label="Step 7"></button><button type="button" class="h" style="grid-column: 9" aria-label="Step 9"></button><button type="button" class="h" style="grid-column: 11" aria-label="Step 11"></button><button type="button" class="h" style="grid-column: 13" aria-label="Step 13"></button></div></div>
+        <div class="row"><b>Snare</b><div class="track" role="group" aria-label="Snare hits"><button type="button" class="h" style="grid-column: 5" aria-label="Step 5"></button><button type="button" class="h" style="grid-column: 13" aria-label="Step 13"></button></div></div>
+        <div class="row"><b>Kick</b><div class="track" role="group" aria-label="Kick hits"><button type="button" class="h" style="grid-column: 1" aria-label="Step 1"></button><button type="button" class="h" style="grid-column: 6" aria-label="Step 6"></button><button type="button" class="h" style="grid-column: 9" aria-label="Step 9"></button><button type="button" class="h" style="grid-column: 11" aria-label="Step 11"></button></div></div>
+      </div>
+    </div>
+    <div class="foot">
+      <div><p>Length</p><div class="seg" role="group" aria-label="Pattern length"><button type="button" aria-pressed="true">1x</button><button type="button">2x</button><button type="button">4x</button><button type="button">8x</button></div></div>
+      <div><p>Note value</p><div class="seg" role="group" aria-label="Note value"><button type="button">Whole</button><button type="button">Half</button><button type="button">Quarter</button><button type="button" aria-pressed="true">16th</button><button type="button">Third</button><button type="button">Half of a third</button></div></div>
+      <div><p>View</p><button type="button" class="tg" aria-pressed="false">Show whole pattern</button></div>
+      <div class="env">
+        <label>Volume<output>80</output><input type="range" min="0" max="100" value="80"></label>
+        <label>Attack<output>6</output><input type="range" min="0" max="100" value="6"></label>
+        <label>Decay<output>40</output><input type="range" min="0" max="100" value="40"></label>
+        <label>Release<output>30</output><input type="range" min="0" max="100" value="30"></label>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="look d02" id="d02">
+  <div class="meta">
+    <h2><span class="fig">02</span>Three columns</h2>
+    <p>The patterns stand in a grid at the left, the editor is in the middle with its tools above it and its beat numbers below, and the envelope is four vertical faders at the right. Play and Undo are in a header bar.</p>
+  </div>
+  <div class="frame">
+    <header class="bar">
+      <h3>Drums</h3>
+      <button type="button">Undo</button>
+      <button type="button" class="go"><i></i>Play</button>
+    </header>
+    <div class="cols">
+      <aside class="pats">
+        <h4>Patterns</h4>
+        <div class="grid" role="group" aria-label="Drum patterns">
+          <button type="button" class="has" aria-pressed="true">1</button><button type="button" class="has">2</button><button type="button" class="has">3</button><button type="button">4</button>
+          <button type="button" class="has">5</button><button type="button">6</button><button type="button">7</button><button type="button">8</button>
+          <button type="button">9</button><button type="button">10</button><button type="button">11</button><button type="button">12</button>
+          <button type="button">13</button><button type="button">14</button><button type="button">15</button><button type="button">16</button>
+          <button type="button">17</button><button type="button">18</button><button type="button">19</button><button type="button">20</button>
+        </div>
+        <h4>Length</h4>
+        <div class="len" role="group" aria-label="Pattern length"><button type="button" aria-pressed="true">1x</button><button type="button">2x</button><button type="button">4x</button><button type="button">8x</button></div>
+        <button type="button" class="cp">Copy notes to&hellip;</button>
+      </aside>
+      <div class="mid">
+        <div class="tools">
+          <div class="vals" role="group" aria-label="Note value"><button type="button">Whole</button><button type="button">Half</button><button type="button">Quarter</button><button type="button" aria-pressed="true">16th</button><button type="button">Third</button><button type="button">Half of a third</button></div>
+          <button type="button" class="sw" aria-pressed="false"><span></span>Show whole pattern</button>
+        </div>
+        <div class="scroll">
+          <div class="roll">
+            <div class="lane"><b>Crash</b><div class="t" role="group" aria-label="Crash hits"><button type="button" class="d" style="grid-column: 1" aria-label="Step 1"></button></div></div>
+            <div class="lane"><b>Open hi-hat</b><div class="t" role="group" aria-label="Open hi-hat hits"><button type="button" class="d" style="grid-column: 15" aria-label="Step 15"></button></div></div>
+            <div class="lane"><b>Hi-hat</b><div class="t" role="group" aria-label="Hi-hat hits"><button type="button" class="d" style="grid-column: 1" aria-label="Step 1"></button><button type="button" class="d" style="grid-column: 3" aria-label="Step 3"></button><button type="button" class="d" style="grid-column: 5" aria-label="Step 5"></button><button type="button" class="d" style="grid-column: 7" aria-label="Step 7"></button><button type="button" class="d" style="grid-column: 9" aria-label="Step 9"></button><button type="button" class="d" style="grid-column: 11" aria-label="Step 11"></button><button type="button" class="d" style="grid-column: 13" aria-label="Step 13"></button></div></div>
+            <div class="lane"><b>Snare</b><div class="t" role="group" aria-label="Snare hits"><button type="button" class="d" style="grid-column: 5" aria-label="Step 5"></button><button type="button" class="d" style="grid-column: 13" aria-label="Step 13"></button></div></div>
+            <div class="lane"><b>Kick</b><div class="t" role="group" aria-label="Kick hits"><button type="button" class="d" style="grid-column: 1" aria-label="Step 1"></button><button type="button" class="d" style="grid-column: 6" aria-label="Step 6"></button><button type="button" class="d" style="grid-column: 9" aria-label="Step 9"></button><button type="button" class="d" style="grid-column: 11" aria-label="Step 11"></button></div></div>
+            <ol class="beats" aria-label="Beats"><li>1</li><li>2</li><li>3</li><li>4</li></ol>
+          </div>
+        </div>
+      </div>
+      <aside class="fad">
+        <h4>Envelope</h4>
+        <div class="faders">
+          <label><output>80</output><input type="range" min="0" max="100" value="80" aria-label="Volume"><span>Volume</span></label>
+          <label><output>6</output><input type="range" min="0" max="100" value="6" aria-label="Attack"><span>Attack</span></label>
+          <label><output>40</output><input type="range" min="0" max="100" value="40" aria-label="Decay"><span>Decay</span></label>
+          <label><output>30</output><input type="range" min="0" max="100" value="30" aria-label="Release"><span>Release</span></label>
+        </div>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<section class="look d03" id="d03">
+  <div class="meta">
+    <h2><span class="fig">03</span>Pad machine</h2>
+    <p>The densest layout. Every step is a pad you press, in groups of four per beat. Everything lives in one compartmented panel: the pattern bank on top, length and note value in a column beside the pads, the envelope along the bottom.</p>
+  </div>
+  <div class="frame">
+    <header class="top">
+      <h3>Drums</h3>
+      <button type="button">Undo</button>
+      <button type="button" class="run"><i></i>Play</button>
+    </header>
+    <div class="m">
+      <div class="bank">
+        <h4>Pattern</h4>
+        <div class="chips" role="group" aria-label="Drum patterns">
+          <button type="button" class="has" aria-pressed="true">1</button><button type="button" class="has">2</button><button type="button" class="has">3</button><button type="button">4</button><button type="button" class="has">5</button><button type="button">6</button><button type="button">7</button><button type="button">8</button><button type="button">9</button><button type="button">10</button>
+          <button type="button">11</button><button type="button">12</button><button type="button">13</button><button type="button">14</button><button type="button">15</button><button type="button">16</button><button type="button">17</button><button type="button">18</button><button type="button">19</button><button type="button">20</button>
+        </div>
+        <button type="button" class="cp">Copy notes to&hellip;</button>
+      </div>
+      <div class="side">
+        <div><h4>Length</h4><div class="lens" role="group" aria-label="Pattern length"><button type="button" aria-pressed="true">1x</button><button type="button">2x</button><button type="button">4x</button><button type="button">8x</button></div></div>
+        <div><h4>Note value</h4><div class="vals" role="group" aria-label="Note value"><button type="button">Whole</button><button type="button">Half</button><button type="button">Quarter</button><button type="button" aria-pressed="true">16th</button><button type="button">Third</button><button type="button">Half of a third</button></div></div>
+        <button type="button" aria-pressed="false">Show whole pattern</button>
+      </div>
+      <div class="pads">
+        <div class="board">
+          <ol class="nums" aria-label="Beats"><li>1</li><li>2</li><li>3</li><li>4</li></ol>
+          <div class="r"><b>Crash</b><div class="q" role="group" aria-label="Crash pads">
+            <div class="g"><button type="button" aria-pressed="true"></button><button type="button" aria-pressed="false"></button><button type="button" aria-pressed="false"></button><button type="button" aria-pressed="false"></button></div>
+            <div class="g"><button type="button" aria-pressed="false"></button><button type="button" aria-pressed="false"></button><button type="button" aria-pressed="false"></button><button type="button" aria-pressed="false"></button></div>
+            <div class="g"><button type="button" aria-pressed="false"></button><button type="button" aria-pressed="false"></button><button type="button" aria-pressed="false"></button><button type="button" aria-pressed="false"></button></div>
+            <div class="g"><button type="button" aria-pressed="false"></button><button type="button" aria-pressed="false"></button><button type="button" aria-pressed="false"></button><button type="button" aria-pressed="false"></button></div>
+          </div></div>
+          <div class="r"><b>Open hi-hat</b><div class="q" role="group" aria-label="Open hi-hat pads">
+            <div class="g"><button type="button" aria-pressed="false"></button><button type="button" aria-pressed="false"></button><button type="button" aria-pressed="false"></button><button type="button" aria-pressed="false"></button></div>
+            <div class="g"><button type="button" aria-pressed="false"></button><button type="button" aria-pressed="false"></button><button type="button" aria-pressed="false"></button><button type="button" aria-pressed="false"></button></div>
+            <div class="g"><button type="button" aria-pressed="false"></button><button type="button" aria-pressed="false"></button><button type="button" aria-pressed="false"></button><button type="button" aria-pressed="false"></button></div>
+            <div class="g"><button type="button" aria-pressed="false"></button><button type="button" aria-pressed="false"></button><button type="button" aria-pressed="true"></button><button type="button" aria-pressed="false"></button></div>
+          </div></div>
+          <div class="r"><b>Hi-hat</b><div class="q" role="group" aria-label="Hi-hat pads">
+            <div class="g"><button type="button" aria-pressed="true"></button><button type="button" aria-pressed="false"></button><button type="button" aria-pressed="true"></button><button type="button" aria-pressed="false"></button></div>
+            <div class="g"><button type="button" aria-pressed="true"></button><button type="button" aria-pressed="false"></button><button type="button" aria-pressed="true"></button><button type="button" aria-pressed="false"></button></div>
+            <div class="g"><button type="button" aria-pressed="true"></button><button type="button" aria-pressed="false"></button><button type="button" aria-pressed="true"></button><button type="button" aria-pressed="false"></button></div>
+            <div class="g"><button type="button" aria-pressed="true"></button><button type="button" aria-pressed="false"></button><button type="button" aria-pressed="false"></button><button type="button" aria-pressed="false"></button></div>
+          </div></div>
+          <div class="r"><b>Snare</b><div class="q" role="group" aria-label="Snare pads">
+            <div class="g"><button type="button" aria-pressed="false"></button><button type="button" aria-pressed="false"></button><button type="button" aria-pressed="false"></button><button type="button" aria-pressed="false"></button></div>
+            <div class="g"><button type="button" aria-pressed="true"></button><button type="button" aria-pressed="false"></button><button type="button" aria-pressed="false"></button><button type="button" aria-pressed="false"></button></div>
+            <div class="g"><button type="button" aria-pressed="false"></button><button type="button" aria-pressed="false"></button><button type="button" aria-pressed="false"></button><button type="button" aria-pressed="false"></button></div>
+            <div class="g"><button type="button" aria-pressed="true"></button><button type="button" aria-pressed="false"></button><button type="button" aria-pressed="false"></button><button type="button" aria-pressed="false"></button></div>
+          </div></div>
+          <div class="r"><b>Kick</b><div class="q" role="group" aria-label="Kick pads">
+            <div class="g"><button type="button" aria-pressed="true"></button><button type="button" aria-pressed="false"></button><button type="button" aria-pressed="false"></button><button type="button" aria-pressed="false"></button></div>
+            <div class="g"><button type="button" aria-pressed="false"></button><button type="button" aria-pressed="true"></button><button type="button" aria-pressed="false"></button><button type="button" aria-pressed="false"></button></div>
+            <div class="g"><button type="button" aria-pressed="true"></button><button type="button" aria-pressed="false"></button><button type="button" aria-pressed="true"></button><button type="button" aria-pressed="false"></button></div>
+            <div class="g"><button type="button" aria-pressed="false"></button><button type="button" aria-pressed="false"></button><button type="button" aria-pressed="false"></button><button type="button" aria-pressed="false"></button></div>
+          </div></div>
+        </div>
+      </div>
+      <div class="env">
+        <label>Volume<output>80</output><input type="range" min="0" max="100" value="80"></label>
+        <label>Attack<output>6</output><input type="range" min="0" max="100" value="6"></label>
+        <label>Decay<output>40</output><input type="range" min="0" max="100" value="40"></label>
+        <label>Release<output>30</output><input type="range" min="0" max="100" value="30"></label>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="look d04" id="d04">
+  <div class="meta">
+    <h2><span class="fig">04</span>Tabs</h2>
+    <p>The page&rsquo;s two parts become two tabs, Notes and Envelope. Notes holds one toolbar (a pattern stepper with a list, length, note value, the whole-pattern check) over a drum staff where hits sit as diamonds on a line. Both tabs are drawn below.</p>
+  </div>
+  <p class="cap">Notes tab open</p>
+  <div class="frame">
+    <header class="head">
+      <h3>Drums</h3>
+      <button type="button">Undo</button>
+      <button type="button">Play</button>
+    </header>
+    <div class="tabs" role="tablist" aria-label="Drums page parts">
+      <button type="button" role="tab" aria-selected="true">Notes</button>
+      <button type="button" role="tab" aria-selected="false">Envelope</button>
+    </div>
+    <div class="panel" role="tabpanel">
+      <div class="bar">
+        <div class="fld">Pattern<div class="step"><button type="button" class="prev" aria-label="Previous pattern"></button><select aria-label="Pattern"><option selected>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option><option>9</option><option>10</option><option>11</option><option>12</option><option>13</option><option>14</option><option>15</option><option>16</option><option>17</option><option>18</option><option>19</option><option>20</option></select><button type="button" class="next" aria-label="Next pattern"></button></div></div>
+        <button type="button" class="cp">Copy notes to&hellip;</button>
+        <div class="fld">Length<div class="seg" role="group" aria-label="Pattern length"><button type="button" aria-pressed="true">1x</button><button type="button">2x</button><button type="button">4x</button><button type="button">8x</button></div></div>
+        <div class="fld">Note value<select aria-label="Note value"><option>Whole</option><option>Half</option><option>Quarter</option><option selected>16th</option><option>Third</option><option>Half of a third</option></select></div>
+        <label class="check"><input type="checkbox">Show whole pattern</label>
+      </div>
+      <div class="scroll">
+        <div class="stave">
+          <ol class="nums" aria-label="Beats"><li>1</li><li>2</li><li>3</li><li>4</li></ol>
+          <div class="line"><b>Crash</b><div class="tr" role="group" aria-label="Crash hits"><button type="button" class="x" style="grid-column: 1" aria-label="Step 1"></button></div></div>
+          <div class="line"><b>Open hi-hat</b><div class="tr" role="group" aria-label="Open hi-hat hits"><button type="button" class="x" style="grid-column: 15" aria-label="Step 15"></button></div></div>
+          <div class="line"><b>Hi-hat</b><div class="tr" role="group" aria-label="Hi-hat hits"><button type="button" class="x" style="grid-column: 1" aria-label="Step 1"></button><button type="button" class="x" style="grid-column: 3" aria-label="Step 3"></button><button type="button" class="x" style="grid-column: 5" aria-label="Step 5"></button><button type="button" class="x" style="grid-column: 7" aria-label="Step 7"></button><button type="button" class="x" style="grid-column: 9" aria-label="Step 9"></button><button type="button" class="x" style="grid-column: 11" aria-label="Step 11"></button><button type="button" class="x" style="grid-column: 13" aria-label="Step 13"></button></div></div>
+          <div class="line"><b>Snare</b><div class="tr" role="group" aria-label="Snare hits"><button type="button" class="x" style="grid-column: 5" aria-label="Step 5"></button><button type="button" class="x" style="grid-column: 13" aria-label="Step 13"></button></div></div>
+          <div class="line"><b>Kick</b><div class="tr" role="group" aria-label="Kick hits"><button type="button" class="x" style="grid-column: 1" aria-label="Step 1"></button><button type="button" class="x" style="grid-column: 6" aria-label="Step 6"></button><button type="button" class="x" style="grid-column: 9" aria-label="Step 9"></button><button type="button" class="x" style="grid-column: 11" aria-label="Step 11"></button></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <p class="cap">Envelope tab open</p>
+  <div class="frame">
+    <header class="head">
+      <h3>Drums</h3>
+      <button type="button">Undo</button>
+      <button type="button">Play</button>
+    </header>
+    <div class="tabs" role="tablist" aria-label="Drums page parts">
+      <button type="button" role="tab" aria-selected="false">Notes</button>
+      <button type="button" role="tab" aria-selected="true">Envelope</button>
+    </div>
+    <div class="panel" role="tabpanel">
+      <div class="set">
+        <label>Volume<input type="range" min="0" max="100" value="80"><input type="number" min="0" max="100" value="80" aria-label="Volume value"></label>
+        <label>Attack<input type="range" min="0" max="100" value="6"><input type="number" min="0" max="100" value="6" aria-label="Attack value"></label>
+        <label>Decay<input type="range" min="0" max="100" value="40"><input type="number" min="0" max="100" value="40" aria-label="Decay value"></label>
+        <label>Release<input type="range" min="0" max="100" value="30"><input type="number" min="0" max="100" value="30" aria-label="Release value"></label>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="look d05" id="d05">
+  <div class="meta">
+    <h2><span class="fig">05</span>Docks and rails</h2>
+    <p>The editor takes the middle and stays clear. Patterns run down a slim rail of twenty numbers at the left, the envelope is a drawer at the right, and length, note value, whole-pattern and copy sit in one dock under the rows. The row names are at the right end of each row.</p>
+  </div>
+  <div class="frame">
+    <header class="top">
+      <h3>Drums</h3>
+      <button type="button">Undo</button>
+      <button type="button" class="go"><i></i>Play</button>
+    </header>
+    <div class="stage">
+      <nav class="rail" aria-label="Drum patterns">
+        <button type="button" class="has" aria-pressed="true">1</button><button type="button" class="has">2</button><button type="button" class="has">3</button><button type="button">4</button><button type="button" class="has">5</button><button type="button">6</button><button type="button">7</button><button type="button">8</button><button type="button">9</button><button type="button">10</button>
+        <button type="button">11</button><button type="button">12</button><button type="button">13</button><button type="button">14</button><button type="button">15</button><button type="button">16</button><button type="button">17</button><button type="button">18</button><button type="button">19</button><button type="button">20</button>
+      </nav>
+      <div class="mid">
+        <div class="scroll">
+          <div class="rows">
+            <div class="rw"><div class="tk" role="group" aria-label="Crash hits"><button type="button" style="grid-column: 1" aria-label="Step 1"></button></div><b>Crash</b></div>
+            <div class="rw"><div class="tk" role="group" aria-label="Open hi-hat hits"><button type="button" style="grid-column: 15" aria-label="Step 15"></button></div><b>Open hi-hat</b></div>
+            <div class="rw"><div class="tk" role="group" aria-label="Hi-hat hits"><button type="button" style="grid-column: 1" aria-label="Step 1"></button><button type="button" style="grid-column: 3" aria-label="Step 3"></button><button type="button" style="grid-column: 5" aria-label="Step 5"></button><button type="button" style="grid-column: 7" aria-label="Step 7"></button><button type="button" style="grid-column: 9" aria-label="Step 9"></button><button type="button" style="grid-column: 11" aria-label="Step 11"></button><button type="button" style="grid-column: 13" aria-label="Step 13"></button></div><b>Hi-hat</b></div>
+            <div class="rw"><div class="tk" role="group" aria-label="Snare hits"><button type="button" style="grid-column: 5" aria-label="Step 5"></button><button type="button" style="grid-column: 13" aria-label="Step 13"></button></div><b>Snare</b></div>
+            <div class="rw"><div class="tk" role="group" aria-label="Kick hits"><button type="button" style="grid-column: 1" aria-label="Step 1"></button><button type="button" style="grid-column: 6" aria-label="Step 6"></button><button type="button" style="grid-column: 9" aria-label="Step 9"></button><button type="button" style="grid-column: 11" aria-label="Step 11"></button></div><b>Kick</b></div>
+          </div>
+        </div>
+        <div class="dock" role="toolbar" aria-label="Pattern tools">
+          <div class="grp" role="group" aria-label="Pattern length"><span>Length</span><button type="button" aria-pressed="true">1x</button><button type="button">2x</button><button type="button">4x</button><button type="button">8x</button></div>
+          <div class="grp" role="group" aria-label="Note value"><span>Note</span><button type="button">Whole</button><button type="button">Half</button><button type="button">Quarter</button><button type="button" aria-pressed="true">16th</button><button type="button">Third</button><button type="button">Half of a third</button></div>
+          <div class="grp"><button type="button" aria-pressed="false">Show whole pattern</button><button type="button">Copy notes to&hellip;</button></div>
+        </div>
+      </div>
+      <aside class="drawer">
+        <h4>Envelope</h4>
+        <label>Volume<output>80</output><input type="range" min="0" max="100" value="80"></label>
+        <label>Attack<output>6</output><input type="range" min="0" max="100" value="6"></label>
+        <label>Decay<output>40</output><input type="range" min="0" max="100" value="40"></label>
+        <label>Release<output>30</output><input type="range" min="0" max="100" value="30"></label>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<section class="look d06" id="d06">
+  <div class="meta">
+    <h2><span class="fig">06</span>Kit lanes</h2>
+    <p>The sparse one. The pattern number is set huge with a small stepper, all twenty numbers run in one line of type, and the five drums are tall lanes with their names set large. Length, note value, view and envelope sit in plain text under the lanes.</p>
+  </div>
+  <div class="frame">
+    <header class="top">
+      <div class="who">
+        <h3>Drums, pattern</h3>
+        <span class="big fig">1</span>
+        <div class="arr"><button type="button" class="p" aria-label="Previous pattern"></button><button type="button" class="n" aria-label="Next pattern"></button></div>
+      </div>
+      <div class="acts">
+        <button type="button" class="undo">Undo</button>
+        <button type="button" class="play"><i></i>Play</button>
+      </div>
+    </header>
+    <div class="nums" role="group" aria-label="Drum patterns">
+      <button type="button" class="has" aria-pressed="true">1</button><button type="button" class="has">2</button><button type="button" class="has">3</button><button type="button">4</button><button type="button" class="has">5</button><button type="button">6</button><button type="button">7</button><button type="button">8</button><button type="button">9</button><button type="button">10</button><button type="button">11</button><button type="button">12</button><button type="button">13</button><button type="button">14</button><button type="button">15</button><button type="button">16</button><button type="button">17</button><button type="button">18</button><button type="button">19</button><button type="button">20</button>
+    </div>
+    <div class="scroll">
+      <div class="lanes">
+        <div class="lane"><h4>Crash</h4><div class="tr" role="group" aria-label="Crash hits"><button type="button" style="grid-column: 1" aria-label="Step 1"></button></div></div>
+        <div class="lane"><h4>Open hi-hat</h4><div class="tr" role="group" aria-label="Open hi-hat hits"><button type="button" style="grid-column: 15" aria-label="Step 15"></button></div></div>
+        <div class="lane"><h4>Hi-hat</h4><div class="tr" role="group" aria-label="Hi-hat hits"><button type="button" style="grid-column: 1" aria-label="Step 1"></button><button type="button" style="grid-column: 3" aria-label="Step 3"></button><button type="button" style="grid-column: 5" aria-label="Step 5"></button><button type="button" style="grid-column: 7" aria-label="Step 7"></button><button type="button" style="grid-column: 9" aria-label="Step 9"></button><button type="button" style="grid-column: 11" aria-label="Step 11"></button><button type="button" style="grid-column: 13" aria-label="Step 13"></button></div></div>
+        <div class="lane"><h4>Snare</h4><div class="tr" role="group" aria-label="Snare hits"><button type="button" style="grid-column: 5" aria-label="Step 5"></button><button type="button" style="grid-column: 13" aria-label="Step 13"></button></div></div>
+        <div class="lane"><h4>Kick</h4><div class="tr" role="group" aria-label="Kick hits"><button type="button" style="grid-column: 1" aria-label="Step 1"></button><button type="button" style="grid-column: 6" aria-label="Step 6"></button><button type="button" style="grid-column: 9" aria-label="Step 9"></button><button type="button" style="grid-column: 11" aria-label="Step 11"></button></div></div>
+      </div>
+    </div>
+    <div class="bot">
+      <div><h4>Length</h4><div class="tx" role="group" aria-label="Pattern length"><button type="button" aria-pressed="true">1x</button><button type="button">2x</button><button type="button">4x</button><button type="button">8x</button></div></div>
+      <div><h4>Note value</h4><div class="tx" role="group" aria-label="Note value"><button type="button">Whole</button><button type="button">Half</button><button type="button">Quarter</button><button type="button" aria-pressed="true">16th</button><button type="button">Third</button><button type="button">Half of a third</button></div></div>
+      <div><h4>Pattern</h4><div class="tx"><button type="button" aria-pressed="false">Show whole pattern</button><button type="button">Copy notes to&hellip;</button></div></div>
+      <div class="sl-wrap">
+        <h4>Envelope</h4>
+        <div class="sl">
+          <label>Volume<output>80</output><input type="range" min="0" max="100" value="80"></label>
+          <label>Attack<output>6</output><input type="range" min="0" max="100" value="6"></label>
+          <label>Decay<output>40</output><input type="range" min="0" max="100" value="40"></label>
+          <label>Release<output>30</output><input type="range" min="0" max="100" value="30"></label>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="look d07" id="d07">
+  <div class="meta">
+    <h2><span class="fig">07</span>Filmstrip</h2>
+    <p>The patterns are a strip of thumbnails, each as wide as its length, each showing its own hits in miniature. The editor below shows pattern 3, which is 2x, with the whole-pattern toggle on so both bars are in view.</p>
+  </div>
+  <div class="frame">
+    <header class="top">
+      <h3>Drums</h3>
+      <button type="button">Undo</button>
+      <button type="button">Play</button>
+    </header>
+    <div class="film">
+      <ol aria-label="Drum patterns">
+        <li><button type="button" class="has" aria-label="Pattern 1"><span class="n">1</span><span class="m" aria-hidden="true"><i style="grid-row:1;grid-column:1"></i><i style="grid-row:2;grid-column:15"></i><i style="grid-row:3;grid-column:1"></i><i style="grid-row:3;grid-column:3"></i><i style="grid-row:3;grid-column:5"></i><i style="grid-row:3;grid-column:7"></i><i style="grid-row:3;grid-column:9"></i><i style="grid-row:3;grid-column:11"></i><i style="grid-row:3;grid-column:13"></i><i style="grid-row:4;grid-column:5"></i><i style="grid-row:4;grid-column:13"></i><i style="grid-row:5;grid-column:1"></i><i style="grid-row:5;grid-column:6"></i><i style="grid-row:5;grid-column:9"></i><i style="grid-row:5;grid-column:11"></i></span></button></li>
+        <li><button type="button" class="has" aria-label="Pattern 2"><span class="n">2</span><span class="m" aria-hidden="true"><i style="grid-row:3;grid-column:1"></i><i style="grid-row:3;grid-column:3"></i><i style="grid-row:3;grid-column:5"></i><i style="grid-row:3;grid-column:7"></i><i style="grid-row:3;grid-column:9"></i><i style="grid-row:3;grid-column:11"></i><i style="grid-row:3;grid-column:13"></i><i style="grid-row:3;grid-column:15"></i><i style="grid-row:4;grid-column:5"></i><i style="grid-row:4;grid-column:13"></i><i style="grid-row:5;grid-column:1"></i><i style="grid-row:5;grid-column:9"></i></span></button></li>
+        <li><button type="button" class="has w2" aria-pressed="true" aria-label="Pattern 3, 2x"><span class="n">3</span><span class="m" aria-hidden="true"><i style="grid-row:1;grid-column:1"></i><i style="grid-row:2;grid-column:15"></i><i style="grid-row:3;grid-column:1"></i><i style="grid-row:3;grid-column:3"></i><i style="grid-row:3;grid-column:5"></i><i style="grid-row:3;grid-column:7"></i><i style="grid-row:3;grid-column:9"></i><i style="grid-row:3;grid-column:11"></i><i style="grid-row:3;grid-column:13"></i><i style="grid-row:3;grid-column:17"></i><i style="grid-row:3;grid-column:19"></i><i style="grid-row:3;grid-column:21"></i><i style="grid-row:3;grid-column:23"></i><i style="grid-row:3;grid-column:25"></i><i style="grid-row:3;grid-column:27"></i><i style="grid-row:3;grid-column:29"></i><i style="grid-row:3;grid-column:31"></i><i style="grid-row:4;grid-column:5"></i><i style="grid-row:4;grid-column:13"></i><i style="grid-row:4;grid-column:21"></i><i style="grid-row:4;grid-column:29"></i><i style="grid-row:4;grid-column:31"></i><i style="grid-row:5;grid-column:1"></i><i style="grid-row:5;grid-column:6"></i><i style="grid-row:5;grid-column:9"></i><i style="grid-row:5;grid-column:11"></i><i style="grid-row:5;grid-column:17"></i><i style="grid-row:5;grid-column:23"></i><i style="grid-row:5;grid-column:25"></i></span></button></li>
+        <li><button type="button" aria-label="Pattern 4, empty"><span class="n">4</span></button></li>
+        <li><button type="button" class="has" aria-label="Pattern 5"><span class="n">5</span><span class="m" aria-hidden="true"><i style="grid-row:5;grid-column:1"></i><i style="grid-row:5;grid-column:9"></i></span></button></li>
+        <li><button type="button" aria-label="Pattern 6, empty"><span class="n">6</span></button></li>
+        <li><button type="button" aria-label="Pattern 7, empty"><span class="n">7</span></button></li>
+        <li><button type="button" aria-label="Pattern 8, empty"><span class="n">8</span></button></li>
+        <li><button type="button" aria-label="Pattern 9, empty"><span class="n">9</span></button></li>
+        <li><button type="button" aria-label="Pattern 10, empty"><span class="n">10</span></button></li>
+        <li><button type="button" aria-label="Pattern 11, empty"><span class="n">11</span></button></li>
+        <li><button type="button" aria-label="Pattern 12, empty"><span class="n">12</span></button></li>
+        <li><button type="button" aria-label="Pattern 13, empty"><span class="n">13</span></button></li>
+        <li><button type="button" aria-label="Pattern 14, empty"><span class="n">14</span></button></li>
+        <li><button type="button" aria-label="Pattern 15, empty"><span class="n">15</span></button></li>
+        <li><button type="button" aria-label="Pattern 16, empty"><span class="n">16</span></button></li>
+        <li><button type="button" aria-label="Pattern 17, empty"><span class="n">17</span></button></li>
+        <li><button type="button" aria-label="Pattern 18, empty"><span class="n">18</span></button></li>
+        <li><button type="button" aria-label="Pattern 19, empty"><span class="n">19</span></button></li>
+        <li><button type="button" aria-label="Pattern 20, empty"><span class="n">20</span></button></li>
+      </ol>
+    </div>
+    <div class="work">
+      <div class="tools">
+        <h4>Pattern 3</h4>
+        <div class="grp">Length<div class="seg" role="group" aria-label="Pattern length"><button type="button">1x</button><button type="button" aria-pressed="true">2x</button><button type="button">4x</button><button type="button">8x</button></div></div>
+        <div class="grp">Note value<div class="seg" role="group" aria-label="Note value"><button type="button">Whole</button><button type="button">Half</button><button type="button">Quarter</button><button type="button" aria-pressed="true">16th</button><button type="button">Third</button><button type="button">Half of a third</button></div></div>
+        <div class="grp">View<button type="button" class="btn" aria-pressed="true">Show whole pattern</button></div>
+        <div class="grp">Copy<button type="button" class="btn">Copy notes to&hellip;</button></div>
+      </div>
+      <div class="scroll">
+        <div class="sheet">
+          <ol class="bars" aria-label="Bars"><li>Bar 1</li><li>Bar 2</li></ol>
+          <div class="rw"><b>Crash</b><div class="tk" role="group" aria-label="Crash hits"><button type="button" style="grid-column: 1" aria-label="Step 1"></button></div></div>
+          <div class="rw"><b>Open hi-hat</b><div class="tk" role="group" aria-label="Open hi-hat hits"><button type="button" style="grid-column: 15" aria-label="Step 15"></button></div></div>
+          <div class="rw"><b>Hi-hat</b><div class="tk" role="group" aria-label="Hi-hat hits"><button type="button" style="grid-column: 1" aria-label="Step 1"></button><button type="button" style="grid-column: 3" aria-label="Step 3"></button><button type="button" style="grid-column: 5" aria-label="Step 5"></button><button type="button" style="grid-column: 7" aria-label="Step 7"></button><button type="button" style="grid-column: 9" aria-label="Step 9"></button><button type="button" style="grid-column: 11" aria-label="Step 11"></button><button type="button" style="grid-column: 13" aria-label="Step 13"></button><button type="button" style="grid-column: 17" aria-label="Step 17"></button><button type="button" style="grid-column: 19" aria-label="Step 19"></button><button type="button" style="grid-column: 21" aria-label="Step 21"></button><button type="button" style="grid-column: 23" aria-label="Step 23"></button><button type="button" style="grid-column: 25" aria-label="Step 25"></button><button type="button" style="grid-column: 27" aria-label="Step 27"></button><button type="button" style="grid-column: 29" aria-label="Step 29"></button><button type="button" style="grid-column: 31" aria-label="Step 31"></button></div></div>
+          <div class="rw"><b>Snare</b><div class="tk" role="group" aria-label="Snare hits"><button type="button" style="grid-column: 5" aria-label="Step 5"></button><button type="button" style="grid-column: 13" aria-label="Step 13"></button><button type="button" style="grid-column: 21" aria-label="Step 21"></button><button type="button" style="grid-column: 29" aria-label="Step 29"></button><button type="button" style="grid-column: 31" aria-label="Step 31"></button></div></div>
+          <div class="rw"><b>Kick</b><div class="tk" role="group" aria-label="Kick hits"><button type="button" style="grid-column: 1" aria-label="Step 1"></button><button type="button" style="grid-column: 6" aria-label="Step 6"></button><button type="button" style="grid-column: 9" aria-label="Step 9"></button><button type="button" style="grid-column: 11" aria-label="Step 11"></button><button type="button" style="grid-column: 17" aria-label="Step 17"></button><button type="button" style="grid-column: 23" aria-label="Step 23"></button><button type="button" style="grid-column: 25" aria-label="Step 25"></button></div></div>
+        </div>
+      </div>
+      <div class="env">
+        <label>Volume<output>80</output><input type="range" min="0" max="100" value="80"></label>
+        <label>Attack<output>6</output><input type="range" min="0" max="100" value="6"></label>
+        <label>Decay<output>40</output><input type="range" min="0" max="100" value="40"></label>
+        <label>Release<output>30</output><input type="range" min="0" max="100" value="30"></label>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="look d08" id="d08">
+  <div class="meta">
+    <h2><span class="fig">08</span>Sentence bar</h2>
+    <p>The controls read as sentences with fields in the gaps: which pattern, how long, what note value, what to copy, and the envelope as a closing sentence. Under it, the editor has each drum name above its own row instead of beside it.</p>
+  </div>
+  <div class="frame">
+    <header class="top">
+      <h3>Drums</h3>
+      <button type="button">Undo</button>
+      <button type="button" class="go"><i></i>Play</button>
+    </header>
+    <p class="s">Editing pattern
+      <select aria-label="Pattern"><option selected>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option><option>9</option><option>10</option><option>11</option><option>12</option><option>13</option><option>14</option><option>15</option><option>16</option><option>17</option><option>18</option><option>19</option><option>20</option></select>
+      of 20, which runs
+      <select aria-label="Pattern length"><option selected>1x</option><option>2x</option><option>4x</option><option>8x</option></select>
+      long, placing
+      <select aria-label="Note value"><option>whole</option><option>half</option><option>quarter</option><option selected>16th</option><option>third</option><option>half of a third</option></select>
+      notes.</p>
+    <p class="s small"><button type="button" aria-pressed="false">Show the whole pattern</button> Or copy its notes into pattern
+      <select aria-label="Copy target pattern"><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option></select>
+      <button type="button">Copy</button></p>
+    <div class="scroll">
+      <div class="sheet">
+        <ol class="nums" aria-label="Beats"><li>1</li><li>2</li><li>3</li><li>4</li></ol>
+        <div class="rw"><h4>Crash</h4><div class="tk" role="group" aria-label="Crash hits"><button type="button" style="grid-column: 1" aria-label="Step 1"></button></div></div>
+        <div class="rw"><h4>Open hi-hat</h4><div class="tk" role="group" aria-label="Open hi-hat hits"><button type="button" style="grid-column: 15" aria-label="Step 15"></button></div></div>
+        <div class="rw"><h4>Hi-hat</h4><div class="tk" role="group" aria-label="Hi-hat hits"><button type="button" style="grid-column: 1" aria-label="Step 1"></button><button type="button" style="grid-column: 3" aria-label="Step 3"></button><button type="button" style="grid-column: 5" aria-label="Step 5"></button><button type="button" style="grid-column: 7" aria-label="Step 7"></button><button type="button" style="grid-column: 9" aria-label="Step 9"></button><button type="button" style="grid-column: 11" aria-label="Step 11"></button><button type="button" style="grid-column: 13" aria-label="Step 13"></button></div></div>
+        <div class="rw"><h4>Snare</h4><div class="tk" role="group" aria-label="Snare hits"><button type="button" style="grid-column: 5" aria-label="Step 5"></button><button type="button" style="grid-column: 13" aria-label="Step 13"></button></div></div>
+        <div class="rw"><h4>Kick</h4><div class="tk" role="group" aria-label="Kick hits"><button type="button" style="grid-column: 1" aria-label="Step 1"></button><button type="button" style="grid-column: 6" aria-label="Step 6"></button><button type="button" style="grid-column: 9" aria-label="Step 9"></button><button type="button" style="grid-column: 11" aria-label="Step 11"></button></div></div>
+      </div>
+    </div>
+    <p class="s">The sound: volume
+      <input type="number" min="0" max="100" value="80" aria-label="Volume">, attack
+      <input type="number" min="0" max="100" value="6" aria-label="Attack">, decay
+      <input type="number" min="0" max="100" value="40" aria-label="Decay">, release
+      <input type="number" min="0" max="100" value="30" aria-label="Release">.</p>
+  </div>
+</section>
+
+<section class="look d09" id="d09">
+  <div class="meta">
+    <h2><span class="fig">09</span>Numbered column</h2>
+    <p>One centred column with a measure that does not grow. Four sections with hanging numerals, read from top to bottom: pattern, length and note value, notes, envelope. The editor is the third section and uses the full column width.</p>
+  </div>
+  <div class="frame">
+    <div class="col">
+      <header class="top">
+        <h3>Drums</h3>
+        <button type="button">Undo</button>
+        <button type="button" class="go"><i></i>Play</button>
+      </header>
+      <section class="st">
+        <span class="fig">1</span>
+        <div>
+          <h4>Pattern</h4>
+          <div class="chips" role="group" aria-label="Drum patterns">
+            <button type="button" class="has" aria-pressed="true">1</button><button type="button" class="has">2</button><button type="button" class="has">3</button><button type="button">4</button><button type="button" class="has">5</button><button type="button">6</button><button type="button">7</button><button type="button">8</button><button type="button">9</button><button type="button">10</button>
+            <button type="button">11</button><button type="button">12</button><button type="button">13</button><button type="button">14</button><button type="button">15</button><button type="button">16</button><button type="button">17</button><button type="button">18</button><button type="button">19</button><button type="button">20</button>
+          </div>
+          <div class="row"><button type="button">Copy notes to&hellip;</button></div>
+        </div>
+      </section>
+      <section class="st">
+        <span class="fig">2</span>
+        <div>
+          <h4>Length and note value</h4>
+          <div class="row">
+            <span class="lbl">Length</span><div class="seg" role="group" aria-label="Pattern length"><button type="button" aria-pressed="true">1x</button><button type="button">2x</button><button type="button">4x</button><button type="button">8x</button></div>
+          </div>
+          <div class="row">
+            <span class="lbl">Note value</span><div class="seg" role="group" aria-label="Note value"><button type="button">Whole</button><button type="button">Half</button><button type="button">Quarter</button><button type="button" aria-pressed="true">16th</button><button type="button">Third</button><button type="button">Half of a third</button></div>
+          </div>
+        </div>
+      </section>
+      <section class="st">
+        <span class="fig">3</span>
+        <div>
+          <h4>Notes</h4>
+          <div class="scroll">
+            <div class="stripe">
+              <ol class="nums" aria-label="Beats"><li>1</li><li>2</li><li>3</li><li>4</li></ol>
+              <div class="ln"><b>Crash</b><div class="tk" role="group" aria-label="Crash hits"><button type="button" style="grid-column: 1" aria-label="Step 1"></button></div></div>
+              <div class="ln"><b>Open hi-hat</b><div class="tk" role="group" aria-label="Open hi-hat hits"><button type="button" style="grid-column: 15" aria-label="Step 15"></button></div></div>
+              <div class="ln"><b>Hi-hat</b><div class="tk" role="group" aria-label="Hi-hat hits"><button type="button" style="grid-column: 1" aria-label="Step 1"></button><button type="button" style="grid-column: 3" aria-label="Step 3"></button><button type="button" style="grid-column: 5" aria-label="Step 5"></button><button type="button" style="grid-column: 7" aria-label="Step 7"></button><button type="button" style="grid-column: 9" aria-label="Step 9"></button><button type="button" style="grid-column: 11" aria-label="Step 11"></button><button type="button" style="grid-column: 13" aria-label="Step 13"></button></div></div>
+              <div class="ln"><b>Snare</b><div class="tk" role="group" aria-label="Snare hits"><button type="button" style="grid-column: 5" aria-label="Step 5"></button><button type="button" style="grid-column: 13" aria-label="Step 13"></button></div></div>
+              <div class="ln"><b>Kick</b><div class="tk" role="group" aria-label="Kick hits"><button type="button" style="grid-column: 1" aria-label="Step 1"></button><button type="button" style="grid-column: 6" aria-label="Step 6"></button><button type="button" style="grid-column: 9" aria-label="Step 9"></button><button type="button" style="grid-column: 11" aria-label="Step 11"></button></div></div>
+            </div>
+          </div>
+          <div class="row"><button type="button" aria-pressed="false">Show whole pattern</button></div>
+        </div>
+      </section>
+      <section class="st">
+        <span class="fig">4</span>
+        <div>
+          <h4>Envelope</h4>
+          <div class="env">
+            <label>Volume<output>80</output><input type="range" min="0" max="100" value="80"></label>
+            <label>Attack<output>6</output><input type="range" min="0" max="100" value="6"></label>
+            <label>Decay<output>40</output><input type="range" min="0" max="100" value="40"></label>
+            <label>Release<output>30</output><input type="range" min="0" max="100" value="30"></label>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+</section>
+
+<section class="look d10" id="d10">
+  <div class="meta">
+    <h2><span class="fig">10</span>Pattern ledger</h2>
+    <p>The twenty patterns are a table at the left, one row each with its length and whether it has notes, the way the Mixer is a table. The chosen row is inked. The editor and its tools take the right, and the envelope closes the page as four large figures under sliders.</p>
+  </div>
+  <div class="frame">
+    <header class="top">
+      <h3>Drums</h3>
+      <button type="button">Undo</button>
+      <button type="button">Play</button>
+    </header>
+    <div class="body">
+      <div class="led">
+        <table>
+          <caption>Patterns</caption>
+          <thead><tr><th scope="col">Pattern</th><th scope="col">Length</th><th scope="col">Notes</th></tr></thead>
+          <tbody>
+            <tr class="has on"><th scope="row"><button type="button" aria-pressed="true">1</button></th><td>1x</td><td>Has notes</td></tr>
+            <tr class="has"><th scope="row"><button type="button">2</button></th><td>1x</td><td>Has notes</td></tr>
+            <tr class="has"><th scope="row"><button type="button">3</button></th><td>2x</td><td>Has notes</td></tr>
+            <tr><th scope="row"><button type="button">4</button></th><td>1x</td><td>Empty</td></tr>
+            <tr class="has"><th scope="row"><button type="button">5</button></th><td>1x</td><td>Has notes</td></tr>
+            <tr><th scope="row"><button type="button">6</button></th><td>1x</td><td>Empty</td></tr>
+            <tr><th scope="row"><button type="button">7</button></th><td>1x</td><td>Empty</td></tr>
+            <tr><th scope="row"><button type="button">8</button></th><td>1x</td><td>Empty</td></tr>
+            <tr><th scope="row"><button type="button">9</button></th><td>1x</td><td>Empty</td></tr>
+            <tr><th scope="row"><button type="button">10</button></th><td>1x</td><td>Empty</td></tr>
+            <tr><th scope="row"><button type="button">11</button></th><td>1x</td><td>Empty</td></tr>
+            <tr><th scope="row"><button type="button">12</button></th><td>1x</td><td>Empty</td></tr>
+            <tr><th scope="row"><button type="button">13</button></th><td>1x</td><td>Empty</td></tr>
+            <tr><th scope="row"><button type="button">14</button></th><td>1x</td><td>Empty</td></tr>
+            <tr><th scope="row"><button type="button">15</button></th><td>1x</td><td>Empty</td></tr>
+            <tr><th scope="row"><button type="button">16</button></th><td>1x</td><td>Empty</td></tr>
+            <tr><th scope="row"><button type="button">17</button></th><td>1x</td><td>Empty</td></tr>
+            <tr><th scope="row"><button type="button">18</button></th><td>1x</td><td>Empty</td></tr>
+            <tr><th scope="row"><button type="button">19</button></th><td>1x</td><td>Empty</td></tr>
+            <tr><th scope="row"><button type="button">20</button></th><td>1x</td><td>Empty</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="work">
+        <div class="tools">
+          <div class="grp">Length<div class="seg" role="group" aria-label="Pattern length"><button type="button" aria-pressed="true">1x</button><button type="button">2x</button><button type="button">4x</button><button type="button">8x</button></div></div>
+          <div class="grp">Note value<div class="seg" role="group" aria-label="Note value"><button type="button">Whole</button><button type="button">Half</button><button type="button">Quarter</button><button type="button" aria-pressed="true">16th</button><button type="button">Third</button><button type="button">Half of a third</button></div></div>
+          <button type="button" aria-pressed="false">Show whole pattern</button>
+          <button type="button">Copy notes to&hellip;</button>
+        </div>
+        <div class="scroll">
+          <div class="sheet">
+            <ol class="nums" aria-label="Beats"><li>1</li><li>2</li><li>3</li><li>4</li></ol>
+            <div class="rw"><b>Crash</b><div class="tk" role="group" aria-label="Crash hits"><button type="button" style="grid-column: 1" aria-label="Step 1"></button></div></div>
+            <div class="rw"><b>Open hi-hat</b><div class="tk" role="group" aria-label="Open hi-hat hits"><button type="button" style="grid-column: 15" aria-label="Step 15"></button></div></div>
+            <div class="rw"><b>Hi-hat</b><div class="tk" role="group" aria-label="Hi-hat hits"><button type="button" style="grid-column: 1" aria-label="Step 1"></button><button type="button" style="grid-column: 3" aria-label="Step 3"></button><button type="button" style="grid-column: 5" aria-label="Step 5"></button><button type="button" style="grid-column: 7" aria-label="Step 7"></button><button type="button" style="grid-column: 9" aria-label="Step 9"></button><button type="button" style="grid-column: 11" aria-label="Step 11"></button><button type="button" style="grid-column: 13" aria-label="Step 13"></button></div></div>
+            <div class="rw"><b>Snare</b><div class="tk" role="group" aria-label="Snare hits"><button type="button" style="grid-column: 5" aria-label="Step 5"></button><button type="button" style="grid-column: 13" aria-label="Step 13"></button></div></div>
+            <div class="rw"><b>Kick</b><div class="tk" role="group" aria-label="Kick hits"><button type="button" style="grid-column: 1" aria-label="Step 1"></button><button type="button" style="grid-column: 6" aria-label="Step 6"></button><button type="button" style="grid-column: 9" aria-label="Step 9"></button><button type="button" style="grid-column: 11" aria-label="Step 11"></button></div></div>
+          </div>
+        </div>
+        <div class="spec">
+          <label>Volume<output>80</output><input type="range" min="0" max="100" value="80"></label>
+          <label>Attack<output>6</output><input type="range" min="0" max="100" value="6"></label>
+          <label>Decay<output>40</output><input type="range" min="0" max="100" value="40"></label>
+          <label>Release<output>30</output><input type="range" min="0" max="100" value="30"></label>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+</div>
+</body>
+</html>
