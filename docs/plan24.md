@@ -3,7 +3,7 @@
 The build plan, run one step per invocation of the `/plan24` skill ([.claude/skills/plan24/SKILL.md](../.claude/skills/plan24/SKILL.md)). Step numbers are plan24's own and have nothing to do with the older branches `00-overall` to `04-guitars`.
 
 Horizon: 24
-Last completed step: 0
+Last completed step: 1
 Replanned after step: 0
 
 The plan is replanned after every third completed step (3, 6, 9, and so on). Done steps are history and are never changed by a replan.
@@ -98,7 +98,7 @@ Broad strokes only. The next replan (after step 3) details steps 4 to 6.
 
 | # | Title | Status | Branch |
 | --- | --- | --- | --- |
-| 1 | Scaffold the app | todo | 01-scaffold |
+| 1 | Scaffold the app | done | 01-scaffold |
 | 2 | The project model | todo | 02-model |
 | 3 | Capture the sounds | todo | 03-sounds |
 | 4 | Audio engine | todo | |

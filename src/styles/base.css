@@ -1,0 +1,27 @@
+/* Page-level basics only. No layout, corner, line or spacing decisions are made here. */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  background: var(--color-paper);
+  color: var(--color-ink);
+  font-family: var(--font-body);
+  font-weight: 400;
+  /* The page never scrolls sideways (docs/design.md). */
+  overflow-x: hidden;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+}
