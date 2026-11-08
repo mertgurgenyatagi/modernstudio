@@ -15,6 +15,7 @@ The master mixer screen. See [sound.md](sound.md).
 - For each of the five instruments: volume, mute, isolate, and a level meter that moves while playing.
 - Master volume.
 - BPM (40 to 300) and meter (4/4 or 3/4). These apply to the whole project. See [time-and-notes.md](time-and-notes.md).
+- **Import MIDI** and **Export MIDI** (decided 2026-11-09). Import opens a mapping step (see below) and then a new project. See [midi-import.md](midi-import.md).
 
 ## Song
 
@@ -33,7 +34,7 @@ Three pages for five instruments: **Drums**, **Guitar** (which serves **Bass**, 
 
 Pattern mode lives here. It builds patterns for this one instrument. See [patterns-and-song.md](patterns-and-song.md) and [time-and-notes.md](time-and-notes.md).
 
-- The 20 numbered patterns of the instrument, to select from. Notes can be copied from one pattern into another.
+- The 20 numbered patterns of the instrument, to select from, and the hidden control that opens more, up to 120 ([patterns-and-song.md](patterns-and-song.md)). Notes can be copied from one pattern into another.
 - The pattern length: 1x, 2x, 4x or 8x.
 - The note editor, with the layout for that instrument (see below).
 - The note value selector: whole, half, quarter, 16th, third, half of a third.
@@ -63,6 +64,7 @@ On the Guitar page, the instrument (Bass, Rhythm Guitar or Lead Guitar) is chose
 
 - The audition tool for picking the General MIDI instruments is a separate small tool, not a page of the app. It is built and the picks are made. See [sound.md](sound.md).
 - Saving, opening and WAV export were described only as actions, not as pages. See [editing-and-project.md](editing-and-project.md).
+- The MIDI import mapping step and the report that follows an import. The mapping step is a list of the file's tracks, each with a choice of Drums, Bass, Rhythm Guitar, Lead Guitar, Keys or Skip, started from the app's guess. Neither is drawn, and whether each is a dialog or a screen is not decided. See [midi-import.md](midi-import.md).
 
 ## Assumptions
 

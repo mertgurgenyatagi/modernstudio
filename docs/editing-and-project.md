@@ -6,7 +6,7 @@
 - Undo is required. There is no redo.
 - A Song block is removed by selecting it and pressing Delete, with no button (questionnaire 16).
 - Other editing actions (select, move, copy, delete and so on) are left to whatever feels natural.
-- No MIDI keyboard input.
+- No MIDI keyboard input. MIDI files are a separate matter: they can be imported and exported ([midi-import.md](midi-import.md)).
 - Editors are not zoomable.
 
 ## Playback
@@ -23,6 +23,8 @@
 - The app asks to save when it is closed with unsaved changes.
 - The app reopens the last project when it starts.
 - WAV export renders the whole song with every instrument. It ignores mute and isolate. Single instruments cannot be exported on their own.
+- MIDI export writes the Song arrangement as a standard MIDI file, with one track per instrument. It also ignores mute and isolate.
+- MIDI import takes a whole file and opens it as a new project, after asking to save the open one. It cannot be undone, because it is a new project. Both commands are on the Mixer page. See [midi-import.md](midi-import.md).
 
 ## The app
 

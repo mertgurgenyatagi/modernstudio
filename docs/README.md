@@ -4,7 +4,7 @@ A minimalist, Windows-only music app made for one person. Five instruments, a Pa
 
 ## Status
 
-The specification phase is closed. It was built through 16 answered questionnaires, and every answer is stored as given in [questionnaire_answers/](questionnaire_answers/). Questionnaire 17 was published but not answered. No code exists yet.
+The specification phase is closed. It was built through 16 answered questionnaires, and every answer is stored as given in [questionnaire_answers/](questionnaire_answers/). Questionnaire 17 was published but not answered. After that, MIDI import and export was added through a question-and-answer in chat, stored in [questionnaire_answers/midi_import.md](questionnaire_answers/midi_import.md) and written up in [midi-import.md](midi-import.md). No app code exists yet; [tools/midi-prototype/](../tools/midi-prototype/) holds a Python reference for the import algorithms.
 
 ## Read in this order
 
@@ -14,11 +14,12 @@ The specification phase is closed. It was built through 16 answered questionnair
 4. [patterns-and-song.md](patterns-and-song.md) — patterns and the Song timeline.
 5. [sound.md](sound.md) — sound source, the chosen General MIDI sounds, the audition tool, envelopes, mixer.
 6. [editing-and-project.md](editing-and-project.md) — undo, playback, saving, export, packaging.
-7. [pages.md](pages.md) — the names of the pages and what each contains.
-8. [stack.md](stack.md) — the chosen tech stack and the installed tooling.
-9. [design.md](design.md) — the decided palette and fonts (Bone and black), and the default window size, 960 by 540. Not a layout or page design.
-10. [page-designs.md](page-designs.md) — the decided layout of each page, picked one at a time. So far: the Mixer (the Ledger), the Song page (the Brush bar), the Drums page (the Pad machine) and the Guitar page (the String cards), one page for Bass, Rhythm Guitar and Lead Guitar.
-11. [open-items.md](open-items.md) — everything undecided or decided by assumption. Read before building.
+7. [midi-import.md](midi-import.md) — importing and exporting MIDI files: the mapping step, the algorithms, and the eleven chosen album files.
+8. [pages.md](pages.md) — the names of the pages and what each contains.
+9. [stack.md](stack.md) — the chosen tech stack and the installed tooling.
+10. [design.md](design.md) — the decided palette and fonts (Bone and black), and the default window size, 960 by 540. Not a layout or page design.
+11. [page-designs.md](page-designs.md) — the decided layout of each page, picked one at a time. So far: the Mixer (the Ledger), the Song page (the Brush bar), the Drums page (the Pad machine) and the Guitar page (the String cards), one page for Bass, Rhythm Guitar and Lead Guitar.
+12. [open-items.md](open-items.md) — everything undecided or decided by assumption. Read before building.
 
 ## Where the truth lives
 

@@ -17,7 +17,7 @@ Picked by the user on 2026-11-08 with the audition tool, from 9 bass, 6 electric
 | Keys | Synth Voice | 55 | 54 |
 | Drums | Standard Kit | 1 | 0, on MIDI channel 10 |
 
-Program numbers are the General MIDI numbering from 1 to 128. The program change value is that number minus 1. The guitars are electric guitars. Keys is the instrument for vocals, which is why a voice sound was picked.
+Program numbers are the General MIDI numbering from 1 to 128. The program change value is that number minus 1. The same values are written into exported MIDI files; the program numbers inside an imported MIDI file are ignored, because the sounds are fixed ([midi-import.md](midi-import.md)). The guitars are electric guitars. Keys is the instrument for vocals, which is why a voice sound was picked.
 
 ## Audition tool
 

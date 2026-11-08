@@ -19,6 +19,10 @@ Each instrument can be muted or isolated, and has its own volume.
 
 There is also a master mixer screen. Each instrument also has its own page for editing its notes and its envelope.
 
+## Files
+
+A project is saved to a file. The song can be exported as WAV, and as a MIDI file. A MIDI file can also be imported as a whole song. The import is file based only; there is no MIDI keyboard input. See [midi-import.md](midi-import.md).
+
 ## Why it exists
 
 Caustic cannot do the one special feature: the guitar and bass editors are not a horizontal piano roll but an upside-down arrangement of strings. See [instrument-layouts.md](instrument-layouts.md).

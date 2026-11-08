@@ -2,7 +2,8 @@
 
 ## Patterns
 
-- Each instrument has 20 patterns, numbered. They have no names.
+- Each instrument shows 20 patterns, numbered. They have no names.
+- Up to 120 patterns per instrument exist (decided 2026-11-09, for MIDI import). Once all 20 shown patterns are active, a hidden control appears that opens more. Its exact look and how many it opens at a time are not decided; see [open-items.md](open-items.md). A MIDI import that needs more than 20 opens the extra ones by itself ([midi-import.md](midi-import.md)).
 - A pattern cannot be deleted. It becomes active as soon as one note is placed in it. To clear a pattern, delete its notes.
 - One pattern is one bar long: four quarter notes in 4/4, three in 3/4.
 - A pattern can be extended to 2x, 4x or 8x, and the length can be changed after notes are placed.
