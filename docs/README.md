@@ -20,6 +20,7 @@ The specification phase is closed. It was built through 16 answered questionnair
 10. [design.md](design.md) — the decided palette and fonts (Bone and black), and the default window size, 960 by 540. Not a layout or page design.
 11. [page-designs.md](page-designs.md) — the decided layout of each page, picked one at a time. So far: the Mixer (the Ledger), the Song page (the Brush bar), the Drums page (the Pad machine) and the Guitar page (the String cards), one page for Bass, Rhythm Guitar and Lead Guitar.
 12. [open-items.md](open-items.md) — everything undecided or decided by assumption. Read before building.
+13. [plan24.md](plan24.md) — the build plan, one step per `/plan24` invocation: the next three steps in detail, the rest in broad strokes, and the table of every step with its status.
 
 ## Where the truth lives
 
@@ -27,4 +28,4 @@ If a doc and a questionnaire answer disagree, the answer file wins, unless a lat
 
 ## Next
 
-The stack is chosen, and so are the palette, the fonts, the Mixer, Song, Drums and Guitar layouts, and the four General MIDI sounds (bass, guitar, keys, drums; [sound.md](sound.md)). The default window is 960 by 540 and every page must handle it ([design.md](design.md)). One transport bar at the top of every page holds Play, Stop, the metronome and Undo. Next: build the Keys page from the Guitar page, check the four decided layouts at 960 by 540 (the Guitar editor may scroll vertically), work out how to record the chosen sounds from the Windows synth into audio files (a free General MIDI soundfont is the accepted fallback), then build the app. The full described scope is wanted in the first build.
+The stack is chosen, and so are the palette, the fonts, the Mixer, Song, Drums and Guitar layouts, and the four General MIDI sounds (bass, guitar, keys, drums; [sound.md](sound.md)). The default window is 960 by 540 and every page must handle it ([design.md](design.md)). One transport bar at the top of every page holds Play, Stop, the metronome and Undo. The preparation phase is over and the app is built by [plan24.md](plan24.md), one step at a time. That plan scaffolds the app, builds the model, records the chosen sounds from the Windows synth (a free General MIDI soundfont is the accepted fallback), then builds the audio engine and the pages. The Keys page is built from the Guitar page, and every page is checked at 960 by 540 (the Guitar editor may scroll vertically). The full described scope is wanted in the first build.
