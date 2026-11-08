@@ -4,7 +4,7 @@ A minimalist, Windows-only music app made for one person. Five instruments, a Pa
 
 ## Status
 
-The specification phase is closed. It was built through 16 answered questionnaires, and every answer is stored as given in [questionnaire_answers/](questionnaire_answers/). Questionnaire 17 was published but not answered. After that, MIDI import and export was added through a question-and-answer in chat, stored in [questionnaire_answers/midi_import.md](questionnaire_answers/midi_import.md) and written up in [midi-import.md](midi-import.md). [tools/midi-prototype/](../tools/midi-prototype/) holds a Python reference for the import algorithms. The build began with [plan24.md](plan24.md): step 1 added an app shell (Electron, TypeScript, React) that opens a placeholder screen at 960 by 540; no page is built yet. See the root [README.md](../README.md) for how to run it.
+The specification phase is closed. It was built through 16 answered questionnaires, and every answer is stored as given in [questionnaire_answers/](questionnaire_answers/). Questionnaire 17 was published but not answered. After that, MIDI import and export was added through a question-and-answer in chat, stored in [questionnaire_answers/midi_import.md](questionnaire_answers/midi_import.md) and written up in [midi-import.md](midi-import.md). [tools/midi-prototype/](../tools/midi-prototype/) holds a Python reference for the import algorithms. The build began with [plan24.md](plan24.md): step 1 added an app shell (Electron, TypeScript, React) that opens a placeholder screen at 960 by 540; no page is built yet. Step 2 added the project model in `src/core/` ([project-model.md](project-model.md)). See the root [README.md](../README.md) for how to run it.
 
 ## Read in this order
 
@@ -20,7 +20,8 @@ The specification phase is closed. It was built through 16 answered questionnair
 10. [design.md](design.md) — the decided palette and fonts (Bone and black), and the default window size, 960 by 540. Not a layout or page design.
 11. [page-designs.md](page-designs.md) — the decided layout of each page, picked one at a time. So far: the Mixer (the Ledger), the Song page (the Brush bar), the Drums page (the Pad machine) and the Guitar page (the String cards), one page for Bass, Rhythm Guitar and Lead Guitar.
 12. [open-items.md](open-items.md) — everything undecided or decided by assumption. Read before building.
-13. [plan24.md](plan24.md) — the build plan, one step per `/plan24` invocation: the next three steps in detail, the rest in broad strokes, and the table of every step with its status.
+13. [project-model.md](project-model.md) — the project model as built (plan24 step 2): the rules in `src/core/`, and what is deliberately not in it.
+14. [plan24.md](plan24.md) — the build plan, one step per `/plan24` invocation: the next three steps in detail, the rest in broad strokes, and the table of every step with its status.
 
 ## Where the truth lives
 
