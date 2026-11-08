@@ -5,6 +5,7 @@ The build plan, run one step per invocation of the `/plan24` skill ([.claude/ski
 Horizon: 24
 Last completed step: 2
 Replanned after step: 0
+Plan complete: no
 
 The plan is replanned after every third completed step (3, 6, 9, and so on). Done steps are history and are never changed by a replan.
 
