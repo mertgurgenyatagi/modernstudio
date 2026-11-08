@@ -22,4 +22,4 @@ A note can ring past the end of its pattern into the next one when the instrumen
 
 ## When the meter changes
 
-Notes keep their positions. Switching 4/4 to 3/4 shortens the bar, and notes that now fall outside the bar are kept but not played, and return if the meter is switched back. This follows the same rule as shortening a pattern.
+Notes keep their positions. Switching 4/4 to 3/4 shortens the bar, and notes that now fall outside the bar are deleted for good (questionnaire 16). They do not come back if the meter is switched back. This differs from shortening a pattern, where notes outside are kept (see [patterns-and-song.md](patterns-and-song.md)). Whether Undo restores them was not decided.

@@ -30,4 +30,4 @@
 
 ## Placing a pattern in the lane
 
-Select an active pattern, then click an empty bar in the lane to place it. Blocks can be dragged to move them and removed. This is a proposed design, since the how was left open.
+Select an active pattern, then click an empty bar in the lane to place it. Blocks can be dragged to move them. A block is removed by selecting it and pressing Delete, with no button (questionnaire 16). The rest is a proposed design, since the how was left open.

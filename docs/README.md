@@ -4,7 +4,7 @@ A minimalist, Windows-only music app made for one person. Five instruments, a Pa
 
 ## Status
 
-The specification phase is closed. It was built through 15 questionnaires, and every answer is stored as given in [questionnaire_answers/](questionnaire_answers/). No code exists yet.
+The specification phase is closed. It was built through 16 answered questionnaires, and every answer is stored as given in [questionnaire_answers/](questionnaire_answers/). Questionnaire 17 was published but not answered. No code exists yet.
 
 ## Read in this order
 
@@ -26,4 +26,4 @@ If a doc and a questionnaire answer disagree, the answer file wins, unless a lat
 
 ## Next
 
-The stack is chosen, and so are the palette, the fonts, the Mixer, Song, Drums and Guitar layouts, and the four General MIDI sounds (bass, guitar, keys, drums; [sound.md](sound.md)). The default window is 960 by 540 and every page must handle it ([design.md](design.md)). Next: build the Keys page from the Guitar page, check the four decided layouts at 960 by 540, work out how to record the chosen sounds from the Windows synth into audio files, then build the app. The full described scope is wanted in the first build.
+The stack is chosen, and so are the palette, the fonts, the Mixer, Song, Drums and Guitar layouts, and the four General MIDI sounds (bass, guitar, keys, drums; [sound.md](sound.md)). The default window is 960 by 540 and every page must handle it ([design.md](design.md)). One transport bar at the top of every page holds Play, Stop, the metronome and Undo. Next: build the Keys page from the Guitar page, check the four decided layouts at 960 by 540 (the Guitar editor may scroll vertically), work out how to record the chosen sounds from the Windows synth into audio files (a free General MIDI soundfont is the accepted fallback), then build the app. The full described scope is wanted in the first build.

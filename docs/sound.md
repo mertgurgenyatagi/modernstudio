@@ -31,6 +31,8 @@ Built and used. It lives in [tools/audition/](../tools/audition/) and is not a p
 
 Windows' synth cannot shape attack, decay and release. The agreed plan is to record the chosen instruments from it into audio files that ship with the app, and shape the envelope in the app's own engine.
 
+Fallback (questionnaire 16): if the Windows synth cannot be recorded exactly, a free General MIDI soundfont with the same four instrument names is acceptable. It would sound close to the Windows synth but not identical.
+
 ## Per-instrument settings
 
 Each instrument has exactly one setting for each of these, never per pattern or per note:

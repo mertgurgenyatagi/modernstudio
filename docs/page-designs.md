@@ -30,7 +30,7 @@ A plain table. One row per instrument, the same columns every time, the master i
 None of this is in the questionnaire answers. Change it if wrong.
 
 - The volume scale is 0 to 100, shown as a number beside each slider.
-- The Mixer page carries its own Play and Stop button. [pages.md](pages.md) says where the transport belongs is not specified.
+- The Mixer design draws its own Play and Stop button. Questionnaire 16 moved these into one transport bar at the top of every page ([pages.md](pages.md)), so the build uses the shared bar instead.
 - BPM has both a number field (to type) and a slider (to drag).
 - The three status words under each name (Playing, Muted, Silent while another is isolated) were added so the isolate rule is visible without explanation.
 - Corner shape, line weight and row height are this page's own and are not a decision for other pages.
@@ -60,11 +60,11 @@ One toolbar holds the whole pattern picker as a single "brush". Below it, five t
 
 None of this is in the questionnaire answers. Change it if wrong.
 
-- The Song page carries its own Play button, as the Mixer does. [pages.md](pages.md) says where the transport belongs is not specified.
+- The Song design draws its own Play button, as the Mixer does. The shared transport bar of questionnaire 16 replaces it ([pages.md](pages.md)).
 - "Bar 6 of 12" is a readout of the playhead and the song end (the end of the last placed block on any lane). It is the only number added.
 - The stepper skips empty patterns, because only active patterns can be placed.
 - The sixteen bars drawn are the visible stretch. The song can run to 256 bars, reached by scrolling sideways.
-- Moving and removing blocks are not drawn. The design suggests dragging to move; how removal works (a Remove action on a selected block was drawn in design 05, and a Delete key is the plain option) is still open.
+- Moving and removing blocks are not drawn. The design suggests dragging to move. Removal is decided in questionnaire 16: select the block and press Delete, with no Remove button.
 - Corner shape, line weight and lane height are this page's own and are not a decision for other pages.
 
 ### Where to look
@@ -93,7 +93,7 @@ The densest of the ten. The whole page is one bordered panel split into compartm
 
 None of this is in the questionnaire answers. Change it if wrong.
 
-- The Drums page carries its own Undo and Play, as the Mixer and the Song page do. [pages.md](pages.md) says where the transport and undo belong is not specified.
+- The Drums design draws its own Undo and Play. The shared transport bar of questionnaire 16 replaces them ([pages.md](pages.md)).
 - The editor is drawn as pads, one per step of the chosen note value. The docs say only that Drums has five rows and that hits have no length. Pads are the way this design shows "a hit with no length".
 - Sixteen pads per bar are drawn because 16th is the note value shown as chosen. How the pad grid changes for Whole, Half, Quarter, Third and Half of a third is not drawn.
 - For a pattern of 2x, 4x or 8x the pads continue to the right and the compartment scrolls sideways, or "Show whole pattern" fits them all. Neither is drawn.
@@ -138,7 +138,7 @@ None of this is in the questionnaire answers. Change it if wrong.
 - Rows are labelled by fret number, 0 to 7. The example in [instrument-layouts.md](instrument-layouts.md) names the pitch on every row (E2, F2, F#2 and so on); this design shows the pitch only in the card header, as the open string. Pitch names on every row could be added without changing the layout.
 - With 5 or 12 frets the cards would have 6 or 13 rows. Neither is drawn.
 - Sixteen steps per bar are drawn because 16th is the note value shown as chosen. How the grid changes for Whole, Half, Quarter, Third and Half of a third is not drawn. Nor is a 2x, 4x or 8x pattern; the cards would scroll sideways, or "Show whole pattern" would fit them all.
-- The Guitar page carries its own Undo and Play, as the Mixer, Song and Drums pages do. [pages.md](pages.md) says where the transport and undo belong is not specified.
+- The Guitar design draws its own Undo and Play. The shared transport bar of questionnaire 16 replaces them ([pages.md](pages.md)). The six string cards run about 1000 pixels tall, so at 540 high the editor scrolls vertically. The user accepted this in questionnaire 16.
 - "Show whole pattern" is a button that stays pressed when on. "Copy notes to…" is a button, and the picker that follows it is not drawn.
 - Empty patterns are selectable, because a pattern becomes active when the first note is placed in it.
 - The envelope values are shown on a 0 to 100 scale with no unit.

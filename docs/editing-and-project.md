@@ -4,6 +4,7 @@
 
 - Note placement and length are described in [time-and-notes.md](time-and-notes.md).
 - Undo is required. There is no redo.
+- A Song block is removed by selecting it and pressing Delete, with no button (questionnaire 16).
 - Other editing actions (select, move, copy, delete and so on) are left to whatever feels natural.
 - No MIDI keyboard input.
 - Editors are not zoomable.
@@ -14,6 +15,7 @@
 - Pattern mode loops the pattern.
 - Song mode starts from the beginning by default, or from the point the user clicked on the timeline, and loops at the end.
 - A metronome can be turned on while playing. No count-in.
+- Play, Stop, the metronome toggle and Undo sit in one bar at the top of every page (questionnaire 16).
 
 ## Saving and files
 
