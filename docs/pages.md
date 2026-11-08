@@ -57,7 +57,7 @@ On the Guitar page, the instrument (Bass, Rhythm Guitar or Lead Guitar) is chose
 
 ## Not pages
 
-- The audition tool for picking the General MIDI instruments is a separate small tool, not a page of the app. See [open-items.md](open-items.md).
+- The audition tool for picking the General MIDI instruments is a separate small tool, not a page of the app. It is built and the picks are made. See [sound.md](sound.md).
 - Saving, opening and WAV export were described only as actions, not as pages. See [editing-and-project.md](editing-and-project.md).
 
 ## Assumptions

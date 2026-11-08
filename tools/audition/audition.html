@@ -1,0 +1,479 @@
+<title>Sound Audition</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fragment+Mono&family=Golos+Text:wght@400;500;600&family=Piazzolla:wght@700&display=swap">
+<style>
+  /* Layout: a source bar on top, then four candidate lists in a 2 by 2 grid (one column when narrow), then a docked strip showing the four picks. */
+  :root {
+    --color-paper: oklch(96.5% 0.006 90);
+    --color-paper-2: oklch(99% 0.004 90);
+    --color-paper-3: oklch(94% 0.006 90);
+    --color-ink: oklch(18% 0.006 90);
+    --color-muted: oklch(44% 0.006 90);
+    --color-rule: oklch(79% 0.006 90);
+    --color-accent: oklch(18% 0.006 90);
+    --color-accent-ink: oklch(97% 0.005 90);
+    --color-focus: oklch(18% 0.006 90);
+    --font-display: "Piazzolla", ui-serif, serif;
+    --font-body: "Golos Text", ui-sans-serif, sans-serif;
+    --font-outlier: "Fragment Mono", ui-monospace, monospace;
+    color-scheme: light;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--color-paper);
+    color: var(--color-ink);
+    font: 400 14px/1.45 var(--font-body);
+    padding-block: 24px 16px;
+    padding-left: max(16px, env(safe-area-inset-left, 0px));
+    padding-right: max(16px, env(safe-area-inset-right, 0px));
+  }
+  .wrap { max-width: 960px; margin: 0 auto; display: flex; flex-direction: column; gap: 16px; }
+  button, select, input { font: inherit; color: inherit; }
+  button { cursor: pointer; }
+  :focus-visible { outline: 2px solid var(--color-focus); outline-offset: 2px; }
+
+  header h1 { margin: 0; font: 700 30px/1.1 var(--font-display); text-wrap: balance; }
+  header p { margin: 6px 0 0; max-width: 65ch; color: var(--color-muted); }
+
+  .panel { background: var(--color-paper-2); border: 1px solid var(--color-rule); border-radius: 2px; }
+
+  .source { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 20px; padding: 12px 14px; }
+  .source .label { font: 400 11px/1 var(--font-outlier); letter-spacing: 0.08em; text-transform: uppercase; color: var(--color-muted); }
+  .seg { display: inline-flex; border: 1px solid var(--color-ink); border-radius: 2px; overflow: hidden; }
+  .seg label { position: relative; display: block; }
+  .seg input { position: absolute; inset: 0; opacity: 0; margin: 0; cursor: pointer; }
+  .seg span { display: block; padding: 6px 12px; font-weight: 500; }
+  .seg label + label span { border-left: 1px solid var(--color-ink); }
+  .seg input:checked + span { background: var(--color-accent); color: var(--color-accent-ink); }
+  .seg input:focus-visible + span { outline: 2px solid var(--color-focus); outline-offset: -4px; }
+  .btn { padding: 6px 12px; border: 1px solid var(--color-ink); border-radius: 2px; background: transparent; font-weight: 500; }
+  .btn:hover { background: var(--color-paper-3); }
+  select { padding: 6px 8px; border: 1px solid var(--color-ink); border-radius: 2px; background: var(--color-paper-2); max-width: 100%; }
+  .check { display: inline-flex; align-items: center; gap: 6px; }
+  .check input { accent-color: var(--color-ink); width: 16px; height: 16px; margin: 0; }
+  .status { flex-basis: 100%; margin: 0; color: var(--color-muted); min-width: 0; }
+  .status strong { color: var(--color-ink); font-weight: 600; }
+  .status code { font: 400 13px/1 var(--font-outlier); color: var(--color-ink); background: var(--color-paper-3); padding: 2px 5px; }
+
+  .groups { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+  @media (max-width: 700px) { .groups { grid-template-columns: minmax(0, 1fr); } }
+  .group { min-width: 0; }
+  .group-head { padding: 12px 14px 10px; }
+  .group-head h2 { margin: 0; display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 10px; font: 700 20px/1.2 var(--font-display); }
+  .group-head h2 small { font: 400 12px/1 var(--font-outlier); color: var(--color-muted); }
+  .group-head p { margin: 4px 0 0; color: var(--color-muted); font-size: 13px; }
+  .note { margin: 6px 0 0; padding: 6px 8px; background: var(--color-paper-3); font-size: 13px; }
+  .group ul { list-style: none; margin: 0; padding: 0; }
+  .row { display: grid; grid-template-columns: 30px 3ch minmax(0, 1fr) auto; align-items: center; gap: 10px; min-height: 40px; padding: 5px 12px 5px 14px; border-top: 1px solid var(--color-rule); }
+  .row.picked { background: var(--color-paper-3); }
+  .row.picked .name { font-weight: 600; }
+  .num { font: 400 13px/1 var(--font-outlier); color: var(--color-muted); font-variant-numeric: tabular-nums; }
+  .name { min-width: 0; overflow-wrap: anywhere; }
+  .name small { display: block; color: var(--color-muted); font-size: 12px; }
+  .play { width: 30px; height: 30px; padding: 0; display: grid; place-items: center; border: 1px solid var(--color-ink); border-radius: 2px; background: transparent; }
+  .play:hover { background: var(--color-paper-3); }
+  .play svg { width: 12px; height: 12px; fill: currentColor; }
+  .play .i-stop { display: none; }
+  .play[aria-pressed="true"] { background: var(--color-accent); color: var(--color-accent-ink); }
+  .play[aria-pressed="true"] .i-play { display: none; }
+  .play[aria-pressed="true"] .i-stop { display: block; }
+  .pick { min-width: 68px; padding: 5px 10px; border: 1px solid var(--color-ink); border-radius: 2px; background: transparent; font-size: 13px; font-weight: 500; }
+  .pick:hover { background: var(--color-paper-3); }
+  .pick[aria-pressed="true"] { background: var(--color-accent); color: var(--color-accent-ink); }
+
+  .picks { position: sticky; bottom: 0; margin-top: 4px; padding: 10px 14px; border-color: var(--color-ink); display: flex; flex-wrap: wrap; align-items: center; gap: 10px 16px; }
+  .picks dl { flex: 1 1 420px; min-width: 0; margin: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 8px 14px; }
+  .picks dt { font: 400 11px/1 var(--font-outlier); letter-spacing: 0.08em; text-transform: uppercase; color: var(--color-muted); }
+  .picks dd { margin: 3px 0 0; min-width: 0; overflow-wrap: anywhere; font-weight: 500; }
+  .picks dd.empty { color: var(--color-muted); font-weight: 400; }
+  .copy { background: var(--color-accent); color: var(--color-accent-ink); }
+  .copy:hover { background: var(--color-accent); opacity: 0.88; }
+  .fallback { flex-basis: 100%; }
+  .fallback p { margin: 0 0 4px; color: var(--color-muted); font-size: 13px; }
+  .fallback textarea { width: 100%; min-height: 96px; padding: 8px; border: 1px solid var(--color-ink); border-radius: 2px; background: var(--color-paper-2); font: 400 13px/1.4 var(--font-outlier); }
+  @media (prefers-reduced-motion: no-preference) { .btn, .pick, .play { transition: background-color 0.12s; } }
+</style>
+
+<div class="wrap">
+  <header>
+    <h1>Sound audition</h1>
+    <p>Pick one General MIDI sound for each instrument. Press play to hear a short phrase written for that instrument, then press Pick. Guitar is one pick, shared by Rhythm Guitar and Lead Guitar.</p>
+  </header>
+
+  <section class="panel source" aria-label="Sound source">
+    <span class="label">Source</span>
+    <div class="seg" role="radiogroup" aria-label="Sound source">
+      <label><input type="radio" name="source" id="src-preview" value="preview" checked><span>Preview synth</span></label>
+      <label><input type="radio" name="source" id="src-windows" value="windows"><span>Windows synth</span></label>
+    </div>
+    <button type="button" class="btn" id="connect">Connect Windows synth</button>
+    <label class="check"><input type="checkbox" id="loop"> Loop</label>
+    <p class="status" id="status" aria-live="polite"></p>
+  </section>
+
+  <main class="groups" id="groups"></main>
+
+  <section class="panel picks" aria-label="Your picks">
+    <dl id="slots"></dl>
+    <button type="button" class="btn copy" id="copy">Copy picks</button>
+    <div class="fallback" id="fallback" hidden>
+      <p>Copying was refused here. The text is selected, press Ctrl+C.</p>
+      <textarea id="fallback-text" readonly></textarea>
+    </div>
+  </section>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/webaudio-tinysynth@1.1.3/webaudio-tinysynth.min.js"></script>
+<script>
+(function () {
+  "use strict";
+
+  var BEAT = 600; // ms per beat, 100 BPM
+
+  // ---- Phrases: [beat, midi note, length in beats, velocity] ----
+  function strum(start, notes, len, vel, spread) {
+    return notes.map(function (n, i) { return [start + i * spread, n, len, vel]; });
+  }
+  function chord(start, notes, len, vel) { return strum(start, notes, len, vel, 0); }
+
+  var bassPhrase = [
+    [0, 28, 0.5, 100], [0.5, 28, 0.5, 90], [1, 31, 0.5, 95], [1.5, 33, 0.5, 95],
+    [2, 35, 0.5, 100], [2.5, 33, 0.5, 90], [3, 31, 0.5, 95], [3.5, 28, 0.5, 90],
+    [4, 28, 0.5, 100], [4.5, 28, 0.5, 90], [5, 31, 0.5, 95], [5.5, 33, 0.5, 95],
+    [6, 35, 1, 100], [7, 28, 1.5, 105]
+  ];
+
+  var guitarPhrase = [].concat(
+    chord(0, [40, 47, 52], 1.5, 100),
+    [[2, 40, 0.5, 95], [2.5, 40, 0.5, 85], [3, 43, 0.5, 95], [3.5, 45, 0.5, 95]],
+    strum(4, [40, 47, 52, 55, 59, 64], 2, 90, 0.04),
+    [[6, 64, 0.5, 100], [6.5, 67, 0.5, 100], [7, 69, 0.5, 100], [7.5, 71, 0.5, 100], [8, 76, 1.5, 105]]
+  );
+
+  var keysPhrase = [].concat(
+    chord(0, [48, 52, 55], 2, 80), [[0, 64, 1, 95], [1, 67, 1, 95]],
+    chord(2, [53, 57, 60], 2, 80), [[2, 69, 1, 95], [3, 65, 1, 95]],
+    chord(4, [55, 59, 62], 2, 80), [[4, 67, 1, 95], [5, 62, 1, 95]],
+    chord(6, [48, 52, 55, 60], 3, 80), [[6, 64, 3, 100]]
+  );
+
+  var drumPhrase = (function () {
+    var h = [], i;
+    var KICK = 36, SNARE = 38, HAT = 42, OPEN = 46, CRASH = 49;
+    h.push([0, CRASH, 1, 100]);
+    for (i = 0; i < 8; i++) {
+      h.push([i * 0.5, HAT, 0.25, i % 2 ? 70 : 90]);
+      h.push([4 + i * 0.5, HAT, 0.25, i % 2 ? 70 : 90]);
+    }
+    h.push([0, KICK, 0.25, 110], [2, KICK, 0.25, 105], [2.5, KICK, 0.25, 95]);
+    h.push([1, SNARE, 0.25, 105], [3, SNARE, 0.25, 105]);
+    h.push([3.5, OPEN, 0.5, 90]);
+    h.push([4, KICK, 0.25, 110], [6, KICK, 0.25, 105], [6.5, KICK, 0.25, 95]);
+    h.push([5, SNARE, 0.25, 105], [7, SNARE, 0.25, 105]);
+    h.push([7.5, OPEN, 0.5, 90]);
+    h.push([8, CRASH, 1, 105], [8, KICK, 0.25, 110]);
+    return h;
+  })();
+
+  // ---- The candidates. n = General MIDI program number (1 to 128). ----
+  var GROUPS = [
+    {
+      id: "bass", title: "Bass", sub: "E1 to G2", channel: 0, phrase: bassPhrase,
+      about: "An eighth-note line on the low strings, ending on a held E1.",
+      items: [
+        { n: 34, name: "Electric Bass (finger)" },
+        { n: 35, name: "Electric Bass (pick)" },
+        { n: 36, name: "Fretless Bass" },
+        { n: 37, name: "Slap Bass 1" },
+        { n: 38, name: "Slap Bass 2" },
+        { n: 33, name: "Acoustic Bass" },
+        { n: 44, name: "Contrabass", hint: "Bowed, not plucked" },
+        { n: 39, name: "Synth Bass 1" },
+        { n: 40, name: "Synth Bass 2" }
+      ],
+      note: "9 candidates. General MIDI has 8 bass sounds, plus Contrabass as a ninth."
+    },
+    {
+      id: "guitar", title: "Guitar", sub: "Rhythm and Lead", channel: 0, phrase: guitarPhrase,
+      about: "A power chord, a muted riff, a strummed Em chord, then a lead line.",
+      items: [
+        { n: 28, name: "Electric Guitar (clean)" },
+        { n: 27, name: "Electric Guitar (jazz)" },
+        { n: 29, name: "Electric Guitar (muted)" },
+        { n: 30, name: "Overdriven Guitar" },
+        { n: 31, name: "Distortion Guitar" },
+        { n: 32, name: "Guitar Harmonics" }
+      ],
+      note: "6 candidates. These are all the electric guitars General MIDI has."
+    },
+    {
+      id: "keys", title: "Keys", sub: "C2 to C6, for vocals", channel: 0, phrase: keysPhrase,
+      about: "A melody over C, F, G and C chords.",
+      items: [
+        { n: 1, name: "Acoustic Grand Piano" },
+        { n: 2, name: "Bright Acoustic Piano" },
+        { n: 3, name: "Electric Grand Piano" },
+        { n: 5, name: "Electric Piano 1" },
+        { n: 6, name: "Electric Piano 2" },
+        { n: 17, name: "Drawbar Organ" },
+        { n: 53, name: "Choir Aahs" },
+        { n: 54, name: "Voice Oohs" },
+        { n: 55, name: "Synth Voice" },
+        { n: 82, name: "Lead 2 (sawtooth)" }
+      ]
+    },
+    {
+      id: "drums", title: "Drums", sub: "Kick, snare, hats, crash", channel: 9, drums: true, phrase: drumPhrase,
+      about: "Two bars of a rock beat with closed and open hi-hat and a crash.",
+      items: [
+        { n: 1, prog: 0, name: "Standard Kit" },
+        { n: 9, prog: 8, name: "Room Kit" },
+        { n: 17, prog: 16, name: "Power Kit" },
+        { n: 25, prog: 24, name: "Electronic Kit" },
+        { n: 26, prog: 25, name: "TR-808 Kit" },
+        { n: 33, prog: 32, name: "Jazz Kit" },
+        { n: 41, prog: 40, name: "Brush Kit" },
+        { n: 49, prog: 48, name: "Orchestra Kit" }
+      ],
+      note: "8 kits. If two kits sound the same on the Windows synth, it does not have that kit."
+    }
+  ];
+
+  var $ = function (id) { return document.getElementById(id); };
+  var statusEl = $("status");
+
+  // ---- Picks, remembered in this browser ----
+  var STORE_KEY = "modernstudio-sound-picks";
+  var picks = {};
+  try { picks = JSON.parse(localStorage.getItem(STORE_KEY) || "{}") || {}; } catch (e) { picks = {}; }
+  function savePicks() { try { localStorage.setItem(STORE_KEY, JSON.stringify(picks)); } catch (e) {} }
+  function findItem(g, n) { for (var i = 0; i < g.items.length; i++) if (g.items[i].n === n) return g.items[i]; return null; }
+  GROUPS.forEach(function (g) { if (picks[g.id] && !findItem(g, picks[g.id])) delete picks[g.id]; });
+
+  // ---- Sound sources ----
+  var synth = null;       // preview synth, created on the first click
+  var bridge = null;      // { name } once the local bridge has answered
+  var source = "preview";
+
+  // Messages for the Windows synth go to the bridge in small ordered batches.
+  var outbox = [], outboxTimer = null, outboxChain = Promise.resolve();
+  function flushOutbox() {
+    outboxTimer = null;
+    var batch = outbox; outbox = [];
+    outboxChain = outboxChain.then(function () {
+      return fetch("/midi", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(batch) })
+        .then(function (r) { if (!r.ok) throw new Error("bridge " + r.status); })
+        .catch(function () { bridge = null; say("The bridge stopped answering. Start it again with <code>node tools/audition/bridge.mjs</code>, then press Connect."); });
+    });
+  }
+  function sendBytes(bytes) {
+    if (source === "windows") {
+      if (!bridge) return;
+      outbox.push(bytes);
+      if (!outboxTimer) outboxTimer = setTimeout(flushOutbox, 0);
+    } else if (synth) {
+      synth.send(bytes);
+    }
+  }
+  function sourceReady() {
+    if (source === "windows") {
+      if (!bridge) { say("Press <strong>Connect Windows synth</strong> first, or switch to the preview synth."); return false; }
+      return true;
+    }
+    if (!synth) {
+      if (typeof WebAudioTinySynth === "undefined") { say("The preview synth did not load. Check the connection, then reload."); return false; }
+      synth = new WebAudioTinySynth({ quality: 1, useReverb: 0, voices: 64 });
+    }
+    return true;
+  }
+  function say(html) { statusEl.innerHTML = html; }
+
+  // ---- Playback ----
+  var timers = [];
+  var now = null;          // { gid, n } of the row that is playing
+  var run = 0;
+
+  function silence() {
+    [0, 9].forEach(function (ch) {
+      try { sendBytes([0xB0 | ch, 123, 0]); sendBytes([0xB0 | ch, 120, 0]); } catch (e) {}
+    });
+  }
+  function stop() {
+    run++;
+    timers.forEach(clearTimeout);
+    timers = [];
+    if (now) silence();
+    now = null;
+    renderRows();
+  }
+  function later(ms, fn, token) {
+    timers.push(setTimeout(function () { if (token === run) fn(); }, ms));
+  }
+  function play(g, item) {
+    var wasThis = now && now.gid === g.id && now.n === item.n;
+    stop();
+    if (wasThis) return;
+    if (!sourceReady()) return;
+    var token = ++run;
+    now = { gid: g.id, n: item.n };
+    renderRows();
+    startPhrase(g, item, token);
+  }
+  function startPhrase(g, item, token) {
+    var ch = g.channel;
+    var program = g.drums ? item.prog : item.n - 1;
+    sendBytes([0xB0 | ch, 121, 0]);
+    sendBytes([0xB0 | ch, 7, 110]);
+    sendBytes([0xC0 | ch, program]);
+    var endBeat = 0;
+    g.phrase.forEach(function (ev) {
+      var on = ev[0] * BEAT, len = Math.max(ev[2] * BEAT * 0.94, 60);
+      endBeat = Math.max(endBeat, ev[0] + ev[2]);
+      later(on, function () { sendBytes([0x90 | ch, ev[1], ev[3]]); }, token);
+      later(on + len, function () { sendBytes([0x80 | ch, ev[1], 0]); }, token);
+    });
+    later(endBeat * BEAT + 1100, function () {
+      if ($("loop").checked) { startPhrase(g, item, token); }
+      else { now = null; renderRows(); }
+    }, token);
+  }
+
+  // ---- Windows synth through the local bridge (tools/audition/bridge.mjs) ----
+  function escapeHtml(s) { return String(s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
+
+  function connectBridge(quiet) {
+    return fetch("/ping", { cache: "no-store" })
+      .then(function (r) { if (!r.ok) throw new Error("no bridge"); return r.json(); })
+      .then(function (j) {
+        if (!j || j.bridge !== true) throw new Error("no bridge");
+        bridge = { name: j.name || "Microsoft GS Wavetable Synth" };
+        setSource("windows");
+        return true;
+      })
+      .catch(function () {
+        bridge = null;
+        if (!quiet) say("No bridge found. Browsers hide the Windows synth from web pages, so a small local program plays it instead. In a terminal in the project folder, run <code>node tools/audition/bridge.mjs</code>, open the address it prints, then press Connect.");
+        return false;
+      });
+  }
+
+  function setSource(value) {
+    if (source !== value) stop();
+    source = value;
+    $(value === "windows" ? "src-windows" : "src-preview").checked = true;
+    if (value === "preview") say("Using the <strong>preview synth</strong>, a rough stand-in. The instruments are the right kind, but the sound is not the Windows sound. For the real sounds, start the local bridge and press <strong>Connect Windows synth</strong>.");
+    else if (bridge) say("Connected to <strong>" + escapeHtml(bridge.name) + "</strong> through the local bridge.");
+    else say("Press <strong>Connect Windows synth</strong> to use the real sounds.");
+    renderRows();
+  }
+
+  // ---- Rendering ----
+  var playSvg = '<svg class="i-play" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 1 L11 6 L2 11 Z" fill="currentColor"/></svg><svg class="i-stop" viewBox="0 0 12 12" aria-hidden="true"><rect x="2" y="2" width="8" height="8" fill="currentColor"/></svg>';
+
+  function buildGroups() {
+    var host = $("groups");
+    host.innerHTML = "";
+    GROUPS.forEach(function (g) {
+      var sec = document.createElement("section");
+      sec.className = "panel group";
+      sec.setAttribute("aria-labelledby", "h-" + g.id);
+      var head = '<div class="group-head"><h2 id="h-' + g.id + '">' + g.title + ' <small>' + g.sub + '</small></h2><p>' + g.about + '</p>' +
+        (g.note ? '<p class="note">' + g.note + '</p>' : '') +
+        (g.drums ? '<p class="note" id="drum-note" hidden>The preview synth has one drum kit, so every kit sounds the same on it. Use the Windows synth to tell the kits apart.</p>' : '') +
+        '</div>';
+      var rows = g.items.map(function (it) {
+        return '<li class="row" data-g="' + g.id + '" data-n="' + it.n + '">' +
+          '<button type="button" class="play" aria-pressed="false" aria-label="Play ' + it.name + '">' + playSvg + '</button>' +
+          '<span class="num">' + it.n + '</span>' +
+          '<span class="name">' + it.name + (it.hint ? '<small>' + it.hint + '</small>' : '') + '</span>' +
+          '<button type="button" class="pick" aria-pressed="false" aria-label="Pick ' + it.name + ' for ' + g.title + '">Pick</button>' +
+          '</li>';
+      }).join("");
+      sec.innerHTML = head + '<ul>' + rows + '</ul>';
+      host.appendChild(sec);
+    });
+  }
+
+  function renderRows() {
+    var rows = document.querySelectorAll(".row");
+    Array.prototype.forEach.call(rows, function (row) {
+      var gid = row.getAttribute("data-g"), n = +row.getAttribute("data-n");
+      var isPlaying = !!now && now.gid === gid && now.n === n;
+      var isPicked = picks[gid] === n;
+      row.classList.toggle("picked", isPicked);
+      var pb = row.querySelector(".play"), kb = row.querySelector(".pick");
+      pb.setAttribute("aria-pressed", isPlaying ? "true" : "false");
+      kb.setAttribute("aria-pressed", isPicked ? "true" : "false");
+      kb.textContent = isPicked ? "Picked" : "Pick";
+    });
+    var dn = $("drum-note");
+    if (dn) dn.hidden = source !== "preview";
+    renderSlots();
+  }
+
+  function pickLabel(g) {
+    var n = picks[g.id];
+    if (!n) return null;
+    var it = findItem(g, n);
+    return n + " " + it.name;
+  }
+  function renderSlots() {
+    $("slots").innerHTML = GROUPS.map(function (g) {
+      var label = pickLabel(g);
+      return '<div><dt>' + (g.id === "guitar" ? "Guitar (rhythm and lead)" : g.title) + '</dt><dd class="' + (label ? "" : "empty") + '">' + (label ? escapeHtml(label) : "Not picked yet") + '</dd></div>';
+    }).join("");
+  }
+
+  function summary() {
+    var lines = ["Sound picks"];
+    GROUPS.forEach(function (g) {
+      var n = picks[g.id], name = g.id === "guitar" ? "Guitar (rhythm and lead)" : g.title;
+      if (!n) { lines.push(name + ": not picked yet"); return; }
+      var it = findItem(g, n);
+      lines.push(name + ": " + n + " " + it.name + (g.drums
+        ? " (program change " + it.prog + " on channel 10)"
+        : " (program change " + (n - 1) + ")"));
+    });
+    return lines.join("\n");
+  }
+
+  // ---- Events ----
+  $("groups").addEventListener("click", function (e) {
+    var btn = e.target.closest("button");
+    if (!btn) return;
+    var row = btn.closest(".row");
+    if (!row) return;
+    var g = GROUPS.filter(function (x) { return x.id === row.getAttribute("data-g"); })[0];
+    var it = findItem(g, +row.getAttribute("data-n"));
+    if (btn.classList.contains("play")) { play(g, it); }
+    else if (btn.classList.contains("pick")) {
+      if (picks[g.id] === it.n) delete picks[g.id]; else picks[g.id] = it.n;
+      savePicks();
+      renderRows();
+    }
+  });
+  Array.prototype.forEach.call(document.querySelectorAll('input[name="source"]'), function (r) {
+    r.addEventListener("change", function () { setSource(r.value); });
+  });
+  $("connect").addEventListener("click", function () { connectBridge(false); });
+  $("copy").addEventListener("click", function () {
+    var text = summary(), fb = $("fallback"), ta = $("fallback-text");
+    var showFallback = function () { fb.hidden = false; ta.value = text; ta.focus(); ta.select(); };
+    fb.hidden = true;
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(function () {
+        var b = $("copy"); b.textContent = "Copied"; setTimeout(function () { b.textContent = "Copy picks"; }, 1400);
+      }, showFallback);
+    } else { showFallback(); }
+  });
+  document.addEventListener("visibilitychange", function () { if (document.hidden) stop(); });
+  window.addEventListener("pagehide", stop);
+
+  buildGroups();
+  setSource("preview");
+  connectBridge(true);
+})();
+</script>

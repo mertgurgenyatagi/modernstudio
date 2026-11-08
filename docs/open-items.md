@@ -2,7 +2,7 @@
 
 Not yet decided, or decided by assumption.
 
-- Which General MIDI instrument is used for each of the four sounds (drums, bass, guitar, keys). To be picked with the audition tool, then final.
+- The General MIDI sounds: decided, no longer open. Bass is Electric Bass (finger), both guitars are Electric Guitar (jazz), Keys is Synth Voice, Drums is the Standard Kit. See [sound.md](sound.md). Still open: how to record them from the Windows synth into the audio files the app ships with. The audition tool only plays the synth. The Windows synth was not checked for all eight drum kits, which no longer matters since the Standard Kit was picked.
 - Tech stack: decided, no longer open. The assistant recommended Electron, TypeScript, React and Web Audio, and the user agreed. See [stack.md](stack.md). Its one known risk is how to record the General MIDI sounds.
 - Page names and contents: written in [pages.md](pages.md) with assumptions. Pattern mode is treated as part of each instrument page. The places of the transport, metronome and undo controls are not specified.
 - Palette and fonts: decided, no longer open. "Bone and black", look 09 of the overall-feel exhibition. See [design.md](design.md). That is all it decides. Page layouts are picked page by page and recorded in [page-designs.md](page-designs.md). Decided so far: the Mixer (the Ledger), the Song page (the Brush bar), the Drums page (the Pad machine) and the Guitar page (the String cards). Only Keys is still open.

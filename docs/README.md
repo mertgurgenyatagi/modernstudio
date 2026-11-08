@@ -12,7 +12,7 @@ The specification phase is closed. It was built through 15 questionnaires, and e
 2. [instrument-layouts.md](instrument-layouts.md) — the string layout, bass, drums, keys.
 3. [time-and-notes.md](time-and-notes.md) — BPM, meter, note values, placing notes.
 4. [patterns-and-song.md](patterns-and-song.md) — patterns and the Song timeline.
-5. [sound.md](sound.md) — sound source, envelopes, mixer.
+5. [sound.md](sound.md) — sound source, the chosen General MIDI sounds, the audition tool, envelopes, mixer.
 6. [editing-and-project.md](editing-and-project.md) — undo, playback, saving, export, packaging.
 7. [pages.md](pages.md) — the names of the pages and what each contains.
 8. [stack.md](stack.md) — the chosen tech stack and the installed tooling.
@@ -26,4 +26,4 @@ If a doc and a questionnaire answer disagree, the answer file wins, unless a lat
 
 ## Next
 
-The stack is chosen, and so are the palette, the fonts, and the Mixer, Song, Drums and Guitar layouts. The default window is 960 by 540 and every page must handle it ([design.md](design.md)). Next: build the Keys page from the Guitar page, check the four decided layouts at 960 by 540, then build the audition tool to pick the General MIDI instruments, then build the app. The full described scope is wanted in the first build.
+The stack is chosen, and so are the palette, the fonts, the Mixer, Song, Drums and Guitar layouts, and the four General MIDI sounds (bass, guitar, keys, drums; [sound.md](sound.md)). The default window is 960 by 540 and every page must handle it ([design.md](design.md)). Next: build the Keys page from the Guitar page, check the four decided layouts at 960 by 540, work out how to record the chosen sounds from the Windows synth into audio files, then build the app. The full described scope is wanted in the first build.

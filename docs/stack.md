@@ -30,6 +30,12 @@ The installed app is large (around 100 to 150 MB) and uses more memory than a na
 
 The plan is to record the chosen General MIDI sounds from the Windows synth into audio files. A web page can send notes to the Microsoft GS Wavetable Synth, but capturing its sound needs a separate method, such as capturing system audio. This is worked out in the audition tool, before the main app depends on it.
 
+What the audition tool found (2026-11-08):
+
+- Playing the synth is not possible from a web page. Chrome and Edge hide the Microsoft GS Wavetable Synth from Web MIDI on purpose (Chromium blocklisted it in 2015 after a crash bug, and Firefox does the same). Windows itself has it, and the browser lists no outputs for it.
+- The audition tool plays it through a local Node script that calls the Windows MIDI API (winmm) through PowerShell. This works for playing. It has not been heard being recorded.
+- Recording is still open. Capturing system audio while the bridge plays the notes is the likely route. The final app plays the recorded files, so it does not need the bridge.
+
 ## Tooling installed
 
 ### Hallmark
