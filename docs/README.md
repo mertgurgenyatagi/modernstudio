@@ -16,7 +16,8 @@ The specification phase is closed. It was built through 15 questionnaires, and e
 6. [editing-and-project.md](editing-and-project.md) — undo, playback, saving, export, packaging.
 7. [pages.md](pages.md) — the names of the pages and what each contains.
 8. [stack.md](stack.md) — the chosen tech stack and the installed tooling.
-9. [open-items.md](open-items.md) — everything undecided or decided by assumption. Read before building.
+9. [design.md](design.md) — the decided palette and fonts (Bone and black). Not a layout or page design.
+10. [open-items.md](open-items.md) — everything undecided or decided by assumption. Read before building.
 
 ## Where the truth lives
 
@@ -24,4 +25,4 @@ If a doc and a questionnaire answer disagree, the answer file wins, unless a lat
 
 ## Next
 
-The stack is chosen. Next: decide the page designs, then build the audition tool to pick the General MIDI instruments, then build the app. The full described scope is wanted in the first build.
+The stack is chosen, and so are the palette and fonts. Next: decide the page designs, one page at a time (the Mixer first), then build the audition tool to pick the General MIDI instruments, then build the app. The full described scope is wanted in the first build.
