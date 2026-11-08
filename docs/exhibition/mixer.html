@@ -1,0 +1,1316 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>modernstudio mixer designs</title>
+<meta name="description" content="Seventeen layouts for the modernstudio Mixer page, in the decided Bone and black look. Design 02, the Ledger, was picked.">
+<link rel="icon" href="data:,">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Piazzolla:wght@700&family=Golos+Text:wght@400;500;600&family=Fragment+Mono&display=swap">
+<style>
+/* Hallmark · shape: app screen · genre: modern-minimal · theme: custom (Bone and black, locked by docs/design.md)
+ * paper: oklch 96.5% 0.006 90 · accent: the ink itself · display: Piazzolla 700 · body: Golos Text · figures: Fragment Mono
+ * nav: none, the Mixer page alone · signature: the live level meter, one per channel, moving while playing · states: default, hover, focus, active, pressed, disabled
+ * axes: mixed/mixed/mixed · posture: restrained, ink fills only pressed toggles, slider fills and meters · contrast: pass · v2.0.0 */
+/* Hallmark · pre-emit critique: P4 H4 E4 S4 R4 V5 · weakest: S, every layout shares one slider skin on purpose so the arrangements are compared and not the sliders; each design sets its own track, thumb and meter */
+/* Hallmark · waive 37 · three families only (Piazzolla, Golos Text, Fragment Mono), flagged by the page loading one stylesheet for all three · the project fixed exactly these three in docs/design.md */
+/* Hallmark · answered F4 · the filled ink style marks a pressed toggle or the running Play button only, never a primary action, and each design is a separate layout being compared */
+/* Hallmark · answered F7 · the BPM field repeats across designs on purpose: only the layout around it differs between the seventeen */
+/* Hallmark · waive 47c · decorative scale lines in the balance chart and the LED stack segments are drawn under real controls · the grid is the instrument being compared, not a stand-in picture */
+
+:root {
+  --color-paper: oklch(96.5% 0.006 90);  --color-paper-2: oklch(99% 0.004 90);  --color-paper-3: oklch(94% 0.006 90);
+  --color-ink: oklch(18% 0.006 90);  --color-muted: oklch(44% 0.006 90);  --color-rule: oklch(79% 0.006 90);
+  --color-accent: oklch(18% 0.006 90);  --color-accent-ink: oklch(97% 0.005 90);  --color-focus: oklch(18% 0.006 90);
+  --font-display: "Piazzolla", ui-serif, serif;
+  --font-body: "Golos Text", ui-sans-serif, sans-serif;
+  --font-outlier: "Fragment Mono", ui-monospace, monospace;
+
+  --space-3xs: 2px; --space-2xs: 4px; --space-xs: 8px; --space-sm: 12px; --space-md: 16px; --space-lg: 24px; --space-lgx: 32px; --space-xl: 40px; --space-2xl: 64px; --space-3xl: 96px;
+  --text-xs: 0.75rem; --text-sm: 0.8125rem; --text-md: 0.9375rem; --text-lg: 1.0625rem; --text-xl: 1.2rem; --text-2xl: 1.5rem; --text-3xl: 2.25rem; --text-4xl: 3.5rem; --text-5xl: 6rem;
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --dur-micro: 120ms;
+  --container: 1360px; --gutter: 24px;
+  --rule-w: 1px;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html, body { overflow-x: clip; }
+html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; scrollbar-color: var(--color-muted) var(--color-paper-3); caret-color: var(--color-ink); }
+body { margin: 0; background: var(--color-paper-3); color: var(--color-ink); font-family: var(--font-body); font-size: var(--text-md); line-height: 1.5; font-synthesis: none; }
+h1, h2, h3, h4, p, ul, ol, dl, dd, figure { margin: 0; }
+h1, h2, h3, h4 { text-wrap: balance; overflow-wrap: break-word; min-width: 0; }
+ul, ol { padding: 0; list-style: none; }
+a { color: inherit; }
+::selection { background: var(--color-ink); color: var(--color-accent-ink); }
+
+.wrap { width: 100%; max-width: var(--container); margin: 0 auto; padding: var(--space-xl) var(--gutter) var(--space-3xl); }
+
+/* page header */
+.page-head { display: grid; gap: var(--space-md); max-width: 70ch; margin-bottom: var(--space-2xl); }
+.page-head h1 { font-family: var(--font-display); font-weight: 700; font-size: var(--text-3xl); line-height: 1.1; letter-spacing: -0.015em; }
+.page-head p { color: var(--color-muted); max-width: 62ch; }
+.index { display: grid; grid-template-columns: repeat(auto-fill, minmax(11rem, 1fr)); gap: 0 var(--space-md); max-width: 62rem; margin-top: var(--space-xs); }
+.index a { display: block; padding: var(--space-xs) 0; text-decoration: none; border-bottom: 1px solid var(--color-rule); }
+.index a span { font-family: var(--font-outlier); color: var(--color-muted); margin-right: var(--space-xs); }
+.index a:hover { border-bottom-color: var(--color-ink); }
+.index a:active { transform: translateY(1px); }
+.index a:focus-visible { outline: 3px solid var(--color-focus); outline-offset: 2px; }
+
+/* the frame around each design */
+.look { margin-top: var(--space-3xl); scroll-margin-top: var(--space-lg); }
+.meta { display: grid; gap: var(--space-xs); margin-bottom: var(--space-md); max-width: 70ch; }
+.meta h2 { font-family: var(--font-display); font-weight: 700; font-size: var(--text-2xl); line-height: 1.15; }
+.meta p { max-width: 62ch; }
+.frame { container-type: inline-size; background: var(--color-paper); color: var(--color-ink); border: var(--rule-w) solid var(--color-rule); overflow: clip; }
+.frame :is(button, input, output) { font: inherit; color: inherit; }
+.frame button { cursor: pointer; }
+.frame button:active, .frame label:active { transform: translateY(1px); }
+.frame button:disabled { opacity: 0.45; cursor: not-allowed; }
+.frame :focus-visible { outline: 3px solid var(--color-focus); outline-offset: 2px; }
+.frame [role="radiogroup"] { position: relative; }
+.frame input[type="radio"].pick { position: absolute; opacity: 0; inline-size: 1px; block-size: 1px; margin: 0; }
+.frame h3, .frame h4 { font-family: var(--font-display); font-weight: 700; }
+.frame .fig { font-family: var(--font-outlier); font-variant-numeric: tabular-nums; }
+.frame .sr { position: absolute; inline-size: 1px; block-size: 1px; overflow: clip; clip-path: inset(50%); white-space: nowrap; }
+
+/* the shared slider skin: every design sets its own track, thumb and length through variables */
+.frame .rng { -webkit-appearance: none; appearance: none; display: block; inline-size: 100%; block-size: var(--hit, 1.75rem); margin: 0; padding: 0; background: transparent; cursor: pointer; }
+.frame .rng::-webkit-slider-runnable-track { box-sizing: border-box; inline-size: 100%; block-size: var(--trk, 0.5rem); border: var(--rule-w) solid var(--edge, var(--color-rule)); border-radius: var(--trk-r, 0); background: linear-gradient(var(--dir, to right), var(--fill, var(--color-ink)) var(--v, 50%), var(--empty, var(--color-paper-3)) var(--v, 50%)); }
+.frame .rng::-moz-range-track { box-sizing: border-box; inline-size: 100%; block-size: var(--trk, 0.5rem); border: var(--rule-w) solid var(--edge, var(--color-rule)); border-radius: var(--trk-r, 0); background: linear-gradient(var(--dir, to right), var(--fill, var(--color-ink)) var(--v, 50%), var(--empty, var(--color-paper-3)) var(--v, 50%)); }
+.frame .rng::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; box-sizing: border-box; inline-size: var(--tw, 0.75rem); block-size: var(--th, 1.25rem); margin-block-start: calc((var(--trk, 0.5rem) - var(--th, 1.25rem)) / 2); border: var(--thumb-edge, 0) solid var(--color-paper-2); border-radius: var(--thumb-r, 0); background: var(--thumb, var(--color-ink)); }
+.frame .rng::-moz-range-thumb { box-sizing: border-box; inline-size: var(--tw, 0.75rem); block-size: var(--th, 1.25rem); border: var(--thumb-edge, 0) solid var(--color-paper-2); border-radius: var(--thumb-r, 0); background: var(--thumb, var(--color-ink)); }
+.frame .rng.vert { writing-mode: vertical-lr; direction: rtl; --dir: to top; inline-size: var(--len, 12rem); block-size: var(--hit, 1.75rem); }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition: none !important; animation: none !important; scroll-behavior: auto !important; }
+  .index a:active, .frame button:active, .frame label:active { transform: none; }
+}
+@media (max-width: 40rem) { :root { --gutter: 16px; } }
+
+/* ===== 01 Console ===== */
+.d01 .bar { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-md) var(--space-lg); padding: var(--space-md) var(--space-lg); background: var(--color-paper-2); border-bottom: var(--rule-w) solid var(--color-rule); }
+.d01 .bar h3 { margin-right: auto; font-size: var(--text-xl); line-height: 1.2; }
+.d01 .lab { font-size: var(--text-sm); color: var(--color-muted); }
+.d01 .tempo, .d01 .metre { display: flex; align-items: center; gap: var(--space-xs); }
+.d01 .step { inline-size: 2.25rem; block-size: 2.25rem; padding: 0; border: var(--rule-w) solid var(--color-rule); border-radius: 2px; background: var(--color-paper); font-size: var(--text-lg); line-height: 1; transition: background-color var(--dur-micro) var(--ease-out); }
+.d01 .step:hover { background: var(--color-paper-3); }
+.d01 .bpm { inline-size: 4.5rem; block-size: 2.25rem; text-align: center; border: var(--rule-w) solid var(--color-muted); border-radius: 2px; background: var(--color-paper-2); font-family: var(--font-outlier); font-size: var(--text-lg); -moz-appearance: textfield; }
+.d01 .bpm::-webkit-inner-spin-button { display: none; }
+.d01 .metre label { display: grid; place-items: center; min-inline-size: 3rem; block-size: 2.25rem; border: var(--rule-w) solid var(--color-rule); background: var(--color-paper); font-family: var(--font-outlier); cursor: pointer; transition: background-color var(--dur-micro) var(--ease-out), color var(--dur-micro) var(--ease-out); }
+.d01 .metre label:hover { background: var(--color-paper-3); }
+.d01 .metre label:first-of-type { border-radius: 2px 0 0 2px; }
+.d01 .metre label:last-of-type { border-radius: 0 2px 2px 0; margin-left: calc(var(--rule-w) * -1); }
+.d01 .metre input:checked + label { background: var(--color-ink); border-color: var(--color-ink); color: var(--color-accent-ink); }
+.d01 .metre input:focus-visible + label { outline: 3px solid var(--color-focus); outline-offset: 2px; }
+.d01 .play { display: inline-flex; align-items: center; gap: var(--space-xs); block-size: 2.25rem; padding: 0 var(--space-md); border: var(--rule-w) solid var(--color-ink); border-radius: 2px; background: var(--color-paper-2); font-weight: 600; transition: background-color var(--dur-micro) var(--ease-out), color var(--dur-micro) var(--ease-out); }
+.d01 .play[aria-pressed="true"] { background: var(--color-ink); color: var(--color-accent-ink); }
+.d01 .play .tri { inline-size: 0; block-size: 0; border: 0.4rem solid transparent; border-left: 0.65rem solid currentColor; border-right: 0; }
+.d01 .play[aria-pressed="true"] .tri { inline-size: 0.7rem; block-size: 0.7rem; border: 0; background: currentColor; }
+.d01 .desk { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)) minmax(0, 1.25fr); }
+.d01 .strip { display: grid; justify-items: center; align-content: start; gap: var(--space-sm); padding: var(--space-lg) var(--space-md); border-right: var(--rule-w) solid var(--color-rule); min-inline-size: 0; }
+.d01 .strip.master { border-right: 0; background: var(--color-paper-2); }
+.d01 .strip.master .keys { min-block-size: 5rem; }
+.d01 .strip .keys { display: grid; gap: var(--space-xs); inline-size: 100%; max-inline-size: 8rem; }
+.d01 .tog { block-size: 2.25rem; border: var(--rule-w) solid var(--color-rule); border-radius: 2px; background: var(--color-paper-2); font-size: var(--text-sm); font-weight: 500; transition: background-color var(--dur-micro) var(--ease-out), color var(--dur-micro) var(--ease-out); }
+.d01 .tog:hover { background: var(--color-paper-3); border-color: var(--color-muted); }
+.d01 .tog[aria-pressed="true"] { background: var(--color-ink); border-color: var(--color-ink); color: var(--color-accent-ink); }
+.d01 .run { display: flex; align-items: stretch; justify-content: center; gap: var(--space-md); }
+.d01 .rng { --len: 13rem; --trk: 0.5rem; --tw: 1.25rem; --th: 2.25rem; --thumb-r: 2px; --hit: 2.5rem; --fill: var(--color-rule); --edge: var(--color-rule); }
+.d01 .mtr { inline-size: 0.75rem; block-size: 13rem; margin-block: var(--space-xs); align-self: center; background: var(--color-paper-3); border: var(--rule-w) solid var(--color-rule); position: relative; overflow: clip; }
+.d01 .mtr i { position: absolute; inset: 0; background: var(--color-ink); transform-origin: bottom; transform: scaleY(var(--lvl, 0)); }
+.d01 .strip.master .mtr { inline-size: 1.25rem; }
+.d01 .strip.master .rng { --th: 2.75rem; --tw: 1.5rem; }
+.d01 .strip output { font-family: var(--font-outlier); font-size: var(--text-lg); }
+.d01 .strip b { font-weight: 600; text-align: center; line-height: 1.2; }
+.d01 .strip[data-silent="true"] b { color: var(--color-muted); }
+.d01 .strip[data-silent="true"] .mtr { opacity: 0.5; }
+@container (max-width: 56rem) { .d01 .desk { grid-template-columns: repeat(3, minmax(0, 1fr)); } .d01 .strip { border-bottom: var(--rule-w) solid var(--color-rule); } }
+@container (max-width: 34rem) { .d01 .desk { grid-template-columns: repeat(2, minmax(0, 1fr)); } .d01 .bar h3 { flex-basis: 100%; } }
+/* ===== 02 Ledger ===== */
+.d02 .top { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-md) var(--space-xl); padding: var(--space-lg); }
+.d02 .top h3 { margin-right: auto; font-size: var(--text-2xl); line-height: 1.1; }
+.d02 .time { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-md) var(--space-lg); }
+.d02 .field { display: flex; align-items: center; gap: var(--space-xs); font-size: var(--text-sm); color: var(--color-muted); }
+.d02 .bpm { inline-size: 4.25rem; block-size: 2.25rem; text-align: center; border: var(--rule-w) solid var(--color-muted); border-radius: 0; background: var(--color-paper-2); font-family: var(--font-outlier); font-size: var(--text-lg); -moz-appearance: textfield; }
+.d02 .bpm::-webkit-inner-spin-button { display: none; }
+.d02 .bpmr { inline-size: 10rem; --trk: 0.25rem; --th: 1.25rem; --tw: 0.625rem; --hit: 2.25rem; --fill: var(--color-muted); }
+.d02 .metre { display: flex; border: var(--rule-w) solid var(--color-muted); }
+.d02 .metre label { display: grid; place-items: center; inline-size: 3rem; block-size: calc(2.25rem - 2 * var(--rule-w)); font-family: var(--font-outlier); cursor: pointer; transition: background-color var(--dur-micro) var(--ease-out), color var(--dur-micro) var(--ease-out); }
+.d02 .metre label:hover { background: var(--color-paper-3); }
+.d02 .metre input:checked + label { background: var(--color-ink); color: var(--color-accent-ink); }
+.d02 .metre input:focus-visible + label { outline: 3px solid var(--color-focus); outline-offset: 2px; }
+.d02 .play { block-size: 2.25rem; padding: 0 var(--space-md); border: 0; border-bottom: 2px solid var(--color-ink); border-radius: 0; background: transparent; font-weight: 600; transition: background-color var(--dur-micro) var(--ease-out), color var(--dur-micro) var(--ease-out); }
+.d02 .play:hover { background: var(--color-paper-3); }
+.d02 .play[aria-pressed="true"] { background: var(--color-ink); color: var(--color-accent-ink); }
+.d02 .ledger { inline-size: 100%; border-collapse: collapse; }
+.d02 .ledger th, .d02 .ledger td { padding: var(--space-sm) var(--space-lg); border-top: var(--rule-w) solid var(--color-rule); text-align: left; vertical-align: middle; font-weight: 400; }
+.d02 .ledger thead th { border-top: 2px solid var(--color-ink); border-bottom: 0; color: var(--color-muted); font-size: var(--text-sm); font-weight: 500; }
+.d02 .ledger tbody tr:first-child > * { border-top: var(--rule-w) solid var(--color-ink); }
+.d02 .ledger tfoot > tr > * { border-top: 2px solid var(--color-ink); background: var(--color-paper-2); }
+.d02 .ledger .n { inline-size: 14rem; }
+.d02 .ledger .n b { display: block; font-weight: 600; }
+.d02 .ledger .n small { display: block; font-size: var(--text-sm); color: var(--color-muted); }
+.d02 .ledger .t { inline-size: 6rem; text-align: center; }
+.d02 .ledger .l { inline-size: 13rem; }
+.d02 .vol { display: grid; grid-template-columns: minmax(0, 1fr) 3rem; align-items: center; gap: var(--space-md); }
+.d02 .vol output { font-family: var(--font-outlier); text-align: right; }
+.d02 .vol .rng { --trk: 0.375rem; --th: 1.5rem; --tw: 0.625rem; --hit: 2.5rem; }
+.d02 .lv { display: block; block-size: 0.5rem; background: var(--color-paper-3); border: var(--rule-w) solid var(--color-rule); position: relative; overflow: clip; }
+.d02 .lv i { position: absolute; inset: 0; background: var(--color-ink); transform-origin: left; transform: scaleX(var(--lvl, 0)); }
+.d02 .chk { display: inline-flex; align-items: center; justify-content: center; gap: var(--space-xs); inline-size: 2.25rem; block-size: 2.25rem; padding: 0; border: var(--rule-w) solid var(--color-muted); border-radius: 0; background: var(--color-paper-2); transition: background-color var(--dur-micro) var(--ease-out); }
+.d02 .chk:hover { background: var(--color-paper-3); }
+.d02 .chk::before { content: ""; inline-size: 0.4rem; block-size: 0.8rem; border: solid var(--color-accent-ink); border-width: 0 2px 2px 0; transform: translateY(-1px) rotate(45deg) scale(0); transition: transform var(--dur-micro) var(--ease-out); }
+.d02 .chk[aria-pressed="true"] { background: var(--color-ink); border-color: var(--color-ink); }
+.d02 .chk[aria-pressed="true"]::before { transform: translateY(-1px) rotate(45deg) scale(1); }
+.d02 .chk .tx { position: absolute; inline-size: 1px; block-size: 1px; overflow: clip; clip-path: inset(50%); }
+.d02 tr[data-silent="true"] .n b { color: var(--color-muted); }
+.d02 tr[data-silent="true"] .lv { opacity: 0.5; }
+@container (max-width: 46rem) {
+  .d02 .ledger, .d02 .ledger tbody, .d02 .ledger tfoot { display: block; }
+  .d02 .ledger thead { position: absolute; inline-size: 1px; block-size: 1px; overflow: clip; clip-path: inset(50%); }
+  .d02 .ledger tr { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-sm); padding: var(--space-md); border-top: var(--rule-w) solid var(--color-rule); }
+  .d02 .ledger th, .d02 .ledger td { display: block; padding: 0; border: 0 !important; background: transparent !important; inline-size: auto !important; text-align: left; }
+  .d02 .ledger .n, .d02 .ledger .v, .d02 .ledger .l { grid-column: 1 / -1; }
+  .d02 .chk { inline-size: 100%; justify-content: flex-start; padding: 0 var(--space-sm); }
+  .d02 .chk .tx { position: static; inline-size: auto; block-size: auto; clip-path: none; font-size: var(--text-sm); }
+  .d02 .chk[aria-pressed="true"] .tx { color: var(--color-accent-ink); }
+}
+/* ===== 03 Names first ===== */
+.d03 .ttl { display: flex; flex-wrap: wrap; align-items: end; justify-content: space-between; gap: var(--space-md) var(--space-xl); padding: var(--space-xl) var(--space-xl) var(--space-lg); }
+.d03 .ttl h3 { font-size: var(--text-3xl); line-height: 1; }
+.d03 .clock { display: flex; flex-wrap: wrap; align-items: end; gap: var(--space-md) var(--space-xl); }
+.d03 .tempo { display: flex; align-items: center; gap: var(--space-2xs); }
+.d03 .tempo > span { align-self: end; padding-bottom: var(--space-xs); color: var(--color-muted); font-size: var(--text-sm); }
+.d03 .bpm { inline-size: 5.5rem; padding: 0; border: 0; border-bottom: 2px solid var(--color-ink); border-radius: 0; background: transparent; font-family: var(--font-outlier); font-size: var(--text-3xl); line-height: 1.2; text-align: center; -moz-appearance: textfield; }
+.d03 .bpm::-webkit-inner-spin-button { display: none; }
+.d03 .nudge { inline-size: 2.75rem; block-size: 2.75rem; padding: 0; border: 0; border-radius: 50%; background: transparent; font-size: var(--text-2xl); line-height: 1; transition: background-color var(--dur-micro) var(--ease-out); }
+.d03 .nudge:hover { background: var(--color-paper-3); }
+.d03 .metre { display: flex; gap: var(--space-xs); }
+.d03 .metre label { display: grid; place-items: center; min-inline-size: 3.5rem; block-size: 2.75rem; border-bottom: 2px solid transparent; font-family: var(--font-outlier); font-size: var(--text-xl); color: var(--color-muted); cursor: pointer; transition: color var(--dur-micro) var(--ease-out), border-color var(--dur-micro) var(--ease-out); }
+.d03 .metre label:hover { color: var(--color-ink); }
+.d03 .metre input:checked + label { color: var(--color-ink); border-bottom-color: var(--color-ink); }
+.d03 .metre input:focus-visible + label { outline: 3px solid var(--color-focus); outline-offset: 2px; }
+.d03 .play { block-size: 2.75rem; padding: 0 var(--space-lg); border: var(--rule-w) solid var(--color-ink); border-radius: 1.375rem; background: transparent; font-weight: 600; transition: background-color var(--dur-micro) var(--ease-out), color var(--dur-micro) var(--ease-out); }
+.d03 .play:hover { background: var(--color-paper-3); }
+.d03 .play[aria-pressed="true"] { background: var(--color-ink); color: var(--color-accent-ink); }
+.d03 .names > li { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr) 10.5rem; grid-template-areas: "who vol tg" "ul ul ul"; align-items: center; gap: var(--space-sm) var(--space-xl); padding: var(--space-lg) var(--space-xl) 0; }
+.d03 .who { grid-area: who; min-inline-size: 0; }
+.d03 .nm { font-size: var(--text-4xl); line-height: 1; letter-spacing: -0.02em; }
+.d03 .st { margin-top: var(--space-2xs); font-size: var(--text-sm); color: var(--color-muted); }
+.d03 .vol { grid-area: vol; display: grid; grid-template-columns: minmax(0, 1fr) 2.5rem; align-items: center; gap: var(--space-md); }
+.d03 .vol output { font-family: var(--font-outlier); text-align: right; color: var(--color-muted); }
+.d03 .rng { --trk: 0.25rem; --th: 1.75rem; --tw: 0.5rem; --thumb-r: 0.25rem; --edge: transparent; --empty: var(--color-rule); --hit: 2.75rem; }
+.d03 .tg { grid-area: tg; display: flex; gap: var(--space-xs); }
+.d03 .tg button { block-size: 2.5rem; padding: 0 var(--space-md); border: var(--rule-w) solid var(--color-rule); border-radius: 1.25rem; background: transparent; font-weight: 500; transition: background-color var(--dur-micro) var(--ease-out), color var(--dur-micro) var(--ease-out), border-color var(--dur-micro) var(--ease-out); }
+.d03 .tg button:hover { border-color: var(--color-ink); }
+.d03 .tg button[aria-pressed="true"] { background: var(--color-ink); border-color: var(--color-ink); color: var(--color-accent-ink); }
+.d03 .ul { grid-area: ul; position: relative; block-size: 3px; margin-top: var(--space-md); background: var(--color-rule); overflow: clip; }
+.d03 .ul i { position: absolute; inset: 0; background: var(--color-ink); transform-origin: left; transform: scaleX(var(--lvl, 0)); }
+.d03 .names > li[data-silent="true"] .nm { color: var(--color-muted); }
+.d03 .names > li.master { background: var(--color-paper-2); padding-bottom: var(--space-lg); }
+.d03 .names > li.master .nm { font-size: var(--text-3xl); }
+.d03 .names > li.master .ul { margin-top: var(--space-md); margin-bottom: calc(var(--space-lg) * -1); }
+@container (max-width: 60rem) { .d03 .nm { font-size: var(--text-3xl); } .d03 .names > li { grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: "who tg" "vol vol" "ul ul"; padding-inline: var(--space-md); } .d03 .ttl { padding-inline: var(--space-md); } }
+@container (max-width: 34rem) { .d03 .names > li { grid-template-columns: minmax(0, 1fr); grid-template-areas: "who" "tg" "vol" "ul"; } }
+/* ===== 04 Tiles ===== */
+.d04 .board { display: grid; gap: var(--space-md); padding: var(--space-lg); }
+.d04 .banner { display: grid; grid-template-columns: auto minmax(0, 1fr) auto auto; align-items: center; gap: var(--space-lg); padding: var(--space-md) var(--space-lg); border: var(--rule-w) solid var(--color-rule); border-radius: 12px; background: var(--color-paper-2); }
+.d04 .bp { display: flex; align-items: baseline; gap: var(--space-xs); }
+.d04 .bp output { font-family: var(--font-outlier); font-size: var(--text-3xl); line-height: 1; min-inline-size: 3ch; text-align: right; }
+.d04 .bp span { color: var(--color-muted); font-size: var(--text-sm); }
+.d04 .slide { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: var(--space-sm); }
+.d04 .nud { inline-size: 2.5rem; block-size: 2.5rem; padding: 0; border: var(--rule-w) solid var(--color-rule); border-radius: 50%; background: var(--color-paper); font-size: var(--text-lg); line-height: 1; transition: background-color var(--dur-micro) var(--ease-out); }
+.d04 .nud:hover { background: var(--color-paper-3); }
+.d04 .banner .rng { --trk: 0.5rem; --trk-r: 0.25rem; --th: 1.5rem; --tw: 1.5rem; --thumb-r: 50%; --hit: 2.5rem; }
+.d04 .metre { display: flex; padding: var(--space-3xs); border: var(--rule-w) solid var(--color-rule); border-radius: 10px; background: var(--color-paper-3); }
+.d04 .metre label { display: grid; place-items: center; inline-size: 3.25rem; block-size: 2.25rem; border-radius: 8px; font-family: var(--font-outlier); cursor: pointer; transition: background-color var(--dur-micro) var(--ease-out), color var(--dur-micro) var(--ease-out); }
+.d04 .metre input:checked + label { background: var(--color-ink); color: var(--color-accent-ink); }
+.d04 .metre input:focus-visible + label { outline: 3px solid var(--color-focus); outline-offset: 2px; }
+.d04 .play { block-size: 2.75rem; padding: 0 var(--space-lg); border: var(--rule-w) solid var(--color-ink); border-radius: 10px; background: var(--color-paper); font-weight: 600; transition: background-color var(--dur-micro) var(--ease-out), color var(--dur-micro) var(--ease-out); }
+.d04 .play[aria-pressed="true"] { background: var(--color-ink); color: var(--color-accent-ink); }
+.d04 .tiles { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-md); }
+.d04 .tile { display: grid; align-content: start; gap: var(--space-sm); padding: var(--space-lg); border: var(--rule-w) solid var(--color-rule); border-radius: 12px; background: var(--color-paper-2); }
+.d04 .tile header { display: flex; align-items: baseline; justify-content: space-between; gap: var(--space-sm); }
+.d04 .tile h3 { font-size: var(--text-xl); line-height: 1.2; }
+.d04 .tile output { font-size: var(--text-2xl); line-height: 1; }
+.d04 .st { min-block-size: 1lh; font-size: var(--text-sm); color: var(--color-muted); }
+.d04 .lv { display: block; position: relative; block-size: 0.875rem; border-radius: 7px; background: var(--color-paper-3); overflow: clip; }
+.d04 .lv i { position: absolute; inset: 0; background: var(--color-ink); transform-origin: left; transform: scaleX(var(--lvl, 0)); }
+.d04 .tile .rng { --trk: 0.375rem; --trk-r: 0.1875rem; --th: 1.5rem; --tw: 1.5rem; --thumb-r: 50%; --hit: 2.5rem; --fill: var(--color-muted); --edge: transparent; }
+.d04 .acts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-xs); }
+.d04 .acts button { block-size: 2.5rem; border: var(--rule-w) solid var(--color-rule); border-radius: 8px; background: var(--color-paper); font-weight: 500; transition: background-color var(--dur-micro) var(--ease-out), color var(--dur-micro) var(--ease-out); }
+.d04 .acts button:hover { border-color: var(--color-ink); }
+.d04 .acts button[aria-pressed="true"] { background: var(--color-ink); border-color: var(--color-ink); color: var(--color-accent-ink); }
+.d04 .tile.master { border: 2px solid var(--color-ink); align-content: space-between; }
+.d04 .tile[data-silent="true"] { background: var(--color-paper-3); }
+.d04 .tile[data-silent="true"] h3 { color: var(--color-muted); }
+@container (max-width: 58rem) { .d04 .tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); } .d04 .banner { grid-template-columns: auto minmax(0, 1fr); } .d04 .metre, .d04 .play { justify-self: start; } }
+@container (max-width: 34rem) { .d04 .tiles { grid-template-columns: minmax(0, 1fr); } .d04 .banner { grid-template-columns: minmax(0, 1fr); } .d04 .board { padding: var(--space-md); } }
+
+/* ===== 05 Master first ===== */
+.d05 .board { display: grid; grid-template-columns: 22rem minmax(0, 1fr); }
+.d05 .mast { display: grid; grid-template-rows: auto 1fr auto; gap: var(--space-lg); padding: var(--space-lg); background: var(--color-paper-2); border-right: var(--rule-w) solid var(--color-rule); }
+.d05 .mast h3 { font-size: var(--text-2xl); line-height: 1.1; }
+.d05 .mf { display: flex; justify-content: center; align-items: center; gap: var(--space-lg); }
+.d05 .mf .rng { --len: 19rem; --hit: 3.5rem; --trk: 0.75rem; --tw: 2rem; --th: 3.25rem; --thumb-r: 0; --fill: var(--color-rule); }
+.d05 .mf .mtr { position: relative; inline-size: 2.25rem; block-size: 19rem; border: var(--rule-w) solid var(--color-rule); background: var(--color-paper-3); overflow: clip; }
+.d05 .mf .mtr i { position: absolute; inset: 0; background: var(--color-ink); transform-origin: bottom; transform: scaleY(var(--lvl, 0)); }
+.d05 .mf output { position: absolute; inset-inline-end: var(--space-lg); font-size: var(--text-3xl); }
+.d05 .mast { position: relative; }
+.d05 .time { display: grid; gap: var(--space-sm); padding-top: var(--space-md); border-top: var(--rule-w) solid var(--color-rule); }
+.d05 .time .row { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: var(--space-xs); }
+.d05 .time .lab { font-size: var(--text-sm); color: var(--color-muted); }
+.d05 .stp { inline-size: 2.5rem; block-size: 2.5rem; padding: 0; border: var(--rule-w) solid var(--color-rule); background: var(--color-paper); font-size: var(--text-lg); line-height: 1; }
+.d05 .stp:hover { background: var(--color-paper-3); }
+.d05 .bpm { inline-size: 100%; block-size: 2.5rem; text-align: center; border: var(--rule-w) solid var(--color-muted); border-radius: 0; background: var(--color-paper); font-family: var(--font-outlier); font-size: var(--text-xl); -moz-appearance: textfield; }
+.d05 .bpm::-webkit-inner-spin-button { display: none; }
+.d05 .metre { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-xs); }
+.d05 .metre label { display: grid; place-items: center; block-size: 2.5rem; border: var(--rule-w) solid var(--color-rule); background: var(--color-paper); font-family: var(--font-outlier); cursor: pointer; transition: background-color var(--dur-micro) var(--ease-out), color var(--dur-micro) var(--ease-out); }
+.d05 .metre input:checked + label { background: var(--color-ink); border-color: var(--color-ink); color: var(--color-accent-ink); }
+.d05 .metre input:focus-visible + label { outline: 3px solid var(--color-focus); outline-offset: 2px; }
+.d05 .play { block-size: 2.75rem; border: var(--rule-w) solid var(--color-ink); background: var(--color-paper); font-weight: 600; transition: background-color var(--dur-micro) var(--ease-out), color var(--dur-micro) var(--ease-out); }
+.d05 .play[aria-pressed="true"] { background: var(--color-ink); color: var(--color-accent-ink); }
+.d05 .rows { display: grid; grid-auto-rows: 1fr; }
+.d05 .rows > li { display: grid; grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: "who tg" "sl sl"; align-content: center; gap: var(--space-xs) var(--space-md); padding: var(--space-md) var(--space-lg); border-bottom: var(--rule-w) solid var(--color-rule); }
+.d05 .rows > li:last-child { border-bottom: 0; }
+.d05 .who { grid-area: who; display: flex; align-items: baseline; gap: var(--space-sm); min-inline-size: 0; }
+.d05 .who b { font-size: var(--text-lg); font-weight: 600; }
+.d05 .who output { color: var(--color-muted); }
+.d05 .who small { font-size: var(--text-sm); color: var(--color-muted); }
+.d05 .tg { grid-area: tg; display: flex; gap: var(--space-xs); }
+.d05 .tg button { block-size: 2.25rem; padding: 0 var(--space-md); border: var(--rule-w) solid var(--color-rule); background: var(--color-paper-2); font-size: var(--text-sm); font-weight: 500; transition: background-color var(--dur-micro) var(--ease-out), color var(--dur-micro) var(--ease-out); }
+.d05 .tg button:hover { border-color: var(--color-ink); }
+.d05 .tg button[aria-pressed="true"] { background: var(--color-ink); border-color: var(--color-ink); color: var(--color-accent-ink); }
+.d05 .sl { grid-area: sl; display: grid; gap: var(--space-3xs); }
+.d05 .sl .rng { --trk: 0.375rem; --th: 1.5rem; --tw: 0.75rem; --hit: 2rem; --fill: var(--color-rule); --edge: var(--color-rule); }
+.d05 .lv { display: block; position: relative; block-size: 0.375rem; background: var(--color-paper-3); overflow: clip; }
+.d05 .lv i { position: absolute; inset: 0; background: var(--color-ink); transform-origin: left; transform: scaleX(var(--lvl, 0)); }
+.d05 .rows > li[data-silent="true"] .who b { color: var(--color-muted); }
+@container (max-width: 52rem) { .d05 .board { grid-template-columns: minmax(0, 1fr); } .d05 .mast { border-right: 0; border-bottom: var(--rule-w) solid var(--color-rule); } .d05 .mf .rng, .d05 .mf .mtr { --len: 12rem; block-size: 12rem; } .d05 .mf output { position: static; } }
+@container (max-width: 34rem) { .d05 .rows > li { grid-template-columns: minmax(0, 1fr); grid-template-areas: "who" "tg" "sl"; } }
+/* ===== 06 Tempo first ===== */
+.d06 .hero { display: grid; grid-template-columns: minmax(0, 1fr) 15rem; align-items: center; gap: var(--space-xl); padding: var(--space-xl); border-bottom: 2px solid var(--color-ink); }
+.d06 .tempo { display: grid; gap: var(--space-sm); min-inline-size: 0; }
+.d06 .tempo h3 { font-size: var(--text-xl); line-height: 1.2; color: var(--color-muted); }
+.d06 .dial { display: flex; align-items: center; gap: var(--space-lg); }
+.d06 .bpm { inline-size: 4.4ch; min-inline-size: 0; padding: 0; border: 0; border-bottom: 3px solid var(--color-ink); border-radius: 0; background: transparent; font-family: var(--font-outlier); font-size: var(--text-5xl); line-height: 1; letter-spacing: -0.04em; text-align: center; -moz-appearance: textfield; }
+.d06 .bpm::-webkit-inner-spin-button { display: none; }
+.d06 .unit { align-self: end; padding-bottom: var(--space-sm); color: var(--color-muted); }
+.d06 .big { inline-size: 3.5rem; block-size: 3.5rem; flex: none; padding: 0; border: var(--rule-w) solid var(--color-ink); border-radius: 50%; background: var(--color-paper-2); font-size: var(--text-2xl); line-height: 1; transition: background-color var(--dur-micro) var(--ease-out), color var(--dur-micro) var(--ease-out); }
+.d06 .big:hover { background: var(--color-ink); color: var(--color-accent-ink); }
+.d06 .tempo .rng { --trk: 0.75rem; --th: 2rem; --tw: 2rem; --thumb-r: 50%; --trk-r: 0.375rem; --hit: 3rem; --fill: var(--color-ink); --edge: var(--color-rule); }
+.d06 .side { display: grid; gap: var(--space-sm); }
+.d06 .metre { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-xs); }
+.d06 .metre label { display: grid; place-items: center; block-size: 3.5rem; border: var(--rule-w) solid var(--color-rule); background: var(--color-paper-2); font-family: var(--font-outlier); font-size: var(--text-xl); cursor: pointer; transition: background-color var(--dur-micro) var(--ease-out), color var(--dur-micro) var(--ease-out); }
+.d06 .metre input:checked + label { background: var(--color-ink); border-color: var(--color-ink); color: var(--color-accent-ink); }
+.d06 .metre input:focus-visible + label { outline: 3px solid var(--color-focus); outline-offset: 2px; }
+.d06 .play { block-size: 3.5rem; border: var(--rule-w) solid var(--color-ink); background: var(--color-paper-2); font-size: var(--text-lg); font-weight: 600; transition: background-color var(--dur-micro) var(--ease-out), color var(--dur-micro) var(--ease-out); }
+.d06 .play[aria-pressed="true"] { background: var(--color-ink); color: var(--color-accent-ink); }
+.d06 .mix { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.d06 .mix > li { display: grid; grid-template-columns: 8rem minmax(0, 1fr) 2.25rem auto; align-items: center; gap: var(--space-sm) var(--space-md); padding: var(--space-sm) var(--space-lg); border-bottom: var(--rule-w) solid var(--color-rule); }
+.d06 .mix > li:nth-child(odd) { border-right: var(--rule-w) solid var(--color-rule); }
+.d06 .mix > li:nth-last-child(-n+2) { border-bottom: 0; }
+.d06 .mix b { font-weight: 600; line-height: 1.2; }
+.d06 .mix output { font-family: var(--font-outlier); text-align: right; }
+.d06 .mix .sl { display: grid; gap: var(--space-3xs); }
+.d06 .mix .rng { --trk: 0.375rem; --th: 1.25rem; --tw: 0.625rem; --hit: 1.75rem; --fill: var(--color-rule); }
+.d06 .lv { display: block; position: relative; block-size: 0.25rem; background: var(--color-paper-3); overflow: clip; }
+.d06 .lv i { position: absolute; inset: 0; background: var(--color-ink); transform-origin: left; transform: scaleX(var(--lvl, 0)); }
+.d06 .tg { display: flex; gap: var(--space-2xs); }
+.d06 .tg button { block-size: 2.25rem; padding: 0 var(--space-sm); border: var(--rule-w) solid var(--color-rule); background: var(--color-paper-2); font-size: var(--text-sm); font-weight: 500; transition: background-color var(--dur-micro) var(--ease-out), color var(--dur-micro) var(--ease-out); }
+.d06 .tg button:hover { border-color: var(--color-ink); }
+.d06 .tg button[aria-pressed="true"] { background: var(--color-ink); border-color: var(--color-ink); color: var(--color-accent-ink); }
+.d06 .mix > li[data-silent="true"] b { color: var(--color-muted); }
+@container (max-width: 62rem) { .d06 .mix { grid-template-columns: minmax(0, 1fr); } .d06 .mix > li:nth-child(odd) { border-right: 0; } .d06 .mix > li:nth-last-child(2) { border-bottom: var(--rule-w) solid var(--color-rule); } .d06 .hero { grid-template-columns: minmax(0, 1fr); padding: var(--space-lg); } .d06 .side { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); } .d06 .play { grid-column: 1 / -1; } }
+@container (max-width: 36rem) { .d06 .bpm { font-size: var(--text-4xl); } .d06 .mix > li { grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: "n o" "s s" "t t"; } .d06 .mix > li > b { grid-area: n; } .d06 .mix > li > output { grid-area: o; } .d06 .mix > li > .sl { grid-area: s; } .d06 .mix > li > .tg { grid-area: t; } }
+
+/* ===== 07 Knobs ===== */
+.d07 .stage { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)) minmax(0, 1.5fr); align-items: end; padding: var(--space-xl) var(--space-lg) var(--space-lg); gap: var(--space-md); }
+.d07 .ch { display: grid; justify-items: center; gap: var(--space-sm); min-inline-size: 0; }
+.d07 .knob { --d: 8.5rem; position: relative; inline-size: var(--d); block-size: var(--d); border-radius: 50%; touch-action: none; }
+.d07 .master .knob { --d: 12rem; }
+.d07 .ring { position: absolute; border-radius: 50%; -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - var(--w)), var(--color-ink) calc(100% - var(--w) + 1px)); mask: radial-gradient(farthest-side, transparent calc(100% - var(--w)), var(--color-ink) calc(100% - var(--w) + 1px)); }
+.d07 .r-meter { --w: 5px; inset: 0; background: conic-gradient(from -135deg, var(--color-ink) calc(var(--lvl, 0) * 270deg), var(--color-rule) calc(var(--lvl, 0) * 270deg) 270deg, transparent 270deg); }
+.d07 .r-vol { --w: 12px; inset: 11px; background: conic-gradient(from -135deg, var(--color-muted) calc(var(--vol, 0.5) * 270deg), var(--color-paper-3) calc(var(--vol, 0.5) * 270deg) 270deg, transparent 270deg); }
+.d07 .cap { position: absolute; inset: 30px; border-radius: 50%; background: var(--color-paper-2); border: var(--rule-w) solid var(--color-rule); }
+.d07 .ptr { position: absolute; inset: 0; transform: rotate(calc(var(--vol, 0.5) * 270deg - 135deg)); }
+.d07 .ptr::after { content: ""; position: absolute; inset-inline-start: calc(50% - 2px); inset-block-start: 8px; inline-size: 4px; block-size: 34%; border-radius: 2px; background: var(--color-ink); }
+.d07 .knob .rng { position: absolute; inset: 0; inline-size: 100%; block-size: 100%; opacity: 0; --len: 100%; --hit: 100%; }
+.d07 .knob:has(.rng:focus-visible) { outline: 3px solid var(--color-focus); outline-offset: 4px; }
+.d07 .ch output { font-size: var(--text-xl); }
+.d07 .ch b { font-weight: 600; text-align: center; line-height: 1.2; }
+.d07 .ch[data-silent="true"] b { color: var(--color-muted); }
+.d07 .ch[data-silent="true"] .knob { opacity: 0.55; }
+.d07 .tg { display: flex; gap: var(--space-2xs); }
+.d07 .tg button { block-size: 2.25rem; padding: 0 var(--space-sm); border: var(--rule-w) solid var(--color-rule); border-radius: 1.125rem; background: var(--color-paper-2); font-size: var(--text-sm); font-weight: 500; transition: background-color var(--dur-micro) var(--ease-out), color var(--dur-micro) var(--ease-out); }
+.d07 .tg button:hover { border-color: var(--color-ink); }
+.d07 .tg button[aria-pressed="true"] { background: var(--color-ink); border-color: var(--color-ink); color: var(--color-accent-ink); }
+.d07 .foot { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-md) var(--space-xl); padding: var(--space-md) var(--space-lg); border-top: var(--rule-w) solid var(--color-rule); background: var(--color-paper-2); }
+.d07 .foot h3 { margin-right: auto; font-size: var(--text-xl); }
+.d07 .tp { display: flex; align-items: center; gap: var(--space-xs); }
+.d07 .tp .lab { font-size: var(--text-sm); color: var(--color-muted); }
+.d07 .bpm { inline-size: 4.5rem; block-size: 2.5rem; text-align: center; border: var(--rule-w) solid var(--color-muted); border-radius: 1.25rem; background: var(--color-paper); font-family: var(--font-outlier); font-size: var(--text-lg); -moz-appearance: textfield; }
+.d07 .bpm::-webkit-inner-spin-button { display: none; }
+.d07 .stp { inline-size: 2.5rem; block-size: 2.5rem; padding: 0; border: var(--rule-w) solid var(--color-rule); border-radius: 50%; background: var(--color-paper); font-size: var(--text-lg); line-height: 1; }
+.d07 .stp:hover { background: var(--color-paper-3); }
+.d07 .metre { display: flex; gap: var(--space-2xs); }
+.d07 .metre label { display: grid; place-items: center; inline-size: 3.25rem; block-size: 2.5rem; border: var(--rule-w) solid var(--color-rule); border-radius: 1.25rem; background: var(--color-paper); font-family: var(--font-outlier); cursor: pointer; transition: background-color var(--dur-micro) var(--ease-out), color var(--dur-micro) var(--ease-out); }
+.d07 .metre input:checked + label { background: var(--color-ink); border-color: var(--color-ink); color: var(--color-accent-ink); }
+.d07 .metre input:focus-visible + label { outline: 3px solid var(--color-focus); outline-offset: 2px; }
+.d07 .play { block-size: 2.5rem; padding: 0 var(--space-lg); border: var(--rule-w) solid var(--color-ink); border-radius: 1.25rem; background: var(--color-paper); font-weight: 600; transition: background-color var(--dur-micro) var(--ease-out), color var(--dur-micro) var(--ease-out); }
+.d07 .play[aria-pressed="true"] { background: var(--color-ink); color: var(--color-accent-ink); }
+@container (max-width: 56rem) { .d07 .stage { grid-template-columns: repeat(3, minmax(0, 1fr)); align-items: start; } .d07 .master { grid-column: span 3; } }
+@container (max-width: 34rem) { .d07 .stage { grid-template-columns: repeat(2, minmax(0, 1fr)); } .d07 .master { grid-column: span 2; } }
+
+/* ===== 08 Narrow column ===== */
+.d08 .frame { background: var(--color-paper-3); }
+.d08 .col { max-inline-size: 28rem; margin-inline: auto; background: var(--color-paper); border-inline: var(--rule-w) solid var(--color-rule); }
+.d08 .head { display: flex; align-items: center; justify-content: space-between; padding: var(--space-md); border-bottom: var(--rule-w) solid var(--color-rule); }
+.d08 .head h3 { font-size: var(--text-xl); }
+.d08 .play { block-size: 3rem; padding: 0 var(--space-lg); border: var(--rule-w) solid var(--color-ink); border-radius: 1.5rem; background: var(--color-paper); font-weight: 600; transition: background-color var(--dur-micro) var(--ease-out), color var(--dur-micro) var(--ease-out); }
+.d08 .play[aria-pressed="true"] { background: var(--color-ink); color: var(--color-accent-ink); }
+.d08 .time { display: grid; gap: var(--space-sm); padding: var(--space-md); background: var(--color-paper-2); border-bottom: var(--rule-w) solid var(--color-rule); }
+.d08 .brow { display: grid; grid-template-columns: 3rem minmax(0, 1fr) 3rem; align-items: center; gap: var(--space-sm); }
+.d08 .step { inline-size: 3rem; block-size: 3rem; padding: 0; border: var(--rule-w) solid var(--color-rule); border-radius: 50%; background: var(--color-paper); font-size: var(--text-xl); line-height: 1; }
+.d08 .step:hover { background: var(--color-paper-3); }
+.d08 .bpm { inline-size: 100%; min-inline-size: 0; block-size: 3rem; border: 0; border-bottom: 2px solid var(--color-ink); border-radius: 0; background: transparent; text-align: center; font-family: var(--font-outlier); font-size: var(--text-3xl); -moz-appearance: textfield; }
+.d08 .bpm::-webkit-inner-spin-button { display: none; }
+.d08 .metre { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-xs); }
+.d08 .metre label { display: grid; place-items: center; block-size: 3rem; border: var(--rule-w) solid var(--color-rule); border-radius: 0.5rem; background: var(--color-paper); font-family: var(--font-outlier); font-size: var(--text-lg); cursor: pointer; transition: background-color var(--dur-micro) var(--ease-out), color var(--dur-micro) var(--ease-out); }
+.d08 .metre input:checked + label { background: var(--color-ink); border-color: var(--color-ink); color: var(--color-accent-ink); }
+.d08 .metre input:focus-visible + label { outline: 3px solid var(--color-focus); outline-offset: 2px; }
+.d08 .blk { display: grid; gap: var(--space-sm); padding: var(--space-md); border-bottom: var(--rule-w) solid var(--color-rule); }
+.d08 .top { display: flex; align-items: baseline; justify-content: space-between; gap: var(--space-sm); }
+.d08 .top b { font-size: var(--text-lg); font-weight: 600; }
+.d08 .top output { font-size: var(--text-xl); }
+.d08 .st { font-size: var(--text-sm); color: var(--color-muted); }
+.d08 .lv { display: block; position: relative; block-size: 0.375rem; background: var(--color-paper-3); overflow: clip; }
+.d08 .lv i { position: absolute; inset: 0; background: var(--color-ink); transform-origin: left; transform: scaleX(var(--lvl, 0)); }
+.d08 .blk .rng { --trk: 0.5rem; --trk-r: 0.25rem; --th: 2rem; --tw: 2rem; --thumb-r: 50%; --hit: 3rem; --fill: var(--color-muted); --edge: transparent; }
+.d08 .acts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-xs); }
+.d08 .acts button { block-size: 3rem; border: var(--rule-w) solid var(--color-rule); border-radius: 0.5rem; background: var(--color-paper-2); font-weight: 500; transition: background-color var(--dur-micro) var(--ease-out), color var(--dur-micro) var(--ease-out); }
+.d08 .acts button:hover { border-color: var(--color-ink); }
+.d08 .acts button[aria-pressed="true"] { background: var(--color-ink); border-color: var(--color-ink); color: var(--color-accent-ink); }
+.d08 .blk[data-silent="true"] { background: var(--color-paper-3); }
+.d08 .blk[data-silent="true"] .top b { color: var(--color-muted); }
+.d08 .blk.master { background: var(--color-paper-2); border-bottom: 0; border-top: 2px solid var(--color-ink); }
+/* ===== 09 Readout ===== */
+.d09 .head { display: flex; align-items: center; justify-content: space-between; padding: var(--space-md) var(--space-lg); border-bottom: 2px solid var(--color-ink); }
+.d09 .head h3 { font-size: var(--text-xl); line-height: 1.2; }
+.d09 .play { block-size: 2.5rem; padding: 0 var(--space-lg); border: var(--rule-w) solid var(--color-ink); background: var(--color-paper-2); font-weight: 600; transition: background-color var(--dur-micro) var(--ease-out), color var(--dur-micro) var(--ease-out); }
+.d09 .play[aria-pressed="true"] { background: var(--color-ink); color: var(--color-accent-ink); }
+.d09 .line { display: grid; grid-template-columns: 9rem 12rem minmax(0, 1fr) auto; grid-template-areas: "num who ctl tg"; align-items: center; gap: var(--space-md) var(--space-lg); padding: var(--space-md) var(--space-lg); border-bottom: var(--rule-w) solid var(--color-rule); }
+.d09 .num { grid-area: num; font-variant-numeric: tabular-nums; min-inline-size: 0; inline-size: 100%; padding: 0; border: 0; background: transparent; font-family: var(--font-outlier); font-size: var(--text-4xl); line-height: 1; letter-spacing: -0.04em; text-align: right; -moz-appearance: textfield; }
+.d09 input.num { border-bottom: 3px solid var(--color-ink); border-radius: 0; }
+.d09 input.num::-webkit-inner-spin-button { display: none; }
+.d09 .who { grid-area: who; min-inline-size: 0; }
+.d09 .who b { display: block; font-size: var(--text-lg); font-weight: 600; line-height: 1.2; }
+.d09 .who small { display: block; margin-top: var(--space-3xs); font-size: var(--text-sm); color: var(--color-muted); }
+.d09 .ctl { grid-area: ctl; display: grid; gap: var(--space-3xs); min-inline-size: 0; }
+.d09 .ctl.tempo { grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: var(--space-sm); }
+.d09 .rng { --trk: 0.375rem; --th: 1.5rem; --tw: 0.625rem; --hit: 2rem; --fill: var(--color-ink); --edge: var(--color-rule); }
+.d09 .stp { inline-size: 2.5rem; block-size: 2.5rem; padding: 0; border: var(--rule-w) solid var(--color-rule); background: var(--color-paper-2); font-size: var(--text-lg); line-height: 1; transition: background-color var(--dur-micro) var(--ease-out); }
+.d09 .stp:hover { background: var(--color-paper-3); }
+.d09 .lv { display: block; position: relative; block-size: 0.5rem; background: var(--color-paper-3); border: var(--rule-w) solid var(--color-rule); overflow: clip; }
+.d09 .lv i { position: absolute; inset: 0; background: var(--color-ink); transform-origin: left; transform: scaleX(var(--lvl, 0)); }
+.d09 .tg, .d09 .metre { grid-area: tg; display: flex; gap: var(--space-xs); min-inline-size: 10.5rem; justify-content: flex-end; }
+.d09 .tg button, .d09 .metre label { display: grid; place-items: center; block-size: 2.5rem; padding: 0 var(--space-md); border: var(--rule-w) solid var(--color-rule); background: var(--color-paper-2); font-size: var(--text-sm); font-weight: 500; cursor: pointer; transition: background-color var(--dur-micro) var(--ease-out), color var(--dur-micro) var(--ease-out); }
+.d09 .metre label { font-family: var(--font-outlier); font-size: var(--text-md); min-inline-size: 3.5rem; }
+.d09 .tg button:hover, .d09 .metre label:hover { border-color: var(--color-ink); }
+.d09 .tg button[aria-pressed="true"], .d09 .metre input:checked + label { background: var(--color-ink); border-color: var(--color-ink); color: var(--color-accent-ink); }
+.d09 .metre input:focus-visible + label { outline: 3px solid var(--color-focus); outline-offset: 2px; }
+.d09 .line.master { border-top: 2px solid var(--color-ink); border-bottom: 0; background: var(--color-paper-2); }
+.d09 .line[data-silent="true"] .num, .d09 .line[data-silent="true"] .who b { color: var(--color-muted); }
+@container (max-width: 56rem) { .d09 .line { grid-template-columns: 6.5rem minmax(0, 1fr); grid-template-areas: "num who" "ctl ctl" "tg tg"; } .d09 .num { font-size: var(--text-3xl); } .d09 .tg, .d09 .metre { justify-content: flex-start; } }
+
+/* ===== 10 Fill columns ===== */
+.d10 .board { display: grid; grid-template-columns: 13rem minmax(0, 1fr); }
+.d10 .rail { display: grid; align-content: start; gap: var(--space-md); padding: var(--space-lg); background: var(--color-paper-2); border-right: var(--rule-w) solid var(--color-rule); }
+.d10 .rail h3 { font-size: var(--text-xl); line-height: 1.2; }
+.d10 .rail .lab { font-size: var(--text-sm); color: var(--color-muted); }
+.d10 .bp { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: var(--space-2xs); }
+.d10 .bpm { inline-size: 100%; min-inline-size: 0; block-size: 2.75rem; border: var(--rule-w) solid var(--color-muted); border-radius: 0; background: var(--color-paper); text-align: center; font-family: var(--font-outlier); font-size: var(--text-xl); -moz-appearance: textfield; }
+.d10 .bpm::-webkit-inner-spin-button { display: none; }
+.d10 .stp { inline-size: 2.5rem; block-size: 2.75rem; padding: 0; border: var(--rule-w) solid var(--color-rule); background: var(--color-paper); font-size: var(--text-lg); line-height: 1; }
+.d10 .stp:hover { background: var(--color-paper-3); }
+.d10 .metre { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-2xs); }
+.d10 .metre label { display: grid; place-items: center; block-size: 2.5rem; border: var(--rule-w) solid var(--color-rule); background: var(--color-paper); font-family: var(--font-outlier); cursor: pointer; transition: background-color var(--dur-micro) var(--ease-out), color var(--dur-micro) var(--ease-out); }
+.d10 .metre input:checked + label { background: var(--color-ink); border-color: var(--color-ink); color: var(--color-accent-ink); }
+.d10 .metre input:focus-visible + label { outline: 3px solid var(--color-focus); outline-offset: 2px; }
+.d10 .play { block-size: 2.75rem; border: var(--rule-w) solid var(--color-ink); background: var(--color-paper); font-weight: 600; transition: background-color var(--dur-micro) var(--ease-out), color var(--dur-micro) var(--ease-out); }
+.d10 .play[aria-pressed="true"] { background: var(--color-ink); color: var(--color-accent-ink); }
+.d10 .pads { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)) minmax(0, 1.3fr); gap: var(--space-md); padding: var(--space-lg); align-items: start; }
+.d10 .col { display: grid; gap: var(--space-xs); align-content: start; min-inline-size: 0; }
+.d10 .pad { position: relative; block-size: 21rem; background: var(--color-paper-3); border: var(--rule-w) solid var(--color-rule); overflow: clip; }
+.d10 .fill { position: absolute; inset: 0; background: var(--color-rule); transform-origin: bottom; transform: scaleY(var(--vol, 0.5)); }
+.d10 .edge { position: absolute; inset-inline: 0; inset-block-end: calc(var(--vol, 0.5) * 100%); block-size: 3px; background: var(--color-ink); transform: translateY(50%); }
+.d10 .mt { position: absolute; inset-block: 0; inset-inline-end: 0; inline-size: 0.875rem; border-inline-start: var(--rule-w) solid var(--color-rule); background: var(--color-paper-2); overflow: clip; }
+.d10 .mt i { position: absolute; inset: 0; background: var(--color-ink); transform-origin: bottom; transform: scaleY(var(--lvl, 0)); }
+.d10 .nm { position: absolute; inset-block-start: var(--space-sm); inset-inline: var(--space-sm) var(--space-xl); font-family: var(--font-display); font-weight: 700; font-size: var(--text-lg); line-height: 1.15; }
+.d10 .val { position: absolute; inset-block-end: var(--space-sm); inset-inline-start: var(--space-sm); font-size: var(--text-2xl); line-height: 1; }
+.d10 .pad .rng { position: absolute; inset: 0; opacity: 0; --len: 100%; --hit: 100%; --trk: 100%; }
+.d10 .pad:has(.rng:focus-visible) { outline: 3px solid var(--color-focus); outline-offset: 2px; }
+.d10 .col .tg { display: grid; gap: var(--space-2xs); }
+.d10 .tg button { block-size: 2.5rem; border: var(--rule-w) solid var(--color-rule); background: var(--color-paper-2); font-size: var(--text-sm); font-weight: 500; transition: background-color var(--dur-micro) var(--ease-out), color var(--dur-micro) var(--ease-out); }
+.d10 .tg button:hover { border-color: var(--color-ink); }
+.d10 .tg button[aria-pressed="true"] { background: var(--color-ink); border-color: var(--color-ink); color: var(--color-accent-ink); }
+.d10 .col[data-silent="true"] .nm { color: var(--color-muted); }
+.d10 .col[data-silent="true"] .fill { background: var(--color-paper-3); box-shadow: inset 0 0 0 var(--rule-w) var(--color-muted); }
+.d10 .col.master .pad { border: 2px solid var(--color-ink); }
+@container (max-width: 60rem) { .d10 .board { grid-template-columns: minmax(0, 1fr); } .d10 .rail { border-right: 0; border-bottom: var(--rule-w) solid var(--color-rule); grid-template-columns: repeat(2, minmax(0, 1fr)); } .d10 .rail h3, .d10 .play { grid-column: 1 / -1; } .d10 .pads { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+@container (max-width: 34rem) { .d10 .pads { grid-template-columns: repeat(2, minmax(0, 1fr)); } .d10 .rail { grid-template-columns: minmax(0, 1fr); } }
+
+/* ===== 11 Meter bridge ===== */
+.d11 .board { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr); }
+.d11 .panel { display: grid; align-content: start; gap: var(--space-md); padding: var(--space-lg); min-inline-size: 0; }
+.d11 .panel + .panel { background: var(--color-paper-2); border-left: var(--rule-w) solid var(--color-rule); }
+.d11 .panel h3 { font-size: var(--text-xl); line-height: 1.2; }
+.d11 .bars { display: grid; gap: var(--space-sm); }
+.d11 .bars > li { display: grid; grid-template-columns: 8rem minmax(0, 1fr); align-items: center; gap: var(--space-md); }
+.d11 .bars b { font-weight: 600; line-height: 1.2; }
+.d11 .bar { position: relative; display: block; block-size: 2.5rem; background: var(--color-paper-3); border: var(--rule-w) solid var(--color-rule); overflow: clip; }
+.d11 .bar i { position: absolute; inset: 0; background: var(--color-ink); transform-origin: left; transform: scaleX(var(--lvl, 0)); }
+.d11 .bars > li.master { margin-top: var(--space-sm); padding-top: var(--space-md); border-top: 2px solid var(--color-ink); }
+.d11 .bars > li.master .bar { block-size: 3.5rem; }
+.d11 .bars > li[data-silent="true"] b { color: var(--color-muted); }
+.d11 .bars > li[data-silent="true"] .bar { opacity: 0.5; }
+.d11 .time { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-sm) var(--space-lg); padding-bottom: var(--space-md); border-bottom: var(--rule-w) solid var(--color-rule); }
+.d11 .tp { display: flex; align-items: center; gap: var(--space-xs); }
+.d11 .tp .lab { font-size: var(--text-sm); color: var(--color-muted); }
+.d11 .stp { inline-size: 2.5rem; block-size: 2.5rem; padding: 0; border: var(--rule-w) solid var(--color-rule); background: var(--color-paper); font-size: var(--text-lg); line-height: 1; }
+.d11 .stp:hover { background: var(--color-paper-3); }
+.d11 .bpm { inline-size: 4.5rem; block-size: 2.5rem; border: var(--rule-w) solid var(--color-muted); border-radius: 0; background: var(--color-paper); text-align: center; font-family: var(--font-outlier); font-size: var(--text-lg); -moz-appearance: textfield; }
+.d11 .bpm::-webkit-inner-spin-button { display: none; }
+.d11 .metre { display: flex; }
+.d11 .metre label { display: grid; place-items: center; inline-size: 3.25rem; block-size: 2.5rem; border: var(--rule-w) solid var(--color-rule); background: var(--color-paper); font-family: var(--font-outlier); cursor: pointer; transition: background-color var(--dur-micro) var(--ease-out), color var(--dur-micro) var(--ease-out); }
+.d11 .metre input:checked + label { background: var(--color-ink); border-color: var(--color-ink); color: var(--color-accent-ink); }
+.d11 .metre input:focus-visible + label { outline: 3px solid var(--color-focus); outline-offset: 2px; }
+.d11 .play { block-size: 2.5rem; margin-left: auto; padding: 0 var(--space-lg); border: var(--rule-w) solid var(--color-ink); background: var(--color-paper); font-weight: 600; transition: background-color var(--dur-micro) var(--ease-out), color var(--dur-micro) var(--ease-out); }
+.d11 .play[aria-pressed="true"] { background: var(--color-ink); color: var(--color-accent-ink); }
+.d11 .set { display: grid; gap: var(--space-xs); }
+.d11 .set > li { display: grid; grid-template-columns: 8rem minmax(0, 1fr) 2.5rem auto; align-items: center; gap: var(--space-md); min-block-size: 3.5rem; }
+.d11 .set > li.master { margin-top: var(--space-sm); padding-top: var(--space-md); border-top: 2px solid var(--color-ink); min-block-size: 4.5rem; }
+.d11 .set b { font-weight: 600; line-height: 1.2; }
+.d11 .set output { font-family: var(--font-outlier); text-align: right; }
+.d11 .set .rng { --trk: 0.375rem; --th: 1.5rem; --tw: 0.625rem; --hit: 2.25rem; --fill: var(--color-ink); --edge: var(--color-rule); }
+.d11 .tg { display: flex; gap: var(--space-2xs); min-inline-size: 10rem; justify-content: flex-end; }
+.d11 .tg button { block-size: 2.25rem; padding: 0 var(--space-sm); border: var(--rule-w) solid var(--color-rule); background: var(--color-paper); font-size: var(--text-sm); font-weight: 500; transition: background-color var(--dur-micro) var(--ease-out), color var(--dur-micro) var(--ease-out); }
+.d11 .tg button:hover { border-color: var(--color-ink); }
+.d11 .tg button[aria-pressed="true"] { background: var(--color-ink); border-color: var(--color-ink); color: var(--color-accent-ink); }
+.d11 .set > li[data-silent="true"] b { color: var(--color-muted); }
+@container (max-width: 62rem) { .d11 .board { grid-template-columns: minmax(0, 1fr); } .d11 .panel + .panel { border-left: 0; border-top: var(--rule-w) solid var(--color-rule); } }
+@container (max-width: 36rem) { .d11 .bars > li { grid-template-columns: minmax(0, 1fr); gap: var(--space-2xs); } .d11 .set > li { grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: "n o" "s s" "t t"; } .d11 .set > li > b { grid-area: n; } .d11 .set > li > output { grid-area: o; } .d11 .set > li > .rng { grid-area: s; } .d11 .set > li > .tg { grid-area: t; justify-content: flex-start; } }
+/* ===== 12 Hear only ===== */
+.d12 .bar { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-md) var(--space-xl); padding: var(--space-md) var(--space-lg); border-bottom: var(--rule-w) solid var(--color-rule); }
+.d12 .bar h3 { margin-right: auto; font-size: var(--text-xl); line-height: 1.2; }
+.d12 .tp { display: flex; align-items: center; gap: var(--space-xs); }
+.d12 .tp .lab { font-size: var(--text-sm); color: var(--color-muted); }
+.d12 .stp { inline-size: 2.5rem; block-size: 2.5rem; padding: 0; border: var(--rule-w) solid var(--color-rule); border-radius: 50%; background: var(--color-paper-2); font-size: var(--text-lg); line-height: 1; }
+.d12 .stp:hover { background: var(--color-paper-3); }
+.d12 .bpm { inline-size: 4.5rem; block-size: 2.5rem; border: var(--rule-w) solid var(--color-muted); border-radius: 0.25rem; background: var(--color-paper-2); text-align: center; font-family: var(--font-outlier); font-size: var(--text-lg); -moz-appearance: textfield; }
+.d12 .bpm::-webkit-inner-spin-button { display: none; }
+.d12 .metre { display: flex; gap: var(--space-2xs); }
+.d12 .metre label { display: grid; place-items: center; inline-size: 3.25rem; block-size: 2.5rem; border: var(--rule-w) solid var(--color-rule); border-radius: 0.25rem; background: var(--color-paper-2); font-family: var(--font-outlier); cursor: pointer; transition: background-color var(--dur-micro) var(--ease-out), color var(--dur-micro) var(--ease-out); }
+.d12 .metre input:checked + label { background: var(--color-ink); border-color: var(--color-ink); color: var(--color-accent-ink); }
+.d12 .metre input:focus-visible + label { outline: 3px solid var(--color-focus); outline-offset: 2px; }
+.d12 .play { block-size: 2.5rem; padding: 0 var(--space-lg); border: var(--rule-w) solid var(--color-ink); border-radius: 0.25rem; background: var(--color-paper-2); font-weight: 600; transition: background-color var(--dur-micro) var(--ease-out), color var(--dur-micro) var(--ease-out); }
+.d12 .play[aria-pressed="true"] { background: var(--color-ink); color: var(--color-accent-ink); }
+.d12 .strips { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)) minmax(0, 1.2fr); }
+.d12 .strip { display: grid; justify-items: center; align-content: start; gap: var(--space-sm); padding: var(--space-lg) var(--space-md); border-right: var(--rule-w) solid var(--color-rule); min-inline-size: 0; }
+.d12 .strip.master { border-right: 0; background: var(--color-paper-2); }
+.d12 .strip b { font-weight: 600; text-align: center; line-height: 1.2; min-block-size: 2.4em; }
+.d12 .lv { display: block; position: relative; inline-size: 100%; max-inline-size: 8rem; block-size: 0.625rem; background: var(--color-paper-3); border: var(--rule-w) solid var(--color-rule); overflow: clip; }
+.d12 .lv i { position: absolute; inset: 0; background: var(--color-ink); transform-origin: left; transform: scaleX(var(--lvl, 0)); }
+.d12 .strip .rng { --len: 11rem; --trk: 0.25rem; --th: 2rem; --tw: 2rem; --thumb-r: 50%; --hit: 2.5rem; --edge: transparent; --fill: var(--color-ink); --empty: var(--color-rule); }
+.d12 .strip output { font-size: var(--text-lg); }
+.d12 .mute { inline-size: 100%; max-inline-size: 7rem; block-size: 2.5rem; border: var(--rule-w) solid var(--color-rule); border-radius: 0.25rem; background: var(--color-paper-2); font-weight: 500; transition: background-color var(--dur-micro) var(--ease-out), color var(--dur-micro) var(--ease-out); }
+.d12 .mute:hover { border-color: var(--color-ink); }
+.d12 .mute[aria-pressed="true"] { background: var(--color-ink); border-color: var(--color-ink); color: var(--color-accent-ink); }
+.d12 .strip[data-silent="true"] b { color: var(--color-muted); }
+.d12 .strip[data-silent="true"] .lv { opacity: 0.5; }
+.d12 .listen { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)) minmax(0, 1.2fr); border-top: 2px solid var(--color-ink); background: var(--color-paper-2); }
+.d12 .listen .lead { grid-column: 1 / -1; padding: var(--space-sm) var(--space-md) 0; font-size: var(--text-sm); color: var(--color-muted); }
+.d12 .opt { position: relative; padding: var(--space-xs) var(--space-md) var(--space-md); }
+.d12 .opt label { display: grid; place-items: center; block-size: 2.75rem; padding: 0 var(--space-2xs); border: var(--rule-w) solid var(--color-rule); border-radius: 0.25rem; background: var(--color-paper); font-weight: 500; text-align: center; line-height: 1.15; cursor: pointer; transition: background-color var(--dur-micro) var(--ease-out), color var(--dur-micro) var(--ease-out); }
+.d12 .opt label:hover { border-color: var(--color-ink); }
+.d12 .opt input:checked + label { background: var(--color-ink); border-color: var(--color-ink); color: var(--color-accent-ink); }
+.d12 .opt input:focus-visible + label { outline: 3px solid var(--color-focus); outline-offset: 2px; }
+@container (max-width: 56rem) { .d12 .strips, .d12 .listen { grid-template-columns: repeat(3, minmax(0, 1fr)); } .d12 .strip { border-bottom: var(--rule-w) solid var(--color-rule); } }
+@container (max-width: 34rem) { .d12 .strips, .d12 .listen { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+
+/* ===== 13 LED stacks ===== */
+.d13 .top { display: flex; align-items: center; justify-content: space-between; gap: var(--space-md); padding: var(--space-md) var(--space-lg); background: var(--color-paper-2); border-bottom: var(--rule-w) solid var(--color-rule); }
+.d13 .top h3 { font-size: var(--text-xl); line-height: 1.2; }
+.d13 .clock { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-sm) var(--space-md); }
+.d13 .bpm { inline-size: 4.5rem; block-size: 2.5rem; border: var(--rule-w) solid var(--color-muted); border-radius: 0; background: var(--color-paper); text-align: center; font-family: var(--font-outlier); font-size: var(--text-lg); -moz-appearance: textfield; }
+.d13 .bpm::-webkit-inner-spin-button { display: none; }
+.d13 .lab { font-size: var(--text-sm); color: var(--color-muted); }
+.d13 .metre { display: flex; }
+.d13 .metre label { display: grid; place-items: center; inline-size: 3.25rem; block-size: 2.5rem; border: var(--rule-w) solid var(--color-rule); background: var(--color-paper); font-family: var(--font-outlier); cursor: pointer; transition: background-color var(--dur-micro) var(--ease-out), color var(--dur-micro) var(--ease-out); }
+.d13 .metre input:checked + label { background: var(--color-ink); border-color: var(--color-ink); color: var(--color-accent-ink); }
+.d13 .metre input:focus-visible + label { outline: 3px solid var(--color-focus); outline-offset: 2px; }
+.d13 .play { block-size: 2.5rem; padding: 0 var(--space-lg); border: var(--rule-w) solid var(--color-ink); background: var(--color-paper); font-weight: 600; transition: background-color var(--dur-micro) var(--ease-out), color var(--dur-micro) var(--ease-out); }
+.d13 .play[aria-pressed="true"] { background: var(--color-ink); color: var(--color-accent-ink); }
+.d13 .rack { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)) minmax(0, 1.3fr); gap: var(--space-md); padding: var(--space-lg); }
+.d13 .ch { display: grid; justify-items: center; align-content: start; gap: var(--space-sm); min-inline-size: 0; }
+.d13 .ch b { font-weight: 600; text-align: center; line-height: 1.2; min-block-size: 2.4em; }
+.d13 .led { position: relative; inline-size: 2.25rem; block-size: 15rem; background: repeating-linear-gradient(to top, var(--color-rule) 0 0.5rem, transparent 0.5rem 0.6875rem); }
+.d13 .led i { position: absolute; inset: 0; background: repeating-linear-gradient(to top, var(--color-ink) 0 0.5rem, transparent 0.5rem 0.6875rem); clip-path: inset(calc((1 - var(--lvl, 0)) * 100%) 0 0 0); }
+.d13 .master .led { inline-size: 3.5rem; }
+.d13 .vrow { display: grid; grid-template-columns: minmax(0, 1fr) 2rem; align-items: center; gap: var(--space-xs); inline-size: 100%; }
+.d13 .vrow output { font-size: var(--text-sm); text-align: right; }
+.d13 .rng { --trk: 0.25rem; --th: 1.5rem; --tw: 0.625rem; --hit: 2.25rem; --fill: var(--color-ink); --edge: var(--color-rule); }
+.d13 .tg { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-2xs); inline-size: 100%; }
+.d13 .tg button { block-size: 2.5rem; padding: 0 var(--space-2xs); border: var(--rule-w) solid var(--color-rule); background: var(--color-paper-2); font-size: var(--text-sm); font-weight: 500; transition: background-color var(--dur-micro) var(--ease-out), color var(--dur-micro) var(--ease-out); }
+.d13 .tg button:hover { border-color: var(--color-ink); }
+.d13 .tg button[aria-pressed="true"] { background: var(--color-ink); border-color: var(--color-ink); color: var(--color-accent-ink); }
+.d13 .ch[data-silent="true"] b { color: var(--color-muted); }
+.d13 .ch.master { padding-inline-start: var(--space-md); border-inline-start: var(--rule-w) solid var(--color-rule); }
+@container (max-width: 56rem) { .d13 .rack { grid-template-columns: repeat(3, minmax(0, 1fr)); } .d13 .ch.master { border-inline-start: 0; grid-column: span 3; padding-inline-start: 0; } }
+@container (max-width: 34rem) { .d13 .rack { grid-template-columns: repeat(2, minmax(0, 1fr)); } .d13 .ch.master { grid-column: span 2; } .d13 .top { flex-wrap: wrap; } }
+
+/* ===== 14 Settings form ===== */
+.d14 .top { display: flex; align-items: center; justify-content: space-between; padding: var(--space-md) var(--space-lg); border-bottom: var(--rule-w) solid var(--color-rule); }
+.d14 .top h3 { font-size: var(--text-xl); line-height: 1.2; }
+.d14 .play { block-size: 2.5rem; padding: 0 var(--space-lg); border: var(--rule-w) solid var(--color-ink); border-radius: 1.25rem; background: var(--color-paper-2); font-weight: 600; transition: background-color var(--dur-micro) var(--ease-out), color var(--dur-micro) var(--ease-out); }
+.d14 .play[aria-pressed="true"] { background: var(--color-ink); color: var(--color-accent-ink); }
+.d14 .grp { display: grid; grid-template-columns: 11rem minmax(0, 1fr); gap: var(--space-lg); padding: var(--space-lg); border-bottom: var(--rule-w) solid var(--color-rule); }
+.d14 .grp:last-child { border-bottom: 0; }
+.d14 .grp h3 { font-size: var(--text-xl); line-height: 1.2; }
+.d14 .list { display: grid; gap: var(--space-xs); min-inline-size: 0; }
+.d14 .fld { display: grid; grid-template-columns: 9rem minmax(0, 1fr) auto; align-items: center; gap: var(--space-md); min-block-size: 3rem; }
+.d14 .fld > label, .d14 .fld > b { font-weight: 600; line-height: 1.2; }
+.d14 .bpm { inline-size: 5rem; block-size: 2.5rem; border: var(--rule-w) solid var(--color-muted); border-radius: 0.5rem; background: var(--color-paper-2); text-align: center; font-family: var(--font-outlier); font-size: var(--text-lg); -moz-appearance: textfield; }
+.d14 .bpm::-webkit-inner-spin-button { display: none; }
+.d14 .metre { display: flex; gap: var(--space-xs); }
+.d14 .metre label { display: grid; place-items: center; inline-size: 3.5rem; block-size: 2.5rem; border: var(--rule-w) solid var(--color-rule); border-radius: 0.5rem; background: var(--color-paper-2); font-family: var(--font-outlier); cursor: pointer; transition: background-color var(--dur-micro) var(--ease-out), color var(--dur-micro) var(--ease-out); }
+.d14 .metre input:checked + label { background: var(--color-ink); border-color: var(--color-ink); color: var(--color-accent-ink); }
+.d14 .metre input:focus-visible + label { outline: 3px solid var(--color-focus); outline-offset: 2px; }
+.d14 .chan { display: grid; grid-template-columns: 9rem minmax(0, 1fr) 2.5rem 6.5rem 7.5rem; align-items: center; gap: var(--space-md); min-block-size: 3.5rem; border-bottom: var(--rule-w) solid var(--color-rule); }
+.d14 .chan:last-child { border-bottom: 0; }
+.d14 .chan.solo { grid-template-columns: 9rem minmax(0, 1fr) 2.5rem; }
+.d14 .chan b { font-weight: 600; line-height: 1.2; }
+.d14 .chan output { text-align: right; }
+.d14 .sl { display: grid; gap: var(--space-3xs); min-inline-size: 0; }
+.d14 .rng { --trk: 0.375rem; --trk-r: 0.1875rem; --th: 1.5rem; --tw: 1.5rem; --thumb-r: 50%; --hit: 2rem; --fill: var(--color-ink); --edge: transparent; --empty: var(--color-rule); }
+.d14 .lv { display: block; position: relative; block-size: 0.25rem; border-radius: 0.125rem; background: var(--color-paper-3); overflow: clip; }
+.d14 .lv i { position: absolute; inset: 0; background: var(--color-ink); transform-origin: left; transform: scaleX(var(--lvl, 0)); }
+.d14 .sw { position: relative; display: inline-flex; align-items: center; gap: var(--space-xs); block-size: 2.5rem; padding: 0; border: 0; background: transparent; font-size: var(--text-sm); font-weight: 500; }
+.d14 .sw::before { content: ""; flex: none; inline-size: 2.5rem; block-size: 1.5rem; border: var(--rule-w) solid var(--color-muted); border-radius: 0.75rem; background: var(--color-paper-3); transition: background-color var(--dur-micro) var(--ease-out), border-color var(--dur-micro) var(--ease-out); }
+.d14 .sw::after { content: ""; position: absolute; inset-block-start: 0.6875rem; inset-inline-start: 0.1875rem; inline-size: 1.125rem; block-size: 1.125rem; border-radius: 50%; background: var(--color-muted); transition: transform var(--dur-micro) var(--ease-out), background-color var(--dur-micro) var(--ease-out); }
+.d14 .sw[aria-pressed="true"]::before { background: var(--color-ink); border-color: var(--color-ink); }
+.d14 .sw[aria-pressed="true"]::after { transform: translateX(1rem); background: var(--color-accent-ink); }
+.d14 .chan[data-silent="true"] b { color: var(--color-muted); }
+@container (max-width: 58rem) { .d14 .grp { grid-template-columns: minmax(0, 1fr); gap: var(--space-sm); } .d14 .chan { grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: "n o" "s s" "m i"; padding-block: var(--space-sm); } .d14 .chan > b { grid-area: n; } .d14 .chan > output { grid-area: o; } .d14 .chan > .sl { grid-area: s; } .d14 .chan > .sw:nth-of-type(1) { grid-area: m; } .d14 .chan > .sw:nth-of-type(2) { grid-area: i; } .d14 .fld { grid-template-columns: 5rem minmax(0, 1fr); } }
+/* ===== 15 Matrix ===== */
+.d15 .mx { inline-size: 100%; border-collapse: collapse; table-layout: fixed; }
+.d15 .mx th, .d15 .mx td { padding: var(--space-sm) var(--space-md); border: var(--rule-w) solid var(--color-rule); text-align: center; vertical-align: middle; font-weight: 400; }
+.d15 .mx tr > :first-child { inline-size: 8.5rem; text-align: left; background: var(--color-paper-2); font-weight: 600; border-inline-start: 0; }
+.d15 .mx tr > :last-child { border-inline-end: 0; }
+.d15 .mx thead th { border-block-start: 0; padding-block: var(--space-md); font-weight: 600; line-height: 1.2; background: var(--color-paper-2); }
+.d15 .mx thead th:first-child { font-size: var(--text-sm); color: var(--color-muted); font-weight: 500; }
+.d15 .mx tbody tr:last-child > * { border-block-end: 0; }
+.d15 .mx .tall > * { block-size: 12.5rem; }
+.d15 .mx .mid > * { block-size: 8rem; }
+.d15 .mx .short > * { block-size: 4rem; }
+.d15 .mx td[data-silent="true"], .d15 .mx th[data-silent="true"] { color: var(--color-muted); }
+.d15 .mx td[data-silent="true"] .mtr { opacity: 0.5; }
+.d15 .mtr { position: relative; display: block; inline-size: 1.25rem; block-size: 100%; margin-inline: auto; background: var(--color-paper-3); border: var(--rule-w) solid var(--color-rule); overflow: clip; }
+.d15 .mtr i { position: absolute; inset: 0; background: var(--color-ink); transform-origin: bottom; transform: scaleY(var(--lvl, 0)); }
+.d15 .fd { display: flex; align-items: center; justify-content: center; gap: var(--space-sm); }
+.d15 .fd .rng { --len: 9.5rem; --trk: 0.25rem; --th: 1.75rem; --tw: 1.75rem; --thumb-r: 0.25rem; --hit: 2.25rem; --edge: transparent; --fill: var(--color-ink); --empty: var(--color-rule); }
+.d15 .fd output { font-size: var(--text-md); }
+.d15 .mx button.cell { inline-size: 100%; max-inline-size: 7rem; block-size: 2.5rem; border: var(--rule-w) solid var(--color-rule); background: var(--color-paper); font-size: var(--text-sm); font-weight: 500; transition: background-color var(--dur-micro) var(--ease-out), color var(--dur-micro) var(--ease-out); }
+.d15 .mx button.cell:hover { border-color: var(--color-ink); }
+.d15 .mx button.cell[aria-pressed="true"] { background: var(--color-ink); border-color: var(--color-ink); color: var(--color-accent-ink); }
+.d15 .tempo { display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-start; gap: var(--space-sm) var(--space-lg); text-align: left; }
+.d15 .tempo .pair { display: flex; align-items: center; gap: var(--space-xs); }
+.d15 .stp { inline-size: 2.5rem; block-size: 2.5rem; padding: 0; border: var(--rule-w) solid var(--color-rule); background: var(--color-paper); font-size: var(--text-lg); line-height: 1; }
+.d15 .stp:hover { background: var(--color-paper-3); }
+.d15 .bpm { inline-size: 4.5rem; block-size: 2.5rem; border: var(--rule-w) solid var(--color-muted); border-radius: 0; background: var(--color-paper); text-align: center; font-family: var(--font-outlier); font-size: var(--text-lg); -moz-appearance: textfield; }
+.d15 .bpm::-webkit-inner-spin-button { display: none; }
+.d15 .metre { display: flex; }
+.d15 .metre label { display: grid; place-items: center; inline-size: 3.25rem; block-size: 2.5rem; border: var(--rule-w) solid var(--color-rule); background: var(--color-paper); font-family: var(--font-outlier); cursor: pointer; transition: background-color var(--dur-micro) var(--ease-out), color var(--dur-micro) var(--ease-out); }
+.d15 .metre input:checked + label { background: var(--color-ink); border-color: var(--color-ink); color: var(--color-accent-ink); }
+.d15 .metre input:focus-visible + label { outline: 3px solid var(--color-focus); outline-offset: 2px; }
+.d15 .play { block-size: 2.5rem; padding: 0 var(--space-lg); border: var(--rule-w) solid var(--color-ink); background: var(--color-paper); font-weight: 600; transition: background-color var(--dur-micro) var(--ease-out), color var(--dur-micro) var(--ease-out); }
+.d15 .play[aria-pressed="true"] { background: var(--color-ink); color: var(--color-accent-ink); }
+.d15 .scroller { overflow-x: auto; }
+.d15 .scroller .mx { min-inline-size: 52rem; }
+
+/* ===== 16 Signal flow ===== */
+.d16 .bar { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-md) var(--space-xl); padding: var(--space-md) var(--space-lg); border-bottom: var(--rule-w) solid var(--color-rule); }
+.d16 .bar h3 { margin-right: auto; font-size: var(--text-xl); line-height: 1.2; }
+.d16 .tp { display: flex; align-items: center; gap: var(--space-xs); }
+.d16 .tp .lab { font-size: var(--text-sm); color: var(--color-muted); }
+.d16 .stp { inline-size: 2.5rem; block-size: 2.5rem; padding: 0; border: var(--rule-w) solid var(--color-rule); background: var(--color-paper-2); font-size: var(--text-lg); line-height: 1; }
+.d16 .stp:hover { background: var(--color-paper-3); }
+.d16 .bpm { inline-size: 4.5rem; block-size: 2.5rem; border: var(--rule-w) solid var(--color-muted); border-radius: 0; background: var(--color-paper-2); text-align: center; font-family: var(--font-outlier); font-size: var(--text-lg); -moz-appearance: textfield; }
+.d16 .bpm::-webkit-inner-spin-button { display: none; }
+.d16 .metre { display: flex; }
+.d16 .metre label { display: grid; place-items: center; inline-size: 3.25rem; block-size: 2.5rem; border: var(--rule-w) solid var(--color-rule); background: var(--color-paper-2); font-family: var(--font-outlier); cursor: pointer; transition: background-color var(--dur-micro) var(--ease-out), color var(--dur-micro) var(--ease-out); }
+.d16 .metre input:checked + label { background: var(--color-ink); border-color: var(--color-ink); color: var(--color-accent-ink); }
+.d16 .metre input:focus-visible + label { outline: 3px solid var(--color-focus); outline-offset: 2px; }
+.d16 .play { block-size: 2.5rem; padding: 0 var(--space-lg); border: var(--rule-w) solid var(--color-ink); background: var(--color-paper-2); font-weight: 600; transition: background-color var(--dur-micro) var(--ease-out), color var(--dur-micro) var(--ease-out); }
+.d16 .play[aria-pressed="true"] { background: var(--color-ink); color: var(--color-accent-ink); }
+.d16 .flow { --bus: 4rem; display: grid; grid-template-columns: minmax(0, 1fr) 16rem; padding: var(--space-lg) var(--space-lg) var(--space-lg) var(--space-lg); gap: 0; }
+.d16 .src { display: grid; grid-auto-rows: 1fr; gap: var(--space-sm); margin-inline-end: var(--bus); }
+.d16 .src > li { position: relative; display: grid; grid-template-columns: 9rem minmax(0, 1fr) 2.5rem auto; align-items: center; gap: var(--space-md); padding: var(--space-sm) var(--space-md); border: var(--rule-w) solid var(--color-rule); background: var(--color-paper-2); }
+.d16 .src b { font-weight: 600; line-height: 1.2; }
+.d16 .src output { text-align: right; }
+.d16 .wire { position: absolute; inset-inline-start: calc(100% + var(--rule-w)); inset-block-start: calc(50% - 2px); inline-size: var(--bus); block-size: 4px; background: var(--color-rule); overflow: clip; }
+.d16 .wire i { position: absolute; inset: 0; background: var(--color-ink); transform-origin: left; transform: scaleX(var(--lvl, 0)); }
+.d16 .src .rng { --trk: 0.375rem; --th: 1.5rem; --tw: 0.625rem; --hit: 2.25rem; --fill: var(--color-ink); --edge: var(--color-rule); }
+.d16 .tg { display: flex; gap: var(--space-2xs); }
+.d16 .tg button { block-size: 2.25rem; padding: 0 var(--space-sm); border: var(--rule-w) solid var(--color-rule); background: var(--color-paper); font-size: var(--text-sm); font-weight: 500; transition: background-color var(--dur-micro) var(--ease-out), color var(--dur-micro) var(--ease-out); }
+.d16 .tg button:hover { border-color: var(--color-ink); }
+.d16 .tg button[aria-pressed="true"] { background: var(--color-ink); border-color: var(--color-ink); color: var(--color-accent-ink); }
+.d16 .src > li[data-silent="true"] b { color: var(--color-muted); }
+.d16 .out { --run: 14rem; display: grid; grid-template-rows: auto 1fr auto; justify-items: center; align-content: center; gap: var(--space-sm); padding: var(--space-md); border: 2px solid var(--color-ink); background: var(--color-paper-2); }
+.d16 .out h4 { font-size: var(--text-xl); }
+.d16 .out .run { display: flex; align-items: stretch; gap: var(--space-md); block-size: var(--run); }
+.d16 .out .rng { --len: var(--run); --trk: 0.5rem; --th: 2.5rem; --tw: 1.5rem; --thumb-r: 0; --hit: 3rem; --fill: var(--color-rule); --edge: var(--color-rule); }
+.d16 .out .mtr { position: relative; inline-size: 1.5rem; border: var(--rule-w) solid var(--color-rule); background: var(--color-paper-3); overflow: clip; }
+.d16 .out .mtr i { position: absolute; inset: 0; background: var(--color-ink); transform-origin: bottom; transform: scaleY(var(--lvl, 0)); }
+.d16 .out output { font-size: var(--text-2xl); }
+@container (max-width: 56rem) { .d16 .flow { grid-template-columns: minmax(0, 1fr); } .d16 .src { margin-inline-end: 0; } .d16 .wire { display: none; } .d16 .out { margin-top: var(--space-md); --run: 12rem; } .d16 .src > li { grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: "n o" "s s" "t t"; } .d16 .src > li > b { grid-area: n; } .d16 .src > li > output { grid-area: o; } .d16 .src > li > .rng { grid-area: s; } .d16 .src > li > .tg { grid-area: t; } }
+/* ===== 17 Dock ===== */
+.d17 .stage { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: var(--space-md); padding: var(--space-lg); }
+.d17 .col { display: grid; gap: var(--space-xs); align-content: start; min-inline-size: 0; }
+.d17 .pad { position: relative; display: grid; grid-template-rows: auto 1fr auto; justify-items: start; aspect-ratio: 1 / 1; min-block-size: 9rem; padding: var(--space-md); border: var(--rule-w) solid var(--color-muted); background: var(--color-paper-2); text-align: left; overflow: clip; transition: background-color var(--dur-micro) var(--ease-out), border-color var(--dur-micro) var(--ease-out); }
+.d17 .pad:hover { background: var(--color-paper-3); }
+.d17 .pad b { font-size: var(--text-lg); font-weight: 600; line-height: 1.15; }
+.d17 .pad .big { align-self: center; font-family: var(--font-outlier); font-size: var(--text-4xl); line-height: 1; letter-spacing: -0.04em; }
+.d17 .pad small { font-size: var(--text-sm); color: var(--color-muted); }
+.d17 .pad .lv { position: absolute; inset-inline: 0; inset-block-end: 0; block-size: 0.5rem; background: var(--color-paper-3); }
+.d17 .pad .lv i { position: absolute; inset: 0; background: var(--color-ink); transform-origin: left; transform: scaleX(var(--lvl, 0)); }
+.d17 .pad[aria-pressed="true"] { border-style: dashed; background: var(--color-paper-3); color: var(--color-muted); }
+.d17 .pad[aria-pressed="true"] .big { text-decoration: line-through; text-decoration-thickness: 2px; }
+.d17 .col .rng { --trk: 0.375rem; --th: 1.5rem; --tw: 1.5rem; --thumb-r: 50%; --hit: 2.25rem; --fill: var(--color-ink); --edge: transparent; --empty: var(--color-rule); }
+.d17 .iso { block-size: 2.5rem; border: var(--rule-w) solid var(--color-rule); background: var(--color-paper-2); font-size: var(--text-sm); font-weight: 500; transition: background-color var(--dur-micro) var(--ease-out), color var(--dur-micro) var(--ease-out); }
+.d17 .iso:hover { border-color: var(--color-ink); }
+.d17 .iso[aria-pressed="true"] { background: var(--color-ink); border-color: var(--color-ink); color: var(--color-accent-ink); }
+.d17 .dock { display: grid; grid-template-columns: auto auto auto minmax(0, 1fr); align-items: center; gap: var(--space-md) var(--space-xl); padding: var(--space-md) var(--space-lg); border-top: 2px solid var(--color-ink); background: var(--color-paper-2); }
+.d17 .play { block-size: 3rem; padding: 0 var(--space-xl); border: var(--rule-w) solid var(--color-ink); background: var(--color-paper); font-weight: 600; transition: background-color var(--dur-micro) var(--ease-out), color var(--dur-micro) var(--ease-out); }
+.d17 .play[aria-pressed="true"] { background: var(--color-ink); color: var(--color-accent-ink); }
+.d17 .tp { display: flex; align-items: center; gap: var(--space-xs); }
+.d17 .tp .lab { font-size: var(--text-sm); color: var(--color-muted); }
+.d17 .stp { inline-size: 2.5rem; block-size: 2.5rem; padding: 0; border: var(--rule-w) solid var(--color-rule); background: var(--color-paper); font-size: var(--text-lg); line-height: 1; }
+.d17 .stp:hover { background: var(--color-paper-3); }
+.d17 .bpm { inline-size: 4.5rem; block-size: 2.5rem; border: var(--rule-w) solid var(--color-muted); border-radius: 0; background: var(--color-paper); text-align: center; font-family: var(--font-outlier); font-size: var(--text-lg); -moz-appearance: textfield; }
+.d17 .bpm::-webkit-inner-spin-button { display: none; }
+.d17 .metre { display: flex; }
+.d17 .metre label { display: grid; place-items: center; inline-size: 3.25rem; block-size: 2.5rem; border: var(--rule-w) solid var(--color-rule); background: var(--color-paper); font-family: var(--font-outlier); cursor: pointer; transition: background-color var(--dur-micro) var(--ease-out), color var(--dur-micro) var(--ease-out); }
+.d17 .metre input:checked + label { background: var(--color-ink); border-color: var(--color-ink); color: var(--color-accent-ink); }
+.d17 .metre input:focus-visible + label { outline: 3px solid var(--color-focus); outline-offset: 2px; }
+.d17 .mast { display: grid; grid-template-columns: auto minmax(0, 1fr) 2.5rem; align-items: center; gap: var(--space-md); padding-inline-start: var(--space-xl); border-inline-start: var(--rule-w) solid var(--color-rule); }
+.d17 .mast b { font-weight: 600; }
+.d17 .mast .sl { display: grid; gap: var(--space-3xs); }
+.d17 .mast .rng { --trk: 0.5rem; --th: 1.75rem; --tw: 0.875rem; --hit: 2.5rem; --fill: var(--color-ink); --edge: var(--color-rule); }
+.d17 .mast .lv { display: block; position: relative; block-size: 0.375rem; background: var(--color-paper-3); overflow: clip; }
+.d17 .mast .lv i { position: absolute; inset: 0; background: var(--color-ink); transform-origin: left; transform: scaleX(var(--lvl, 0)); }
+.d17 .mast output { text-align: right; }
+@container (max-width: 64rem) { .d17 .dock { grid-template-columns: auto auto minmax(0, 1fr); } .d17 .mast { grid-column: 1 / -1; padding-inline-start: 0; border-inline-start: 0; } }
+@container (max-width: 52rem) { .d17 .stage { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+@container (max-width: 34rem) { .d17 .stage { grid-template-columns: repeat(2, minmax(0, 1fr)); } .d17 .pad .big { font-size: var(--text-3xl); } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="page-head">
+    <h1>Mixer, seventeen designs</h1>
+    <p>Every design holds the same content: five channels with volume, mute, isolate and a level meter, the master volume, BPM and meter. Only the arrangement changes. The look is fixed to Bone and black: Piazzolla for titles, Golos Text for text, Fragment Mono for figures.</p>
+    <p>Design 02, the Ledger, was picked. Twenty were planned and the work stopped at seventeen. Designs 01 to 08 were looked at in a browser. Designs 09 to 17 were written but never viewed, so treat them as unchecked drafts.</p>
+    <p>The sliders, mute, isolate and BPM controls work. The meters move while Play is on and stop when it is off.</p>
+    <ol class="index" aria-label="Jump to a design"><li><a href="#d01"><span>01</span>Console</a></li><li><a href="#d02"><span>02</span>Ledger</a></li><li><a href="#d03"><span>03</span>Names first</a></li><li><a href="#d04"><span>04</span>Tiles</a></li><li><a href="#d05"><span>05</span>Master first</a></li><li><a href="#d06"><span>06</span>Tempo first</a></li><li><a href="#d07"><span>07</span>Knobs</a></li><li><a href="#d08"><span>08</span>Narrow column</a></li><li><a href="#d09"><span>09</span>Readout</a></li><li><a href="#d10"><span>10</span>Fill columns</a></li><li><a href="#d11"><span>11</span>Meter bridge</a></li><li><a href="#d12"><span>12</span>Hear only</a></li><li><a href="#d13"><span>13</span>LED stacks</a></li><li><a href="#d14"><span>14</span>Needles</a></li><li><a href="#d15"><span>15</span>Matrix</a></li><li><a href="#d16"><span>16</span>Signal flow</a></li><li><a href="#d17"><span>17</span>Dock</a></li></ol>
+  </header>
+
+<section class="look d01" id="d01" aria-labelledby="d01-h">
+  <header class="meta">
+    <h2 id="d01-h">01 Console</h2>
+    <p>The familiar studio desk. Five vertical faders with a meter beside each, the master set apart on the right, tempo and meter in a bar on top. Mute and isolate sit above each fader.</p>
+  </header>
+  <div class="frame">
+    <div class="bar">
+      <h3>Mixer</h3>
+      <div class="tempo"><span class="lab" id="d01-bl">BPM</span>
+        <button class="step" type="button" data-bpm-step="-1" aria-label="Lower BPM by one">&minus;</button>
+        <input class="bpm" type="number" min="40" max="300" step="1" value="120" data-bpm aria-labelledby="d01-bl" inputmode="numeric">
+        <button class="step" type="button" data-bpm-step="1" aria-label="Raise BPM by one">+</button></div>
+      <div class="metre" role="radiogroup" aria-label="Meter"><span class="lab">Meter</span>
+        <input class="pick" type="radio" name="m01" id="m01a" checked><label for="m01a">4/4</label>
+        <input class="pick" type="radio" name="m01" id="m01b"><label for="m01b">3/4</label></div>
+      <button class="play" type="button" data-play aria-pressed="false"><span class="tri" aria-hidden="true"></span><span data-play-label>Play</span></button>
+    </div>
+    <ul class="desk">
+      <li class="strip" data-ch="drums"><div class="keys"><button class="tog" type="button" data-mute aria-pressed="false">Mute</button><button class="tog" type="button" data-iso aria-pressed="false">Isolate</button></div>
+        <div class="run"><input class="rng vert" type="range" min="0" max="100" value="82" data-vol aria-label="Drums volume"><span class="mtr" data-meter style="--lvl:.74"><i></i></span></div>
+        <output class="fig" data-val>82</output><b>Drums</b></li>
+      <li class="strip" data-ch="bass"><div class="keys"><button class="tog" type="button" data-mute aria-pressed="false">Mute</button><button class="tog" type="button" data-iso aria-pressed="false">Isolate</button></div>
+        <div class="run"><input class="rng vert" type="range" min="0" max="100" value="74" data-vol aria-label="Bass volume"><span class="mtr" data-meter style="--lvl:.6"><i></i></span></div>
+        <output class="fig" data-val>74</output><b>Bass</b></li>
+      <li class="strip" data-ch="rhythm"><div class="keys"><button class="tog" type="button" data-mute aria-pressed="false">Mute</button><button class="tog" type="button" data-iso aria-pressed="false">Isolate</button></div>
+        <div class="run"><input class="rng vert" type="range" min="0" max="100" value="66" data-vol aria-label="Rhythm Guitar volume"><span class="mtr" data-meter style="--lvl:.52"><i></i></span></div>
+        <output class="fig" data-val>66</output><b>Rhythm Guitar</b></li>
+      <li class="strip" data-ch="lead"><div class="keys"><button class="tog" type="button" data-mute aria-pressed="false">Mute</button><button class="tog" type="button" data-iso aria-pressed="false">Isolate</button></div>
+        <div class="run"><input class="rng vert" type="range" min="0" max="100" value="58" data-vol aria-label="Lead Guitar volume"><span class="mtr" data-meter style="--lvl:.38"><i></i></span></div>
+        <output class="fig" data-val>58</output><b>Lead Guitar</b></li>
+      <li class="strip" data-ch="keys"><div class="keys"><button class="tog" type="button" data-mute aria-pressed="false">Mute</button><button class="tog" type="button" data-iso aria-pressed="false">Isolate</button></div>
+        <div class="run"><input class="rng vert" type="range" min="0" max="100" value="48" data-vol aria-label="Keys volume"><span class="mtr" data-meter style="--lvl:.3"><i></i></span></div>
+        <output class="fig" data-val>48</output><b>Keys</b></li>
+      <li class="strip master" data-ch="master"><div class="keys" aria-hidden="true"></div>
+        <div class="run"><input class="rng vert" type="range" min="0" max="100" value="85" data-vol aria-label="Master volume"><span class="mtr" data-meter style="--lvl:.66"><i></i></span></div>
+        <output class="fig" data-val>85</output><b>Master</b></li>
+    </ul>
+  </div>
+</section>
+
+<section class="look d02" id="d02" aria-labelledby="d02-h">
+  <header class="meta">
+    <h2 id="d02-h">02 Ledger</h2>
+    <p>A plain table. One row per instrument, with the same columns every time, and the master in the footer row. Nothing to learn: read across, change what you need.</p>
+  </header>
+  <div class="frame">
+    <div class="top">
+      <h3>Mixer</h3>
+      <div class="time">
+        <label class="field"><span>BPM</span><input class="bpm" type="number" min="40" max="300" step="1" value="120" data-bpm inputmode="numeric"></label>
+        <input class="rng bpmr" type="range" min="40" max="300" step="1" value="120" data-bpm aria-label="BPM slider">
+        <div class="metre" role="radiogroup" aria-label="Meter"><input class="pick" type="radio" name="m02" id="m02a" checked><label for="m02a">4/4</label><input class="pick" type="radio" name="m02" id="m02b"><label for="m02b">3/4</label></div>
+      </div>
+      <button class="play" type="button" data-play aria-pressed="false"><span data-play-label>Play</span></button>
+    </div>
+    <table class="ledger">
+      <caption class="sr">Channels of the mixer</caption>
+      <thead><tr><th class="n" scope="col">Instrument</th><th class="v" scope="col">Volume</th><th class="l" scope="col">Level</th><th class="t" scope="col">Mute</th><th class="t" scope="col">Isolate</th></tr></thead>
+      <tbody>
+        <tr data-ch="drums"><th class="n" scope="row"><b>Drums</b><small data-status>Playing</small></th><td class="v"><div class="vol"><input class="rng" type="range" min="0" max="100" value="82" data-vol aria-label="Drums volume"><output data-val>82</output></div></td><td class="l"><span class="lv" data-meter style="--lvl:.74"><i></i></span></td><td class="t"><button class="chk" type="button" data-mute aria-pressed="false" aria-label="Mute Drums"><span class="tx">Mute</span></button></td><td class="t"><button class="chk" type="button" data-iso aria-pressed="false" aria-label="Isolate Drums"><span class="tx">Isolate</span></button></td></tr>
+        <tr data-ch="bass"><th class="n" scope="row"><b>Bass</b><small data-status>Playing</small></th><td class="v"><div class="vol"><input class="rng" type="range" min="0" max="100" value="74" data-vol aria-label="Bass volume"><output data-val>74</output></div></td><td class="l"><span class="lv" data-meter style="--lvl:.6"><i></i></span></td><td class="t"><button class="chk" type="button" data-mute aria-pressed="false" aria-label="Mute Bass"><span class="tx">Mute</span></button></td><td class="t"><button class="chk" type="button" data-iso aria-pressed="false" aria-label="Isolate Bass"><span class="tx">Isolate</span></button></td></tr>
+        <tr data-ch="rhythm"><th class="n" scope="row"><b>Rhythm Guitar</b><small data-status>Playing</small></th><td class="v"><div class="vol"><input class="rng" type="range" min="0" max="100" value="66" data-vol aria-label="Rhythm Guitar volume"><output data-val>66</output></div></td><td class="l"><span class="lv" data-meter style="--lvl:.52"><i></i></span></td><td class="t"><button class="chk" type="button" data-mute aria-pressed="false" aria-label="Mute Rhythm Guitar"><span class="tx">Mute</span></button></td><td class="t"><button class="chk" type="button" data-iso aria-pressed="false" aria-label="Isolate Rhythm Guitar"><span class="tx">Isolate</span></button></td></tr>
+        <tr data-ch="lead"><th class="n" scope="row"><b>Lead Guitar</b><small data-status>Playing</small></th><td class="v"><div class="vol"><input class="rng" type="range" min="0" max="100" value="58" data-vol aria-label="Lead Guitar volume"><output data-val>58</output></div></td><td class="l"><span class="lv" data-meter style="--lvl:.38"><i></i></span></td><td class="t"><button class="chk" type="button" data-mute aria-pressed="false" aria-label="Mute Lead Guitar"><span class="tx">Mute</span></button></td><td class="t"><button class="chk" type="button" data-iso aria-pressed="false" aria-label="Isolate Lead Guitar"><span class="tx">Isolate</span></button></td></tr>
+        <tr data-ch="keys" data-silent="true"><th class="n" scope="row"><b>Keys</b><small data-status>Muted</small></th><td class="v"><div class="vol"><input class="rng" type="range" min="0" max="100" value="48" data-vol aria-label="Keys volume"><output data-val>48</output></div></td><td class="l"><span class="lv" data-meter style="--lvl:0"><i></i></span></td><td class="t"><button class="chk" type="button" data-mute aria-pressed="true" aria-label="Mute Keys"><span class="tx">Mute</span></button></td><td class="t"><button class="chk" type="button" data-iso aria-pressed="false" aria-label="Isolate Keys"><span class="tx">Isolate</span></button></td></tr>
+      </tbody>
+      <tfoot>
+        <tr data-ch="master"><th class="n" scope="row"><b>Master</b></th><td class="v"><div class="vol"><input class="rng" type="range" min="0" max="100" value="85" data-vol aria-label="Master volume"><output data-val>85</output></div></td><td class="l"><span class="lv" data-meter style="--lvl:.66"><i></i></span></td><td class="t"></td><td class="t"></td></tr>
+      </tfoot>
+    </table>
+  </div>
+</section>
+
+<section class="look d03" id="d03" aria-labelledby="d03-h">
+  <header class="meta">
+    <h2 id="d03-h">03 Names first</h2>
+    <p>The instrument names are the largest thing on the screen, so there is never a doubt which line is which. The level is the line under each name: it grows while the music plays.</p>
+  </header>
+  <div class="frame">
+    <header class="ttl">
+      <h3>Mixer</h3>
+      <div class="clock">
+        <div class="tempo"><button class="nudge" type="button" data-bpm-step="-1" aria-label="Lower BPM by one">&minus;</button><input class="bpm" type="number" min="40" max="300" step="1" value="120" data-bpm aria-label="BPM" inputmode="numeric"><button class="nudge" type="button" data-bpm-step="1" aria-label="Raise BPM by one">+</button><span>BPM</span></div>
+        <div class="metre" role="radiogroup" aria-label="Meter"><input class="pick" type="radio" name="m03" id="m03a" checked><label for="m03a">4/4</label><input class="pick" type="radio" name="m03" id="m03b"><label for="m03b">3/4</label></div>
+        <button class="play" type="button" data-play aria-pressed="false"><span data-play-label>Play</span></button>
+      </div>
+    </header>
+    <ul class="names">
+      <li data-ch="drums"><div class="who"><h4 class="nm">Drums</h4><p class="st" data-status>Playing</p></div><div class="vol"><input class="rng" type="range" min="0" max="100" value="82" data-vol aria-label="Drums volume"><output data-val>82</output></div><div class="tg"><button type="button" data-mute aria-pressed="false">Mute</button><button type="button" data-iso aria-pressed="false">Isolate</button></div><span class="ul" data-meter style="--lvl:.74"><i></i></span></li>
+      <li data-ch="bass"><div class="who"><h4 class="nm">Bass</h4><p class="st" data-status>Playing</p></div><div class="vol"><input class="rng" type="range" min="0" max="100" value="74" data-vol aria-label="Bass volume"><output data-val>74</output></div><div class="tg"><button type="button" data-mute aria-pressed="false">Mute</button><button type="button" data-iso aria-pressed="false">Isolate</button></div><span class="ul" data-meter style="--lvl:.6"><i></i></span></li>
+      <li data-ch="rhythm"><div class="who"><h4 class="nm">Rhythm Guitar</h4><p class="st" data-status>Playing</p></div><div class="vol"><input class="rng" type="range" min="0" max="100" value="66" data-vol aria-label="Rhythm Guitar volume"><output data-val>66</output></div><div class="tg"><button type="button" data-mute aria-pressed="false">Mute</button><button type="button" data-iso aria-pressed="false">Isolate</button></div><span class="ul" data-meter style="--lvl:.52"><i></i></span></li>
+      <li data-ch="lead"><div class="who"><h4 class="nm">Lead Guitar</h4><p class="st" data-status>Playing</p></div><div class="vol"><input class="rng" type="range" min="0" max="100" value="58" data-vol aria-label="Lead Guitar volume"><output data-val>58</output></div><div class="tg"><button type="button" data-mute aria-pressed="false">Mute</button><button type="button" data-iso aria-pressed="false">Isolate</button></div><span class="ul" data-meter style="--lvl:.38"><i></i></span></li>
+      <li data-ch="keys"><div class="who"><h4 class="nm">Keys</h4><p class="st" data-status>Playing</p></div><div class="vol"><input class="rng" type="range" min="0" max="100" value="48" data-vol aria-label="Keys volume"><output data-val>48</output></div><div class="tg"><button type="button" data-mute aria-pressed="false">Mute</button><button type="button" data-iso aria-pressed="false">Isolate</button></div><span class="ul" data-meter style="--lvl:.3"><i></i></span></li>
+      <li class="master" data-ch="master"><div class="who"><h4 class="nm">Master</h4></div><div class="vol"><input class="rng" type="range" min="0" max="100" value="85" data-vol aria-label="Master volume"><output data-val>85</output></div><div class="tg" aria-hidden="true"></div><span class="ul" data-meter style="--lvl:.66"><i></i></span></li>
+    </ul>
+  </div>
+</section>
+
+<section class="look d04" id="d04" aria-labelledby="d04-h">
+  <header class="meta">
+    <h2 id="d04-h">04 Tiles</h2>
+    <p>One card per channel in a grid, each holding its own name, meter, slider and two buttons, so a channel is a single thing to look at. Tempo has its own wide banner with a long slider. Bass is isolated here to show how the others read.</p>
+  </header>
+  <div class="frame">
+    <div class="board">
+      <div class="banner">
+        <div class="bp"><output data-bpm-out>120</output><span>BPM</span></div>
+        <div class="slide"><button class="nud" type="button" data-bpm-step="-1" aria-label="Lower BPM by one">&minus;</button><input class="rng" type="range" min="40" max="300" step="1" value="120" data-bpm aria-label="BPM"><button class="nud" type="button" data-bpm-step="1" aria-label="Raise BPM by one">+</button></div>
+        <div class="metre" role="radiogroup" aria-label="Meter"><input class="pick" type="radio" name="m04" id="m04a" checked><label for="m04a">4/4</label><input class="pick" type="radio" name="m04" id="m04b"><label for="m04b">3/4</label></div>
+        <button class="play" type="button" data-play aria-pressed="false"><span data-play-label>Play</span></button>
+      </div>
+      <div class="tiles">
+        <article class="tile" data-ch="drums" data-silent="true"><header><h3>Drums</h3><output class="fig" data-val>82</output></header><p class="st" data-status>Silent while another is isolated</p><span class="lv" data-meter style="--lvl:0"><i></i></span><input class="rng" type="range" min="0" max="100" value="82" data-vol aria-label="Drums volume"><div class="acts"><button type="button" data-mute aria-pressed="false">Mute</button><button type="button" data-iso aria-pressed="false">Isolate</button></div></article>
+        <article class="tile" data-ch="bass"><header><h3>Bass</h3><output class="fig" data-val>74</output></header><p class="st" data-status>Only this plays</p><span class="lv" data-meter style="--lvl:.6"><i></i></span><input class="rng" type="range" min="0" max="100" value="74" data-vol aria-label="Bass volume"><div class="acts"><button type="button" data-mute aria-pressed="false">Mute</button><button type="button" data-iso aria-pressed="true">Isolate</button></div></article>
+        <article class="tile" data-ch="rhythm" data-silent="true"><header><h3>Rhythm Guitar</h3><output class="fig" data-val>66</output></header><p class="st" data-status>Silent while another is isolated</p><span class="lv" data-meter style="--lvl:0"><i></i></span><input class="rng" type="range" min="0" max="100" value="66" data-vol aria-label="Rhythm Guitar volume"><div class="acts"><button type="button" data-mute aria-pressed="false">Mute</button><button type="button" data-iso aria-pressed="false">Isolate</button></div></article>
+        <article class="tile" data-ch="lead" data-silent="true"><header><h3>Lead Guitar</h3><output class="fig" data-val>58</output></header><p class="st" data-status>Silent while another is isolated</p><span class="lv" data-meter style="--lvl:0"><i></i></span><input class="rng" type="range" min="0" max="100" value="58" data-vol aria-label="Lead Guitar volume"><div class="acts"><button type="button" data-mute aria-pressed="false">Mute</button><button type="button" data-iso aria-pressed="false">Isolate</button></div></article>
+        <article class="tile" data-ch="keys" data-silent="true"><header><h3>Keys</h3><output class="fig" data-val>48</output></header><p class="st" data-status>Silent while another is isolated</p><span class="lv" data-meter style="--lvl:0"><i></i></span><input class="rng" type="range" min="0" max="100" value="48" data-vol aria-label="Keys volume"><div class="acts"><button type="button" data-mute aria-pressed="false">Mute</button><button type="button" data-iso aria-pressed="false">Isolate</button></div></article>
+        <article class="tile master" data-ch="master"><header><h3>Master</h3><output class="fig" data-val>85</output></header><span class="lv" data-meter style="--lvl:.5"><i></i></span><input class="rng" type="range" min="0" max="100" value="85" data-vol aria-label="Master volume"></article>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="look d05" id="d05" aria-labelledby="d05-h">
+  <header class="meta">
+    <h2 id="d05-h">05 Master first</h2>
+    <p>The master gets the big fader on the left, with tempo and meter beneath it, because it is the one control that affects everything. The five instruments are rows to the right, each with a thin level strip under its slider.</p>
+  </header>
+  <div class="frame">
+    <div class="board">
+      <div class="mast" data-ch="master">
+        <h3>Master</h3>
+        <div class="mf"><input class="rng vert" type="range" min="0" max="100" value="85" data-vol aria-label="Master volume"><span class="mtr" data-meter style="--lvl:.66"><i></i></span><output class="fig" data-val>85</output></div>
+        <div class="time">
+          <div class="row"><span class="lab">BPM</span><input class="bpm" type="number" min="40" max="300" step="1" value="120" data-bpm aria-label="BPM" inputmode="numeric"><span style="display:flex;gap:var(--space-2xs)"><button class="stp" type="button" data-bpm-step="-1" aria-label="Lower BPM by one">&minus;</button><button class="stp" type="button" data-bpm-step="1" aria-label="Raise BPM by one">+</button></span></div>
+          <div class="metre" role="radiogroup" aria-label="Meter"><input class="pick" type="radio" name="m05" id="m05a" checked><label for="m05a">4/4</label><input class="pick" type="radio" name="m05" id="m05b"><label for="m05b">3/4</label></div>
+          <button class="play" type="button" data-play aria-pressed="false"><span data-play-label>Play</span></button>
+        </div>
+      </div>
+      <ul class="rows">
+        <li data-ch="drums"><div class="who"><b>Drums</b><output class="fig" data-val>82</output><small data-status>Playing</small></div><div class="tg"><button type="button" data-mute aria-pressed="false">Mute</button><button type="button" data-iso aria-pressed="false">Isolate</button></div><div class="sl"><input class="rng" type="range" min="0" max="100" value="82" data-vol aria-label="Drums volume"><span class="lv" data-meter style="--lvl:.74"><i></i></span></div></li>
+        <li data-ch="bass"><div class="who"><b>Bass</b><output class="fig" data-val>74</output><small data-status>Playing</small></div><div class="tg"><button type="button" data-mute aria-pressed="false">Mute</button><button type="button" data-iso aria-pressed="false">Isolate</button></div><div class="sl"><input class="rng" type="range" min="0" max="100" value="74" data-vol aria-label="Bass volume"><span class="lv" data-meter style="--lvl:.6"><i></i></span></div></li>
+        <li data-ch="rhythm"><div class="who"><b>Rhythm Guitar</b><output class="fig" data-val>66</output><small data-status>Playing</small></div><div class="tg"><button type="button" data-mute aria-pressed="false">Mute</button><button type="button" data-iso aria-pressed="false">Isolate</button></div><div class="sl"><input class="rng" type="range" min="0" max="100" value="66" data-vol aria-label="Rhythm Guitar volume"><span class="lv" data-meter style="--lvl:.52"><i></i></span></div></li>
+        <li data-ch="lead"><div class="who"><b>Lead Guitar</b><output class="fig" data-val>58</output><small data-status>Playing</small></div><div class="tg"><button type="button" data-mute aria-pressed="false">Mute</button><button type="button" data-iso aria-pressed="false">Isolate</button></div><div class="sl"><input class="rng" type="range" min="0" max="100" value="58" data-vol aria-label="Lead Guitar volume"><span class="lv" data-meter style="--lvl:.38"><i></i></span></div></li>
+        <li data-ch="keys"><div class="who"><b>Keys</b><output class="fig" data-val>48</output><small data-status>Playing</small></div><div class="tg"><button type="button" data-mute aria-pressed="false">Mute</button><button type="button" data-iso aria-pressed="false">Isolate</button></div><div class="sl"><input class="rng" type="range" min="0" max="100" value="48" data-vol aria-label="Keys volume"><span class="lv" data-meter style="--lvl:.3"><i></i></span></div></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="look d06" id="d06" aria-labelledby="d06-h">
+  <header class="meta">
+    <h2 id="d06-h">06 Tempo first</h2>
+    <p>Tempo and meter are project-wide, so they open the page: a huge BPM you can type into, nudge or slide, then the channels in two compact columns below.</p>
+  </header>
+  <div class="frame">
+    <div class="hero">
+      <div class="tempo">
+        <h3>Mixer</h3>
+        <div class="dial"><button class="big" type="button" data-bpm-step="-1" aria-label="Lower BPM by one">&minus;</button><input class="bpm" type="number" min="40" max="300" step="1" value="120" data-bpm aria-label="BPM" inputmode="numeric"><button class="big" type="button" data-bpm-step="1" aria-label="Raise BPM by one">+</button><span class="unit">BPM</span></div>
+        <input class="rng" type="range" min="40" max="300" step="1" value="120" data-bpm aria-label="BPM slider">
+      </div>
+      <div class="side">
+        <div class="metre" role="radiogroup" aria-label="Meter"><input class="pick" type="radio" name="m06" id="m06a" checked><label for="m06a">4/4</label><input class="pick" type="radio" name="m06" id="m06b"><label for="m06b">3/4</label></div>
+        <button class="play" type="button" data-play aria-pressed="false"><span data-play-label>Play</span></button>
+      </div>
+    </div>
+    <ul class="mix">
+      <li data-ch="drums"><b>Drums</b><div class="sl"><input class="rng" type="range" min="0" max="100" value="82" data-vol aria-label="Drums volume"><span class="lv" data-meter style="--lvl:.74"><i></i></span></div><output data-val>82</output><div class="tg"><button type="button" data-mute aria-pressed="false">Mute</button><button type="button" data-iso aria-pressed="false">Isolate</button></div></li>
+      <li data-ch="lead"><b>Lead Guitar</b><div class="sl"><input class="rng" type="range" min="0" max="100" value="58" data-vol aria-label="Lead Guitar volume"><span class="lv" data-meter style="--lvl:.38"><i></i></span></div><output data-val>58</output><div class="tg"><button type="button" data-mute aria-pressed="false">Mute</button><button type="button" data-iso aria-pressed="false">Isolate</button></div></li>
+      <li data-ch="bass"><b>Bass</b><div class="sl"><input class="rng" type="range" min="0" max="100" value="74" data-vol aria-label="Bass volume"><span class="lv" data-meter style="--lvl:.6"><i></i></span></div><output data-val>74</output><div class="tg"><button type="button" data-mute aria-pressed="false">Mute</button><button type="button" data-iso aria-pressed="false">Isolate</button></div></li>
+      <li data-ch="keys"><b>Keys</b><div class="sl"><input class="rng" type="range" min="0" max="100" value="48" data-vol aria-label="Keys volume"><span class="lv" data-meter style="--lvl:.3"><i></i></span></div><output data-val>48</output><div class="tg"><button type="button" data-mute aria-pressed="false">Mute</button><button type="button" data-iso aria-pressed="false">Isolate</button></div></li>
+      <li data-ch="rhythm"><b>Rhythm Guitar</b><div class="sl"><input class="rng" type="range" min="0" max="100" value="66" data-vol aria-label="Rhythm Guitar volume"><span class="lv" data-meter style="--lvl:.52"><i></i></span></div><output data-val>66</output><div class="tg"><button type="button" data-mute aria-pressed="false">Mute</button><button type="button" data-iso aria-pressed="false">Isolate</button></div></li>
+      <li data-ch="master"><b>Master</b><div class="sl"><input class="rng" type="range" min="0" max="100" value="85" data-vol aria-label="Master volume"><span class="lv" data-meter style="--lvl:.66"><i></i></span></div><output data-val>85</output><div class="tg" aria-hidden="true"></div></li>
+    </ul>
+  </div>
+</section>
+
+<section class="look d07" id="d07" aria-labelledby="d07-h">
+  <header class="meta">
+    <h2 id="d07-h">07 Knobs</h2>
+    <p>Rotary knobs, as on outboard gear. Drag up or down on a knob to set its volume. The thin outer ring is the live level, the thicker inner ring is the volume. Tempo sits in a footer bar.</p>
+  </header>
+  <div class="frame">
+    <div class="stage">
+      <div class="ch" data-ch="drums" style="--vol:.82"><div class="knob"><span class="ring r-meter" data-meter style="--lvl:.74"></span><span class="ring r-vol"></span><span class="cap"></span><span class="ptr"></span><input class="rng vert" type="range" min="0" max="100" value="82" data-vol aria-label="Drums volume"></div><output class="fig" data-val>82</output><b>Drums</b><div class="tg"><button type="button" data-mute aria-pressed="false">Mute</button><button type="button" data-iso aria-pressed="false">Isolate</button></div></div>
+      <div class="ch" data-ch="bass" style="--vol:.74"><div class="knob"><span class="ring r-meter" data-meter style="--lvl:.6"></span><span class="ring r-vol"></span><span class="cap"></span><span class="ptr"></span><input class="rng vert" type="range" min="0" max="100" value="74" data-vol aria-label="Bass volume"></div><output class="fig" data-val>74</output><b>Bass</b><div class="tg"><button type="button" data-mute aria-pressed="false">Mute</button><button type="button" data-iso aria-pressed="false">Isolate</button></div></div>
+      <div class="ch" data-ch="rhythm" style="--vol:.66"><div class="knob"><span class="ring r-meter" data-meter style="--lvl:.52"></span><span class="ring r-vol"></span><span class="cap"></span><span class="ptr"></span><input class="rng vert" type="range" min="0" max="100" value="66" data-vol aria-label="Rhythm Guitar volume"></div><output class="fig" data-val>66</output><b>Rhythm Guitar</b><div class="tg"><button type="button" data-mute aria-pressed="false">Mute</button><button type="button" data-iso aria-pressed="false">Isolate</button></div></div>
+      <div class="ch" data-ch="lead" style="--vol:.58"><div class="knob"><span class="ring r-meter" data-meter style="--lvl:.38"></span><span class="ring r-vol"></span><span class="cap"></span><span class="ptr"></span><input class="rng vert" type="range" min="0" max="100" value="58" data-vol aria-label="Lead Guitar volume"></div><output class="fig" data-val>58</output><b>Lead Guitar</b><div class="tg"><button type="button" data-mute aria-pressed="false">Mute</button><button type="button" data-iso aria-pressed="false">Isolate</button></div></div>
+      <div class="ch" data-ch="keys" style="--vol:.48"><div class="knob"><span class="ring r-meter" data-meter style="--lvl:.3"></span><span class="ring r-vol"></span><span class="cap"></span><span class="ptr"></span><input class="rng vert" type="range" min="0" max="100" value="48" data-vol aria-label="Keys volume"></div><output class="fig" data-val>48</output><b>Keys</b><div class="tg"><button type="button" data-mute aria-pressed="false">Mute</button><button type="button" data-iso aria-pressed="false">Isolate</button></div></div>
+      <div class="ch master" data-ch="master" style="--vol:.85"><div class="knob"><span class="ring r-meter" data-meter style="--lvl:.66"></span><span class="ring r-vol"></span><span class="cap"></span><span class="ptr"></span><input class="rng vert" type="range" min="0" max="100" value="85" data-vol aria-label="Master volume"></div><output class="fig" data-val>85</output><b>Master</b></div>
+    </div>
+    <div class="foot">
+      <h3>Mixer</h3>
+      <div class="tp"><span class="lab">BPM</span><button class="stp" type="button" data-bpm-step="-1" aria-label="Lower BPM by one">&minus;</button><input class="bpm" type="number" min="40" max="300" step="1" value="120" data-bpm aria-label="BPM" inputmode="numeric"><button class="stp" type="button" data-bpm-step="1" aria-label="Raise BPM by one">+</button></div>
+      <div class="tp"><span class="lab">Meter</span><div class="metre" role="radiogroup" aria-label="Meter"><input class="pick" type="radio" name="m07" id="m07a" checked><label for="m07a">4/4</label><input class="pick" type="radio" name="m07" id="m07b"><label for="m07b">3/4</label></div></div>
+      <button class="play" type="button" data-play aria-pressed="false"><span data-play-label>Play</span></button>
+    </div>
+  </div>
+</section>
+
+<section class="look d08" id="d08" aria-labelledby="d08-h">
+  <header class="meta">
+    <h2 id="d08-h">08 Narrow column</h2>
+    <p>Everything in one phone-width column, one thing per line, with large targets and a plain sentence saying what each channel is doing. It also shows how the page would sit in a small window. Rhythm Guitar is muted here.</p>
+  </header>
+  <div class="frame">
+    <div class="col">
+      <div class="head"><h3>Mixer</h3><button class="play" type="button" data-play aria-pressed="false"><span data-play-label>Play</span></button></div>
+      <div class="time">
+        <div class="brow"><button class="step" type="button" data-bpm-step="-1" aria-label="Lower BPM by one">&minus;</button><input class="bpm" type="number" min="40" max="300" step="1" value="120" data-bpm aria-label="BPM" inputmode="numeric"><button class="step" type="button" data-bpm-step="1" aria-label="Raise BPM by one">+</button></div>
+        <div class="metre" role="radiogroup" aria-label="Meter"><input class="pick" type="radio" name="m08" id="m08a" checked><label for="m08a">4/4</label><input class="pick" type="radio" name="m08" id="m08b"><label for="m08b">3/4</label></div>
+      </div>
+      <div class="blk" data-ch="drums"><div class="top"><b>Drums</b><output class="fig" data-val>82</output></div><p class="st" data-status>Playing</p><span class="lv" data-meter style="--lvl:.74"><i></i></span><input class="rng" type="range" min="0" max="100" value="82" data-vol aria-label="Drums volume"><div class="acts"><button type="button" data-mute aria-pressed="false">Mute</button><button type="button" data-iso aria-pressed="false">Isolate</button></div></div>
+      <div class="blk" data-ch="bass"><div class="top"><b>Bass</b><output class="fig" data-val>74</output></div><p class="st" data-status>Playing</p><span class="lv" data-meter style="--lvl:.6"><i></i></span><input class="rng" type="range" min="0" max="100" value="74" data-vol aria-label="Bass volume"><div class="acts"><button type="button" data-mute aria-pressed="false">Mute</button><button type="button" data-iso aria-pressed="false">Isolate</button></div></div>
+      <div class="blk" data-ch="rhythm" data-silent="true"><div class="top"><b>Rhythm Guitar</b><output class="fig" data-val>66</output></div><p class="st" data-status>Muted</p><span class="lv" data-meter style="--lvl:0"><i></i></span><input class="rng" type="range" min="0" max="100" value="66" data-vol aria-label="Rhythm Guitar volume"><div class="acts"><button type="button" data-mute aria-pressed="true">Mute</button><button type="button" data-iso aria-pressed="false">Isolate</button></div></div>
+      <div class="blk" data-ch="lead"><div class="top"><b>Lead Guitar</b><output class="fig" data-val>58</output></div><p class="st" data-status>Playing</p><span class="lv" data-meter style="--lvl:.38"><i></i></span><input class="rng" type="range" min="0" max="100" value="58" data-vol aria-label="Lead Guitar volume"><div class="acts"><button type="button" data-mute aria-pressed="false">Mute</button><button type="button" data-iso aria-pressed="false">Isolate</button></div></div>
+      <div class="blk" data-ch="keys"><div class="top"><b>Keys</b><output class="fig" data-val>48</output></div><p class="st" data-status>Playing</p><span class="lv" data-meter style="--lvl:.3"><i></i></span><input class="rng" type="range" min="0" max="100" value="48" data-vol aria-label="Keys volume"><div class="acts"><button type="button" data-mute aria-pressed="false">Mute</button><button type="button" data-iso aria-pressed="false">Isolate</button></div></div>
+      <div class="blk master" data-ch="master"><div class="top"><b>Master</b><output class="fig" data-val>85</output></div><span class="lv" data-meter style="--lvl:.66"><i></i></span><input class="rng" type="range" min="0" max="100" value="85" data-vol aria-label="Master volume"></div>
+    </div>
+  </div>
+</section>
+
+<section class="look d09" id="d09" aria-labelledby="d09-h">
+  <header class="meta">
+    <h2 id="d09-h">09 Readout</h2>
+    <p>Every line has the same shape: a big number, what it belongs to, how to change it. Tempo is the first line and works like a channel, so there is one pattern to learn. Lead Guitar is isolated here.</p>
+  </header>
+  <div class="frame">
+    <div class="head"><h3>Mixer</h3><button class="play" type="button" data-play aria-pressed="false"><span data-play-label>Play</span></button></div>
+    <div class="line">
+      <input class="num" type="number" min="40" max="300" step="1" value="120" data-bpm aria-label="BPM" inputmode="numeric">
+      <div class="who"><b>BPM</b><small>For the whole project</small></div>
+      <div class="ctl tempo"><button class="stp" type="button" data-bpm-step="-1" aria-label="Lower BPM by one">&minus;</button><input class="rng" type="range" min="40" max="300" step="1" value="120" data-bpm aria-label="BPM slider"><button class="stp" type="button" data-bpm-step="1" aria-label="Raise BPM by one">+</button></div>
+      <div class="metre" role="radiogroup" aria-label="Meter"><input class="pick" type="radio" name="m09" id="m09a" checked><label for="m09a">4/4</label><input class="pick" type="radio" name="m09" id="m09b"><label for="m09b">3/4</label></div>
+    </div>
+    <div class="line" data-ch="drums" data-silent="true"><output class="num" data-val>82</output><div class="who"><b>Drums</b><small data-status>Silent while another is isolated</small></div><div class="ctl"><input class="rng" type="range" min="0" max="100" value="82" data-vol aria-label="Drums volume"><span class="lv" data-meter style="--lvl:0"><i></i></span></div><div class="tg"><button type="button" data-mute aria-pressed="false">Mute</button><button type="button" data-iso aria-pressed="false">Isolate</button></div></div>
+    <div class="line" data-ch="bass" data-silent="true"><output class="num" data-val>74</output><div class="who"><b>Bass</b><small data-status>Silent while another is isolated</small></div><div class="ctl"><input class="rng" type="range" min="0" max="100" value="74" data-vol aria-label="Bass volume"><span class="lv" data-meter style="--lvl:0"><i></i></span></div><div class="tg"><button type="button" data-mute aria-pressed="false">Mute</button><button type="button" data-iso aria-pressed="false">Isolate</button></div></div>
+    <div class="line" data-ch="rhythm" data-silent="true"><output class="num" data-val>66</output><div class="who"><b>Rhythm Guitar</b><small data-status>Silent while another is isolated</small></div><div class="ctl"><input class="rng" type="range" min="0" max="100" value="66" data-vol aria-label="Rhythm Guitar volume"><span class="lv" data-meter style="--lvl:0"><i></i></span></div><div class="tg"><button type="button" data-mute aria-pressed="false">Mute</button><button type="button" data-iso aria-pressed="false">Isolate</button></div></div>
+    <div class="line" data-ch="lead"><output class="num" data-val>58</output><div class="who"><b>Lead Guitar</b><small data-status>Only this plays</small></div><div class="ctl"><input class="rng" type="range" min="0" max="100" value="58" data-vol aria-label="Lead Guitar volume"><span class="lv" data-meter style="--lvl:.38"><i></i></span></div><div class="tg"><button type="button" data-mute aria-pressed="false">Mute</button><button type="button" data-iso aria-pressed="true">Isolate</button></div></div>
+    <div class="line" data-ch="keys" data-silent="true"><output class="num" data-val>48</output><div class="who"><b>Keys</b><small data-status>Silent while another is isolated</small></div><div class="ctl"><input class="rng" type="range" min="0" max="100" value="48" data-vol aria-label="Keys volume"><span class="lv" data-meter style="--lvl:0"><i></i></span></div><div class="tg"><button type="button" data-mute aria-pressed="false">Mute</button><button type="button" data-iso aria-pressed="false">Isolate</button></div></div>
+    <div class="line master" data-ch="master"><output class="num" data-val>85</output><div class="who"><b>Master</b></div><div class="ctl"><input class="rng" type="range" min="0" max="100" value="85" data-vol aria-label="Master volume"><span class="lv" data-meter style="--lvl:.34"><i></i></span></div><div class="tg" aria-hidden="true"></div></div>
+  </div>
+</section>
+
+<section class="look d10" id="d10" aria-labelledby="d10-h">
+  <header class="meta">
+    <h2 id="d10-h">10 Fill columns</h2>
+    <p>Each channel is a tall pad. Press or drag anywhere on it and the grey fill rises to that height, so the volume is something you see and push. The dark strip on the edge of each pad is the live level. Tempo lives in a left rail.</p>
+  </header>
+  <div class="frame">
+    <div class="board">
+      <div class="rail">
+        <h3>Mixer</h3>
+        <span class="lab">BPM</span>
+        <div class="bp"><button class="stp" type="button" data-bpm-step="-1" aria-label="Lower BPM by one">&minus;</button><input class="bpm" type="number" min="40" max="300" step="1" value="120" data-bpm aria-label="BPM" inputmode="numeric"><button class="stp" type="button" data-bpm-step="1" aria-label="Raise BPM by one">+</button></div>
+        <span class="lab">Meter</span>
+        <div class="metre" role="radiogroup" aria-label="Meter"><input class="pick" type="radio" name="m10" id="m10a" checked><label for="m10a">4/4</label><input class="pick" type="radio" name="m10" id="m10b"><label for="m10b">3/4</label></div>
+        <button class="play" type="button" data-play aria-pressed="false"><span data-play-label>Play</span></button>
+      </div>
+      <div class="pads">
+        <div class="col" data-ch="drums" style="--vol:.82"><div class="pad"><span class="fill"></span><span class="edge"></span><span class="mt" data-meter style="--lvl:.74"><i></i></span><span class="nm">Drums</span><output class="val fig" data-val>82</output><input class="rng vert" type="range" min="0" max="100" value="82" data-vol aria-label="Drums volume"></div><div class="tg"><button type="button" data-mute aria-pressed="false">Mute</button><button type="button" data-iso aria-pressed="false">Isolate</button></div></div>
+        <div class="col" data-ch="bass" style="--vol:.74"><div class="pad"><span class="fill"></span><span class="edge"></span><span class="mt" data-meter style="--lvl:.6"><i></i></span><span class="nm">Bass</span><output class="val fig" data-val>74</output><input class="rng vert" type="range" min="0" max="100" value="74" data-vol aria-label="Bass volume"></div><div class="tg"><button type="button" data-mute aria-pressed="false">Mute</button><button type="button" data-iso aria-pressed="false">Isolate</button></div></div>
+        <div class="col" data-ch="rhythm" style="--vol:.66"><div class="pad"><span class="fill"></span><span class="edge"></span><span class="mt" data-meter style="--lvl:.52"><i></i></span><span class="nm">Rhythm Guitar</span><output class="val fig" data-val>66</output><input class="rng vert" type="range" min="0" max="100" value="66" data-vol aria-label="Rhythm Guitar volume"></div><div class="tg"><button type="button" data-mute aria-pressed="false">Mute</button><button type="button" data-iso aria-pressed="false">Isolate</button></div></div>
+        <div class="col" data-ch="lead" style="--vol:.58"><div class="pad"><span class="fill"></span><span class="edge"></span><span class="mt" data-meter style="--lvl:.38"><i></i></span><span class="nm">Lead Guitar</span><output class="val fig" data-val>58</output><input class="rng vert" type="range" min="0" max="100" value="58" data-vol aria-label="Lead Guitar volume"></div><div class="tg"><button type="button" data-mute aria-pressed="false">Mute</button><button type="button" data-iso aria-pressed="false">Isolate</button></div></div>
+        <div class="col" data-ch="keys" style="--vol:.48"><div class="pad"><span class="fill"></span><span class="edge"></span><span class="mt" data-meter style="--lvl:.3"><i></i></span><span class="nm">Keys</span><output class="val fig" data-val>48</output><input class="rng vert" type="range" min="0" max="100" value="48" data-vol aria-label="Keys volume"></div><div class="tg"><button type="button" data-mute aria-pressed="false">Mute</button><button type="button" data-iso aria-pressed="false">Isolate</button></div></div>
+        <div class="col master" data-ch="master" style="--vol:.85"><div class="pad"><span class="fill"></span><span class="edge"></span><span class="mt" data-meter style="--lvl:.66"><i></i></span><span class="nm">Master</span><output class="val fig" data-val>85</output><input class="rng vert" type="range" min="0" max="100" value="85" data-vol aria-label="Master volume"></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="look d11" id="d11" aria-labelledby="d11-h">
+  <header class="meta">
+    <h2 id="d11-h">11 Meter bridge</h2>
+    <p>Looking and doing are kept apart. The left panel only shows the levels, large, so you can read the whole mix at a glance. The right panel holds every control. Both panels list the channels in the same order.</p>
+  </header>
+  <div class="frame">
+    <div class="board">
+      <div class="panel">
+        <h3>Levels</h3>
+        <ul class="bars">
+          <li data-ch="drums"><b>Drums</b><span class="bar" data-meter style="--lvl:.74"><i></i></span></li>
+          <li data-ch="bass"><b>Bass</b><span class="bar" data-meter style="--lvl:.6"><i></i></span></li>
+          <li data-ch="rhythm"><b>Rhythm Guitar</b><span class="bar" data-meter style="--lvl:.52"><i></i></span></li>
+          <li data-ch="lead"><b>Lead Guitar</b><span class="bar" data-meter style="--lvl:.38"><i></i></span></li>
+          <li data-ch="keys"><b>Keys</b><span class="bar" data-meter style="--lvl:.3"><i></i></span></li>
+          <li class="master" data-ch="master"><b>Master</b><span class="bar" data-meter style="--lvl:.66"><i></i></span></li>
+        </ul>
+      </div>
+      <div class="panel">
+        <h3>Controls</h3>
+        <div class="time">
+          <div class="tp"><span class="lab">BPM</span><button class="stp" type="button" data-bpm-step="-1" aria-label="Lower BPM by one">&minus;</button><input class="bpm" type="number" min="40" max="300" step="1" value="120" data-bpm aria-label="BPM" inputmode="numeric"><button class="stp" type="button" data-bpm-step="1" aria-label="Raise BPM by one">+</button></div>
+          <div class="tp"><span class="lab">Meter</span><div class="metre" role="radiogroup" aria-label="Meter"><input class="pick" type="radio" name="m11" id="m11a" checked><label for="m11a">4/4</label><input class="pick" type="radio" name="m11" id="m11b"><label for="m11b">3/4</label></div></div>
+          <button class="play" type="button" data-play aria-pressed="false"><span data-play-label>Play</span></button>
+        </div>
+        <ul class="set">
+          <li data-ch="drums"><b>Drums</b><input class="rng" type="range" min="0" max="100" value="82" data-vol aria-label="Drums volume"><output data-val>82</output><div class="tg"><button type="button" data-mute aria-pressed="false">Mute</button><button type="button" data-iso aria-pressed="false">Isolate</button></div></li>
+          <li data-ch="bass"><b>Bass</b><input class="rng" type="range" min="0" max="100" value="74" data-vol aria-label="Bass volume"><output data-val>74</output><div class="tg"><button type="button" data-mute aria-pressed="false">Mute</button><button type="button" data-iso aria-pressed="false">Isolate</button></div></li>
+          <li data-ch="rhythm"><b>Rhythm Guitar</b><input class="rng" type="range" min="0" max="100" value="66" data-vol aria-label="Rhythm Guitar volume"><output data-val>66</output><div class="tg"><button type="button" data-mute aria-pressed="false">Mute</button><button type="button" data-iso aria-pressed="false">Isolate</button></div></li>
+          <li data-ch="lead"><b>Lead Guitar</b><input class="rng" type="range" min="0" max="100" value="58" data-vol aria-label="Lead Guitar volume"><output data-val>58</output><div class="tg"><button type="button" data-mute aria-pressed="false">Mute</button><button type="button" data-iso aria-pressed="false">Isolate</button></div></li>
+          <li data-ch="keys"><b>Keys</b><input class="rng" type="range" min="0" max="100" value="48" data-vol aria-label="Keys volume"><output data-val>48</output><div class="tg"><button type="button" data-mute aria-pressed="false">Mute</button><button type="button" data-iso aria-pressed="false">Isolate</button></div></li>
+          <li class="master" data-ch="master"><b>Master</b><input class="rng" type="range" min="0" max="100" value="85" data-vol aria-label="Master volume"><output data-val>85</output><div class="tg" aria-hidden="true"></div></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="look d12" id="d12" aria-labelledby="d12-h">
+  <header class="meta">
+    <h2 id="d12-h">12 Hear only</h2>
+    <p>Only one instrument can be isolated at a time, so isolate is a single choice, not five buttons. Each strip has just a Mute button; one row under the strips picks what to hear on its own, lined up with the strip it belongs to. The Everything option sits under the master.</p>
+  </header>
+  <div class="frame">
+    <div class="bar">
+      <h3>Mixer</h3>
+      <div class="tp"><span class="lab">BPM</span><button class="stp" type="button" data-bpm-step="-1" aria-label="Lower BPM by one">&minus;</button><input class="bpm" type="number" min="40" max="300" step="1" value="120" data-bpm aria-label="BPM" inputmode="numeric"><button class="stp" type="button" data-bpm-step="1" aria-label="Raise BPM by one">+</button></div>
+      <div class="tp"><span class="lab">Meter</span><div class="metre" role="radiogroup" aria-label="Meter"><input class="pick" type="radio" name="m12" id="m12a" checked><label for="m12a">4/4</label><input class="pick" type="radio" name="m12" id="m12b"><label for="m12b">3/4</label></div></div>
+      <button class="play" type="button" data-play aria-pressed="false"><span data-play-label>Play</span></button>
+    </div>
+    <ul class="strips">
+      <li class="strip" data-ch="drums"><b>Drums</b><span class="lv" data-meter style="--lvl:.74"><i></i></span><input class="rng vert" type="range" min="0" max="100" value="82" data-vol aria-label="Drums volume"><output class="fig" data-val>82</output><button class="mute" type="button" data-mute aria-pressed="false">Mute</button></li>
+      <li class="strip" data-ch="bass"><b>Bass</b><span class="lv" data-meter style="--lvl:.6"><i></i></span><input class="rng vert" type="range" min="0" max="100" value="74" data-vol aria-label="Bass volume"><output class="fig" data-val>74</output><button class="mute" type="button" data-mute aria-pressed="false">Mute</button></li>
+      <li class="strip" data-ch="rhythm"><b>Rhythm Guitar</b><span class="lv" data-meter style="--lvl:.52"><i></i></span><input class="rng vert" type="range" min="0" max="100" value="66" data-vol aria-label="Rhythm Guitar volume"><output class="fig" data-val>66</output><button class="mute" type="button" data-mute aria-pressed="false">Mute</button></li>
+      <li class="strip" data-ch="lead"><b>Lead Guitar</b><span class="lv" data-meter style="--lvl:.38"><i></i></span><input class="rng vert" type="range" min="0" max="100" value="58" data-vol aria-label="Lead Guitar volume"><output class="fig" data-val>58</output><button class="mute" type="button" data-mute aria-pressed="false">Mute</button></li>
+      <li class="strip" data-ch="keys"><b>Keys</b><span class="lv" data-meter style="--lvl:.3"><i></i></span><input class="rng vert" type="range" min="0" max="100" value="48" data-vol aria-label="Keys volume"><output class="fig" data-val>48</output><button class="mute" type="button" data-mute aria-pressed="false">Mute</button></li>
+      <li class="strip master" data-ch="master"><b>Master</b><span class="lv" data-meter style="--lvl:.66"><i></i></span><input class="rng vert" type="range" min="0" max="100" value="85" data-vol aria-label="Master volume"><output class="fig" data-val>85</output></li>
+    </ul>
+    <div class="listen" role="radiogroup" aria-labelledby="d12-l">
+      <span class="lead" id="d12-l">Hear only</span>
+      <div class="opt"><input class="pick" type="radio" name="h12" id="h12-drums" value="drums" data-hear><label for="h12-drums">Drums</label></div>
+      <div class="opt"><input class="pick" type="radio" name="h12" id="h12-bass" value="bass" data-hear><label for="h12-bass">Bass</label></div>
+      <div class="opt"><input class="pick" type="radio" name="h12" id="h12-rhythm" value="rhythm" data-hear><label for="h12-rhythm">Rhythm Guitar</label></div>
+      <div class="opt"><input class="pick" type="radio" name="h12" id="h12-lead" value="lead" data-hear><label for="h12-lead">Lead Guitar</label></div>
+      <div class="opt"><input class="pick" type="radio" name="h12" id="h12-keys" value="keys" data-hear><label for="h12-keys">Keys</label></div>
+      <div class="opt"><input class="pick" type="radio" name="h12" id="h12-all" value="" data-hear checked><label for="h12-all">Everything</label></div>
+    </div>
+  </div>
+</section>
+
+<section class="look d13" id="d13" aria-labelledby="d13-h">
+  <header class="meta">
+    <h2 id="d13-h">13 LED stacks</h2>
+    <p>Tall lit stacks make the levels the loudest thing on the screen, like a hardware rack. Under each stack sits a plain horizontal slider and the two buttons. Tempo stays small in the top bar.</p>
+  </header>
+  <div class="frame">
+    <div class="top">
+      <h3>Mixer</h3>
+      <div class="clock"><span class="lab">BPM</span><input class="bpm" type="number" min="40" max="300" step="1" value="120" data-bpm aria-label="BPM" inputmode="numeric"><span class="lab">Meter</span><div class="metre" role="radiogroup" aria-label="Meter"><input class="pick" type="radio" name="m13" id="m13a" checked><label for="m13a">4/4</label><input class="pick" type="radio" name="m13" id="m13b"><label for="m13b">3/4</label></div><button class="play" type="button" data-play aria-pressed="false"><span data-play-label>Play</span></button></div>
+    </div>
+    <div class="rack">
+      <div class="ch" data-ch="drums"><b>Drums</b><span class="led" data-meter style="--lvl:.74"><i></i></span><div class="vrow"><input class="rng" type="range" min="0" max="100" value="82" data-vol aria-label="Drums volume"><output class="fig" data-val>82</output></div><div class="tg"><button type="button" data-mute aria-pressed="false">Mute</button><button type="button" data-iso aria-pressed="false">Isolate</button></div></div>
+      <div class="ch" data-ch="bass"><b>Bass</b><span class="led" data-meter style="--lvl:.6"><i></i></span><div class="vrow"><input class="rng" type="range" min="0" max="100" value="74" data-vol aria-label="Bass volume"><output class="fig" data-val>74</output></div><div class="tg"><button type="button" data-mute aria-pressed="false">Mute</button><button type="button" data-iso aria-pressed="false">Isolate</button></div></div>
+      <div class="ch" data-ch="rhythm"><b>Rhythm Guitar</b><span class="led" data-meter style="--lvl:.52"><i></i></span><div class="vrow"><input class="rng" type="range" min="0" max="100" value="66" data-vol aria-label="Rhythm Guitar volume"><output class="fig" data-val>66</output></div><div class="tg"><button type="button" data-mute aria-pressed="false">Mute</button><button type="button" data-iso aria-pressed="false">Isolate</button></div></div>
+      <div class="ch" data-ch="lead"><b>Lead Guitar</b><span class="led" data-meter style="--lvl:.38"><i></i></span><div class="vrow"><input class="rng" type="range" min="0" max="100" value="58" data-vol aria-label="Lead Guitar volume"><output class="fig" data-val>58</output></div><div class="tg"><button type="button" data-mute aria-pressed="false">Mute</button><button type="button" data-iso aria-pressed="false">Isolate</button></div></div>
+      <div class="ch" data-ch="keys"><b>Keys</b><span class="led" data-meter style="--lvl:.3"><i></i></span><div class="vrow"><input class="rng" type="range" min="0" max="100" value="48" data-vol aria-label="Keys volume"><output class="fig" data-val>48</output></div><div class="tg"><button type="button" data-mute aria-pressed="false">Mute</button><button type="button" data-iso aria-pressed="false">Isolate</button></div></div>
+      <div class="ch master" data-ch="master"><b>Master</b><span class="led" data-meter style="--lvl:.66"><i></i></span><div class="vrow"><input class="rng" type="range" min="0" max="100" value="85" data-vol aria-label="Master volume"><output class="fig" data-val>85</output></div></div>
+    </div>
+  </div>
+</section>
+
+<section class="look d14" id="d14" aria-labelledby="d14-h">
+  <header class="meta">
+    <h2 id="d14-h">14 Settings form</h2>
+    <p>The mixer written as a settings page, in three groups: Project, Channels, Output. Mute and isolate are on and off switches, a control everyone already knows from phones and system settings. The label sits left, the control right.</p>
+  </header>
+  <div class="frame">
+    <div class="top"><h3>Mixer</h3><button class="play" type="button" data-play aria-pressed="false"><span data-play-label>Play</span></button></div>
+    <section class="grp" aria-labelledby="d14-p">
+      <h3 id="d14-p">Project</h3>
+      <div class="list">
+        <div class="fld"><label for="d14-bpm">BPM</label><input class="rng" type="range" min="40" max="300" step="1" value="120" data-bpm aria-label="BPM slider"><input class="bpm" id="d14-bpm" type="number" min="40" max="300" step="1" value="120" data-bpm inputmode="numeric"></div>
+        <div class="fld"><b id="d14-mt">Meter</b><div class="metre" role="radiogroup" aria-labelledby="d14-mt"><input class="pick" type="radio" name="m14" id="m14a" checked><label for="m14a">4/4</label><input class="pick" type="radio" name="m14" id="m14b"><label for="m14b">3/4</label></div></div>
+      </div>
+    </section>
+    <section class="grp" aria-labelledby="d14-c">
+      <h3 id="d14-c">Channels</h3>
+      <div class="list">
+        <div class="chan" data-ch="drums"><b>Drums</b><div class="sl"><input class="rng" type="range" min="0" max="100" value="82" data-vol aria-label="Drums volume"><span class="lv" data-meter style="--lvl:.74"><i></i></span></div><output class="fig" data-val>82</output><button class="sw" type="button" data-mute aria-pressed="false">Mute</button><button class="sw" type="button" data-iso aria-pressed="false">Isolate</button></div>
+        <div class="chan" data-ch="bass"><b>Bass</b><div class="sl"><input class="rng" type="range" min="0" max="100" value="74" data-vol aria-label="Bass volume"><span class="lv" data-meter style="--lvl:.6"><i></i></span></div><output class="fig" data-val>74</output><button class="sw" type="button" data-mute aria-pressed="false">Mute</button><button class="sw" type="button" data-iso aria-pressed="false">Isolate</button></div>
+        <div class="chan" data-ch="rhythm"><b>Rhythm Guitar</b><div class="sl"><input class="rng" type="range" min="0" max="100" value="66" data-vol aria-label="Rhythm Guitar volume"><span class="lv" data-meter style="--lvl:.52"><i></i></span></div><output class="fig" data-val>66</output><button class="sw" type="button" data-mute aria-pressed="false">Mute</button><button class="sw" type="button" data-iso aria-pressed="false">Isolate</button></div>
+        <div class="chan" data-ch="lead"><b>Lead Guitar</b><div class="sl"><input class="rng" type="range" min="0" max="100" value="58" data-vol aria-label="Lead Guitar volume"><span class="lv" data-meter style="--lvl:.38"><i></i></span></div><output class="fig" data-val>58</output><button class="sw" type="button" data-mute aria-pressed="false">Mute</button><button class="sw" type="button" data-iso aria-pressed="false">Isolate</button></div>
+        <div class="chan" data-ch="keys"><b>Keys</b><div class="sl"><input class="rng" type="range" min="0" max="100" value="48" data-vol aria-label="Keys volume"><span class="lv" data-meter style="--lvl:.3"><i></i></span></div><output class="fig" data-val>48</output><button class="sw" type="button" data-mute aria-pressed="false">Mute</button><button class="sw" type="button" data-iso aria-pressed="false">Isolate</button></div>
+      </div>
+    </section>
+    <section class="grp" aria-labelledby="d14-o">
+      <h3 id="d14-o">Output</h3>
+      <div class="list"><div class="chan solo" data-ch="master"><b>Master</b><div class="sl"><input class="rng" type="range" min="0" max="100" value="85" data-vol aria-label="Master volume"><span class="lv" data-meter style="--lvl:.66"><i></i></span></div><output class="fig" data-val>85</output></div></div>
+    </section>
+  </div>
+</section>
+
+<section class="look d15" id="d15" aria-labelledby="d15-h">
+  <header class="meta">
+    <h2 id="d15-h">15 Matrix</h2>
+    <p>Turned on its side: the columns are the instruments and the rows are the kinds of control. All the mute buttons line up in one row, all the isolate buttons in another, so you can compare and reach across a whole row. Tempo and meter are the last two rows.</p>
+  </header>
+  <div class="frame">
+    <div class="scroller">
+    <table class="mx">
+      <caption class="sr">Mixer controls, one column per instrument</caption>
+      <thead><tr><th scope="col">Mixer</th><th scope="col" data-ch="drums">Drums</th><th scope="col" data-ch="bass">Bass</th><th scope="col" data-ch="rhythm">Rhythm Guitar</th><th scope="col" data-ch="lead">Lead Guitar</th><th scope="col" data-ch="keys">Keys</th><th scope="col" data-ch="master">Master</th></tr></thead>
+      <tbody>
+        <tr class="mid"><th scope="row">Level</th><td data-ch="drums"><span class="mtr" data-meter style="--lvl:.74"><i></i></span></td><td data-ch="bass"><span class="mtr" data-meter style="--lvl:.6"><i></i></span></td><td data-ch="rhythm"><span class="mtr" data-meter style="--lvl:.52"><i></i></span></td><td data-ch="lead"><span class="mtr" data-meter style="--lvl:.38"><i></i></span></td><td data-ch="keys"><span class="mtr" data-meter style="--lvl:.3"><i></i></span></td><td data-ch="master"><span class="mtr" data-meter style="--lvl:.66"><i></i></span></td></tr>
+        <tr class="tall"><th scope="row">Volume</th>
+          <td data-ch="drums"><div class="fd"><input class="rng vert" type="range" min="0" max="100" value="82" data-vol aria-label="Drums volume"><output class="fig" data-val>82</output></div></td>
+          <td data-ch="bass"><div class="fd"><input class="rng vert" type="range" min="0" max="100" value="74" data-vol aria-label="Bass volume"><output class="fig" data-val>74</output></div></td>
+          <td data-ch="rhythm"><div class="fd"><input class="rng vert" type="range" min="0" max="100" value="66" data-vol aria-label="Rhythm Guitar volume"><output class="fig" data-val>66</output></div></td>
+          <td data-ch="lead"><div class="fd"><input class="rng vert" type="range" min="0" max="100" value="58" data-vol aria-label="Lead Guitar volume"><output class="fig" data-val>58</output></div></td>
+          <td data-ch="keys"><div class="fd"><input class="rng vert" type="range" min="0" max="100" value="48" data-vol aria-label="Keys volume"><output class="fig" data-val>48</output></div></td>
+          <td data-ch="master"><div class="fd"><input class="rng vert" type="range" min="0" max="100" value="85" data-vol aria-label="Master volume"><output class="fig" data-val>85</output></div></td></tr>
+        <tr class="short"><th scope="row">Mute</th><td data-ch="drums"><button class="cell" type="button" data-mute aria-pressed="false">Mute</button></td><td data-ch="bass"><button class="cell" type="button" data-mute aria-pressed="false">Mute</button></td><td data-ch="rhythm"><button class="cell" type="button" data-mute aria-pressed="false">Mute</button></td><td data-ch="lead"><button class="cell" type="button" data-mute aria-pressed="false">Mute</button></td><td data-ch="keys"><button class="cell" type="button" data-mute aria-pressed="false">Mute</button></td><td></td></tr>
+        <tr class="short"><th scope="row">Isolate</th><td data-ch="drums"><button class="cell" type="button" data-iso aria-pressed="false">Isolate</button></td><td data-ch="bass"><button class="cell" type="button" data-iso aria-pressed="false">Isolate</button></td><td data-ch="rhythm"><button class="cell" type="button" data-iso aria-pressed="false">Isolate</button></td><td data-ch="lead"><button class="cell" type="button" data-iso aria-pressed="false">Isolate</button></td><td data-ch="keys"><button class="cell" type="button" data-iso aria-pressed="false">Isolate</button></td><td></td></tr>
+        <tr class="short"><th scope="row">BPM</th><td colspan="6"><div class="tempo"><div class="pair"><button class="stp" type="button" data-bpm-step="-1" aria-label="Lower BPM by one">&minus;</button><input class="bpm" type="number" min="40" max="300" step="1" value="120" data-bpm aria-label="BPM" inputmode="numeric"><button class="stp" type="button" data-bpm-step="1" aria-label="Raise BPM by one">+</button></div><button class="play" type="button" data-play aria-pressed="false"><span data-play-label>Play</span></button></div></td></tr>
+        <tr class="short"><th scope="row">Meter</th><td colspan="6"><div class="tempo"><div class="metre" role="radiogroup" aria-label="Meter"><input class="pick" type="radio" name="m15" id="m15a" checked><label for="m15a">4/4</label><input class="pick" type="radio" name="m15" id="m15b"><label for="m15b">3/4</label></div></div></td></tr>
+      </tbody>
+    </table>
+    </div>
+  </div>
+</section>
+
+<section class="look d16" id="d16" aria-labelledby="d16-h">
+  <header class="meta">
+    <h2 id="d16-h">16 Signal flow</h2>
+    <p>The mixer drawn as what it does: five instruments feed one output. The wire leaving each row is its live level, so you can see sound travelling into the master box on the right.</p>
+  </header>
+  <div class="frame">
+    <div class="bar">
+      <h3>Mixer</h3>
+      <div class="tp"><span class="lab">BPM</span><button class="stp" type="button" data-bpm-step="-1" aria-label="Lower BPM by one">&minus;</button><input class="bpm" type="number" min="40" max="300" step="1" value="120" data-bpm aria-label="BPM" inputmode="numeric"><button class="stp" type="button" data-bpm-step="1" aria-label="Raise BPM by one">+</button></div>
+      <div class="tp"><span class="lab">Meter</span><div class="metre" role="radiogroup" aria-label="Meter"><input class="pick" type="radio" name="m16" id="m16a" checked><label for="m16a">4/4</label><input class="pick" type="radio" name="m16" id="m16b"><label for="m16b">3/4</label></div></div>
+      <button class="play" type="button" data-play aria-pressed="false"><span data-play-label>Play</span></button>
+    </div>
+    <div class="flow">
+      <ul class="src">
+        <li data-ch="drums"><b>Drums</b><input class="rng" type="range" min="0" max="100" value="82" data-vol aria-label="Drums volume"><output class="fig" data-val>82</output><div class="tg"><button type="button" data-mute aria-pressed="false">Mute</button><button type="button" data-iso aria-pressed="false">Isolate</button></div><span class="wire" data-meter style="--lvl:.74"><i></i></span></li>
+        <li data-ch="bass"><b>Bass</b><input class="rng" type="range" min="0" max="100" value="74" data-vol aria-label="Bass volume"><output class="fig" data-val>74</output><div class="tg"><button type="button" data-mute aria-pressed="false">Mute</button><button type="button" data-iso aria-pressed="false">Isolate</button></div><span class="wire" data-meter style="--lvl:.6"><i></i></span></li>
+        <li data-ch="rhythm"><b>Rhythm Guitar</b><input class="rng" type="range" min="0" max="100" value="66" data-vol aria-label="Rhythm Guitar volume"><output class="fig" data-val>66</output><div class="tg"><button type="button" data-mute aria-pressed="false">Mute</button><button type="button" data-iso aria-pressed="false">Isolate</button></div><span class="wire" data-meter style="--lvl:.52"><i></i></span></li>
+        <li data-ch="lead"><b>Lead Guitar</b><input class="rng" type="range" min="0" max="100" value="58" data-vol aria-label="Lead Guitar volume"><output class="fig" data-val>58</output><div class="tg"><button type="button" data-mute aria-pressed="false">Mute</button><button type="button" data-iso aria-pressed="false">Isolate</button></div><span class="wire" data-meter style="--lvl:.38"><i></i></span></li>
+        <li data-ch="keys"><b>Keys</b><input class="rng" type="range" min="0" max="100" value="48" data-vol aria-label="Keys volume"><output class="fig" data-val>48</output><div class="tg"><button type="button" data-mute aria-pressed="false">Mute</button><button type="button" data-iso aria-pressed="false">Isolate</button></div><span class="wire" data-meter style="--lvl:.3"><i></i></span></li>
+      </ul>
+      <div class="out" data-ch="master"><h4>Master</h4><div class="run"><input class="rng vert" type="range" min="0" max="100" value="85" data-vol aria-label="Master volume"><span class="mtr" data-meter style="--lvl:.66"><i></i></span></div><output class="fig" data-val>85</output></div>
+    </div>
+  </div>
+</section>
+
+<section class="look d17" id="d17" aria-labelledby="d17-h">
+  <header class="meta">
+    <h2 id="d17-h">17 Dock</h2>
+    <p>Each instrument is a big pad: tap the pad to mute it, drag the slider under it for volume, press Isolate to hear it alone. Everything that belongs to the whole project, play, tempo, meter and the master, is docked along the bottom edge. Keys is muted here.</p>
+  </header>
+  <div class="frame">
+    <div class="stage">
+      <div class="col" data-ch="drums"><button class="pad" type="button" data-mute aria-pressed="false" aria-label="Mute Drums"><b>Drums</b><output class="big" data-val>82</output><small data-status>Playing</small><span class="lv" data-meter style="--lvl:.74"><i></i></span></button><input class="rng" type="range" min="0" max="100" value="82" data-vol aria-label="Drums volume"><button class="iso" type="button" data-iso aria-pressed="false">Isolate</button></div>
+      <div class="col" data-ch="bass"><button class="pad" type="button" data-mute aria-pressed="false" aria-label="Mute Bass"><b>Bass</b><output class="big" data-val>74</output><small data-status>Playing</small><span class="lv" data-meter style="--lvl:.6"><i></i></span></button><input class="rng" type="range" min="0" max="100" value="74" data-vol aria-label="Bass volume"><button class="iso" type="button" data-iso aria-pressed="false">Isolate</button></div>
+      <div class="col" data-ch="rhythm"><button class="pad" type="button" data-mute aria-pressed="false" aria-label="Mute Rhythm Guitar"><b>Rhythm Guitar</b><output class="big" data-val>66</output><small data-status>Playing</small><span class="lv" data-meter style="--lvl:.52"><i></i></span></button><input class="rng" type="range" min="0" max="100" value="66" data-vol aria-label="Rhythm Guitar volume"><button class="iso" type="button" data-iso aria-pressed="false">Isolate</button></div>
+      <div class="col" data-ch="lead"><button class="pad" type="button" data-mute aria-pressed="false" aria-label="Mute Lead Guitar"><b>Lead Guitar</b><output class="big" data-val>58</output><small data-status>Playing</small><span class="lv" data-meter style="--lvl:.38"><i></i></span></button><input class="rng" type="range" min="0" max="100" value="58" data-vol aria-label="Lead Guitar volume"><button class="iso" type="button" data-iso aria-pressed="false">Isolate</button></div>
+      <div class="col" data-ch="keys" data-silent="true"><button class="pad" type="button" data-mute aria-pressed="true" aria-label="Mute Keys"><b>Keys</b><output class="big" data-val>48</output><small data-status>Muted</small><span class="lv" data-meter style="--lvl:0"><i></i></span></button><input class="rng" type="range" min="0" max="100" value="48" data-vol aria-label="Keys volume"><button class="iso" type="button" data-iso aria-pressed="false">Isolate</button></div>
+    </div>
+    <div class="dock">
+      <button class="play" type="button" data-play aria-pressed="false"><span data-play-label>Play</span></button>
+      <div class="tp"><span class="lab">BPM</span><button class="stp" type="button" data-bpm-step="-1" aria-label="Lower BPM by one">&minus;</button><input class="bpm" type="number" min="40" max="300" step="1" value="120" data-bpm aria-label="BPM" inputmode="numeric"><button class="stp" type="button" data-bpm-step="1" aria-label="Raise BPM by one">+</button></div>
+      <div class="tp"><span class="lab">Meter</span><div class="metre" role="radiogroup" aria-label="Meter"><input class="pick" type="radio" name="m17" id="m17a" checked><label for="m17a">4/4</label><input class="pick" type="radio" name="m17" id="m17b"><label for="m17b">3/4</label></div></div>
+      <div class="mast" data-ch="master"><b>Master</b><div class="sl"><input class="rng" type="range" min="0" max="100" value="85" data-vol aria-label="Master volume"><span class="lv" data-meter style="--lvl:.66"><i></i></span></div><output class="fig" data-val>85</output></div>
+    </div>
+  </div>
+</section>
+
+</div>
+
+<script>
+/* Behaviour only: sliders, mute, isolate, BPM and the meters. It reads the data- hooks each design places by hand and builds no markup. */
+(() => {
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const clamp = (n, a, b) => Math.min(b, Math.max(a, n));
+  const looks = [...document.querySelectorAll('.look')].map((look) => {
+    const chs = [...look.querySelectorAll('[data-ch]')];
+    const keyOf = (el) => el.closest('[data-ch]')?.dataset.ch;
+    const st = { mute: new Set(), iso: null, playing: false, seen: false, touched: false, bpm: 120, last: 0 };
+    look.querySelectorAll('[data-mute][aria-pressed="true"]').forEach((b) => st.mute.add(keyOf(b)));
+    const isoBtn = look.querySelector('[data-iso][aria-pressed="true"]'); if (isoBtn) st.iso = keyOf(isoBtn);
+    const hear = look.querySelector('[data-hear]:checked'); if (hear) st.iso = hear.value || null;
+    look.querySelectorAll('[data-mode]:checked').forEach((r) => { if (r.value === 'mute') st.mute.add(keyOf(r)); if (r.value === 'only') st.iso = keyOf(r); });
+
+    const silent = (k) => k !== 'master' && (st.mute.has(k) || (st.iso !== null && st.iso !== k));
+    const status = (k) => st.mute.has(k) ? 'Muted' : st.iso === k ? 'Only this plays' : st.iso !== null ? 'Silent while another is isolated' : 'Playing';
+
+    function render() {
+      chs.forEach((c) => {
+        const k = c.dataset.ch; if (k === 'master') return;
+        c.dataset.silent = silent(k) ? 'true' : 'false';
+        c.querySelectorAll('[data-mute]').forEach((b) => b.setAttribute('aria-pressed', st.mute.has(k)));
+        c.querySelectorAll('[data-iso]').forEach((b) => b.setAttribute('aria-pressed', st.iso === k));
+        c.querySelectorAll('[data-mode]').forEach((r) => { r.checked = r.value === (st.iso === k ? 'only' : st.mute.has(k) ? 'mute' : 'on'); });
+        c.querySelectorAll('[data-status]').forEach((s) => { s.textContent = status(k); });
+      });
+      look.querySelectorAll('[data-hear]').forEach((r) => { r.checked = r.value === (st.iso || ''); });
+    }
+    function setVol(input) {
+      const pct = clamp(+input.value, 0, 100);
+      input.style.setProperty('--v', pct + '%');
+      const c = input.closest('[data-ch]');
+      if (c) { c.style.setProperty('--vol', (pct / 100).toFixed(3)); c.querySelectorAll('[data-val]').forEach((o) => { o.textContent = Math.round(pct); }); }
+    }
+    function setBpm(n) {
+      st.bpm = clamp(Math.round(n), 40, 300);
+      look.querySelectorAll('[data-bpm]').forEach((i) => { if (document.activeElement !== i || i.type === 'range') i.value = st.bpm; if (i.type === 'range') i.style.setProperty('--v', ((st.bpm - 40) / 260 * 100).toFixed(1) + '%'); });
+      look.querySelectorAll('[data-bpm-out]').forEach((o) => { o.textContent = st.bpm; });
+    }
+    function sync() {
+      look.querySelectorAll('[data-play]').forEach((b) => { b.setAttribute('aria-pressed', st.playing); });
+      look.querySelectorAll('[data-play-label]').forEach((l) => { l.textContent = st.playing ? 'Stop' : 'Play'; });
+    }
+
+    look.addEventListener('click', (e) => {
+      const m = e.target.closest('[data-mute]'); if (m) { const k = keyOf(m); st.mute.has(k) ? st.mute.delete(k) : st.mute.add(k); render(); return; }
+      const i = e.target.closest('[data-iso]'); if (i) { const k = keyOf(i); st.iso = st.iso === k ? null : k; render(); return; }
+      const p = e.target.closest('[data-play]'); if (p) { st.playing = !st.playing; st.touched = true; sync(); return; }
+      const s = e.target.closest('[data-bpm-step]'); if (s) { setBpm(st.bpm + (+s.dataset.bpmStep)); }
+    });
+    look.addEventListener('input', (e) => {
+      if (e.target.matches('[data-vol]')) setVol(e.target);
+      else if (e.target.matches('[data-bpm]')) { const n = +e.target.value; if (n >= 40 && n <= 300) setBpm(n); }
+    });
+    look.addEventListener('change', (e) => {
+      const t = e.target;
+      if (t.matches('[data-bpm]')) setBpm(+t.value || st.bpm);
+      else if (t.matches('[data-hear]')) { st.iso = t.value || null; render(); }
+      else if (t.matches('[data-mode]')) {
+        const k = keyOf(t);
+        st.mute.delete(k); if (st.iso === k) st.iso = null;
+        if (t.value === 'mute') st.mute.add(k); if (t.value === 'only') st.iso = k;
+        render();
+      }
+    });
+    look.querySelectorAll('[data-vol]').forEach(setVol);
+    setBpm(+(look.querySelector('[data-bpm]')?.value || 120));
+    render(); sync();
+    const order = ['drums', 'bass', 'rhythm', 'lead', 'keys'];
+    chs.forEach((c) => { c._l = 0; c._n = Math.max(0, order.indexOf(c.dataset.ch)); });
+    new IntersectionObserver(([en]) => {
+      st.seen = en.isIntersecting;
+      if (st.seen && !st.touched && !reduce) { st.playing = true; sync(); }
+    }, { threshold: 0.25 }).observe(look);
+    return { look, chs, st, silent };
+  });
+
+  let raf = 0;
+  function frame(now) {
+    const t = now / 1000; let busy = false;
+    looks.forEach(({ look, chs, st, silent }) => {
+      if (!st.seen) return;
+      const on = st.playing;
+      let top = 0;
+      chs.forEach((c) => {
+        const k = c.dataset.ch; if (k === 'master') return;
+        const v = (+look.querySelector('[data-ch="' + k + '"] [data-vol]')?.value || 0) / 100, n = c._n;
+        const wave = 0.5 + 0.5 * Math.sin(t * (1.7 + n * 0.43) + n * 2.1);
+        const hit = Math.max(0, Math.sin(t * (st.bpm / 60) * Math.PI * (n % 2 ? 1 : 2) + n));
+        const target = on && !silent(k) ? v * (0.22 + 0.45 * wave + 0.33 * hit) : 0;
+        c._l += (target - c._l) * (target > c._l ? 0.45 : 0.1);
+        top = Math.max(top, c._l);
+        c.querySelectorAll('[data-meter]').forEach((m) => m.style.setProperty('--lvl', clamp(c._l, 0, 1).toFixed(3)));
+        if (c._l > 0.003) busy = true;
+      });
+      const mv = (+look.querySelector('[data-ch="master"] [data-vol]')?.value || 0) / 100;
+      chs.filter((c) => c.dataset.ch === 'master').forEach((mc) => {
+        const target = on ? clamp(top * 1.15, 0, 1) * (0.35 + 0.65 * mv) : 0;
+        mc._l += (target - mc._l) * (target > mc._l ? 0.45 : 0.1);
+        mc.querySelectorAll('[data-meter]').forEach((m) => m.style.setProperty('--lvl', clamp(mc._l, 0, 1).toFixed(3)));
+        if (mc._l > 0.003) busy = true;
+      });
+      if (on) busy = true;
+    });
+    raf = busy ? requestAnimationFrame(frame) : 0;
+  }
+  const kick = () => { if (!raf) raf = requestAnimationFrame(frame); };
+  document.addEventListener('click', kick);
+  document.addEventListener('change', kick);
+  new MutationObserver(kick).observe(document.body, { attributes: true, subtree: true, attributeFilter: ['aria-pressed'] });
+  setInterval(kick, 400);
+})();
+</script>
+</body>
+</html>
