@@ -3,7 +3,7 @@
 The build plan, run one step per invocation of the `/plan24` skill ([.claude/skills/plan24/SKILL.md](../.claude/skills/plan24/SKILL.md)). Step numbers are plan24's own and have nothing to do with the older branches `00-overall` to `04-guitars`.
 
 Horizon: 24
-Last completed step: 10
+Last completed step: 11
 Replanned after step: 9
 Plan complete: no
 
@@ -19,24 +19,7 @@ The plan is replanned after every third completed step (3, 6, 9, and so on). Don
 
 ## Next three steps
 
-Replanned after step 9 (2026-11-09). The horizon stays at 24 and the order is unchanged. Steps 1 to 10 are built and in the history below. The next replan comes before step 13.
-
-### Step 11: Saving and files
-
-**Produces:** save, open, new, reopen the last project, and the unsaved-changes prompt ([editing-and-project.md](editing-and-project.md)).
-
-- **Main process (`electron/main/files.ts`):** handlers for Save (to the known path, else the Save As dialog), Save As, Open and New, with the `.modernstudio` extension (assumed; the file is the JSON of `serializeProject`). A save writes a temporary file and renames it, so a failed save never destroys the old file. The path of the last project is kept in a small `settings.json` in the user data folder; at start the window asks for it and opens it, falling back to a new project (with a quiet line) if the file is gone or does not parse.
-- **Preload bridge:** one narrow typed function per command (`window.studio.files`), the types shared with the renderer.
-- **Renderer:** the store learns the file state: the path (or none), the project last saved, and a dirty flag. A pure function decides "dirty" by comparing the present project with the saved one, ignoring the selected pattern and the number of shown patterns (choosing a pattern is not an edit); it is tested. The window title shows the file name and a mark when unsaved.
-- **Replacing the project** (`replaceProject` action): New, Open and later MIDI import start a new history with the given project, stop playback and reset the playhead.
-- **Commands:** an application menu File with New (Ctrl+N), Open (Ctrl+O), Save (Ctrl+S) and Save As (Ctrl+Shift+S). The menu stays hidden until Alt is pressed, as the window is made; the accelerators work all the time. The top bar gets no extra buttons.
-- **Close:** the main process holds back closing while the project is dirty and asks (Save, Don't save, Cancel) in a native dialog; New, Open and later import ask the same way.
-
-**Relies on:** step 5 (the store), `serialize.ts` (step 2), [editing-and-project.md](editing-and-project.md), [stack.md](stack.md).
-
-**Done when:** tests for the dirty rule, the `replaceProject` reducer case and the settings parsing (a pure function on the settings text) pass; typecheck, lint, test and build pass. The dialogs and the file writing are not run by the step (no window), only type checked; open-items says so.
-
-**Decisions it may need:** the file extension (`.modernstudio`); the title format ("name - modernstudio", a mark when unsaved); where the File commands live (assumed: the hidden menu and the shortcuts only); whether the dirty mark is in the title only (assumed yes).
+Replanned after step 9 (2026-11-09). The horizon stays at 24 and the order is unchanged. Steps 1 to 11 are built and in the history below. The next replan comes before step 13.
 
 ### Step 12: WAV export
 
@@ -234,6 +217,25 @@ Replanned after step 9 (2026-11-09). The horizon stays at 24 and the order is un
 
 **Built (2026-11-09):** `CopyNotes.tsx` and the pure `copy.ts`; the "+20" square in `PatternBank.tsx`; `useDeleteKey.ts` and `useNoteSelection.ts` (the selection is now scoped to the instrument and pattern on screen); `hiddenAcrossPatterns` and `fretChangeLine` in `noteGeometry.ts`. Assumptions are in [open-items.md](open-items.md). Not looked at, as planned.
 
+### Step 11: Saving and files
+
+**Produces:** save, open, new, reopen the last project, and the unsaved-changes prompt ([editing-and-project.md](editing-and-project.md)).
+
+- **Main process (`electron/main/files.ts`):** handlers for Save (to the known path, else the Save As dialog), Save As, Open and New, with the `.modernstudio` extension (assumed; the file is the JSON of `serializeProject`). A save writes a temporary file and renames it, so a failed save never destroys the old file. The path of the last project is kept in a small `settings.json` in the user data folder; at start the window asks for it and opens it, falling back to a new project (with a quiet line) if the file is gone or does not parse.
+- **Preload bridge:** one narrow typed function per command (`window.studio.files`), the types shared with the renderer.
+- **Renderer:** the store learns the file state: the path (or none), the project last saved, and a dirty flag. A pure function decides "dirty" by comparing the present project with the saved one, ignoring the selected pattern and the number of shown patterns (choosing a pattern is not an edit); it is tested. The window title shows the file name and a mark when unsaved.
+- **Replacing the project** (`replaceProject` action): New, Open and later MIDI import start a new history with the given project, stop playback and reset the playhead.
+- **Commands:** an application menu File with New (Ctrl+N), Open (Ctrl+O), Save (Ctrl+S) and Save As (Ctrl+Shift+S). The menu stays hidden until Alt is pressed, as the window is made; the accelerators work all the time. The top bar gets no extra buttons.
+- **Close:** the main process holds back closing while the project is dirty and asks (Save, Don't save, Cancel) in a native dialog; New, Open and later import ask the same way.
+
+**Relies on:** step 5 (the store), `serialize.ts` (step 2), [editing-and-project.md](editing-and-project.md), [stack.md](stack.md).
+
+**Done when:** tests for the dirty rule, the `replaceProject` reducer case and the settings parsing (a pure function on the settings text) pass; typecheck, lint, test and build pass. The dialogs and the file writing are not run by the step (no window), only type checked; open-items says so.
+
+**Decisions it may need:** the file extension (`.modernstudio`); the title format ("name - modernstudio", a mark when unsaved); where the File commands live (assumed: the hidden menu and the shortcuts only); whether the dirty mark is in the title only (assumed yes).
+
+**Built (2026-11-09):** the pure parts in `src/core/`: `fileState.ts` (the dirty rule, names, the window title, the extension), `settings.ts` and `fileBridge.ts` (the shared types and channel names), all tested; the main process in `electron/main/files.ts` (dialogs, atomic write, last project, holding back close) and `menu.ts`; the preload bridge `window.studio.files`; in the renderer `src/state/useFiles.ts`, the `replaceProject`, `saved` and `setNotice` actions, and a `files` object plus `replaceProject` in the store for the MIDI import step. Assumptions are in [open-items.md](open-items.md). The dialogs and the writing were type checked and built, not run (no window), as planned.
+
 ## Later steps
 
 Broad strokes only. The next replan (the first `/plan24` run after step 12 is done) details steps 13 to 15. The horizon stays at 24; the order is unchanged.
@@ -264,7 +266,7 @@ Broad strokes only. The next replan (the first `/plan24` run after step 12 is do
 | 8 | The Guitar page | done | 08-guitar |
 | 9 | The Keys page | done | 09-keys |
 | 10 | Pattern tools and shortcuts | done | 10-tools |
-| 11 | Saving and files | todo | |
+| 11 | Saving and files | done | 11-files |
 | 12 | WAV export | todo | |
 | 13 | MIDI reader, writer and export | todo | |
 | 14 | MIDI import 1: time, tempo, drums, range | todo | |

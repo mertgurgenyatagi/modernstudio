@@ -26,6 +26,11 @@ function Shell() {
           The sounds could not be loaded: {state.soundsError}
         </p>
       )}
+      {state.notice && (
+        <p className="notice" role="status">
+          {state.notice}
+        </p>
+      )}
       <main className="page">
         <CurrentPage />
       </main>
