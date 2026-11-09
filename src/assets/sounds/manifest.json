@@ -1,0 +1,476 @@
+{
+  "version": 1,
+  "sampleRate": 44100,
+  "format": "wav, 16-bit, mono",
+  "velocity": 100,
+  "source": "Microsoft GS Wavetable Synth, recorded by tools/sounds/capture.py",
+  "instruments": {
+    "bass": {
+      "kind": "pitched",
+      "generalMidi": "Electric Bass (finger)",
+      "usedBy": [
+        "bass"
+      ],
+      "samples": [
+        {
+          "file": "bass/bass_28.wav",
+          "pitch": 28,
+          "covers": [
+            28,
+            29
+          ],
+          "heldSeconds": 2.5,
+          "seconds": 2.524
+        },
+        {
+          "file": "bass/bass_31.wav",
+          "pitch": 31,
+          "covers": [
+            30,
+            32
+          ],
+          "heldSeconds": 2.5,
+          "seconds": 2.528
+        },
+        {
+          "file": "bass/bass_34.wav",
+          "pitch": 34,
+          "covers": [
+            33,
+            35
+          ],
+          "heldSeconds": 2.5,
+          "seconds": 2.533
+        },
+        {
+          "file": "bass/bass_37.wav",
+          "pitch": 37,
+          "covers": [
+            36,
+            38
+          ],
+          "heldSeconds": 2.5,
+          "seconds": 2.526
+        },
+        {
+          "file": "bass/bass_40.wav",
+          "pitch": 40,
+          "covers": [
+            39,
+            41
+          ],
+          "heldSeconds": 2.5,
+          "seconds": 2.532
+        },
+        {
+          "file": "bass/bass_43.wav",
+          "pitch": 43,
+          "covers": [
+            42,
+            44
+          ],
+          "heldSeconds": 2.5,
+          "seconds": 2.529
+        },
+        {
+          "file": "bass/bass_46.wav",
+          "pitch": 46,
+          "covers": [
+            45,
+            47
+          ],
+          "heldSeconds": 2.5,
+          "seconds": 2.53
+        },
+        {
+          "file": "bass/bass_49.wav",
+          "pitch": 49,
+          "covers": [
+            48,
+            50
+          ],
+          "heldSeconds": 2.5,
+          "seconds": 2.528
+        },
+        {
+          "file": "bass/bass_52.wav",
+          "pitch": 52,
+          "covers": [
+            51,
+            53
+          ],
+          "heldSeconds": 2.5,
+          "seconds": 2.531
+        },
+        {
+          "file": "bass/bass_55.wav",
+          "pitch": 55,
+          "covers": [
+            54,
+            55
+          ],
+          "heldSeconds": 2.5,
+          "seconds": 2.53
+        }
+      ]
+    },
+    "guitar": {
+      "kind": "pitched",
+      "generalMidi": "Electric Guitar (jazz)",
+      "usedBy": [
+        "rhythm",
+        "lead"
+      ],
+      "samples": [
+        {
+          "file": "guitar/guitar_40.wav",
+          "pitch": 40,
+          "covers": [
+            40,
+            41
+          ],
+          "heldSeconds": 3.0,
+          "seconds": 3.044
+        },
+        {
+          "file": "guitar/guitar_43.wav",
+          "pitch": 43,
+          "covers": [
+            42,
+            44
+          ],
+          "heldSeconds": 3.0,
+          "seconds": 3.05
+        },
+        {
+          "file": "guitar/guitar_46.wav",
+          "pitch": 46,
+          "covers": [
+            45,
+            47
+          ],
+          "heldSeconds": 3.0,
+          "seconds": 3.037
+        },
+        {
+          "file": "guitar/guitar_49.wav",
+          "pitch": 49,
+          "covers": [
+            48,
+            50
+          ],
+          "heldSeconds": 3.0,
+          "seconds": 3.037
+        },
+        {
+          "file": "guitar/guitar_52.wav",
+          "pitch": 52,
+          "covers": [
+            51,
+            53
+          ],
+          "heldSeconds": 3.0,
+          "seconds": 3.028
+        },
+        {
+          "file": "guitar/guitar_55.wav",
+          "pitch": 55,
+          "covers": [
+            54,
+            56
+          ],
+          "heldSeconds": 3.0,
+          "seconds": 3.027
+        },
+        {
+          "file": "guitar/guitar_58.wav",
+          "pitch": 58,
+          "covers": [
+            57,
+            59
+          ],
+          "heldSeconds": 3.0,
+          "seconds": 3.021
+        },
+        {
+          "file": "guitar/guitar_61.wav",
+          "pitch": 61,
+          "covers": [
+            60,
+            62
+          ],
+          "heldSeconds": 3.0,
+          "seconds": 3.017
+        },
+        {
+          "file": "guitar/guitar_64.wav",
+          "pitch": 64,
+          "covers": [
+            63,
+            65
+          ],
+          "heldSeconds": 3.0,
+          "seconds": 3.015
+        },
+        {
+          "file": "guitar/guitar_67.wav",
+          "pitch": 67,
+          "covers": [
+            66,
+            68
+          ],
+          "heldSeconds": 3.0,
+          "seconds": 3.012
+        },
+        {
+          "file": "guitar/guitar_70.wav",
+          "pitch": 70,
+          "covers": [
+            69,
+            71
+          ],
+          "heldSeconds": 3.0,
+          "seconds": 2.999
+        },
+        {
+          "file": "guitar/guitar_73.wav",
+          "pitch": 73,
+          "covers": [
+            72,
+            74
+          ],
+          "heldSeconds": 3.0,
+          "seconds": 2.769
+        },
+        {
+          "file": "guitar/guitar_76.wav",
+          "pitch": 76,
+          "covers": [
+            75,
+            76
+          ],
+          "heldSeconds": 3.0,
+          "seconds": 2.62
+        }
+      ]
+    },
+    "keys": {
+      "kind": "pitched",
+      "generalMidi": "Synth Voice",
+      "usedBy": [
+        "keys"
+      ],
+      "samples": [
+        {
+          "file": "keys/keys_36.wav",
+          "pitch": 36,
+          "covers": [
+            36,
+            37
+          ],
+          "heldSeconds": 4.0,
+          "seconds": 4.753
+        },
+        {
+          "file": "keys/keys_39.wav",
+          "pitch": 39,
+          "covers": [
+            38,
+            40
+          ],
+          "heldSeconds": 4.0,
+          "seconds": 4.753
+        },
+        {
+          "file": "keys/keys_42.wav",
+          "pitch": 42,
+          "covers": [
+            41,
+            43
+          ],
+          "heldSeconds": 4.0,
+          "seconds": 4.752
+        },
+        {
+          "file": "keys/keys_45.wav",
+          "pitch": 45,
+          "covers": [
+            44,
+            46
+          ],
+          "heldSeconds": 4.0,
+          "seconds": 4.763
+        },
+        {
+          "file": "keys/keys_48.wav",
+          "pitch": 48,
+          "covers": [
+            47,
+            49
+          ],
+          "heldSeconds": 4.0,
+          "seconds": 4.754
+        },
+        {
+          "file": "keys/keys_51.wav",
+          "pitch": 51,
+          "covers": [
+            50,
+            52
+          ],
+          "heldSeconds": 4.0,
+          "seconds": 4.752
+        },
+        {
+          "file": "keys/keys_54.wav",
+          "pitch": 54,
+          "covers": [
+            53,
+            55
+          ],
+          "heldSeconds": 4.0,
+          "seconds": 4.752
+        },
+        {
+          "file": "keys/keys_57.wav",
+          "pitch": 57,
+          "covers": [
+            56,
+            58
+          ],
+          "heldSeconds": 4.0,
+          "seconds": 4.722
+        },
+        {
+          "file": "keys/keys_60.wav",
+          "pitch": 60,
+          "covers": [
+            59,
+            61
+          ],
+          "heldSeconds": 4.0,
+          "seconds": 4.723
+        },
+        {
+          "file": "keys/keys_63.wav",
+          "pitch": 63,
+          "covers": [
+            62,
+            64
+          ],
+          "heldSeconds": 4.0,
+          "seconds": 4.723
+        },
+        {
+          "file": "keys/keys_66.wav",
+          "pitch": 66,
+          "covers": [
+            65,
+            67
+          ],
+          "heldSeconds": 4.0,
+          "seconds": 4.723
+        },
+        {
+          "file": "keys/keys_69.wav",
+          "pitch": 69,
+          "covers": [
+            68,
+            70
+          ],
+          "heldSeconds": 4.0,
+          "seconds": 4.723
+        },
+        {
+          "file": "keys/keys_72.wav",
+          "pitch": 72,
+          "covers": [
+            71,
+            73
+          ],
+          "heldSeconds": 4.0,
+          "seconds": 4.723
+        },
+        {
+          "file": "keys/keys_75.wav",
+          "pitch": 75,
+          "covers": [
+            74,
+            76
+          ],
+          "heldSeconds": 4.0,
+          "seconds": 4.723
+        },
+        {
+          "file": "keys/keys_78.wav",
+          "pitch": 78,
+          "covers": [
+            77,
+            79
+          ],
+          "heldSeconds": 4.0,
+          "seconds": 4.723
+        },
+        {
+          "file": "keys/keys_81.wav",
+          "pitch": 81,
+          "covers": [
+            80,
+            82
+          ],
+          "heldSeconds": 4.0,
+          "seconds": 4.723
+        },
+        {
+          "file": "keys/keys_84.wav",
+          "pitch": 84,
+          "covers": [
+            83,
+            84
+          ],
+          "heldSeconds": 4.0,
+          "seconds": 4.723
+        }
+      ]
+    },
+    "drums": {
+      "kind": "drums",
+      "generalMidi": "Standard Kit",
+      "usedBy": [
+        "drums"
+      ],
+      "samples": [
+        {
+          "file": "drums/drums_kick.wav",
+          "row": "kick",
+          "midiNote": 36,
+          "seconds": 0.115
+        },
+        {
+          "file": "drums/drums_snare.wav",
+          "row": "snare",
+          "midiNote": 38,
+          "seconds": 0.193
+        },
+        {
+          "file": "drums/drums_hihat.wav",
+          "row": "hihat",
+          "midiNote": 42,
+          "seconds": 0.063
+        },
+        {
+          "file": "drums/drums_openHihat.wav",
+          "row": "openHihat",
+          "midiNote": 46,
+          "seconds": 2.045
+        },
+        {
+          "file": "drums/drums_crash.wav",
+          "row": "crash",
+          "midiNote": 49,
+          "seconds": 2.308
+        }
+      ]
+    }
+  }
+}

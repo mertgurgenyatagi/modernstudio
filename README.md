@@ -19,9 +19,10 @@ Then:
 | `npm run typecheck` | Checks the TypeScript |
 | `npm run lint` | Checks the code style |
 | `npm test` | Runs the unit tests |
+| `npm run check:sounds` | Checks the recorded sound files against their manifest |
 
 ## Folders
 
 - `electron/main` and `electron/preload`: the desktop shell (window, files, dialogs).
 - `src/`: the app itself. `src/core/` is plain logic with no screen, so it can be tested alone. `src/styles/` holds the decided palette and fonts.
-- `docs/`: the specification. `midis/`: the MIDI files. `tools/`: the audition tool and the MIDI import prototype.
+- `docs/`: the specification. `midis/`: the MIDI files. `tools/`: the audition tool, the sound capture script (`tools/sounds/`, regenerates `src/assets/sounds/`) and the MIDI import prototype.

@@ -3,3 +3,6 @@ out/
 dist/
 release/
 *.log
+tools/sounds/.venv/
+tools/sounds/raw/
+__pycache__/
