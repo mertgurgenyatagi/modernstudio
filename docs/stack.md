@@ -49,6 +49,10 @@ What the audition tool found (2026-11-08):
 - `tools/sounds/` holds the capture script (Python, `capture.py`), its requirements and the checker (`check.mjs`, run by `npm run check:sounds`). The Python venv and the raw takes are not committed.
 - Python is a tool for regenerating the samples only. The app and its build do not need Python.
 
+### As built (plan24 step 4)
+
+- `src/audio/` is the only code that touches Web Audio. The sound files are bundled by Vite (`import.meta.glob`), read with XMLHttpRequest and decoded once at start. Details in [sound.md](sound.md).
+
 ## Tooling installed
 
 ### Hallmark

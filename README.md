@@ -24,5 +24,5 @@ Then:
 ## Folders
 
 - `electron/main` and `electron/preload`: the desktop shell (window, files, dialogs).
-- `src/`: the app itself. `src/core/` is plain logic with no screen, so it can be tested alone. `src/styles/` holds the decided palette and fonts.
+- `src/`: the app itself. `src/core/` is plain logic with no screen, so it can be tested alone. `src/audio/` is the sound engine (Web Audio). `src/styles/` holds the decided palette and fonts.
 - `docs/`: the specification. `midis/`: the MIDI files. `tools/`: the audition tool, the sound capture script (`tools/sounds/`, regenerates `src/assets/sounds/`) and the MIDI import prototype.

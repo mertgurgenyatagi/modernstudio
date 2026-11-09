@@ -37,4 +37,15 @@ Not yet decided, or decided by assumption.
   - Bass has a fret count like the guitars (5, 7 or 12, default 7). Drums and Keys have none.
   - Defaults: volume 80, master volume 80, attack, decay and release 0 (the recorded sound unshaped). The audio engine (step 4) gives the 0 to 100 numbers their meaning and may change these defaults.
   - Isolate is not saved with the project. Undo keeps at most 1000 steps. The next set of patterns opens 20 at a time.
+- Audio engine assumptions (plan24 step 4, see [sound.md](sound.md)):
+  - Attack, decay and release run 0 to 2 s on a squared curve; decay falls to half level and holds; release is a fade after the note ends; with all at 0 the sound is unshaped. Drum hits ignore release. The model defaults (volume 80, master 80, envelope 0) are kept.
+  - Volume is a squared curve to gain. The metronome ignores mute, master and the meters, and is not in exports.
+  - Isolate does not unmute a muted instrument.
+  - A note longer than its sample (Keys' Synth Voice) is released when the recorded key went up, not looped. The sound of a long Keys note therefore ends after about 4 s.
+  - In Pattern mode a shorter pattern of another instrument repeats to fill the loop and a longer one is cut at the end of the loop.
+  - Song mode loops back to bar 1, not to the bar the user started from. A start at or past the song's end, or in an empty song, plays from the beginning (an empty song plays nothing).
+  - A meter change while playing stops playback; a tempo change does not.
+  - The same drum row hit again does not cut the earlier hit; they overlap.
+  - Sounds are read with XMLHttpRequest instead of fetch, and the page's content security policy allows `data:` for it, because the installed app loads from a file address. Not run in a window yet: if the sounds do not load in the packaged app, look here first.
+  - The engine was only checked by types and build. Nobody has heard it. A listen at step 5 is worth doing: the envelope feel, the click, and the volume curve are guesses.
 - Sound capture assumptions (plan24 step 3, see [sound.md](sound.md)): samples every 3 semitones, not every 2 or 4, which keeps the files at 13 MB and any note within one semitone of a recording. Format WAV 16-bit mono 44.1 kHz, not OGG, so that nothing needs a codec and the files can be edited. The two guitars share one set of files. The guitar samples go up to E5 (76), which is the top of the guitar range with 12 frets. The notes are held 2.5 to 4 seconds, so a note longer than that needs the engine to sustain or fade it: the Synth Voice of Keys is the one that does not die away by itself. The machine was quiet and the speakers active while recording; the loopback signal is expected not to depend on the speaker volume (not tested), and the takes were not listened to by a person, only measured (level, length, silence, clipping). A listen to the samples is worth doing once.

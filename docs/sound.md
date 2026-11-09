@@ -55,6 +55,20 @@ Repeat it: `python tools/sounds/capture.py` (record, then process), or `record` 
 - The notes were held 2.5 s (bass), 3 s (guitar) and 4 s (keys). Bass and guitar die away on their own, and the highest guitar notes are already silent before the key was released. The Synth Voice (keys) does not: it would run to the end of the file after 4.7 s. Longer notes need the engine to loop or fade it; that is step 4's decision. The synth's own release after the key goes up is in the file too, so a short note played from the start of the sample is not the same as the note being released at that point. The engine has to cut and fade it.
 - The Standard Kit hits are short: the kick is 0.12 s and the closed hi-hat 0.06 s, which is how the synth plays them.
 
+## The audio engine
+
+Built in plan24 step 4. The pure logic is in `src/core/` with unit tests: `playback.ts` (what plays and when), `cursor.ts` (hands notes out a little ahead of the clock), `samples.ts` (which file plays which note), `envelope.ts` and `levels.ts` (what the 0 to 100 numbers mean). The Web Audio part is in `src/audio/` (`engine.ts`, `voice.ts`, `notes.ts`, `soundFiles.ts`). No step without a window can hear it; the first listening is step 5.
+
+- **Scheduling.** A timer looks every 25 ms and hands the sound card the notes due in the next 0.15 s, timed on the audio clock, so the user interface cannot make it late. Playback starts 60 ms after Play. Tempo changes apply at once, edited notes are picked up without a gap, and a meter change stops playback.
+- **Samples.** A pitched note plays the nearest recorded sample, sped up or slowed down to reach the note (never more than one semitone inside the recorded range). A drum hit plays its row's file for its whole length. Notes hidden outside a shortened pattern, or on frets above the lowered fret count, are not played.
+- **Hold.** A note is held for its length. A note longer than the key was held while recording (2.5, 3 or 4 seconds) is released at that point, which is how the Synth Voice of Keys, the one that never dies away, is faded out rather than looped. A note is cut where its pattern ends; its release rings on past it.
+- **Volume.** 0 to 100 is a squared curve to a gain from 0 to 1. 100 plays the recorded level, and the samples were levelled to the same loudness, so volume 100 means the same for every instrument. The master is the same curve. Isolate silences the other instruments and is not saved with the project; an instrument that is muted and isolated stays silent.
+- **Envelope.** Attack, decay and release each run 0 to 2 seconds on a squared curve (50 is 0.5 s). Attack is a fade-in from silence. Decay is a fall from full level to half level, held after that; with decay 0 the level stays full. Release is the fade-out after the note ends. With all three at 0 the recorded sound is unshaped, apart from a 20 ms fade at the end of a note so that cutting it does not click. A drum hit has no length, so it is held for its whole sample: attack and decay shape it, and release has no effect.
+- **Meters.** The peak of an analyser beside each instrument and the master, on a dB scale from -60 to 0, rising at once and falling from full to empty in 0.4 seconds. The master meter reads after the master volume.
+- **Metronome.** A click on every beat, the first beat of the bar higher, straight to the speakers: it is heard with everything muted, and it does not move the meters or the WAV export. No count-in.
+- **Pattern mode.** The selected pattern of the focused instrument loops; the other instruments play their selected pattern along, a shorter one repeating to fill the loop and a longer one cut at its end. **Song mode** plays the lanes from the chosen bar to the end of the last block, then loops from the beginning of the song (not from the chosen bar).
+- **Offline render.** The voice code takes any audio context, so the WAV export (step 12) can build its notes the same way with an offline one.
+
 ## Per-instrument settings
 
 Each instrument has exactly one setting for each of these, never per pattern or per note:
