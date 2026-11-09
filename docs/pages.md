@@ -6,7 +6,7 @@ There are three kinds of page: the Mixer, the Song page, and the instrument page
 
 ## Transport bar
 
-One bar at the top of every page (decided in questionnaire 16) holds Play, Stop, the metronome toggle and Undo. These controls are not drawn separately on each page. Where the page switch sits is not specified. See [editing-and-project.md](editing-and-project.md).
+One bar at the top of every page (decided in questionnaire 16) holds Play, Stop, the metronome toggle and Undo. These controls are not drawn separately on each page. The page switch sits at the left of the same bar, as five text tabs (assumed in plan24 step 5). See [editing-and-project.md](editing-and-project.md).
 
 ## Mixer
 
@@ -70,5 +70,5 @@ On the Guitar page, the instrument (Bass, Rhythm Guitar or Lead Guitar) is chose
 
 - The docs say each instrument has its own page for editing notes and its envelope, and that Pattern mode builds patterns for one instrument. This doc treats these as the same page.
 - Bass, Rhythm Guitar and Lead Guitar are one page by the user's decision on 2026-11-08, not by a questionnaire answer. Switching instrument on that page swaps in that instrument's own patterns, notes, fret count and envelope; this swap is assumed.
-- The transport controls, the metronome toggle and Undo are in one bar at the top of every page (questionnaire 16). The docs still do not say where the switch between pages and modes is placed.
+- The transport controls, the metronome toggle and Undo are in one bar at the top of every page (questionnaire 16). The page switch is in the same bar, at the left (assumed in plan24 step 5). Pattern and Song mode are not a switch: Pattern mode is part of each instrument page, Song mode is the Song page.
 - The volume is on both the Mixer and the instrument pages in this doc. The docs list volume under the instrument's settings and under the mixer, so it is one setting shown in both places.

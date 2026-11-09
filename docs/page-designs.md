@@ -30,7 +30,7 @@ A plain table. One row per instrument, the same columns every time, the master i
 None of this is in the questionnaire answers. Change it if wrong.
 
 - The volume scale is 0 to 100, shown as a number beside each slider.
-- The Mixer design draws its own Play and Stop button. Questionnaire 16 moved these into one transport bar at the top of every page ([pages.md](pages.md)), so the build uses the shared bar instead.
+- The Mixer design draws its own Play and Stop button. Questionnaire 16 moved these into one transport bar at the top of every page ([pages.md](pages.md)), so the build uses the shared bar instead. Built in plan24 step 5: the page header holds the title at the left and BPM (field and slider) and the meter choice at the right; the page switch and transport are in the shared top bar.
 - BPM has both a number field (to type) and a slider (to drag).
 - The three status words under each name (Playing, Muted, Silent while another is isolated) were added so the isolate rule is visible without explanation.
 - Corner shape, line weight and row height are this page's own and are not a decision for other pages.
