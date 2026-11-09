@@ -1,0 +1,1028 @@
+{
+ "Is This it (2)": {
+  "song": "Is This It",
+  "bpm": 96,
+  "protoBpm": 96,
+  "otherTempos": 0,
+  "protoTempoCount": 1,
+  "meter": [
+   4,
+   4
+  ],
+  "shift": 0,
+  "mapping": {
+   "Drums": [
+    4,
+    5
+   ],
+   "Bass": [
+    2
+   ],
+   "Keys": [
+    3
+   ],
+   "Rhythm Guitar": [
+    1
+   ],
+   "Lead Guitar": [
+    0
+   ]
+  },
+  "skipped": [],
+  "trackCount": 6,
+  "instruments": {
+   "drums": {
+    "hits": 675,
+    "dropped": {
+     "54": 79
+    },
+    "droppedTotal": 79
+   },
+   "bass": {
+    "protoNotes": 182,
+    "notes": 182,
+    "moved": {
+     "5": 56,
+     "7": 40,
+     "12": 8
+    },
+    "protoMoved": {
+     "5": 56,
+     "7": 40,
+     "12": 8
+    },
+    "maxError": 0.0
+   },
+   "rhythm": {
+    "protoNotes": 1358,
+    "notes": 1358,
+    "moved": {
+     "5": 263,
+     "7": 208,
+     "12": 0
+    },
+    "protoMoved": {
+     "5": 263,
+     "7": 208,
+     "12": 0
+    },
+    "maxError": 0.0
+   },
+   "lead": {
+    "protoNotes": 798,
+    "notes": 798,
+    "moved": {
+     "5": 135,
+     "7": 80,
+     "12": 0
+    },
+    "protoMoved": {
+     "5": 135,
+     "7": 80,
+     "12": 0
+    },
+    "maxError": 0.0
+   },
+   "keys": {
+    "protoNotes": 194,
+    "notes": 194,
+    "moved": {
+     "keys": 0
+    },
+    "protoMoved": {
+     "keys": 0
+    },
+    "maxError": 0.0
+   }
+  },
+  "bars": 57
+ },
+ "The Modern Age (5)": {
+  "song": "The Modern Age",
+  "bpm": 146,
+  "protoBpm": 146,
+  "otherTempos": 0,
+  "protoTempoCount": 1,
+  "meter": [
+   4,
+   4
+  ],
+  "shift": 0,
+  "mapping": {
+   "Drums": [
+    4
+   ],
+   "Bass": [
+    3
+   ],
+   "Keys": [
+    0
+   ],
+   "Rhythm Guitar": [
+    2
+   ],
+   "Lead Guitar": [
+    1
+   ]
+  },
+  "skipped": [],
+  "trackCount": 5,
+  "instruments": {
+   "drums": {
+    "hits": 1409,
+    "dropped": {
+     "37": 13,
+     "41": 736
+    },
+    "droppedTotal": 749
+   },
+   "bass": {
+    "protoNotes": 930,
+    "notes": 930,
+    "moved": {
+     "5": 0,
+     "7": 0,
+     "12": 0
+    },
+    "protoMoved": {
+     "5": 0,
+     "7": 0,
+     "12": 0
+    },
+    "maxError": 0.0
+   },
+   "rhythm": {
+    "protoNotes": 4438,
+    "notes": 4438,
+    "moved": {
+     "5": 477,
+     "7": 476,
+     "12": 0
+    },
+    "protoMoved": {
+     "5": 477,
+     "7": 476,
+     "12": 0
+    },
+    "maxError": 0.0
+   },
+   "lead": {
+    "protoNotes": 2970,
+    "notes": 2970,
+    "moved": {
+     "5": 75,
+     "7": 4,
+     "12": 3
+    },
+    "protoMoved": {
+     "5": 75,
+     "7": 4,
+     "12": 3
+    },
+    "maxError": 0.0
+   },
+   "keys": {
+    "protoNotes": 277,
+    "notes": 277,
+    "moved": {
+     "keys": 0
+    },
+    "protoMoved": {
+     "keys": 0
+    },
+    "maxError": 0.0
+   }
+  },
+  "bars": 126
+ },
+ "Soma (8)": {
+  "song": "Soma",
+  "bpm": 150,
+  "protoBpm": 150,
+  "otherTempos": 0,
+  "protoTempoCount": 1,
+  "meter": [
+   4,
+   4
+  ],
+  "shift": 0,
+  "mapping": {
+   "Drums": [
+    3
+   ],
+   "Bass": [
+    2
+   ],
+   "Keys": [],
+   "Rhythm Guitar": [
+    0
+   ],
+   "Lead Guitar": [
+    1
+   ]
+  },
+  "skipped": [],
+  "trackCount": 4,
+  "instruments": {
+   "drums": {
+    "hits": 1204,
+    "dropped": {
+     "41": 2,
+     "43": 2,
+     "45": 4
+    },
+    "droppedTotal": 8
+   },
+   "bass": {
+    "protoNotes": 560,
+    "notes": 560,
+    "moved": {
+     "5": 2,
+     "7": 0,
+     "12": 0
+    },
+    "protoMoved": {
+     "5": 2,
+     "7": 0,
+     "12": 0
+    },
+    "maxError": 0.0
+   },
+   "rhythm": {
+    "protoNotes": 1868,
+    "notes": 1868,
+    "moved": {
+     "5": 232,
+     "7": 0,
+     "12": 0
+    },
+    "protoMoved": {
+     "5": 232,
+     "7": 0,
+     "12": 0
+    },
+    "maxError": 0.0
+   },
+   "lead": {
+    "protoNotes": 706,
+    "notes": 706,
+    "moved": {
+     "5": 287,
+     "7": 278,
+     "12": 0
+    },
+    "protoMoved": {
+     "5": 287,
+     "7": 278,
+     "12": 0
+    },
+    "maxError": 0.0
+   }
+  },
+  "bars": 95
+ },
+ "Barely Legal (2)": {
+  "song": "Barely Legal",
+  "bpm": 160,
+  "protoBpm": 160,
+  "otherTempos": 0,
+  "protoTempoCount": 1,
+  "meter": [
+   4,
+   4
+  ],
+  "shift": 0,
+  "mapping": {
+   "Drums": [
+    3
+   ],
+   "Bass": [
+    2
+   ],
+   "Keys": [],
+   "Rhythm Guitar": [
+    0
+   ],
+   "Lead Guitar": [
+    1
+   ]
+  },
+  "skipped": [],
+  "trackCount": 4,
+  "instruments": {
+   "drums": {
+    "hits": 2028,
+    "dropped": {
+     "37": 3
+    },
+    "droppedTotal": 3
+   },
+   "bass": {
+    "protoNotes": 1150,
+    "notes": 1150,
+    "moved": {
+     "5": 0,
+     "7": 0,
+     "12": 0
+    },
+    "protoMoved": {
+     "5": 0,
+     "7": 0,
+     "12": 0
+    },
+    "maxError": 0.0
+   },
+   "rhythm": {
+    "protoNotes": 4807,
+    "notes": 4807,
+    "moved": {
+     "5": 727,
+     "7": 446,
+     "12": 0
+    },
+    "protoMoved": {
+     "5": 727,
+     "7": 446,
+     "12": 0
+    },
+    "maxError": 0.5
+   },
+   "lead": {
+    "protoNotes": 2617,
+    "notes": 2617,
+    "moved": {
+     "5": 43,
+     "7": 27,
+     "12": 0
+    },
+    "protoMoved": {
+     "5": 43,
+     "7": 27,
+     "12": 0
+    },
+    "maxError": 0.0
+   }
+  },
+  "bars": 162
+ },
+ "Someday (6)": {
+  "song": "Someday",
+  "bpm": 106,
+  "protoBpm": 106,
+  "otherTempos": 0,
+  "protoTempoCount": 1,
+  "meter": [
+   4,
+   4
+  ],
+  "shift": 0,
+  "mapping": {
+   "Drums": [
+    4
+   ],
+   "Bass": [
+    3
+   ],
+   "Keys": [
+    0
+   ],
+   "Rhythm Guitar": [
+    2
+   ],
+   "Lead Guitar": [
+    1
+   ]
+  },
+  "skipped": [],
+  "trackCount": 5,
+  "instruments": {
+   "drums": {
+    "hits": 1332,
+    "dropped": {
+     "45": 4
+    },
+    "droppedTotal": 4
+   },
+   "bass": {
+    "protoNotes": 309,
+    "notes": 309,
+    "moved": {
+     "5": 0,
+     "7": 0,
+     "12": 0
+    },
+    "protoMoved": {
+     "5": 0,
+     "7": 0,
+     "12": 0
+    },
+    "maxError": 0.0
+   },
+   "rhythm": {
+    "protoNotes": 4343,
+    "notes": 4343,
+    "moved": {
+     "5": 0,
+     "7": 0,
+     "12": 0
+    },
+    "protoMoved": {
+     "5": 0,
+     "7": 0,
+     "12": 0
+    },
+    "maxError": 0.0
+   },
+   "lead": {
+    "protoNotes": 958,
+    "notes": 958,
+    "moved": {
+     "5": 109,
+     "7": 49,
+     "12": 0
+    },
+    "protoMoved": {
+     "5": 109,
+     "7": 49,
+     "12": 0
+    },
+    "maxError": 0.0
+   },
+   "keys": {
+    "protoNotes": 255,
+    "notes": 255,
+    "moved": {
+     "keys": 0
+    },
+    "protoMoved": {
+     "keys": 0
+    },
+    "maxError": 0.5
+   }
+  },
+  "bars": 82
+ },
+ "Alone Together (6)": {
+  "song": "Alone Together",
+  "bpm": 145,
+  "protoBpm": 145,
+  "otherTempos": 0,
+  "protoTempoCount": 1,
+  "meter": [
+   4,
+   4
+  ],
+  "shift": 0,
+  "mapping": {
+   "Drums": [
+    4
+   ],
+   "Bass": [
+    3
+   ],
+   "Keys": [
+    0
+   ],
+   "Rhythm Guitar": [
+    2
+   ],
+   "Lead Guitar": [
+    1
+   ]
+  },
+  "skipped": [],
+  "trackCount": 5,
+  "instruments": {
+   "drums": {
+    "hits": 1623,
+    "dropped": {
+     "41": 2,
+     "43": 28,
+     "48": 2
+    },
+    "droppedTotal": 32
+   },
+   "bass": {
+    "protoNotes": 653,
+    "notes": 653,
+    "moved": {
+     "5": 254,
+     "7": 201,
+     "12": 46
+    },
+    "protoMoved": {
+     "5": 254,
+     "7": 201,
+     "12": 46
+    },
+    "maxError": 0.0
+   },
+   "rhythm": {
+    "protoNotes": 2766,
+    "notes": 2766,
+    "moved": {
+     "5": 56,
+     "7": 0,
+     "12": 0
+    },
+    "protoMoved": {
+     "5": 56,
+     "7": 0,
+     "12": 0
+    },
+    "maxError": 0.0
+   },
+   "lead": {
+    "protoNotes": 708,
+    "notes": 708,
+    "moved": {
+     "5": 98,
+     "7": 77,
+     "12": 1
+    },
+    "protoMoved": {
+     "5": 98,
+     "7": 77,
+     "12": 1
+    },
+    "maxError": 0.0
+   },
+   "keys": {
+    "protoNotes": 209,
+    "notes": 209,
+    "moved": {
+     "keys": 0
+    },
+    "protoMoved": {
+     "keys": 0
+    },
+    "maxError": 1.0
+   }
+  },
+  "bars": 112
+ },
+ "Last Night (8)": {
+  "song": "Last Nite",
+  "bpm": 103,
+  "protoBpm": 103,
+  "otherTempos": 0,
+  "protoTempoCount": 1,
+  "meter": [
+   4,
+   4
+  ],
+  "shift": 0,
+  "mapping": {
+   "Drums": [
+    4
+   ],
+   "Bass": [
+    3
+   ],
+   "Keys": [
+    0
+   ],
+   "Rhythm Guitar": [
+    1
+   ],
+   "Lead Guitar": [
+    2
+   ]
+  },
+  "skipped": [],
+  "trackCount": 5,
+  "instruments": {
+   "drums": {
+    "hits": 1327,
+    "dropped": {},
+    "droppedTotal": 0
+   },
+   "bass": {
+    "protoNotes": 425,
+    "notes": 425,
+    "moved": {
+     "5": 0,
+     "7": 0,
+     "12": 0
+    },
+    "protoMoved": {
+     "5": 0,
+     "7": 0,
+     "12": 0
+    },
+    "maxError": 0.0
+   },
+   "rhythm": {
+    "protoNotes": 2518,
+    "notes": 2518,
+    "moved": {
+     "5": 178,
+     "7": 36,
+     "12": 0
+    },
+    "protoMoved": {
+     "5": 178,
+     "7": 36,
+     "12": 0
+    },
+    "maxError": 0.0
+   },
+   "lead": {
+    "protoNotes": 1347,
+    "notes": 1335,
+    "moved": {
+     "5": 100,
+     "7": 98,
+     "12": 6
+    },
+    "protoMoved": {
+     "5": 106,
+     "7": 104,
+     "12": 6
+    },
+    "maxError": 0.5
+   },
+   "keys": {
+    "protoNotes": 264,
+    "notes": 264,
+    "moved": {
+     "keys": 0
+    },
+    "protoMoved": {
+     "keys": 0
+    },
+    "maxError": 0.75
+   }
+  },
+  "bars": 84
+ },
+ "Hard to Explain (5)": {
+  "song": "Hard to Explain",
+  "bpm": 165,
+  "protoBpm": 165,
+  "otherTempos": 0,
+  "protoTempoCount": 1,
+  "meter": [
+   4,
+   4
+  ],
+  "shift": 0,
+  "mapping": {
+   "Drums": [
+    4
+   ],
+   "Bass": [
+    3
+   ],
+   "Keys": [
+    0
+   ],
+   "Rhythm Guitar": [
+    1
+   ],
+   "Lead Guitar": [
+    2
+   ]
+  },
+  "skipped": [],
+  "trackCount": 5,
+  "instruments": {
+   "drums": {
+    "hits": 1851,
+    "dropped": {},
+    "droppedTotal": 0
+   },
+   "bass": {
+    "protoNotes": 1182,
+    "notes": 1182,
+    "moved": {
+     "5": 0,
+     "7": 0,
+     "12": 0
+    },
+    "protoMoved": {
+     "5": 0,
+     "7": 0,
+     "12": 0
+    },
+    "maxError": 0.0
+   },
+   "rhythm": {
+    "protoNotes": 3654,
+    "notes": 3654,
+    "moved": {
+     "5": 0,
+     "7": 0,
+     "12": 0
+    },
+    "protoMoved": {
+     "5": 0,
+     "7": 0,
+     "12": 0
+    },
+    "maxError": 0.0
+   },
+   "lead": {
+    "protoNotes": 2734,
+    "notes": 2734,
+    "moved": {
+     "5": 1182,
+     "7": 590,
+     "12": 590
+    },
+    "protoMoved": {
+     "5": 1182,
+     "7": 590,
+     "12": 590
+    },
+    "maxError": 0.0
+   },
+   "keys": {
+    "protoNotes": 284,
+    "notes": 284,
+    "moved": {
+     "keys": 0
+    },
+    "protoMoved": {
+     "keys": 0
+    },
+    "maxError": 0.0
+   }
+  },
+  "bars": 154
+ },
+ "New York City Cops (4)": {
+  "song": "New York City Cops",
+  "bpm": 114,
+  "protoBpm": 114,
+  "otherTempos": 0,
+  "protoTempoCount": 1,
+  "meter": [
+   4,
+   4
+  ],
+  "shift": 0,
+  "mapping": {
+   "Drums": [
+    7,
+    8
+   ],
+   "Bass": [
+    2
+   ],
+   "Keys": [],
+   "Rhythm Guitar": [
+    4
+   ],
+   "Lead Guitar": [
+    0
+   ]
+  },
+  "skipped": [
+   1,
+   5,
+   3,
+   6
+  ],
+  "trackCount": 9,
+  "instruments": {
+   "drums": {
+    "hits": 1610,
+    "dropped": {
+     "37": 41,
+     "43": 3,
+     "54": 3,
+     "55": 225
+    },
+    "droppedTotal": 272
+   },
+   "bass": {
+    "protoNotes": 599,
+    "notes": 599,
+    "moved": {
+     "5": 10,
+     "7": 6,
+     "12": 0
+    },
+    "protoMoved": {
+     "5": 10,
+     "7": 6,
+     "12": 0
+    },
+    "maxError": 0.0
+   },
+   "rhythm": {
+    "protoNotes": 2145,
+    "notes": 2145,
+    "moved": {
+     "5": 154,
+     "7": 76,
+     "12": 0
+    },
+    "protoMoved": {
+     "5": 154,
+     "7": 76,
+     "12": 0
+    },
+    "maxError": 0.0
+   },
+   "lead": {
+    "protoNotes": 1836,
+    "notes": 1836,
+    "moved": {
+     "5": 0,
+     "7": 0,
+     "12": 0
+    },
+    "protoMoved": {
+     "5": 0,
+     "7": 0,
+     "12": 0
+    },
+    "maxError": 0.0
+   }
+  },
+  "bars": 99
+ },
+ "Trying Your Luck (2)": {
+  "song": "Trying Your Luck",
+  "bpm": 140,
+  "protoBpm": 140,
+  "otherTempos": 0,
+  "protoTempoCount": 1,
+  "meter": [
+   4,
+   4
+  ],
+  "shift": 0,
+  "mapping": {
+   "Drums": [
+    4
+   ],
+   "Bass": [
+    2
+   ],
+   "Keys": [
+    3
+   ],
+   "Rhythm Guitar": [
+    0
+   ],
+   "Lead Guitar": [
+    1
+   ]
+  },
+  "skipped": [],
+  "trackCount": 5,
+  "instruments": {
+   "drums": {
+    "hits": 1695,
+    "dropped": {
+     "43": 1,
+     "45": 1,
+     "47": 1
+    },
+    "droppedTotal": 3
+   },
+   "bass": {
+    "protoNotes": 773,
+    "notes": 773,
+    "moved": {
+     "5": 56,
+     "7": 32,
+     "12": 0
+    },
+    "protoMoved": {
+     "5": 56,
+     "7": 32,
+     "12": 0
+    },
+    "maxError": 0.0
+   },
+   "rhythm": {
+    "protoNotes": 3245,
+    "notes": 3245,
+    "moved": {
+     "5": 0,
+     "7": 0,
+     "12": 0
+    },
+    "protoMoved": {
+     "5": 0,
+     "7": 0,
+     "12": 0
+    },
+    "maxError": 0.0
+   },
+   "lead": {
+    "protoNotes": 763,
+    "notes": 763,
+    "moved": {
+     "5": 49,
+     "7": 40,
+     "12": 16
+    },
+    "protoMoved": {
+     "5": 49,
+     "7": 40,
+     "12": 16
+    },
+    "maxError": 0.5
+   },
+   "keys": {
+    "protoNotes": 123,
+    "notes": 123,
+    "moved": {
+     "keys": 0
+    },
+    "protoMoved": {
+     "keys": 0
+    },
+    "maxError": 0.0
+   }
+  },
+  "bars": 117
+ },
+ "Take it Or Leave it (2)": {
+  "song": "Take It or Leave It",
+  "bpm": 155,
+  "protoBpm": 155,
+  "otherTempos": 1,
+  "protoTempoCount": 2,
+  "meter": [
+   4,
+   4
+  ],
+  "shift": 0,
+  "mapping": {
+   "Drums": [
+    3
+   ],
+   "Bass": [
+    2
+   ],
+   "Keys": [],
+   "Rhythm Guitar": [
+    1
+   ],
+   "Lead Guitar": [
+    0
+   ]
+  },
+  "skipped": [],
+  "trackCount": 4,
+  "instruments": {
+   "drums": {
+    "hits": 1627,
+    "dropped": {},
+    "droppedTotal": 0
+   },
+   "bass": {
+    "protoNotes": 678,
+    "notes": 678,
+    "moved": {
+     "5": 0,
+     "7": 0,
+     "12": 0
+    },
+    "protoMoved": {
+     "5": 0,
+     "7": 0,
+     "12": 0
+    },
+    "maxError": 0.0
+   },
+   "rhythm": {
+    "protoNotes": 2633,
+    "notes": 2633,
+    "moved": {
+     "5": 0,
+     "7": 0,
+     "12": 0
+    },
+    "protoMoved": {
+     "5": 0,
+     "7": 0,
+     "12": 0
+    },
+    "maxError": 0.0
+   },
+   "lead": {
+    "protoNotes": 795,
+    "notes": 795,
+    "moved": {
+     "5": 110,
+     "7": 83,
+     "12": 0
+    },
+    "protoMoved": {
+     "5": 110,
+     "7": 83,
+     "12": 0
+    },
+    "maxError": 0.0
+   }
+  },
+  "bars": 122
+ }
+}
