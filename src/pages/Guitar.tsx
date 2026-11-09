@@ -1,15 +1,18 @@
-import { useMemo, useRef, useState, type CSSProperties, type MouseEvent as ReactMouseEvent } from 'react';
+import { useCallback, useMemo, useRef, useState, type CSSProperties, type MouseEvent as ReactMouseEvent } from 'react';
 import { FRET_COUNTS, INSTRUMENT_LABELS, TUNING, type FretCount, type StringInstrumentId } from '../core/instruments';
-import { addNote, noteKey, replaceNote } from '../core/patterns';
+import { addNote, noteKey, removeNote, replaceNote } from '../core/patterns';
 import { setFretCount, type StringNote } from '../core/project';
 import { patternTicks, ticksPerBar } from '../core/time';
 import { useStudio } from '../state/Studio';
+import { CopyNotes } from './editor/CopyNotes';
 import { EnvelopeStrip } from './editor/EnvelopeStrip';
 import { beatMarks, describeStart } from './editor/grid';
 import {
   clickStart,
+  fretChangeLine,
   fretRows,
   hiddenAboveFret,
+  hiddenAcrossPatterns,
   newNoteLength,
   notesAt,
   stringNames,
@@ -17,7 +20,9 @@ import {
 import { PatternBank } from './editor/PatternBank';
 import { Ruler, at } from './editor/Ruler';
 import { LengthChoice, NoteValueChoice, ShowWholeButton } from './editor/Tools';
+import { useDeleteKey } from './editor/useDeleteKey';
 import { useNoteDrag } from './editor/useNoteDrag';
+import { useNoteSelection } from './editor/useNoteSelection';
 import { usePlayhead } from './editor/usePlayhead';
 import { useTryEdit } from './editor/useTryEdit';
 import './editor/noteEditor.css';
@@ -32,7 +37,6 @@ export function Guitar() {
   const { state, project, dispatch } = useStudio();
   const tryEdit = useTryEdit();
   const [message, setMessage] = useState('');
-  const [selectedKey, setSelectedKey] = useState<string | null>(null);
   const rulerRef = useRef<HTMLDivElement>(null);
 
   const id = state.guitar;
@@ -43,6 +47,7 @@ export function Guitar() {
   const bars = pattern?.bars ?? 1;
   const total = patternTicks(project.meter, bars);
   const value = state.noteValue;
+  const [selectedKey, setSelectedKey] = useNoteSelection(`${id}:${selected}`);
 
   const playheadRef = usePlayhead(id, total, rulerRef);
   const notes = useMemo(() => (pattern?.notes ?? []).filter(isStringNote), [pattern]);
@@ -50,6 +55,16 @@ export function Guitar() {
   const names = stringNames(id);
   const frets = fretRows(fretCount);
   const hidden = hiddenAboveFret(notes, fretCount);
+
+  // Delete removes the selected note, if it is on screen (a note above the fret count is hidden).
+  const deleteSelected = useCallback(() => {
+    const note = notes.find((n) => noteKey(n) === selectedKey);
+    if (!note || note.fret > fretCount) return;
+    dispatch({ type: 'edit', change: (p) => removeNote(p, id, selected, note) });
+    setSelectedKey(null);
+    setMessage('');
+  }, [notes, selectedKey, fretCount, dispatch, id, selected, setSelectedKey]);
+  useDeleteKey(selectedKey === null ? null : deleteSelected);
 
   const { preview, begin } = useNoteDrag<StringNote>({
     value,
@@ -86,6 +101,12 @@ export function Guitar() {
     dispatch({ type: 'setGuitar', id: next });
   };
 
+  /** Sets the fret count. If notes in any pattern are now above it, the quiet line says so (Undo brings them back). */
+  const changeFrets = (count: FretCount) => {
+    dispatch({ type: 'edit', change: (p) => setFretCount(p, id, count) });
+    setMessage(fretChangeLine(hiddenAcrossPatterns(instrument.patterns, count), count));
+  };
+
   const gridStyle = { '--total': total, '--bar-ticks': ticksPerBar(project.meter) } as CSSProperties;
   const hiddenLine =
     hidden === 0 ? '' : `${hidden} ${hidden === 1 ? 'note is' : 'notes are'} on frets above ${fretCount}: hidden, kept, back when frets are raised.`;
@@ -105,6 +126,7 @@ export function Guitar() {
         <div className="ne-tools">
           <LengthChoice id={id} onRefused={setMessage} />
           <NoteValueChoice id={id} />
+          <CopyNotes id={id} onResult={setMessage} />
         </div>
 
         <div className="ne-scroll">
@@ -198,7 +220,7 @@ export function Guitar() {
                 type="button"
                 role="radio"
                 aria-checked={fretCount === count}
-                onClick={() => dispatch({ type: 'edit', change: (p) => setFretCount(p, id, count) })}
+                onClick={() => changeFrets(count)}
               >
                 {count}
               </button>

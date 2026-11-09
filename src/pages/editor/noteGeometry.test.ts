@@ -1,9 +1,11 @@
 import { describe, expect, it } from 'vitest';
-import type { StringNote } from '../../core/project';
+import type { Pattern, StringNote } from '../../core/project';
 import {
   clickStart,
   fretRows,
+  fretChangeLine,
   hiddenAboveFret,
+  hiddenAcrossPatterns,
   movedStart,
   newNoteLength,
   notesAt,
@@ -128,5 +130,27 @@ describe('what is on screen', () => {
     expect(hiddenAboveFret(notes, 5)).toBe(1);
     expect(hiddenAboveFret(notes, 4)).toBe(4);
     expect(hiddenAboveFret(notes, 12)).toBe(0);
+  });
+});
+
+describe('lowering the fret count', () => {
+  const note = (fret: number): StringNote => ({ string: 0, fret, start: 0, length: 12 });
+  const patterns: Pattern[] = [
+    { bars: 1, notes: [note(2), note(9)] },
+    { bars: 1, notes: [] },
+    { bars: 2, notes: [note(12), note(8), note(3)] },
+  ];
+
+  it('counts the notes and the patterns they are in across all patterns', () => {
+    expect(hiddenAcrossPatterns(patterns, 7)).toEqual({ notes: 3, patterns: 2 });
+    expect(hiddenAcrossPatterns(patterns, 5)).toEqual({ notes: 3, patterns: 2 });
+    expect(hiddenAcrossPatterns(patterns, 8)).toEqual({ notes: 2, patterns: 2 });
+    expect(hiddenAcrossPatterns(patterns, 12)).toEqual({ notes: 0, patterns: 0 });
+  });
+
+  it('says nothing when nothing is hidden, and counts words right otherwise', () => {
+    expect(fretChangeLine({ notes: 0, patterns: 0 }, 12)).toBe('');
+    expect(fretChangeLine({ notes: 1, patterns: 1 }, 7)).toContain('1 note is now above fret 7, in 1 pattern');
+    expect(fretChangeLine({ notes: 3, patterns: 2 }, 5)).toContain('3 notes are now above fret 5, in 2 patterns');
   });
 });

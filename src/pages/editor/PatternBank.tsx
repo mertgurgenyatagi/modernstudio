@@ -1,12 +1,13 @@
 import type { InstrumentId } from '../../core/instruments';
-import { isActive, selectPattern } from '../../core/project';
+import { canOpenMorePatterns, isActive, openMorePatterns, selectPattern } from '../../core/project';
 import { useStudio } from '../../state/Studio';
 import './editor.css';
 
 /**
  * The instrument's patterns as numbered squares. A pattern with notes has an ink outline, an empty one
  * a grey outline (it can still be selected: a pattern becomes active when its first note is placed),
- * and the selected one is filled. Choosing a pattern is not an Undo step.
+ * and the selected one is filled. Choosing a pattern is not an Undo step. Once every shown pattern has
+ * notes, a "+20" square opens 20 more (up to 120); that is not an Undo step either.
  */
 export function PatternBank({ id }: { id: InstrumentId }) {
   const { project, dispatch } = useStudio();
@@ -36,6 +37,24 @@ export function PatternBank({ id }: { id: InstrumentId }) {
             </button>
           );
         })}
+        {canOpenMorePatterns(project, id) && (
+          <button
+            type="button"
+            className="bank-number more"
+            aria-label="Open 20 more patterns"
+            onClick={() =>
+              dispatch({
+                type: 'select',
+                change: (p) => {
+                  const outcome = openMorePatterns(p, id);
+                  return outcome.ok ? outcome.project : p;
+                },
+              })
+            }
+          >
+            +20
+          </button>
+        )}
       </div>
     </div>
   );

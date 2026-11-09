@@ -3,6 +3,7 @@ import { addNote, removeNote } from '../core/patterns';
 import type { DrumNote, Note } from '../core/project';
 import { NOTE_VALUE_TICKS, patternTicks, ticksPerBar } from '../core/time';
 import { useStudio } from '../state/Studio';
+import { CopyNotes } from './editor/CopyNotes';
 import { EnvelopeStrip } from './editor/EnvelopeStrip';
 import { PatternBank } from './editor/PatternBank';
 import { LengthChoice, NoteValueChoice, ShowWholeButton } from './editor/Tools';
@@ -99,6 +100,7 @@ export function Drums() {
           <LengthChoice id="drums" onRefused={setNote} />
           <NoteValueChoice id="drums" />
           <ShowWholeButton />
+          <CopyNotes id="drums" onResult={setNote} />
         </div>
 
         <div className="pads">
