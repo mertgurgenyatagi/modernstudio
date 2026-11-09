@@ -1,0 +1,623 @@
+{
+ "Is This it (2)": {
+  "song": "Is This It",
+  "format": 1,
+  "ppq": 480,
+  "tempos": 1,
+  "timeSignatures": [
+   [
+    0,
+    4,
+    4
+   ]
+  ],
+  "tracks": [
+   {
+    "name": "Gtr. 1 (Nick Valensi)",
+    "notes": 798,
+    "channels": [
+     0
+    ],
+    "checksum": 323367225
+   },
+   {
+    "name": "Gtr. 2 (Albert Hammond Jr)",
+    "notes": 1358,
+    "channels": [
+     2
+    ],
+    "checksum": 859795157
+   },
+   {
+    "name": "Bass (Nikolai Fraiture)",
+    "notes": 182,
+    "channels": [
+     4
+    ],
+    "checksum": 384723559
+   },
+   {
+    "name": "Vocals (Julian Casablancas)",
+    "notes": 194,
+    "channels": [
+     6
+    ],
+    "checksum": 676922979
+   },
+   {
+    "name": "Tambourine",
+    "notes": 79,
+    "channels": [
+     9
+    ],
+    "checksum": 601542402
+   },
+   {
+    "name": "Drumkit",
+    "notes": 675,
+    "channels": [
+     9
+    ],
+    "checksum": 909159806
+   }
+  ]
+ },
+ "The Modern Age (5)": {
+  "song": "The Modern Age",
+  "format": 1,
+  "ppq": 480,
+  "tempos": 1,
+  "timeSignatures": [
+   [
+    0,
+    4,
+    4
+   ]
+  ],
+  "tracks": [
+   {
+    "name": "Julian Casablancas",
+    "notes": 277,
+    "channels": [
+     6
+    ],
+    "checksum": 296445657
+   },
+   {
+    "name": "Nick Valensi",
+    "notes": 2970,
+    "channels": [
+     0
+    ],
+    "checksum": 220369111
+   },
+   {
+    "name": "Albert Hammond Jr.",
+    "notes": 4438,
+    "channels": [
+     2
+    ],
+    "checksum": 245676626
+   },
+   {
+    "name": "Nikolai Fraiture",
+    "notes": 930,
+    "channels": [
+     4
+    ],
+    "checksum": 512492890
+   },
+   {
+    "name": "Fabrizio Moretti",
+    "notes": 2158,
+    "channels": [
+     9
+    ],
+    "checksum": 305218266
+   }
+  ]
+ },
+ "Soma (8)": {
+  "song": "Soma",
+  "format": 1,
+  "ppq": 480,
+  "tempos": 1,
+  "timeSignatures": [
+   [
+    0,
+    4,
+    4
+   ]
+  ],
+  "tracks": [
+   {
+    "name": "Nick",
+    "notes": 1868,
+    "channels": [
+     0
+    ],
+    "checksum": 80752823
+   },
+   {
+    "name": "Albert",
+    "notes": 706,
+    "channels": [
+     2
+    ],
+    "checksum": 68575643
+   },
+   {
+    "name": "Nikolai",
+    "notes": 560,
+    "channels": [
+     4
+    ],
+    "checksum": 502992885
+   },
+   {
+    "name": "Fabrizio",
+    "notes": 1212,
+    "channels": [
+     9
+    ],
+    "checksum": 281750974
+   }
+  ]
+ },
+ "Barely Legal (2)": {
+  "song": "Barely Legal",
+  "format": 1,
+  "ppq": 480,
+  "tempos": 1,
+  "timeSignatures": [
+   [
+    0,
+    4,
+    4
+   ]
+  ],
+  "tracks": [
+   {
+    "name": "Nick Valensi",
+    "notes": 4807,
+    "channels": [
+     0
+    ],
+    "checksum": 979832886
+   },
+   {
+    "name": "Albert Hammond Jr.",
+    "notes": 2650,
+    "channels": [
+     2
+    ],
+    "checksum": 329371010
+   },
+   {
+    "name": "NikolaÃ¯ Fraiture",
+    "notes": 1150,
+    "channels": [
+     4
+    ],
+    "checksum": 611771214
+   },
+   {
+    "name": "Drumkit",
+    "notes": 2031,
+    "channels": [
+     9
+    ],
+    "checksum": 348062234
+   }
+  ]
+ },
+ "Someday (6)": {
+  "song": "Someday",
+  "format": 1,
+  "ppq": 480,
+  "tempos": 1,
+  "timeSignatures": [
+   [
+    0,
+    4,
+    4
+   ]
+  ],
+  "tracks": [
+   {
+    "name": "Julian Casablancas",
+    "notes": 255,
+    "channels": [
+     6
+    ],
+    "checksum": 420154748
+   },
+   {
+    "name": "Albert Hammond Jr.",
+    "notes": 958,
+    "channels": [
+     0
+    ],
+    "checksum": 939748002
+   },
+   {
+    "name": "Nick Valensi",
+    "notes": 4343,
+    "channels": [
+     2
+    ],
+    "checksum": 767965856
+   },
+   {
+    "name": "Nikolai Fraiture",
+    "notes": 309,
+    "channels": [
+     4
+    ],
+    "checksum": 836740131
+   },
+   {
+    "name": "Fabrizio Moretti",
+    "notes": 1336,
+    "channels": [
+     9
+    ],
+    "checksum": 680033221
+   }
+  ]
+ },
+ "Alone Together (6)": {
+  "song": "Alone Together",
+  "format": 1,
+  "ppq": 480,
+  "tempos": 1,
+  "timeSignatures": [
+   [
+    0,
+    4,
+    4
+   ]
+  ],
+  "tracks": [
+   {
+    "name": "Julian Casablancas",
+    "notes": 209,
+    "channels": [
+     6
+    ],
+    "checksum": 455913406
+   },
+   {
+    "name": "Nick Valensi",
+    "notes": 708,
+    "channels": [
+     0
+    ],
+    "checksum": 379501559
+   },
+   {
+    "name": "Albert Hammond Jr.",
+    "notes": 2766,
+    "channels": [
+     2
+    ],
+    "checksum": 272014022
+   },
+   {
+    "name": "Nikolai Fraiture",
+    "notes": 653,
+    "channels": [
+     4
+    ],
+    "checksum": 271055408
+   },
+   {
+    "name": "Fabrizio Moretti",
+    "notes": 1655,
+    "channels": [
+     9
+    ],
+    "checksum": 268483043
+   }
+  ]
+ },
+ "Last Night (8)": {
+  "song": "Last Nite",
+  "format": 1,
+  "ppq": 480,
+  "tempos": 1,
+  "timeSignatures": [
+   [
+    0,
+    4,
+    4
+   ]
+  ],
+  "tracks": [
+   {
+    "name": "Julian Casablancas",
+    "notes": 264,
+    "channels": [
+     6
+    ],
+    "checksum": 154475400
+   },
+   {
+    "name": "Nick Valensi",
+    "notes": 2518,
+    "channels": [
+     2
+    ],
+    "checksum": 369120698
+   },
+   {
+    "name": "Albert Hammond Jr.",
+    "notes": 1347,
+    "channels": [
+     4
+    ],
+    "checksum": 203369844
+   },
+   {
+    "name": "Nikolai Fraiture",
+    "notes": 425,
+    "channels": [
+     0
+    ],
+    "checksum": 112347807
+   },
+   {
+    "name": "Fabrizio Moretti",
+    "notes": 1327,
+    "channels": [
+     9
+    ],
+    "checksum": 301839664
+   }
+  ]
+ },
+ "Hard to Explain (5)": {
+  "song": "Hard to Explain",
+  "format": 1,
+  "ppq": 480,
+  "tempos": 1,
+  "timeSignatures": [
+   [
+    0,
+    4,
+    4
+   ]
+  ],
+  "tracks": [
+   {
+    "name": "Julian Casablancas",
+    "notes": 284,
+    "channels": [
+     6
+    ],
+    "checksum": 67985426
+   },
+   {
+    "name": "Nick Valensi",
+    "notes": 3654,
+    "channels": [
+     2
+    ],
+    "checksum": 936876234
+   },
+   {
+    "name": "Albert Hammond Jr.",
+    "notes": 2734,
+    "channels": [
+     4
+    ],
+    "checksum": 111110933
+   },
+   {
+    "name": "Nikolai Fraiture",
+    "notes": 1182,
+    "channels": [
+     0
+    ],
+    "checksum": 743845066
+   },
+   {
+    "name": "Fabrizio Moretti",
+    "notes": 1851,
+    "channels": [
+     9
+    ],
+    "checksum": 100462752
+   }
+  ]
+ },
+ "New York City Cops (4)": {
+  "song": "New York City Cops",
+  "format": 1,
+  "ppq": 480,
+  "tempos": 1,
+  "timeSignatures": [
+   [
+    0,
+    4,
+    4
+   ]
+  ],
+  "tracks": [
+   {
+    "name": "Albert Hammond Jr.",
+    "notes": 1836,
+    "channels": [
+     0
+    ],
+    "checksum": 27751283
+   },
+   {
+    "name": "Nick Valensi",
+    "notes": 1030,
+    "channels": [
+     2
+    ],
+    "checksum": 719474236
+   },
+   {
+    "name": "Nikolai Fraiture",
+    "notes": 599,
+    "channels": [
+     4
+    ],
+    "checksum": 534017239
+   },
+   {
+    "name": "Nick Valensi",
+    "notes": 319,
+    "channels": [
+     6
+    ],
+    "checksum": 953120293
+   },
+   {
+    "name": "Albert Hammond Jr.",
+    "notes": 2145,
+    "channels": [
+     8
+    ],
+    "checksum": 575155667
+   },
+   {
+    "name": "Nick Valensi",
+    "notes": 361,
+    "channels": [
+     11
+    ],
+    "checksum": 315386466
+   },
+   {
+    "name": "Nick N' Albert",
+    "notes": 11,
+    "channels": [
+     13
+    ],
+    "checksum": 302397237
+   },
+   {
+    "name": "Tambourine",
+    "notes": 3,
+    "channels": [
+     9
+    ],
+    "checksum": 25694487
+   },
+   {
+    "name": "Drumkit",
+    "notes": 2175,
+    "channels": [
+     9
+    ],
+    "checksum": 349567084
+   }
+  ]
+ },
+ "Trying Your Luck (2)": {
+  "song": "Trying Your Luck",
+  "format": 1,
+  "ppq": 480,
+  "tempos": 1,
+  "timeSignatures": [
+   [
+    0,
+    4,
+    4
+   ]
+  ],
+  "tracks": [
+   {
+    "name": "Nick Valensi - Guitar (Rythm)",
+    "notes": 3473,
+    "channels": [
+     0
+    ],
+    "checksum": 535378451
+   },
+   {
+    "name": "Albert Hammond Jr. - Guitar (Lead)",
+    "notes": 775,
+    "channels": [
+     2
+    ],
+    "checksum": 190077090
+   },
+   {
+    "name": "Nikolai Fraiture - Bass",
+    "notes": 773,
+    "channels": [
+     4
+    ],
+    "checksum": 949801770
+   },
+   {
+    "name": "Julian Casablancas - Voice",
+    "notes": 123,
+    "channels": [
+     6
+    ],
+    "checksum": 895014221
+   },
+   {
+    "name": "Drumkit",
+    "notes": 1698,
+    "channels": [
+     9
+    ],
+    "checksum": 189274939
+   }
+  ]
+ },
+ "Take it Or Leave it (2)": {
+  "song": "Take It or Leave It",
+  "format": 1,
+  "ppq": 480,
+  "tempos": 2,
+  "timeSignatures": [
+   [
+    0,
+    4,
+    4
+   ]
+  ],
+  "tracks": [
+   {
+    "name": "Spor 1",
+    "notes": 795,
+    "channels": [
+     0
+    ],
+    "checksum": 894958766
+   },
+   {
+    "name": "Spor 2",
+    "notes": 2633,
+    "channels": [
+     2
+    ],
+    "checksum": 377349737
+   },
+   {
+    "name": "Spor 3",
+    "notes": 678,
+    "channels": [
+     4
+    ],
+    "checksum": 845905310
+   },
+   {
+    "name": "Drumkit",
+    "notes": 1627,
+    "channels": [
+     9
+    ],
+    "checksum": 289998300
+   }
+  ]
+ }
+}

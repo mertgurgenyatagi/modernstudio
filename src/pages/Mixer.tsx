@@ -4,6 +4,7 @@ import { INSTRUMENT_IDS, INSTRUMENT_LABELS, type InstrumentId } from '../core/in
 import { setBpm, setMasterVolume, setMeter, setMuted, setVolume } from '../core/project';
 import { BPM_MAX, BPM_MIN, METERS } from '../core/time';
 import { useStudio } from '../state/Studio';
+import { useMidiExport } from '../state/useMidiExport';
 import { useWavExport } from '../state/useWavExport';
 import { LevelSlider } from '../ui/LevelSlider';
 import { NumberField } from '../ui/NumberField';
@@ -42,6 +43,7 @@ export function Mixer() {
   const { state, project, dispatch, engine } = useStudio();
   const meterRef = useMeters(engine);
   const wav = useWavExport(project, state.filePath, dispatch);
+  const exportMidi = useMidiExport(project, state.filePath, dispatch);
   const endDrag = () => dispatch({ type: 'endDrag' });
   const editBpm = (value: number) => dispatch({ type: 'edit', change: (p) => setBpm(p, value), key: 'bpm' });
 
@@ -160,6 +162,9 @@ export function Mixer() {
             <td className="export" colSpan={2}>
               <button type="button" className="action" disabled={wav.rendering} aria-busy={wav.rendering} onClick={() => void wav.exportWav()}>
                 {wav.rendering ? 'Rendering…' : 'Export WAV'}
+              </button>
+              <button type="button" className="action" onClick={() => void exportMidi()}>
+                Export MIDI
               </button>
             </td>
           </tr>

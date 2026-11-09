@@ -10,6 +10,7 @@ export const CHANNELS = {
   save: 'files:save',
   saveAs: 'files:save-as',
   exportWav: 'files:export-wav',
+  exportMidi: 'files:export-midi',
   confirmDiscard: 'files:confirm-discard',
   setDirty: 'files:set-dirty',
   closeWindow: 'files:close-window',
@@ -45,6 +46,8 @@ export interface FilesBridge {
   saveAs(text: string, suggestedName: string): Promise<SaveResult>;
   /** Asks where, then writes the bytes of a WAV file there. `suggestedName` is the file name with its extension. */
   exportWav(bytes: Uint8Array, suggestedName: string): Promise<SaveResult>;
+  /** Asks where, then writes the bytes of a MIDI file there. `suggestedName` is the file name with its extension. */
+  exportMidi(bytes: Uint8Array, suggestedName: string): Promise<SaveResult>;
   /** The native "Save changes to …?" dialog. */
   confirmDiscard(name: string): Promise<DiscardChoice>;
   /** Tells the main process whether there are unsaved changes, so it can hold back closing. */

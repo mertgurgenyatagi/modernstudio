@@ -3,7 +3,7 @@
 The build plan, run one step per invocation of the `/plan24` skill ([.claude/skills/plan24/SKILL.md](../.claude/skills/plan24/SKILL.md)). Step numbers are plan24's own and have nothing to do with the older branches `00-overall` to `04-guitars`.
 
 Horizon: 24
-Last completed step: 12
+Last completed step: 13
 Replanned after step: 12
 Plan complete: no
 
@@ -19,22 +19,7 @@ The plan is replanned after every third completed step (3, 6, 9, and so on). Don
 
 ## Next three steps
 
-Replanned after step 12 (2026-11-09). The horizon stays at 24 and the order is unchanged. Steps 13 to 15 are in detail below; steps 16 to 24 are in "Later steps".
-
-### Step 13: MIDI file reader, writer and export
-
-**Produces:** the MIDI file layer and the Export MIDI command. The import steps 14 to 16 build on the reader.
-
-- **Reader (`src/core/midi/read.ts`, pure, tested):** parses format 0 and 1 files into tracks of events (note on and off with absolute tick, channel, track name, program, tempo changes, time signatures), the time division and the end tick. Handles running status, variable-length quantities and note-on with velocity 0 as note off, and ignores other meta and sysex events. Format 2 and SMPTE division are refused with a message that says what the file has. A port of `tools/midi-prototype/midilib.py`.
-- **Writer (`src/core/midi/write.ts`, pure, tested):** a small track-and-event writer (VLQ, meta events, end of track) producing a standard MIDI file as bytes. Tests read the bytes back with the reader.
-- **Export (`src/core/midi/export.ts`, pure, tested):** the Song flattened as [midi-import.md](midi-import.md) says: format 1, 480 ticks per quarter, a conductor track (BPM, meter) and five named tracks; the programs and channels of [sound.md](sound.md) (Bass 33 on channel 1, Rhythm Guitar 26 on 2, Lead Guitar 26 on 3, Keys 54 on 4, Drums on 10), drum rows as 36, 38, 42, 46, 49 (each hit a short note), string notes as pitches, controller 7 from instrument volume and master volume, velocity 100. Mute and isolate are ignored. It uses the Song plan of `playback.ts` for the notes, so export and playback agree. An empty Song says "The Song has no blocks, so there is nothing to export."
-- **Plumbing:** `files.exportMidi(bytes, suggestedName)` in the bridge with a Save dialog in the main process (filter `.mid`), like `exportWav`; a hook `useMidiExport` like `useWavExport`; an "Export MIDI" button in the Mixer footer row next to "Export WAV".
-
-**Relies on:** steps 2, 4, 11 and 12; [midi-import.md](midi-import.md) (the Export section); [sound.md](sound.md); the prototype's `midilib.py`.
-
-**Done when:** tests pass for the reader (including the real files in `midis/`: the eleven album files parse, with track and note counts equal to the prototype's where it prints them), the writer round trip and the export (pitches, positions, lengths, channels, programs, controller 7, the empty Song); typecheck, lint, test and build pass. The dialog is type checked and built, not run.
-
-**Decisions it may need:** a drum hit's length (assumed one 16th, 120 ticks); the controller 7 value (assumed round(volume x master / 100 x 127 / 100), recorded in open-items).
+Replanned after step 12 (2026-11-09). The horizon stays at 24 and the order is unchanged. Step 13 is built (in the history below). Steps 14 and 15 are in detail here; steps 16 to 24 are in "Later steps". The next replan comes after step 15.
 
 ### Step 14: MIDI import, part one: time, tempo, drums, range
 
@@ -284,6 +269,23 @@ Replanned after step 12 (2026-11-09). The horizon stays at 24 and the order is u
 
 **Built (2026-11-09):** the pure `src/core/wav.ts` (render length, file names, the 16-bit PCM writer with clipping; tested), the offline render `src/audio/render.ts` (the Song plan and `startNote` into an `OfflineAudioContext`, mute and isolate ignored, master volume applied, 3 s tail), the bridge function `files.exportWav` with its main-process handler (Save dialog, atomic write), the hook `src/state/useWavExport.ts` and an "Export WAV" button in the Mixer footer row. Assumptions are in [open-items.md](open-items.md). The render and the dialog were type checked and built, not run, as planned: the user's check is to export and listen.
 
+### Step 13: MIDI file reader, writer and export
+
+**Produces:** the MIDI file layer and the Export MIDI command. The import steps 14 to 16 build on the reader.
+
+- **Reader (`src/core/midi/read.ts`, pure, tested):** parses format 0 and 1 files into tracks of events (note on and off with absolute tick, channel, track name, program, tempo changes, time signatures), the time division and the end tick. Handles running status, variable-length quantities and note-on with velocity 0 as note off, and ignores other meta and sysex events. Format 2 and SMPTE division are refused with a message that says what the file has. A port of `tools/midi-prototype/midilib.py`.
+- **Writer (`src/core/midi/write.ts`, pure, tested):** a small track-and-event writer (VLQ, meta events, end of track) producing a standard MIDI file as bytes. Tests read the bytes back with the reader.
+- **Export (`src/core/midi/export.ts`, pure, tested):** the Song flattened as [midi-import.md](midi-import.md) says: format 1, 480 ticks per quarter, a conductor track (BPM, meter) and five named tracks; the programs and channels of [sound.md](sound.md) (Bass 33 on channel 1, Rhythm Guitar 26 on 2, Lead Guitar 26 on 3, Keys 54 on 4, Drums on 10), drum rows as 36, 38, 42, 46, 49 (each hit a short note), string notes as pitches, controller 7 from instrument volume and master volume, velocity 100. Mute and isolate are ignored. It uses the Song plan of `playback.ts` for the notes, so export and playback agree. An empty Song says "The Song has no blocks, so there is nothing to export."
+- **Plumbing:** `files.exportMidi(bytes, suggestedName)` in the bridge with a Save dialog in the main process (filter `.mid`), like `exportWav`; a hook `useMidiExport` like `useWavExport`; an "Export MIDI" button in the Mixer footer row next to "Export WAV".
+
+**Relies on:** steps 2, 4, 11 and 12; [midi-import.md](midi-import.md) (the Export section); [sound.md](sound.md); the prototype's `midilib.py`.
+
+**Done when:** tests pass for the reader (including the real files in `midis/`: the eleven album files parse, with track and note counts equal to the prototype's where it prints them), the writer round trip and the export (pitches, positions, lengths, channels, programs, controller 7, the empty Song); typecheck, lint, test and build pass. The dialog is type checked and built, not run.
+
+**Decisions it may need:** a drum hit's length (assumed one 16th, 120 ticks); the controller 7 value (assumed round(volume x master / 100 x 127 / 100), recorded in open-items).
+
+**Built (2026-11-09):** `src/core/midi/read.ts` (the reader, checked against the prototype on the eleven album files through `fixtures/reader.json` from `tools/midi-prototype/dump_reader.py`), `write.ts`, `export.ts` (all tested), the bridge function `files.exportMidi` with its main-process handler, the hook `src/state/useMidiExport.ts` and an "Export MIDI" button in the Mixer footer row. The writer got an optional `lengthTicks` so every track ends at the end of the Song. Assumptions are in [open-items.md](open-items.md). The dialog was type checked and built, not run, as planned.
+
 ## Later steps
 
 Broad strokes only. The next replan (the first `/plan24` run after step 15) details steps 16 to 18. The horizon stays at 24; the order is unchanged.
@@ -313,7 +315,7 @@ Broad strokes only. The next replan (the first `/plan24` run after step 15) deta
 | 10 | Pattern tools and shortcuts | done | 10-tools |
 | 11 | Saving and files | done | 11-files |
 | 12 | WAV export | done | 12-wav |
-| 13 | MIDI reader, writer and export | todo | |
+| 13 | MIDI reader, writer and export | done | 13-midi |
 | 14 | MIDI import 1: time, tempo, drums, range | todo | |
 | 15 | MIDI import 2: strings and frets | todo | |
 | 16 | MIDI import 3: patterns and lanes | todo | |

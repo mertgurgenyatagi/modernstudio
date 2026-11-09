@@ -202,4 +202,4 @@ The Song arrangement is flattened and written as a standard MIDI file. This is t
 
 ## Building it
 
-Both directions are small. The prototype's file reader is about 100 lines and a writer is about the same, so no library is needed; a library such as `@tonejs/midi` would also do. Not decided. The prototype in [tools/midi-prototype/](../tools/midi-prototype/) is the reference for the numbers above: the cost table, the 24 kept arrangements, the tolerance on the fret count, and the weights 1 and 6 in the tiling.
+Both directions are small. The prototype's file reader is about 100 lines and a writer is about the same, so no library is needed. Decided in plan24 step 13: own code, in `src/core/midi/` (`read.ts`, `write.ts`, `export.ts`). The prototype in [tools/midi-prototype/](../tools/midi-prototype/) is the reference for the numbers above: the cost table, the 24 kept arrangements, the tolerance on the fret count, and the weights 1 and 6 in the tiling.

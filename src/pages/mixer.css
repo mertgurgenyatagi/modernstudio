@@ -200,8 +200,13 @@
   white-space: nowrap;
 }
 
-/* The footer row's actions (Export WAV now; Import MIDI and Export MIDI join it later). */
+/* The footer row's actions (Export WAV and Export MIDI; Import MIDI joins them later). Two buttons that wrap if the cell is narrow. */
 .export {
+  white-space: normal;
+}
+
+.export .action {
+  margin: 0 0.5rem 0.25rem 0;
   white-space: nowrap;
 }
 
