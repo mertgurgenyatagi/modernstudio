@@ -3,7 +3,7 @@
 The build plan, run one step per invocation of the `/plan24` skill ([.claude/skills/plan24/SKILL.md](../.claude/skills/plan24/SKILL.md)). Step numbers are plan24's own and have nothing to do with the older branches `00-overall` to `04-guitars`.
 
 Horizon: 24
-Last completed step: 13
+Last completed step: 14
 Replanned after step: 12
 Plan complete: no
 
@@ -19,23 +19,7 @@ The plan is replanned after every third completed step (3, 6, 9, and so on). Don
 
 ## Next three steps
 
-Replanned after step 12 (2026-11-09). The horizon stays at 24 and the order is unchanged. Step 13 is built (in the history below). Steps 14 and 15 are in detail here; steps 16 to 24 are in "Later steps". The next replan comes after step 15.
-
-### Step 14: MIDI import, part one: time, tempo, drums, range
-
-**Produces:** the first half of the converter as pure code in `src/core/midi/`, checked against the Python prototype.
-
-- **Mapping guesses (`guess.ts`):** the track list with the pre-filled assignment of [midi-import.md](midi-import.md) (channel 10, "bass", vocals, program families; Bass and Keys take the busiest track, guitars named or busiest; the rest Skip; per-row note counts).
-- **Tempo, meter and pickup (`timing.ts`):** the dominant tempo (clamped 40 to 300, 120 if none), the dominant meter (4/4 and 3/4 only, else a refusal that names the meter), the pickup shift, and the notes about ignored tempo and meter changes for the report.
-- **Grid snapping (`quantize.ts`):** starts and ends to the allowed positions in twelfths (0, 2, 3, 4, 6, 8, 9, 10; ties go to the straight 16th), minimum length 2 twelfths, the overlap and duplicate rules, the 256-bar cut.
-- **Drums and range (`drums.ts`, `range.ts`):** the channel-10 map to the five rows with the dropped sounds counted; the octave folding into each instrument's range (counting moved notes), parameterised by the fret count (the choice of the count is step 15).
-- **A check against the prototype:** a script `tools/midi-prototype/dump.py` writes the prototype's numbers for the eleven album files (tempo, meter, shift, bars, note counts after snapping, dropped hits, octave shifts) to a JSON fixture in `src/core/midi/fixtures/`; a test runs the TypeScript on the same files from `midis/` and compares. If Python cannot run, the step compares against the figures in the [midi-import.md](midi-import.md) album table and records the gap in open-items.
-
-**Relies on:** step 13, [midi-import.md](midi-import.md), the prototype's `pipeline.py` and `report.py`.
-
-**Done when:** unit tests for each piece pass, the album comparison passes for all eleven files; typecheck, lint, test and build pass.
-
-**Decisions it may need:** where the converter's types live (`src/core/midi/types.ts`); how a refusal is returned (a result type with a message, never an exception); ties at exact midpoints (the prototype's rule).
+Replanned after step 12 (2026-11-09). The horizon stays at 24 and the order is unchanged. Steps 13 and 14 are built (in the history below). Step 15 is in detail here; steps 16 to 24 are in "Later steps". The next replan comes after step 15, when steps 16 to 18 are detailed.
 
 ### Step 15: MIDI import, part two: strings and frets
 
@@ -286,6 +270,24 @@ Replanned after step 12 (2026-11-09). The horizon stays at 24 and the order is u
 
 **Built (2026-11-09):** `src/core/midi/read.ts` (the reader, checked against the prototype on the eleven album files through `fixtures/reader.json` from `tools/midi-prototype/dump_reader.py`), `write.ts`, `export.ts` (all tested), the bridge function `files.exportMidi` with its main-process handler, the hook `src/state/useMidiExport.ts` and an "Export MIDI" button in the Mixer footer row. The writer got an optional `lengthTicks` so every track ends at the end of the Song. Assumptions are in [open-items.md](open-items.md). The dialog was type checked and built, not run, as planned.
 
+### Step 14: MIDI import, part one: time, tempo, drums, range
+
+**Produces:** the first half of the converter as pure code in `src/core/midi/`, checked against the Python prototype.
+
+- **Mapping guesses (`guess.ts`):** the track list with the pre-filled assignment of [midi-import.md](midi-import.md) (channel 10, "bass", vocals, program families; Bass and Keys take the busiest track, guitars named or busiest; the rest Skip; per-row note counts).
+- **Tempo, meter and pickup (`timing.ts`):** the dominant tempo (clamped 40 to 300, 120 if none), the dominant meter (4/4 and 3/4 only, else a refusal that names the meter), the pickup shift, and the notes about ignored tempo and meter changes for the report.
+- **Grid snapping (`quantize.ts`):** starts and ends to the allowed positions in twelfths (0, 2, 3, 4, 6, 8, 9, 10; ties go to the straight 16th), minimum length 2 twelfths, the overlap and duplicate rules, the 256-bar cut.
+- **Drums and range (`drums.ts`, `range.ts`):** the channel-10 map to the five rows with the dropped sounds counted; the octave folding into each instrument's range (counting moved notes), parameterised by the fret count (the choice of the count is step 15).
+- **A check against the prototype:** a script `tools/midi-prototype/dump.py` writes the prototype's numbers for the eleven album files (tempo, meter, shift, bars, note counts after snapping, dropped hits, octave shifts) to a JSON fixture in `src/core/midi/fixtures/`; a test runs the TypeScript on the same files from `midis/` and compares. If Python cannot run, the step compares against the figures in the [midi-import.md](midi-import.md) album table and records the gap in open-items.
+
+**Relies on:** step 13, [midi-import.md](midi-import.md), the prototype's `pipeline.py` and `report.py`.
+
+**Done when:** unit tests for each piece pass, the album comparison passes for all eleven files; typecheck, lint, test and build pass.
+
+**Decisions it may need:** where the converter's types live (`src/core/midi/types.ts`); how a refusal is returned (a result type with a message, never an exception); ties at exact midpoints (the prototype's rule).
+
+**Built (2026-11-09):** `src/core/midi/` got `types.ts` (the `Result` type), `guess.ts`, `timing.ts`, `quantize.ts`, `drums.ts` and `range.ts`, all tested in `convert.test.ts`; `tools/midi-prototype/dump.py` writes `fixtures/import.json`, and the test compares all eleven album files with it (mapping, BPM, tempos, meter, shift, bars, drum hits and drops, note counts, start error, octave moves at 5, 7 and 12 frets). Python ran, so the fallback to the document's table was not needed. Assumptions (the pickup, the span for the tempo, dropping a too-short restarted note, the bar count) are in [open-items.md](open-items.md).
+
 ## Later steps
 
 Broad strokes only. The next replan (the first `/plan24` run after step 15) details steps 16 to 18. The horizon stays at 24; the order is unchanged.
@@ -316,7 +318,7 @@ Broad strokes only. The next replan (the first `/plan24` run after step 15) deta
 | 11 | Saving and files | done | 11-files |
 | 12 | WAV export | done | 12-wav |
 | 13 | MIDI reader, writer and export | done | 13-midi |
-| 14 | MIDI import 1: time, tempo, drums, range | todo | |
+| 14 | MIDI import 1: time, tempo, drums, range | done | 14-import-time |
 | 15 | MIDI import 2: strings and frets | todo | |
 | 16 | MIDI import 3: patterns and lanes | todo | |
 | 17 | MIDI import screens | todo | |

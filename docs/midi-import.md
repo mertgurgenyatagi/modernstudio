@@ -203,3 +203,5 @@ The Song arrangement is flattened and written as a standard MIDI file. This is t
 ## Building it
 
 Both directions are small. The prototype's file reader is about 100 lines and a writer is about the same, so no library is needed. Decided in plan24 step 13: own code, in `src/core/midi/` (`read.ts`, `write.ts`, `export.ts`). The prototype in [tools/midi-prototype/](../tools/midi-prototype/) is the reference for the numbers above: the cost table, the 24 kept arrangements, the tolerance on the fret count, and the weights 1 and 6 in the tiling.
+
+Built so far (plan24 step 14): the mapping guess, tempo, meter and pickup, grid snapping with the same-pitch rules, the drum map and the octave folding, in `src/core/midi/` (`guess.ts`, `timing.ts`, `quantize.ts`, `drums.ts`, `range.ts`). `tools/midi-prototype/dump.py` writes the figures the tests compare with. The assumptions where this document was silent are in [open-items.md](open-items.md).
