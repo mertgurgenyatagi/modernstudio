@@ -4,7 +4,7 @@ The build plan, run one step per invocation of the `/plan24` skill ([.claude/ski
 
 Horizon: 24
 Last completed step: 21
-Replanned after step: 18
+Replanned after step: 21
 Plan complete: no
 
 The plan is replanned after every third completed step (3, 6, 9, and so on). Done steps are history and are never changed by a replan.
@@ -19,11 +19,23 @@ The plan is replanned after every third completed step (3, 6, 9, and so on). Don
 
 ## Next three steps
 
-Replanned after step 18 (2026-11-09). The horizon stays at 24; the order is unchanged. The plan ends at step 22; 23 and 24 are reserves. Steps 19 to 21 are done (see the history below). Step 22 is next; since 21 is a multiple of 3, the next invocation replans first (nothing but step 22 and the reserves is left to plan), then builds step 22.
+Replanned after step 21 (2026-11-09). The horizon stays at 24; the order is unchanged. The plan ends at step 22; 23 and 24 are reserves, built only when the user asks for one by name. Only step 22 is left to detail.
 
 ### Step 22: Final pass and handover
 
-Detailed at the replan that comes before it. In broad strokes: see "Later steps" below.
+**Produces:** a clean, verified state of the repository and a handover the user can read in five minutes. The last step of the plan.
+
+- **Full verification, run and recorded:** `npm run typecheck`, `npm run lint`, `npm test`, `npm run build`, `npm run check:sounds`, `npm run check:package` (after a `npm run pack`, or on the existing `release/` if present) and `npm run check:docs`. Any failure is fixed, not noted. The counts (tests, files) are written into the handover.
+- **Documentation tidy:** the Status paragraph of [README.md](README.md) (docs) is cut from a step-by-step story to a short current state (what the app is, what is built, where to look); the root `README.md` gets a one-paragraph "What is built" and a link to the handover; the "Next" paragraph of the docs README says the plan is complete and what the user does next. The reading order keeps its numbers; [handover.md](handover.md) is added to it.
+- **`docs/handover.md` (new):** what is built (per page and per feature, one line each), what was never run in a window (a pointer to "Needs the user's check" in [open-items.md](open-items.md) and to [first-run.md](first-run.md), not a copy), the commands, the folder map, the numbers worth knowing (tests, installer size), the assumptions the user is most likely to want to overturn (taken from open-items), and how to ask for a reserve step (23 or 24) for fixes from the first run.
+- **Check the open items once more** against the code for anything the last steps changed (step 22 itself changes none); anything found undecided is decided and recorded.
+- **Close the plan:** step 22 marked done, "Last completed step: 22", `Plan complete: yes`, the "Later steps" section reduced to the reserves, the "Next three steps" section saying the plan is complete.
+
+**Relies on:** everything before; [open-items.md](open-items.md), [first-run.md](first-run.md), [fit.md](fit.md).
+
+**Done when:** all seven checks above pass (their output seen in this step, not remembered); the link checker finds nothing broken; the handover exists and is in the reading order; the plan header says `Plan complete: yes`.
+
+**Decisions it may need:** the handover's name and place (assumed `docs/handover.md`); whether to bump the version in `package.json` (assumed no, 0.1.0 stays until the user has run it); whether to tag the release (assumed no).
 
 ## Done steps (history)
 
@@ -402,9 +414,8 @@ Detailed at the replan that comes before it. In broad strokes: see "Later steps"
 
 ## Later steps
 
-Broad strokes only. The replan after step 21 comes at the start of the next invocation and details step 22. The horizon stays at 24.
+Step 22 is detailed above (replanned after step 21). The horizon stays at 24.
 
-- 22: Final lint, type check, test and build pass; documentation tidy (README and `docs/README.md` status paragraph shortened to the current state, `plan24.md` closed with `Plan complete: yes`); handover notes for the user (what is built, what was never run, what to try first). Ends the plan.
 - 23 and 24: Reserve for fixes and for anything that grew past one step; built only when the user asks.
 
 ## All steps
