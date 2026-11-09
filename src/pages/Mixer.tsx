@@ -9,6 +9,7 @@ import { useMidiExport } from '../state/useMidiExport';
 import { useMidiImport } from '../state/useMidiImport';
 import { useWavExport } from '../state/useWavExport';
 import { ImportMapping } from '../ui/ImportMapping';
+import { ImportReport } from '../ui/ImportReport';
 import { LevelSlider } from '../ui/LevelSlider';
 import { NumberField } from '../ui/NumberField';
 import './mixer.css';
@@ -179,6 +180,9 @@ export function Mixer() {
           </tr>
         </tfoot>
       </table>
+      {state.importReport !== null && !importing && (
+        <ImportReport report={state.importReport} name={name} onClose={() => dispatch({ type: 'dismissReport' })} />
+      )}
       <ImportMapping stage={midiImport.stage} onAssign={midiImport.assign} onConvert={() => void midiImport.convert()} onCancel={midiImport.cancel} />
     </section>
   );

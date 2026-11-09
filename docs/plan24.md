@@ -3,7 +3,7 @@
 The build plan, run one step per invocation of the `/plan24` skill ([.claude/skills/plan24/SKILL.md](../.claude/skills/plan24/SKILL.md)). Step numbers are plan24's own and have nothing to do with the older branches `00-overall` to `04-guitars`.
 
 Horizon: 24
-Last completed step: 17
+Last completed step: 18
 Replanned after step: 15
 Plan complete: no
 
@@ -19,21 +19,7 @@ The plan is replanned after every third completed step (3, 6, 9, and so on). Don
 
 ## Next three steps
 
-Replanned after step 15 (2026-11-09). The horizon stays at 24. Steps 16 and 17 are built (in the history below); step 18 is below in detail; steps 19 to 24 are in "Later steps". The old step 18 (the album check) is folded into the new step 18, and the import report moves there from step 17, so that step 16 can finish the converter and steps 17 and 18 each hold one screen. The next replan comes after step 18 (a multiple of 3), and it will detail steps 19 to 21.
-
-### Step 18: MIDI import screens, part two: the report, and the album check
-
-**Produces:** the import report and an end-to-end check of the whole import on the eleven album files.
-
-- **Report (`src/ui/ImportReport.tsx` and a pure `reportLines` in `src/core/midi/`, tested):** after the import the report shows over the new project, dismissible: tempo and meter used (with the number of other tempos ignored and any meter change named by bar), the number of bars (and a cut at 256), and one row per instrument: the track used, notes, octave shifts, dropped drum hits by sound, fret count, patterns, blocks and warnings. Wording is plain and short; the pure part builds the lines from the report data so it can be tested.
-- **End-to-end album test:** for each of the eleven files, from the bytes in `midis/` through `readMidi`, the guessed mapping and `convertMidi`: the project passes the model's checks; its tempo, meter, bars, patterns and blocks per lane equal the prototype's figures; playing the Song plan yields the same notes as the quantized source (by pitch and position, per instrument); exporting to MIDI and reading it back gives the same pitches and times; saving to JSON and parsing gives an equal project. The totals the document quotes (51 lanes, 679 blocks, 645 of them 8 bars long, busiest lane 18 patterns) are asserted. Any difference is recorded in open-items, not hidden.
-- **Documents:** [midi-import.md](midi-import.md) gets a "Built" paragraph for the whole import; the open item "the mapping step and the import report are not drawn" is closed; [page-designs.md](page-designs.md) records the mapping panel and the report as the assistant's design.
-
-**Relies on:** steps 16 and 17; `report.py`.
-
-**Done when:** the album test passes for all eleven files; the report lines are tested; typecheck, lint, test and build pass; the panel and the report are reasoned to fit 960 by 540.
-
-**Decisions it may need:** how the report is dismissed (assumed: a Close button and Escape; it is not stored in the project); whether it is reachable later (assumed no, it shows once); the placement (assumed: a panel over the Mixer, like the mapping step).
+Step 18 is done and 18 is a multiple of 3, so the next invocation replans first ("Replanned after step" is still 15) and will detail steps 19 to 21 from "Later steps" below. The horizon stays at 24.
 
 ## Done steps (history)
 
@@ -340,9 +326,25 @@ Replanned after step 15 (2026-11-09). The horizon stays at 24. Steps 16 and 17 a
 
 **Built (2026-11-09):** `src/state/importFlow.ts` (the pure flow: stages, row assignments, the figures per row and per instrument, the wording of refusals; tested in `importFlow.test.ts` on a made-up file and on New York City Cops), `src/state/useMidiImport.ts`, `src/ui/ImportMapping.tsx` and `import.css` (the panel), the bridge function `files.chooseMidi` with its main-process handler, and an "Import MIDI" button in the Mixer footer row. For the new unsaved, named project the store got `draftName` and `importReport` and `replaceProject` got options (`name`, `unsaved`, `report`); `displayName` in `fileState.ts` names a project with no file, and the two export hooks now take that name. Assumptions (the question before the dialog, refusals on the quiet line, the panel covering the window, the name and unsaved state of an import) are in [open-items.md](open-items.md). Not run in a window, as planned.
 
+### Step 18: MIDI import screens, part two: the report, and the album check
+
+**Produces:** the import report and an end-to-end check of the whole import on the eleven album files.
+
+- **Report (`src/ui/ImportReport.tsx` and a pure `reportLines` in `src/core/midi/`, tested):** after the import the report shows over the new project, dismissible: tempo and meter used (with the number of other tempos ignored and any meter change named by bar), the number of bars (and a cut at 256), and one row per instrument: the track used, notes, octave shifts, dropped drum hits by sound, fret count, patterns, blocks and warnings. Wording is plain and short; the pure part builds the lines from the report data so it can be tested.
+- **End-to-end album test:** for each of the eleven files, from the bytes in `midis/` through `readMidi`, the guessed mapping and `convertMidi`: the project passes the model's checks; its tempo, meter, bars, patterns and blocks per lane equal the prototype's figures; playing the Song plan yields the same notes as the quantized source (by pitch and position, per instrument); exporting to MIDI and reading it back gives the same pitches and times; saving to JSON and parsing gives an equal project. The totals the document quotes (51 lanes, 679 blocks, 645 of them 8 bars long, busiest lane 18 patterns) are asserted. Any difference is recorded in open-items, not hidden.
+- **Documents:** [midi-import.md](midi-import.md) gets a "Built" paragraph for the whole import; the open item "the mapping step and the import report are not drawn" is closed; [page-designs.md](page-designs.md) records the mapping panel and the report as the assistant's design.
+
+**Relies on:** steps 16 and 17; `report.py`.
+
+**Done when:** the album test passes for all eleven files; the report lines are tested; typecheck, lint, test and build pass; the panel and the report are reasoned to fit 960 by 540.
+
+**Decisions it may need:** how the report is dismissed (assumed: a Close button and Escape; it is not stored in the project); whether it is reachable later (assumed no, it shows once); the placement (assumed: a panel over the Mixer, like the mapping step).
+
+**Built (2026-11-09):** `src/core/midi/reportLines.ts` (the pure wording, tested in `reportLines.test.ts`), `src/ui/ImportReport.tsx` with its styles in `import.css`, shown by the Mixer while the store holds `importReport` and closed by the existing `dismissReport` action (Close or Escape). `src/core/midi/album.test.ts` runs the eleven files end to end (prototype figures, model rules, JSON round trip, `songPlan` against the quantized source, MIDI export and read back, the totals); it passed with no difference to record. [midi-import.md](midi-import.md) has its "Built" paragraph, [page-designs.md](page-designs.md) records both panels, and the assumptions are in [open-items.md](open-items.md). Not run in a window, as planned.
+
 ## Later steps
 
-Broad strokes only. The next replan comes after step 18. The horizon stays at 24.
+Broad strokes only. The next replan comes at the start of the next invocation (after step 18). The horizon stays at 24.
 
 - 19: Fit pass at 960 by 540 for every page, and the vertical scroll of the Guitar editor (reasoning and any pure layout maths, since no browser is used).
 - 20: Installer with `electron-builder`; the runtime-only parts excluded from the package.
@@ -371,7 +373,7 @@ Broad strokes only. The next replan comes after step 18. The horizon stays at 24
 | 15 | MIDI import 2: strings and frets | done | 15-fretting |
 | 16 | MIDI import 3: patterns, lanes, project | done | 16-patterns |
 | 17 | MIDI import screens 1: button, flow, mapping | done | 17-import-ui |
-| 18 | MIDI import screens 2: report, album check | todo | |
+| 18 | MIDI import screens 2: report, album check | done | 18-report |
 | 19 | Fit at 960 by 540 | todo | |
 | 20 | Installer | todo | |
 | 21 | Open items and questionnaire 17 | todo | |
