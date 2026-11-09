@@ -1,0 +1,651 @@
+{
+ "Is This it (2)": {
+  "bass": {
+   "notes": 182,
+   "fretCount": 12,
+   "penalties": {
+    "5": 168,
+    "7": 120,
+    "12": 24
+   },
+   "folded": 8,
+   "placed": 182,
+   "groups": 182,
+   "shared": 0,
+   "wide": 0,
+   "ringing": 0,
+   "open": 0.0,
+   "high": 0.4835164835164835,
+   "move": 1.2682926829268293,
+   "hash": "85b5b45e73085bc67de5854287d60065b3f2da6b"
+  },
+  "rhythm": {
+   "notes": 1358,
+   "fretCount": 12,
+   "penalties": {
+    "5": 981,
+    "7": 624,
+    "12": 0
+   },
+   "folded": 0,
+   "placed": 1358,
+   "groups": 407,
+   "shared": 0,
+   "wide": 0,
+   "ringing": 0,
+   "open": 0.016200294550810016,
+   "high": 0.8519882179675994,
+   "move": 0.33742384682332455,
+   "hash": "70890d6ff89ef6363a1ce830859fcfc3dc1c096e"
+  },
+  "lead": {
+   "notes": 798,
+   "fretCount": 12,
+   "penalties": {
+    "5": 469,
+    "7": 240,
+    "12": 0
+   },
+   "folded": 0,
+   "placed": 798,
+   "groups": 423,
+   "shared": 0,
+   "wide": 0,
+   "ringing": 0,
+   "open": 0.07268170426065163,
+   "high": 0.5614035087719298,
+   "move": 0.5690476190476189,
+   "hash": "3b35f3dcc888c485b650c24a57753ed00c161967"
+  }
+ },
+ "The Modern Age (5)": {
+  "bass": {
+   "notes": 930,
+   "fretCount": 5,
+   "penalties": {
+    "5": 0,
+    "7": 0,
+    "12": 0
+   },
+   "folded": 0,
+   "placed": 930,
+   "groups": 930,
+   "shared": 0,
+   "wide": 0,
+   "ringing": 0,
+   "open": 0.38064516129032255,
+   "high": 0.0,
+   "move": 0.03893805309734513,
+   "hash": "5826e07b0ccd45961afe15385356945adc0f939c"
+  },
+  "rhythm": {
+   "notes": 4438,
+   "fretCount": 12,
+   "penalties": {
+    "5": 2383,
+    "7": 1532,
+    "12": 0
+   },
+   "folded": 0,
+   "placed": 4438,
+   "groups": 894,
+   "shared": 0,
+   "wide": 0,
+   "ringing": 0,
+   "open": 0.014420910319963948,
+   "high": 0.4952681388012618,
+   "move": 0.15115844544095666,
+   "hash": "862d26a39039394f26096d09b7c41816f21a3dd0"
+  },
+  "lead": {
+   "notes": 2970,
+   "fretCount": 12,
+   "penalties": {
+    "5": 229,
+    "7": 154,
+    "12": 9
+   },
+   "folded": 3,
+   "placed": 2970,
+   "groups": 972,
+   "shared": 0,
+   "wide": 0,
+   "ringing": 0,
+   "open": 0.22154882154882155,
+   "high": 0.0696969696969697,
+   "move": 0.12904398400581607,
+   "hash": "d10cea8734aef6eaa6ee5a1ae3613fb06255790e"
+  }
+ },
+ "Soma (8)": {
+  "bass": {
+   "notes": 560,
+   "fretCount": 7,
+   "penalties": {
+    "5": 6,
+    "7": 0,
+    "12": 0
+   },
+   "folded": 0,
+   "placed": 560,
+   "groups": 560,
+   "shared": 0,
+   "wide": 0,
+   "ringing": 0,
+   "open": 0.775,
+   "high": 0.0,
+   "move": 0.028037383177570093,
+   "hash": "71017287a4156c4dc90bb1d11700fcfd9ef15a0a"
+  },
+  "rhythm": {
+   "notes": 1868,
+   "fretCount": 12,
+   "penalties": {
+    "5": 1128,
+    "7": 432,
+    "12": 0
+   },
+   "folded": 0,
+   "placed": 1868,
+   "groups": 575,
+   "shared": 0,
+   "wide": 0,
+   "ringing": 0,
+   "open": 0.0,
+   "high": 0.1349036402569593,
+   "move": 0.3025497512437812,
+   "hash": "55e52d193f19666c3d23257a9b85cf5bba6c2afd"
+  },
+  "lead": {
+   "notes": 706,
+   "fretCount": 12,
+   "penalties": {
+    "5": 861,
+    "7": 852,
+    "12": 0
+   },
+   "folded": 0,
+   "placed": 706,
+   "groups": 439,
+   "shared": 0,
+   "wide": 0,
+   "ringing": 0,
+   "open": 0.06232294617563739,
+   "high": 0.5254957507082153,
+   "move": 0.44672131147540983,
+   "hash": "fc6c88d130c810d812aae5aaa442adcb9e5ed01d"
+  }
+ },
+ "Barely Legal (2)": {
+  "bass": {
+   "notes": 1150,
+   "fretCount": 5,
+   "penalties": {
+    "5": 0,
+    "7": 0,
+    "12": 0
+   },
+   "folded": 0,
+   "placed": 1150,
+   "groups": 1150,
+   "shared": 0,
+   "wide": 0,
+   "ringing": 0,
+   "open": 0.18521739130434783,
+   "high": 0.0,
+   "move": 0.013015184381778741,
+   "hash": "66922dc26928ce632335e6a3c9758ba0f371f96a"
+  },
+  "rhythm": {
+   "notes": 4807,
+   "fretCount": 12,
+   "penalties": {
+    "5": 2181,
+    "7": 1898,
+    "12": 0
+   },
+   "folded": 0,
+   "placed": 4807,
+   "groups": 1217,
+   "shared": 0,
+   "wide": 0,
+   "ringing": 0,
+   "open": 0.0226752652381943,
+   "high": 0.5360931974204285,
+   "move": 0.1281048758049678,
+   "hash": "2d62586f1dd9b9e13320b660b729438c6391a6c2"
+  },
+  "lead": {
+   "notes": 2617,
+   "fretCount": 12,
+   "penalties": {
+    "5": 129,
+    "7": 81,
+    "12": 0
+   },
+   "folded": 0,
+   "placed": 2617,
+   "groups": 779,
+   "shared": 0,
+   "wide": 0,
+   "ringing": 0,
+   "open": 0.09743981658387467,
+   "high": 0.07909820405043944,
+   "move": 0.043955488113302965,
+   "hash": "801146c077aedc9cccd6334c11003f720f77271b"
+  }
+ },
+ "Someday (6)": {
+  "bass": {
+   "notes": 309,
+   "fretCount": 5,
+   "penalties": {
+    "5": 0,
+    "7": 0,
+    "12": 0
+   },
+   "folded": 0,
+   "placed": 309,
+   "groups": 309,
+   "shared": 0,
+   "wide": 0,
+   "ringing": 0,
+   "open": 0.7281553398058253,
+   "high": 0.0,
+   "move": 1.6,
+   "hash": "3969cf4b1002423145dc12017ea459c0c672d6c3"
+  },
+  "rhythm": {
+   "notes": 4343,
+   "fretCount": 7,
+   "penalties": {
+    "5": 384,
+    "7": 0,
+    "12": 0
+   },
+   "folded": 0,
+   "placed": 4343,
+   "groups": 1086,
+   "shared": 0,
+   "wide": 0,
+   "ringing": 0,
+   "open": 0.17614552152889706,
+   "high": 0.0,
+   "move": 0.05942496924969252,
+   "hash": "1f55101611978df8d041cf5e179441107d452208"
+  },
+  "lead": {
+   "notes": 958,
+   "fretCount": 12,
+   "penalties": {
+    "5": 493,
+    "7": 179,
+    "12": 0
+   },
+   "folded": 0,
+   "placed": 958,
+   "groups": 287,
+   "shared": 0,
+   "wide": 0,
+   "ringing": 0,
+   "open": 0.10020876826722339,
+   "high": 0.08455114822546973,
+   "move": 0.8100000000000003,
+   "hash": "a8989284d305a1e7ad47402261329b6f7347e773"
+  }
+ },
+ "Alone Together (6)": {
+  "bass": {
+   "notes": 653,
+   "fretCount": 12,
+   "penalties": {
+    "5": 762,
+    "7": 603,
+    "12": 138
+   },
+   "folded": 46,
+   "placed": 653,
+   "groups": 653,
+   "shared": 0,
+   "wide": 0,
+   "ringing": 0,
+   "open": 0.29402756508422667,
+   "high": 0.32465543644716693,
+   "move": 0.5855072463768116,
+   "hash": "435269b7e2688b016ed4f404c2b648f849abe440"
+  },
+  "rhythm": {
+   "notes": 2766,
+   "fretCount": 12,
+   "penalties": {
+    "5": 1160,
+    "7": 112,
+    "12": 0
+   },
+   "folded": 0,
+   "placed": 2766,
+   "groups": 658,
+   "shared": 0,
+   "wide": 0,
+   "ringing": 0,
+   "open": 0.024222704266088215,
+   "high": 0.02024584237165582,
+   "move": 0.06441025641025637,
+   "hash": "9f29a94cfdab50b03a66b841b3bb7d6740d715b7"
+  },
+  "lead": {
+   "notes": 708,
+   "fretCount": 12,
+   "penalties": {
+    "5": 334,
+    "7": 231,
+    "12": 13
+   },
+   "folded": 1,
+   "placed": 708,
+   "groups": 593,
+   "shared": 5,
+   "wide": 0,
+   "ringing": 0,
+   "open": 0.3220338983050847,
+   "high": 0.2344632768361582,
+   "move": 0.5526315789473685,
+   "hash": "a3bae66d5a561eaffd14d006bdae4f2d0c5abf01"
+  }
+ },
+ "Last Night (8)": {
+  "bass": {
+   "notes": 425,
+   "fretCount": 5,
+   "penalties": {
+    "5": 0,
+    "7": 0,
+    "12": 0
+   },
+   "folded": 0,
+   "placed": 425,
+   "groups": 425,
+   "shared": 0,
+   "wide": 0,
+   "ringing": 0,
+   "open": 0.40705882352941175,
+   "high": 0.0,
+   "move": 0.02030456852791878,
+   "hash": "bc7ad8ea3cfc91c7921744522a5155de5e961d76"
+  },
+  "rhythm": {
+   "notes": 2518,
+   "fretCount": 12,
+   "penalties": {
+    "5": 696,
+    "7": 392,
+    "12": 0
+   },
+   "folded": 0,
+   "placed": 2518,
+   "groups": 711,
+   "shared": 0,
+   "wide": 0,
+   "ringing": 0,
+   "open": 0.0,
+   "high": 0.08498808578236695,
+   "move": 0.05947343676539728,
+   "hash": "de83cea4cc4c7ac5bff9e3713ab96a6c107a721d"
+  },
+  "lead": {
+   "notes": 1335,
+   "fretCount": 12,
+   "penalties": {
+    "5": 300,
+    "7": 294,
+    "12": 20
+   },
+   "folded": 6,
+   "placed": 1335,
+   "groups": 478,
+   "shared": 1,
+   "wide": 0,
+   "ringing": 0,
+   "open": 0.0,
+   "high": 0.18352059925093633,
+   "move": 0.3080168776371308,
+   "hash": "8ce3be975393d1cc2c90d450d91b2b599d19567f"
+  }
+ },
+ "Hard to Explain (5)": {
+  "bass": {
+   "notes": 1182,
+   "fretCount": 5,
+   "penalties": {
+    "5": 0,
+    "7": 0,
+    "12": 0
+   },
+   "folded": 0,
+   "placed": 1182,
+   "groups": 1182,
+   "shared": 0,
+   "wide": 0,
+   "ringing": 0,
+   "open": 0.5211505922165821,
+   "high": 0.0,
+   "move": 0.0708955223880597,
+   "hash": "ad6115ccea8288ab0b4e5ff2c36cf9b456f6e658"
+  },
+  "rhythm": {
+   "notes": 3654,
+   "fretCount": 5,
+   "penalties": {
+    "5": 0,
+    "7": 0,
+    "12": 0
+   },
+   "folded": 0,
+   "placed": 3654,
+   "groups": 1077,
+   "shared": 0,
+   "wide": 0,
+   "ringing": 0,
+   "open": 0.2019704433497537,
+   "high": 0.0,
+   "move": 0.04339143064633259,
+   "hash": "45e631f25640763542198657459151412cb0d3de"
+  },
+  "lead": {
+   "notes": 2734,
+   "fretCount": 12,
+   "penalties": {
+    "5": 3550,
+    "7": 2950,
+    "12": 1770
+   },
+   "folded": 590,
+   "placed": 2144,
+   "groups": 916,
+   "shared": 0,
+   "wide": 0,
+   "ringing": 0,
+   "open": 0.030783582089552237,
+   "high": 0.2751865671641791,
+   "move": 0.12023217247097844,
+   "hash": "f221ebf5e49b8366e19fc957b07997e29e3d4a8f"
+  }
+ },
+ "New York City Cops (4)": {
+  "bass": {
+   "notes": 599,
+   "fretCount": 12,
+   "penalties": {
+    "5": 30,
+    "7": 18,
+    "12": 0
+   },
+   "folded": 0,
+   "placed": 599,
+   "groups": 599,
+   "shared": 0,
+   "wide": 0,
+   "ringing": 0,
+   "open": 0.4574290484140234,
+   "high": 0.01001669449081803,
+   "move": 0.377431906614786,
+   "hash": "0338112ba639fd1082922c89b435eb570f3e1849"
+  },
+  "rhythm": {
+   "notes": 2145,
+   "fretCount": 12,
+   "penalties": {
+    "5": 778,
+    "7": 384,
+    "12": 16
+   },
+   "folded": 0,
+   "placed": 2145,
+   "groups": 507,
+   "shared": 8,
+   "wide": 0,
+   "ringing": 0,
+   "open": 0.042890442890442894,
+   "high": 0.1337995337995338,
+   "move": 0.13956262425447327,
+   "hash": "227cadc2fb9a63915b587b51be014d4505658de7"
+  },
+  "lead": {
+   "notes": 1836,
+   "fretCount": 7,
+   "penalties": {
+    "5": 192,
+    "7": 0,
+    "12": 0
+   },
+   "folded": 0,
+   "placed": 1836,
+   "groups": 693,
+   "shared": 0,
+   "wide": 0,
+   "ringing": 0,
+   "open": 0.16830065359477125,
+   "high": 0.0,
+   "move": 0.07071759259259258,
+   "hash": "000d9a83dd043e3d466d4b80b933b4418fba4b52"
+  }
+ },
+ "Trying Your Luck (2)": {
+  "bass": {
+   "notes": 773,
+   "fretCount": 12,
+   "penalties": {
+    "5": 168,
+    "7": 96,
+    "12": 0
+   },
+   "folded": 0,
+   "placed": 773,
+   "groups": 773,
+   "shared": 0,
+   "wide": 0,
+   "ringing": 0,
+   "open": 0.46959896507115134,
+   "high": 0.04657179818887452,
+   "move": 0.31097560975609756,
+   "hash": "2ec133d969db0eacf0ab94473c29e70d6a757d46"
+  },
+  "rhythm": {
+   "notes": 3245,
+   "fretCount": 7,
+   "penalties": {
+    "5": 416,
+    "7": 4,
+    "12": 0
+   },
+   "folded": 0,
+   "placed": 3245,
+   "groups": 683,
+   "shared": 2,
+   "wide": 0,
+   "ringing": 0,
+   "open": 0.3016949152542373,
+   "high": 0.0,
+   "move": 0.3993579006141822,
+   "hash": "63a28ce052c1958275491f6aa39318e27b1e48ff"
+  },
+  "lead": {
+   "notes": 763,
+   "fretCount": 12,
+   "penalties": {
+    "5": 147,
+    "7": 120,
+    "12": 48
+   },
+   "folded": 16,
+   "placed": 763,
+   "groups": 605,
+   "shared": 0,
+   "wide": 0,
+   "ringing": 0,
+   "open": 0.36828309305373524,
+   "high": 0.03669724770642202,
+   "move": 0.28095238095238095,
+   "hash": "fc30a9992f260b7d4cdb2f4edee6f9862db2a99e"
+  }
+ },
+ "Take it Or Leave it (2)": {
+  "bass": {
+   "notes": 678,
+   "fretCount": 5,
+   "penalties": {
+    "5": 0,
+    "7": 0,
+    "12": 0
+   },
+   "folded": 0,
+   "placed": 678,
+   "groups": 678,
+   "shared": 0,
+   "wide": 0,
+   "ringing": 0,
+   "open": 0.13569321533923304,
+   "high": 0.0,
+   "move": 0.1767857142857143,
+   "hash": "8b36b82ee287de344fc029da653666eb7c1e40ee"
+  },
+  "rhythm": {
+   "notes": 2633,
+   "fretCount": 5,
+   "penalties": {
+    "5": 0,
+    "7": 0,
+    "12": 0
+   },
+   "folded": 0,
+   "placed": 2633,
+   "groups": 915,
+   "shared": 0,
+   "wide": 0,
+   "ringing": 0,
+   "open": 0.3000379794910748,
+   "high": 0.0,
+   "move": 0.1047297297297298,
+   "hash": "4f93658311cfef026f8ec3bdb594c321035dff3e"
+  },
+  "lead": {
+   "notes": 795,
+   "fretCount": 12,
+   "penalties": {
+    "5": 330,
+    "7": 249,
+    "12": 0
+   },
+   "folded": 0,
+   "placed": 795,
+   "groups": 749,
+   "shared": 0,
+   "wide": 0,
+   "ringing": 0,
+   "open": 0.2,
+   "high": 0.18742138364779873,
+   "move": 0.3080260303687636,
+   "hash": "453c4e823e05185f882e2780ec6ff0b42f93fb3a"
+  }
+ }
+}

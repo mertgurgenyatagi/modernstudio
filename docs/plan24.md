@@ -3,7 +3,7 @@
 The build plan, run one step per invocation of the `/plan24` skill ([.claude/skills/plan24/SKILL.md](../.claude/skills/plan24/SKILL.md)). Step numbers are plan24's own and have nothing to do with the older branches `00-overall` to `04-guitars`.
 
 Horizon: 24
-Last completed step: 14
+Last completed step: 15
 Replanned after step: 12
 Plan complete: no
 
@@ -19,22 +19,7 @@ The plan is replanned after every third completed step (3, 6, 9, and so on). Don
 
 ## Next three steps
 
-Replanned after step 12 (2026-11-09). The horizon stays at 24 and the order is unchanged. Steps 13 and 14 are built (in the history below). Step 15 is in detail here; steps 16 to 24 are in "Later steps". The next replan comes after step 15, when steps 16 to 18 are detailed.
-
-### Step 15: MIDI import, part two: strings and frets
-
-**Produces:** the fingering search as pure code, checked against the prototype.
-
-- **Fingering (`src/core/midi/fretting.ts`):** chord grouping, the cheapest 24 arrangements per chord (a shared string only if nothing else exists), the group and transition costs of [midi-import.md](midi-import.md), the `f` decay by gap, Viterbi with the per-survivor ringing check. A port of `fretting.py` with the same weights.
-- **Fret count choice:** run at 5, 7 and 12, the penalty (3 per octave-moved note, 2 per chord with two notes on one string, 1 per ringing clash), the smallest count within `max(1, 0.2% of the notes)` of the best.
-- **API:** `fingerTrack(notes, tuning, fretCount)` and `chooseFretCount(notes, tuning)`, returning string, fret and the metrics the report needs. The use once per distinct pattern comes in step 16.
-- **Tests:** hand-made cases (a lone note on its lowest string; a chord on distinct strings; open strings do not move the hand; every result has the input pitch; a chord that cannot be placed on distinct strings falls back to a shared string), and a comparison with the prototype's fret counts and metrics on the eleven files, run on whole tracks.
-
-**Relies on:** step 14, [midi-import.md](midi-import.md), `fretting.py`, `instruments.ts` (tunings).
-
-**Done when:** tests pass; the chosen fret counts of the 33 guitar and bass parts equal the prototype's; typecheck, lint, test and build pass; the longest part (Barely Legal's rhythm guitar) finishes in a few seconds (noted in open-items).
-
-**Decisions it may need:** exact float equality with the prototype is not required, only the same fingering choices except for recorded ties; the cap of 24 and the weights stay as in the docs.
+Replanned after step 12 (2026-11-09). The horizon stays at 24 and the order is unchanged. Steps 13 to 15 are built (in the history below). Steps 16 to 24 are in "Later steps". The next `/plan24` run replans first (15 is a multiple of 3) and details steps 16 to 18, then builds step 16.
 
 ## Done steps (history)
 
@@ -288,9 +273,26 @@ Replanned after step 12 (2026-11-09). The horizon stays at 24 and the order is u
 
 **Built (2026-11-09):** `src/core/midi/` got `types.ts` (the `Result` type), `guess.ts`, `timing.ts`, `quantize.ts`, `drums.ts` and `range.ts`, all tested in `convert.test.ts`; `tools/midi-prototype/dump.py` writes `fixtures/import.json`, and the test compares all eleven album files with it (mapping, BPM, tempos, meter, shift, bars, drum hits and drops, note counts, start error, octave moves at 5, 7 and 12 frets). Python ran, so the fallback to the document's table was not needed. Assumptions (the pickup, the span for the tempo, dropping a too-short restarted note, the bar count) are in [open-items.md](open-items.md).
 
+### Step 15: MIDI import, part two: strings and frets
+
+**Produces:** the fingering search as pure code, checked against the prototype.
+
+- **Fingering (`src/core/midi/fretting.ts`):** chord grouping, the cheapest 24 arrangements per chord (a shared string only if nothing else exists), the group and transition costs of [midi-import.md](midi-import.md), the `f` decay by gap, Viterbi with the per-survivor ringing check. A port of `fretting.py` with the same weights.
+- **Fret count choice:** run at 5, 7 and 12, the penalty (3 per octave-moved note, 2 per chord with two notes on one string, 1 per ringing clash), the smallest count within `max(1, 0.2% of the notes)` of the best.
+- **API:** `fingerTrack(notes, tuning, fretCount)` and `chooseFretCount(notes, tuning)`, returning string, fret and the metrics the report needs. The use once per distinct pattern comes in step 16.
+- **Tests:** hand-made cases (a lone note on its lowest string; a chord on distinct strings; open strings do not move the hand; every result has the input pitch; a chord that cannot be placed on distinct strings falls back to a shared string), and a comparison with the prototype's fret counts and metrics on the eleven files, run on whole tracks.
+
+**Relies on:** step 14, [midi-import.md](midi-import.md), `fretting.py`, `instruments.ts` (tunings).
+
+**Done when:** tests pass; the chosen fret counts of the 33 guitar and bass parts equal the prototype's; typecheck, lint, test and build pass; the longest part (Barely Legal's rhythm guitar) finishes in a few seconds (noted in open-items).
+
+**Decisions it may need:** exact float equality with the prototype is not required, only the same fingering choices except for recorded ties; the cap of 24 and the weights stay as in the docs.
+
+**Built (2026-11-09):** `src/core/midi/fretting.ts` (`fingerTrack`, `chooseFretCount`, `chordArrangements`, `measureFingering`) and its test `fretting.test.ts`; `tools/midi-prototype/dump_fretting.py` writes `fixtures/fretting.json`. For all 33 guitar and bass parts the fret count, the three penalties, the metrics and the whole fingering (by hash) equal the prototype's, with no ties to record. The longest part takes about 0.2 s. Assumptions (the folding inside `fingerTrack`, a beam for very wide chords) are in [open-items.md](open-items.md).
+
 ## Later steps
 
-Broad strokes only. The next replan (the first `/plan24` run after step 15) details steps 16 to 18. The horizon stays at 24; the order is unchanged.
+Broad strokes only. The next replan (the next `/plan24` run, as 15 is done) details steps 16 to 18. The horizon stays at 24; the order is unchanged.
 
 - 16: MIDI import, part three: patterns and Song lanes (the tiling), fingering once per distinct pattern, and building a project from the result.
 - 17: MIDI import screens: the Import MIDI button on the Mixer, the unsaved prompt, the mapping step, the report.
@@ -319,7 +321,7 @@ Broad strokes only. The next replan (the first `/plan24` run after step 15) deta
 | 12 | WAV export | done | 12-wav |
 | 13 | MIDI reader, writer and export | done | 13-midi |
 | 14 | MIDI import 1: time, tempo, drums, range | done | 14-import-time |
-| 15 | MIDI import 2: strings and frets | todo | |
+| 15 | MIDI import 2: strings and frets | done | 15-fretting |
 | 16 | MIDI import 3: patterns and lanes | todo | |
 | 17 | MIDI import screens | todo | |
 | 18 | Album check | todo | |
