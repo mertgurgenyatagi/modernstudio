@@ -3,9 +3,9 @@
 The build plan, run one step per invocation of the `/plan24` skill ([.claude/skills/plan24/SKILL.md](../.claude/skills/plan24/SKILL.md)). Step numbers are plan24's own and have nothing to do with the older branches `00-overall` to `04-guitars`.
 
 Horizon: 24
-Last completed step: 21
+Last completed step: 22
 Replanned after step: 21
-Plan complete: no
+Plan complete: yes
 
 The plan is replanned after every third completed step (3, 6, 9, and so on). Done steps are history and are never changed by a replan.
 
@@ -19,23 +19,7 @@ The plan is replanned after every third completed step (3, 6, 9, and so on). Don
 
 ## Next three steps
 
-Replanned after step 21 (2026-11-09). The horizon stays at 24; the order is unchanged. The plan ends at step 22; 23 and 24 are reserves, built only when the user asks for one by name. Only step 22 is left to detail.
-
-### Step 22: Final pass and handover
-
-**Produces:** a clean, verified state of the repository and a handover the user can read in five minutes. The last step of the plan.
-
-- **Full verification, run and recorded:** `npm run typecheck`, `npm run lint`, `npm test`, `npm run build`, `npm run check:sounds`, `npm run check:package` (after a `npm run pack`, or on the existing `release/` if present) and `npm run check:docs`. Any failure is fixed, not noted. The counts (tests, files) are written into the handover.
-- **Documentation tidy:** the Status paragraph of [README.md](README.md) (docs) is cut from a step-by-step story to a short current state (what the app is, what is built, where to look); the root `README.md` gets a one-paragraph "What is built" and a link to the handover; the "Next" paragraph of the docs README says the plan is complete and what the user does next. The reading order keeps its numbers; [handover.md](handover.md) is added to it.
-- **`docs/handover.md` (new):** what is built (per page and per feature, one line each), what was never run in a window (a pointer to "Needs the user's check" in [open-items.md](open-items.md) and to [first-run.md](first-run.md), not a copy), the commands, the folder map, the numbers worth knowing (tests, installer size), the assumptions the user is most likely to want to overturn (taken from open-items), and how to ask for a reserve step (23 or 24) for fixes from the first run.
-- **Check the open items once more** against the code for anything the last steps changed (step 22 itself changes none); anything found undecided is decided and recorded.
-- **Close the plan:** step 22 marked done, "Last completed step: 22", `Plan complete: yes`, the "Later steps" section reduced to the reserves, the "Next three steps" section saying the plan is complete.
-
-**Relies on:** everything before; [open-items.md](open-items.md), [first-run.md](first-run.md), [fit.md](fit.md).
-
-**Done when:** all seven checks above pass (their output seen in this step, not remembered); the link checker finds nothing broken; the handover exists and is in the reading order; the plan header says `Plan complete: yes`.
-
-**Decisions it may need:** the handover's name and place (assumed `docs/handover.md`); whether to bump the version in `package.json` (assumed no, 0.1.0 stays until the user has run it); whether to tag the release (assumed no).
+The plan is complete (step 22 is done). Nothing is left to detail. Steps 23 and 24 are reserves for fixes after the user's first run ([handover.md](handover.md)); they are built only when the user asks for one by name, and a replan before them would detail them then.
 
 ## Done steps (history)
 
@@ -412,9 +396,15 @@ Replanned after step 21 (2026-11-09). The horizon stays at 24; the order is unch
 
 **Built (2026-11-09):** [open-items.md](open-items.md) is regrouped into *Questionnaire 17* (a table: question, how it was settled, step, file, how to overturn), *Decided*, *Assumed by the builder* (the pre-build choices, then each step's items in step order) and *Needs the user's check*. Every old entry is kept; entries that later steps made untrue were restated in place (the Play and Undo buttons of the four layouts, the Mixer's three buttons, "Copy notes to…", the "+20" control, Delete, the fret warning, the "nobody has heard it" line). [first-run.md](first-run.md) is the fourteen-line list of what to try first. `npm run check:docs` (`tools/docs/check-links.mjs`) lists broken relative links and headings in `docs/` and the root README; it finds none (247 links in 35 files). Not run in a window, as planned.
 
+### Step 22: Final pass and handover
+
+**Produces:** a clean, verified repository and a handover. Detailed at the replan after step 21.
+
+**Built (2026-11-09):** the seven checks were run and passed (typecheck, lint, 34 test files with 652 tests, build, `check:sounds` with 45 files, `check:package` on a fresh `npm run pack` with 98 entries and none foreign, `check:docs`). New [handover.md](handover.md) (what is built, what was never run, commands, folders, numbers, assumptions to overturn, what next); the docs README status paragraph was cut to the current state and its "Next" paragraph says the plan is complete; the root README got "What is built". The assumptions (the handover's place, no version bump, no tag) are in [open-items.md](open-items.md). No code changed.
+
 ## Later steps
 
-Step 22 is detailed above (replanned after step 21). The horizon stays at 24.
+The plan ended at step 22. The horizon stays at 24.
 
 - 23 and 24: Reserve for fixes and for anything that grew past one step; built only when the user asks.
 
@@ -443,6 +433,6 @@ Step 22 is detailed above (replanned after step 21). The horizon stays at 24.
 | 19 | Fit at 960 by 540 | done | 19-fit |
 | 20 | Installer | done | 20-installer |
 | 21 | Open items and questionnaire 17 | done | 21-open-items |
-| 22 | Final pass and handover | todo | |
+| 22 | Final pass and handover | done | 22-handover |
 | 23 | Reserve | todo | |
 | 24 | Reserve | todo | |

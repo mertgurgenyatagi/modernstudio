@@ -286,6 +286,13 @@ See [stack.md](stack.md).
 - What goes in: `out/` (the build, with the fonts and the 45 sounds inside it through the bundler) and `package.json`, in an `app.asar`. The libraries the screen uses (React and the fonts) are bundled into `out/`, so they are development dependencies in `package.json`; with no production dependency no `node_modules` is packed. The check `npm run check:package` (rules in `tools/package/`, tested in `rules.test.ts`) applies the `files` rules to the repository, fails if a document, MIDI file, tool, questionnaire, source, test, fixture, Python file, source map or `.claude`/`.serena` folder would be in, and, after `npm run pack`, lists the real `app.asar` the same way. It passed on the real package (98 entries).
 - `npm run pack` (an unpacked folder, `release/win-unpacked/`) and `npm run dist` (the installer) both ran on 2026-11-09 and built; electron-builder downloaded its Electron zip and NSIS tools. The built app was **not started** (no window in a step). Not checked at run time, for the user to try: that the window loads from the file address (the built `index.html` uses relative `./assets/` paths and a content security policy of `'self'`, so it should), that the 45 sounds load by XMLHttpRequest from inside the `app.asar` (the earlier engine item above; if the dark "sounds could not be loaded" line shows, look here first), and that the fonts show.
 - Advisories: `npm audit --omit=dev` finds 0, because nothing is a production dependency. `npm audit` finds 15 moderate ones, all through `minimatch` (in `eslint`, `typescript-eslint` and `electron-builder`'s build libraries). They are build-time tools; none is in the package. The only fix offered is a breaking one (`--force`), not taken. React, which is bundled into the app, has none.
+
+### Step 22: final pass and handover
+
+- The handover is [handover.md](handover.md) in `docs/` (the place and name were the builder's choice). The status paragraph of the docs README was cut to the current state, and the step-by-step story stays in [plan24.md](plan24.md).
+- The version in `package.json` stays 0.1.0 and no release is tagged; both wait until the user has run the app.
+- Step 22 changed no code. The seven checks (typecheck, lint, test, build, `check:sounds`, `check:package` after `npm run pack`, `check:docs`) were run in the step and passed: 34 test files, 652 tests.
+
 ## Needs the user's check
 
 Everything below was type checked, linted, unit tested where it has pure parts, and built. None of it was run in a window, heard or looked at, because the rules of the build forbid a browser, a screenshot or listening in a step. The order to try them in is in [first-run.md](first-run.md).
