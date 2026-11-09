@@ -1,0 +1,232 @@
+/*
+ * The mapping step of a MIDI import: a panel over the Mixer (docs/page-designs.md, the assistant's design).
+ * At 960 by 540 the panel is the window less a margin; the header, the summary and the footer keep their
+ * size and only the track list scrolls, so Import and Cancel stay in view with nine tracks.
+ */
+.import-scrim {
+  position: fixed;
+  inset: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  background: color-mix(in oklch, var(--color-paper) 88%, transparent);
+}
+
+.import-panel {
+  display: flex;
+  flex-direction: column;
+  width: min(100%, 56rem);
+  max-height: 100%;
+  min-height: 0;
+  padding: 0.9rem 1.25rem 0.9rem;
+  background: var(--color-paper-2);
+  border: 1px solid var(--color-ink);
+}
+
+.import-head {
+  display: flex;
+  align-items: baseline;
+  gap: 0.25rem 1rem;
+  min-width: 0;
+}
+
+.import-head h2 {
+  flex: none;
+  margin: 0;
+  font: 700 1.35rem/1.1 var(--font-display);
+}
+
+.import-file {
+  margin: 0;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font: 400 0.8rem/1.2 var(--font-outlier);
+  color: var(--color-muted);
+}
+
+.import-time,
+.import-wait {
+  margin: 0.4rem 0 0.5rem;
+  font-size: 0.85rem;
+  color: var(--color-muted);
+}
+
+/* Five cells, one for each instrument: what it would get. */
+.import-summary {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  margin: 0;
+  border-top: 1px solid var(--color-ink);
+  border-bottom: 1px solid var(--color-rule);
+}
+
+.import-cell {
+  padding: 0.35rem 0.5rem 0.4rem 0;
+  min-width: 0;
+}
+
+.import-cell + .import-cell {
+  padding-left: 0.6rem;
+  border-left: 1px solid var(--color-rule);
+}
+
+.import-cell dt {
+  font-size: 0.72rem;
+  color: var(--color-muted);
+}
+
+.import-cell dd {
+  margin: 0;
+  font: 500 0.85rem/1.3 var(--font-body);
+}
+
+.import-cell.none dd {
+  font-weight: 400;
+  color: var(--color-muted);
+}
+
+.import-frets {
+  margin-left: 0.5rem;
+  font: 400 0.75rem/1 var(--font-outlier);
+  color: var(--color-muted);
+}
+
+/* A lane the app cannot hold ("needs 143, 120 fit"): heavier and underlined, since the palette has no second colour. */
+.warn,
+.import-cell.warn dd {
+  font-weight: 700;
+  text-decoration: underline;
+}
+
+/* The one part that scrolls. */
+.import-tracks {
+  flex: 1 1 auto;
+  min-height: 4rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+.import-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem 1rem;
+  padding: 0.4rem 0;
+  border-bottom: 1px solid var(--color-rule);
+}
+
+.import-track {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  min-width: 0;
+}
+
+.import-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font: 500 0.92rem/1.2 var(--font-body);
+}
+
+.import-facts {
+  font: 400 0.74rem/1.2 var(--font-outlier);
+  color: var(--color-muted);
+}
+
+.import-row.skipped .import-name {
+  color: var(--color-muted);
+  font-weight: 400;
+}
+
+/* The six-way choice: one group of buttons, the chosen one filled. */
+.import-choice {
+  display: flex;
+  flex: none;
+}
+
+.import-choice button {
+  appearance: none;
+  min-width: 3.3rem;
+  padding: 0.35rem 0.5rem;
+  font: 500 0.8rem/1 var(--font-body);
+  color: var(--color-ink);
+  background: var(--color-paper-2);
+  border: 1px solid var(--color-ink);
+  border-radius: 0;
+  cursor: pointer;
+}
+
+.import-choice button + button {
+  border-left: 0;
+}
+
+.import-choice button[aria-checked='true'] {
+  background: var(--color-accent);
+  color: var(--color-accent-ink);
+}
+
+.import-choice button:disabled {
+  cursor: progress;
+}
+
+.import-foot {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: 0.6rem;
+  padding-top: 0.65rem;
+}
+
+.import-button {
+  appearance: none;
+  min-width: 6.8rem;
+  padding: 0.45rem 0.9rem;
+  font: 500 0.9rem/1 var(--font-body);
+  color: var(--color-ink);
+  background: var(--color-paper-2);
+  border: 1px solid var(--color-ink);
+  border-radius: 0;
+  cursor: pointer;
+}
+
+.import-button.primary {
+  color: var(--color-accent-ink);
+  background: var(--color-accent);
+}
+
+.import-button:disabled {
+  color: var(--color-muted);
+  background: var(--color-paper-2);
+  border-color: var(--color-muted);
+  cursor: progress;
+}
+
+.import-hint {
+  font-size: 0.82rem;
+  color: var(--color-muted);
+}
+
+/* A narrow window: the choice goes under the track's name. */
+@media (max-width: 720px) {
+  .import-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .import-choice button {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .import-summary {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}

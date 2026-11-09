@@ -4,7 +4,7 @@
  * command says so instead.
  */
 import { useCallback, type Dispatch } from 'react';
-import { baseName, projectName } from '../core/fileState';
+import { baseName } from '../core/fileState';
 import { exportMidi, midiFileName } from '../core/midi/export';
 import type { Project } from '../core/project';
 import type { Action } from './appState';
@@ -13,7 +13,8 @@ function reasonOf(error: unknown): string {
   return error instanceof Error ? error.message : String(error);
 }
 
-export function useMidiExport(project: Project, filePath: string | null, dispatch: Dispatch<Action>): () => Promise<void> {
+/** `name` is the project's display name: the export's suggested file name. */
+export function useMidiExport(project: Project, name: string, dispatch: Dispatch<Action>): () => Promise<void> {
   return useCallback(async () => {
     const bridge = window.studio?.files;
     if (!bridge) {
@@ -27,11 +28,11 @@ export function useMidiExport(project: Project, filePath: string | null, dispatc
         dispatch({ type: 'setNotice', message: made.reason });
         return;
       }
-      const result = await bridge.exportMidi(made.bytes, midiFileName(projectName(filePath)));
+      const result = await bridge.exportMidi(made.bytes, midiFileName(name));
       if (result.kind === 'saved') dispatch({ type: 'setNotice', message: `Exported ${baseName(result.path)}` });
       else if (result.kind === 'error') dispatch({ type: 'setNotice', message: result.message });
     } catch (error) {
       dispatch({ type: 'setNotice', message: `The MIDI file could not be exported: ${reasonOf(error)}` });
     }
-  }, [project, filePath, dispatch]);
+  }, [project, name, dispatch]);
 }

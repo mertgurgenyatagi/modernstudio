@@ -1,5 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { canUndo } from '../core/history';
+import { isDirty } from '../core/fileState';
+import type { ImportReport } from '../core/midi/build';
 import { addNote, setPatternBars } from '../core/patterns';
 import { selectPattern, setBpm, setMasterVolume, setMeter, setMuted, setVolume } from '../core/project';
 import { moveBlock, placeBlock } from '../core/song';
@@ -214,6 +216,37 @@ describe('files', () => {
     expect(s.filePath).toBe('songs/a.modernstudio');
     expect(s.savedProject).toBe(project);
     expect(s.notice).toBeNull();
+  });
+
+  it('opens an imported project as unsaved, named after its MIDI file, with the report waiting', () => {
+    const project = other();
+    const report = { bpm: 120 } as unknown as ImportReport;
+    let s = run(initialState(), { type: 'replaceProject', project, path: null, options: { name: 'Soma (8)', unsaved: true, report } });
+    expect(s.history.present).toBe(project);
+    expect(canUndo(s.history)).toBe(false);
+    expect(s.filePath).toBeNull();
+    expect(s.draftName).toBe('Soma (8)');
+    expect(s.importReport).toBe(report);
+    expect(isDirty(s.history.present, s.savedProject)).toBe(true);
+    s = run(s, { type: 'dismissReport' });
+    expect(s.importReport).toBeNull();
+    expect(s.draftName).toBe('Soma (8)');
+    expect(run(s, { type: 'dismissReport' })).toBe(s);
+  });
+
+  it('forgets the draft name and the report when another project replaces it, and when it is saved', () => {
+    const report = { bpm: 120 } as unknown as ImportReport;
+    const imported = run(initialState(), { type: 'replaceProject', project: other(), path: null, options: { name: 'Soma (8)', unsaved: true, report } });
+    const opened = run(imported, { type: 'replaceProject', project: other(), path: 'a.modernstudio' });
+    expect(opened.draftName).toBeNull();
+    expect(opened.importReport).toBeNull();
+    expect(isDirty(opened.history.present, opened.savedProject)).toBe(false);
+    const fresh = run(imported, { type: 'replaceProject', project: other(), path: null });
+    expect(fresh.draftName).toBeNull();
+    const saved = run(imported, { type: 'saved', path: 'soma.modernstudio', project: imported.history.present });
+    expect(saved.draftName).toBeNull();
+    expect(saved.filePath).toBe('soma.modernstudio');
+    expect(isDirty(saved.history.present, saved.savedProject)).toBe(false);
   });
 
   it('keeps the screen choices when the project is replaced', () => {

@@ -1,11 +1,14 @@
 import { useEffect, useRef } from 'react';
 import type { AudioEngine, MeterId } from '../audio/engine';
+import { displayName } from '../core/fileState';
 import { INSTRUMENT_IDS, INSTRUMENT_LABELS, type InstrumentId } from '../core/instruments';
 import { setBpm, setMasterVolume, setMeter, setMuted, setVolume } from '../core/project';
 import { BPM_MAX, BPM_MIN, METERS } from '../core/time';
 import { useStudio } from '../state/Studio';
 import { useMidiExport } from '../state/useMidiExport';
+import { useMidiImport } from '../state/useMidiImport';
 import { useWavExport } from '../state/useWavExport';
+import { ImportMapping } from '../ui/ImportMapping';
 import { LevelSlider } from '../ui/LevelSlider';
 import { NumberField } from '../ui/NumberField';
 import './mixer.css';
@@ -42,8 +45,11 @@ function useMeters(engine: AudioEngine) {
 export function Mixer() {
   const { state, project, dispatch, engine } = useStudio();
   const meterRef = useMeters(engine);
-  const wav = useWavExport(project, state.filePath, dispatch);
-  const exportMidi = useMidiExport(project, state.filePath, dispatch);
+  const name = displayName(state.filePath, state.draftName);
+  const wav = useWavExport(project, name, dispatch);
+  const exportMidi = useMidiExport(project, name, dispatch);
+  const midiImport = useMidiImport();
+  const importing = midiImport.stage.stage !== 'idle';
   const endDrag = () => dispatch({ type: 'endDrag' });
   const editBpm = (value: number) => dispatch({ type: 'edit', change: (p) => setBpm(p, value), key: 'bpm' });
 
@@ -160,6 +166,9 @@ export function Mixer() {
               </div>
             </td>
             <td className="export" colSpan={2}>
+              <button type="button" className="action" disabled={importing} onClick={() => void midiImport.begin()}>
+                Import MIDI
+              </button>
               <button type="button" className="action" disabled={wav.rendering} aria-busy={wav.rendering} onClick={() => void wav.exportWav()}>
                 {wav.rendering ? 'Rendering…' : 'Export WAV'}
               </button>
@@ -170,6 +179,7 @@ export function Mixer() {
           </tr>
         </tfoot>
       </table>
+      <ImportMapping stage={midiImport.stage} onAssign={midiImport.assign} onConvert={() => void midiImport.convert()} onCancel={midiImport.cancel} />
     </section>
   );
 }

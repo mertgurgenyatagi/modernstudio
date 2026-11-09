@@ -62,9 +62,18 @@ export function projectName(path: string | null): string {
   return stem === '' ? UNTITLED : stem;
 }
 
+/**
+ * The name shown for a project: the file's name, or, for a project that has no file yet, the draft name
+ * it was given (a MIDI import is named after its MIDI file), or "Untitled".
+ */
+export function displayName(path: string | null, draftName: string | null = null): string {
+  if (path !== null) return projectName(path);
+  return draftName !== null && draftName.trim() !== '' ? draftName : UNTITLED;
+}
+
 /** "demo - modernstudio", with a leading "* " while there are unsaved changes (assumed; docs/open-items.md). */
-export function windowTitle(path: string | null, dirty: boolean, appName: string): string {
-  return `${dirty ? '* ' : ''}${projectName(path)} - ${appName}`;
+export function windowTitle(path: string | null, dirty: boolean, appName: string, draftName: string | null = null): string {
+  return `${dirty ? '* ' : ''}${displayName(path, draftName)} - ${appName}`;
 }
 
 export function hasProjectExtension(path: string): boolean {

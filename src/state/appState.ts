@@ -9,6 +9,7 @@ import type { PlayRequest } from '../audio/engine';
 import { commit, newHistory, replacePresent, undo, type History } from '../core/history';
 import { INSTRUMENT_IDS, type InstrumentId, type StringInstrumentId } from '../core/instruments';
 import { createProject, type Project } from '../core/project';
+import type { ImportReport } from '../core/midi/build';
 import { songBars } from '../core/song';
 import type { NoteValue } from '../core/time';
 
@@ -49,6 +50,10 @@ export interface AppState {
   savedProject: Project;
   /** A quiet line about a file command (it could not be opened or saved), or null. Not saved, not undone. */
   notice: string | null;
+  /** The name of a project that has no file yet: a MIDI import is named after its MIDI file. Null means "Untitled". */
+  draftName: string | null;
+  /** What the last MIDI import did, waiting to be shown (step 18). Null for any project that was not just imported. Not saved, not undone. */
+  importReport: ImportReport | null;
 }
 
 export function initialState(project: Project = createProject()): AppState {
@@ -68,7 +73,18 @@ export function initialState(project: Project = createProject()): AppState {
     filePath: null,
     savedProject: project,
     notice: null,
+    draftName: null,
+    importReport: null,
   };
+}
+
+/** What a MIDI import adds to `replaceProject`: a name, "never saved", and the report. */
+export interface ReplaceOptions {
+  /** The name of a project with no file (shown in the title and offered when saving). */
+  name?: string | null;
+  /** The project is not on disk: it counts as having unsaved changes until the first Save. */
+  unsaved?: boolean;
+  report?: ImportReport | null;
 }
 
 export type Action =
@@ -92,7 +108,9 @@ export type Action =
   | { type: 'stopped' }
   | { type: 'soundsFailed'; message: string }
   /** New, Open and (later) MIDI import: a different project, with a new history, no playback and the playhead at the start. */
-  | { type: 'replaceProject'; project: Project; path: string | null }
+  | { type: 'replaceProject'; project: Project; path: string | null; options?: ReplaceOptions }
+  /** The import report was read and closed. */
+  | { type: 'dismissReport' }
   /** The project was written to `path`: that is now the saved state. `project` is what was written, not necessarily the present one. */
   | { type: 'saved'; path: string; project: Project }
   | { type: 'setNotice'; message: string | null };
@@ -157,11 +175,16 @@ export function reduce(state: AppState, action: Action): AppState {
         startBar: 0,
         selectedBlock: null,
         filePath: action.path,
-        savedProject: action.project,
+        // An unsaved project (an import) is compared with an empty one, so it counts as changed until it is saved.
+        savedProject: action.options?.unsaved ? createProject() : action.project,
         notice: null,
+        draftName: action.path === null ? (action.options?.name ?? null) : null,
+        importReport: action.options?.report ?? null,
       };
+    case 'dismissReport':
+      return state.importReport === null ? state : { ...state, importReport: null };
     case 'saved':
-      return { ...state, filePath: action.path, savedProject: action.project, notice: null };
+      return { ...state, filePath: action.path, savedProject: action.project, notice: null, draftName: null };
     case 'setNotice':
       return action.message === state.notice ? state : { ...state, notice: action.message };
   }

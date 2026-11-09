@@ -5,12 +5,14 @@
  * (src/core/fileState.ts and settings.ts) are.
  */
 import { randomBytes } from 'node:crypto';
-import { readFile, rename, unlink, writeFile } from 'node:fs/promises';
+import { readFile, rename, stat, unlink, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import { app, BrowserWindow, dialog, ipcMain, type IpcMainInvokeEvent } from 'electron';
 import { APP_NAME } from '../../src/core/constants';
 import {
   CHANNELS,
+  MIDI_IMPORT_MAX_BYTES,
+  type ChooseMidiResult,
   type DiscardChoice,
   type LoadLastResult,
   type OpenedFile,
@@ -157,6 +159,27 @@ async function exportMidi(win: BrowserWindow | undefined, bytes: Uint8Array, sug
   return { kind: 'saved', path };
 }
 
+/** Asks for a MIDI file and reads it for the import. The import does not remember the file or its folder. */
+async function chooseMidi(win: BrowserWindow | undefined): Promise<ChooseMidiResult> {
+  const options = {
+    title: 'Import MIDI',
+    defaultPath: app.getPath('documents'),
+    filters: [{ name: 'MIDI file', extensions: [MIDI_EXTENSION, 'midi'] }],
+    properties: ['openFile' as const],
+  };
+  const chosen = win ? await dialog.showOpenDialog(win, options) : await dialog.showOpenDialog(options);
+  const path = chosen.filePaths[0];
+  if (chosen.canceled || path === undefined) return { kind: 'cancelled' };
+  try {
+    const { size } = await stat(path);
+    if (size > MIDI_IMPORT_MAX_BYTES) return { kind: 'error', message: `${baseName(path)} is too big to be a song (${Math.round(size / 1024 / 1024)} MB).` };
+    const bytes = await readFile(path);
+    return { kind: 'chosen', name: baseName(path), bytes: new Uint8Array(bytes.buffer, bytes.byteOffset, bytes.byteLength) };
+  } catch (error) {
+    return { kind: 'error', message: `${baseName(path)} could not be read: ${messageOf(error)}` };
+  }
+}
+
 async function confirmDiscard(win: BrowserWindow | undefined, name: string): Promise<DiscardChoice> {
   const options = {
     type: 'warning' as const,
@@ -211,6 +234,7 @@ export function registerFileHandlers(): void {
     }
     return exportMidi(windowOf(event), bytes, suggestedName);
   });
+  ipcMain.handle(CHANNELS.chooseMidi, (event) => chooseMidi(windowOf(event)));
   ipcMain.handle(CHANNELS.confirmDiscard, (event, name: unknown) => confirmDiscard(windowOf(event), isText(name) ? name : projectName(null)));
   ipcMain.on(CHANNELS.setDirty, (event, dirty: unknown) => {
     const win = BrowserWindow.fromWebContents(event.sender);

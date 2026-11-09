@@ -7,7 +7,7 @@
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, type Dispatch } from 'react';
 import { APP_NAME } from '../core/constants';
 import { canUndo } from '../core/history';
-import { isDirty, projectName, windowTitle } from '../core/fileState';
+import { displayName, isDirty, projectName, windowTitle } from '../core/fileState';
 import type { FileCommand } from '../core/fileBridge';
 import { createProject, type Project } from '../core/project';
 import { parseProject, serializeProject } from '../core/serialize';
@@ -50,10 +50,10 @@ export function useFiles(
   const write = useCallback(
     async (asNew: boolean): Promise<boolean> => {
       if (!bridge) return false;
-      const { history, filePath } = latest.current;
+      const { history, filePath, draftName } = latest.current;
       const project = history.present;
       const text = serializeProject(project);
-      const name = projectName(filePath);
+      const name = displayName(filePath, draftName);
       try {
         const result = asNew ? await bridge.saveAs(text, name) : await bridge.save(filePath, text, name);
         if (result.kind === 'saved') {
@@ -73,10 +73,10 @@ export function useFiles(
   const saveAs = useCallback(() => write(true), [write]);
 
   const confirmDiscard = useCallback(async (): Promise<boolean> => {
-    const { history, savedProject, filePath } = latest.current;
+    const { history, savedProject, filePath, draftName } = latest.current;
     if (!bridge || !isDirty(history.present, savedProject)) return true;
     try {
-      const choice = await bridge.confirmDiscard(projectName(filePath));
+      const choice = await bridge.confirmDiscard(displayName(filePath, draftName));
       if (choice === 'cancel') return false;
       if (choice === 'discard') return true;
     } catch {
@@ -141,8 +141,8 @@ export function useFiles(
 
   // The window title, and the main process learns whether closing needs a question.
   useEffect(() => {
-    document.title = windowTitle(state.filePath, dirty, APP_NAME);
-  }, [state.filePath, dirty]);
+    document.title = windowTitle(state.filePath, dirty, APP_NAME, state.draftName);
+  }, [state.filePath, state.draftName, dirty]);
   useEffect(() => {
     bridge?.setDirty(dirty);
   }, [bridge, dirty]);
