@@ -6,7 +6,7 @@
  */
 .song {
   --name-w: 8rem;
-  --lane-h: clamp(3.4rem, calc((100vh - 11.5rem) / 5), 5.5rem);
+  --lane-h: clamp(3.4rem, calc((100vh - 14rem) / 5), 5.5rem);
   display: flex;
   flex-direction: column;
   height: 100%;
@@ -116,7 +116,8 @@
   flex: 1;
   min-height: 0;
   overflow-x: auto;
-  overflow-y: hidden;
+  /* Only if the window is too low for five lanes: then they scroll instead of being cut off. */
+  overflow-y: auto;
   border-top: 1px solid var(--color-ink);
   border-bottom: 1px solid var(--color-ink);
 }

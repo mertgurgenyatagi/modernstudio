@@ -27,7 +27,7 @@
 .panel {
   flex: 1;
   display: grid;
-  grid-template-columns: 9rem minmax(0, 1fr);
+  grid-template-columns: 11.5rem minmax(0, 1fr);
   grid-template-rows: auto 1fr auto;
   min-height: 0;
   background: var(--color-paper-2);
@@ -48,6 +48,15 @@
   border-right: 1px solid var(--color-ink);
 }
 
+/* The tools column is the tallest part of the panel at 540 high, so its choices sit in rows: Length in one, Note value in two columns. */
+.panel-tools .tool-length {
+  grid-template-columns: repeat(4, 1fr);
+}
+
+.panel-tools .tool-values {
+  grid-template-columns: 1fr 1fr;
+}
+
 .panel-envelope {
   grid-column: 1 / -1;
   border-top: 1px solid var(--color-ink);
@@ -55,7 +64,7 @@
 
 /* ---- Pads ---- */
 .pads {
-  --row-h: clamp(2rem, calc((100vh - 22rem) / 5), 3.4rem);
+  --row-h: clamp(2rem, calc((100vh - 20rem) / 5), 3.4rem);
   display: flex;
   min-width: 0;
   padding: 0.5rem 0.8rem 0.5rem 0.8rem;
