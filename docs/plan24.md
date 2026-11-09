@@ -4,7 +4,7 @@ The build plan, run one step per invocation of the `/plan24` skill ([.claude/ski
 
 Horizon: 24
 Last completed step: 6
-Replanned after step: 3
+Replanned after step: 6
 Plan complete: no
 
 The plan is replanned after every third completed step (3, 6, 9, and so on). Done steps are history and are never changed by a replan.
@@ -19,9 +19,55 @@ The plan is replanned after every third completed step (3, 6, 9, and so on). Don
 
 ## Next three steps
 
-Replanned after step 3 (2026-11-09). Steps 4 to 6 are built and moved to the history below. The next replan comes before step 7, which is the next to build.
+Replanned after step 6 (2026-11-09). The horizon stays at 24 and the order is unchanged, except that "Show whole pattern" moves from step 10 into step 7 (the pad grid needs it for 8x patterns), and the pattern-bank, tool and envelope pieces are built once, in step 7, as shared parts that steps 8 and 9 reuse. The next replan comes before step 10.
 
-No step is detailed here until that replan.
+### Step 7: The Drums page, "the Pad machine"
+
+**Produces:** the Drums page ([page-designs.md](page-designs.md)) and the editor parts the Guitar and Keys pages reuse.
+
+- **Shared parts in `src/pages/editor/`:** the pattern bank (the shown pattern numbers in rows of ten; selected = ink-filled, with notes = ink outline, empty = grey outline, all selectable; choosing is `selectPattern` through a `select` action, so not an Undo step), the Length choice (1x, 2x, 4x, 8x through `setPatternBars`; a refusal shows its reason in a quiet line), the Note value choice (six buttons, the store's `noteValue`), the "Show whole pattern" pressed-state button (the store's `showWholePattern`), and the envelope strip (Volume, Attack, Decay, Release: name, number, slider; edits coalesce by the keys `volume:<id>`, `attack:<id>` and so on, volume with the same key the Mixer uses).
+- **Pad grid geometry, pure and tested (`src/pages/editor/grid.ts`):** the cells of a note value across a pattern (a cell is one step of that value; the last cell may overhang the end, as a whole note in 3/4 does), tick to cell, whether a hit lies on the chosen value's grid, the width of a tick, the playhead position.
+- **The pads:** five rows, top to bottom Crash, Open hi-hat, Hi-hat, Snare, Kick; beat numbers above; hairlines at every beat and a heavier line at every bar. Each cell of the chosen note value is a pale pad; a click places a hit (`addNote`), a click on a placed hit removes it (`removeNote`). A hit that is not on the chosen value's grid (placed with another value) is drawn as a narrow ink mark at its own time and removed by clicking it, so a pattern can mix straight and third hits. Hits beyond a shortened pattern are not drawn (they are kept).
+- **Width:** a tick is at most 14 px wide (16 pads of 42 px per bar at 4/4 and the 16th) and never wider than makes one bar fit the pad compartment; a longer pattern scrolls sideways inside the compartment; "Show whole pattern" fits all bars at once. The playhead (2 px line) follows `engine.position().tick` while playing.
+- The page is the one bordered panel of the design, minus the Undo and Play buttons the shared bar replaces. "Copy notes to…" is not drawn until step 10, where its picker is built.
+- `App.tsx` routes `drums` to the page.
+
+**Relies on:** steps 4 to 6 (the store and `patterns.ts` already hold every edit), [page-designs.md](page-designs.md), [time-and-notes.md](time-and-notes.md), [instrument-layouts.md](instrument-layouts.md), [design.md](design.md) (960 by 540).
+
+**Done when:** grid tests pass; typecheck, lint, test and build pass; the page is reasoned to fit 960 by 540. Not looked at, as the rule says.
+
+**Decisions it may need:** how off-grid hits look (assumed: narrow ink marks); whether a placed pad sounds at once (assumed no; the engine has no audition call); the playhead on a pattern wider than the view (assumed: the view does not scroll to follow it, the same rule as the Song page).
+
+### Step 8: The Guitar page, "the String cards"
+
+**Produces:** the Guitar page for Bass, Rhythm Guitar and Lead Guitar ([page-designs.md](page-designs.md)), using step 7's shared parts.
+
+- Layout: two columns. The main column holds the pattern row, the tools row, the beat numbers and the string cards (lowest string first: Bass E1 A1 D2 G2; guitars E2 A2 D3 G3 B3 E4). The 15rem side panel holds the instrument choice (the store's `guitar`), the fret count (5, 7, 12 through `setFretCount`) with "Show whole pattern" under it, and the envelope strip.
+- Each card: a header strip with the open string's pitch and "open string", then fret rows 0 to the fret count (6, 8 or 13 rows), the open row tinted. Notes are ink squares showing their fret number, as wide as their length. Rows are labelled by fret, the pitch only in the header (as the design has it).
+- Placing: a click on an empty cell places a note one step of the chosen value long; dragging the right edge lengthens or shortens it (snapped to the value, at least half of a third); dragging the note moves it; a click selects it. A refusal shows its reason. Notes above a lowered fret count are hidden and kept (the model); a quiet line says how many.
+- The pure geometry (tick to x, drag to new start and length, the row of a fret) is in `src/pages/editor/` with tests, and is shared with Keys.
+- The page scrolls vertically inside its own box (accepted in questionnaire 16); sideways only inside the card area.
+
+**Relies on:** step 7; [instrument-layouts.md](instrument-layouts.md); `patterns.ts` (`addNote`, `replaceNote`, `removeNote`).
+
+**Done when:** geometry tests pass; typecheck, lint, test and build pass; the 5, 7 and 12 fret layouts and the three instruments are reasoned through.
+
+**Decisions it may need:** whether a click on an existing note selects or deletes (assumed: selects; Delete removes it in step 10); the default length of a new note (assumed: one step of the chosen value); what scrolls vertically (assumed: the main column, with the pattern and tools rows staying at the top).
+
+### Step 9: The Keys page
+
+**Produces:** the Keys page, built from the Guitar page ([open-items.md](open-items.md)): the same two columns, pattern row, tools row and side panel, with the string cards replaced by a regular piano roll from C2 to C6 (49 rows).
+
+- Rows are piano keys with the black-key rows tinted; the side panel holds only the Keys envelope strip and "Show whole pattern" (no instrument choice, no frets).
+- Notes are ink bars of their length with the same drag rules as step 8's. The row labelling is decided here: every C is labelled (C2 to C6), other rows carry no label (assumed; settles that part of questionnaire 17).
+- The roll is 49 rows tall, so the main column scrolls vertically, starting with the octave around middle C (C4) in view.
+- The note editor part both pages share is pulled into one component if step 8 left it inside the Guitar page.
+
+**Relies on:** step 8.
+
+**Done when:** tests for the pitch-to-row mapping and the label rule pass; typecheck, lint, test and build pass; fit reasoned.
+
+**Decisions it may need:** the row labelling (assumed: Cs only); the starting scroll (assumed: C4 in view).
 
 ## Done steps (history)
 
@@ -135,12 +181,9 @@ No step is detailed here until that replan.
 
 ## Later steps
 
-Broad strokes only. The next replan (the next `/plan24` run, since step 6 is a multiple of 3) details steps 7 to 9. The horizon stays at 24; the order is unchanged.
+Broad strokes only. The next replan (the first `/plan24` run after step 9 is done) details steps 10 to 12. The horizon stays at 24; the order is unchanged.
 
-- 7: The Drums page, "the Pad machine", including pad grids for the other note values and for 2x to 8x patterns.
-- 8: The Guitar page, "the String cards", for Bass, Rhythm Guitar and Lead Guitar, with 5, 7 and 12 fret layouts.
-- 9: The Keys page, built from the Guitar page with a piano roll from C2 to C6. May need a question on how rows are labelled.
-- 10: Pattern tools and shortcuts: "Copy notes to…" picker, the hidden control for patterns 21 to 120, "Show whole pattern", Space to play, Delete for notes, fret count lowered after notes are placed.
+- 10: Pattern tools and shortcuts: "Copy notes to…" picker, the hidden control for patterns 21 to 120, Delete for selected notes, the warning when the fret count is lowered after notes are placed. ("Show whole pattern" is built in step 7, Space to play in step 5.)
 - 11: Saving and files: save, open, reopen the last project, unsaved-changes prompt on close and on import.
 - 12: WAV export by offline render.
 - 13: MIDI file reader and writer, and MIDI export.
