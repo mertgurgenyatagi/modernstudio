@@ -10,8 +10,9 @@ import {
   type MouseEvent as ReactMouseEvent,
   type PointerEvent as ReactPointerEvent,
 } from 'react';
+import { songHarmony, type ChordSpan } from '../core/harmony/analyse';
 import { INSTRUMENT_IDS, INSTRUMENT_LABELS, type InstrumentId } from '../core/instruments';
-import { blockBars, selectPattern } from '../core/project';
+import { blockBars, patternLabel, selectPattern } from '../core/project';
 import {
   MAX_SONG_BARS,
   blockAt,
@@ -25,7 +26,7 @@ import {
   type BlockPlacement,
   type BlockRef,
 } from '../core/song';
-import { ticksPerBar } from '../core/time';
+import { TICKS_PER_QUARTER, ticksPerBar, type Meter } from '../core/time';
 import { afterBlockPaste, blocksStartingAt, copyBlocksToClipboard } from '../state/clipboard';
 import { commandLetter, isTypingTarget } from '../state/keys';
 import { useStudio } from '../state/Studio';
@@ -34,6 +35,7 @@ import { ContextMenu } from '../ui/ContextMenu';
 import { useElementSize } from '../ui/useElementSize';
 import { useTryEdit } from './editor/useTryEdit';
 import {
+  CHORDS_PX,
   NAME_PX,
   TIMELINE_PX,
   barFromPx,
@@ -56,6 +58,21 @@ const refKey = (ref: BlockRef) => `${ref.instrument}:${ref.startBar}`;
 const toRef = (b: BlockRef): BlockRef => ({ instrument: b.instrument, startBar: b.startBar });
 const plural = (n: number, one: string, many: string) => `${n} ${n === 1 ? one : many}`;
 
+/** Where a chord starts and ends, in words: "bars 4 to 5", "bar 2, beat 3 to bar 2, beat 4". */
+function chordPlace(span: ChordSpan, meter: Meter): string {
+  const perBar = ticksPerBar(meter);
+  const at = (tick: number) => {
+    const bar = Math.floor(tick / perBar) + 1;
+    const beat = Math.floor((tick % perBar) / TICKS_PER_QUARTER) + 1;
+    return { bar, beat };
+  };
+  const from = at(span.start);
+  const to = at(span.end - TICKS_PER_QUARTER);
+  if (span.start % perBar === 0 && span.end % perBar === 0) return from.bar === to.bar ? `bar ${from.bar}` : `bars ${from.bar} to ${to.bar}`;
+  const words = (p: { bar: number; beat: number }) => `bar ${p.bar}, beat ${p.beat}`;
+  return span.end - span.start === TICKS_PER_QUARTER ? words(from) : `${words(from)} to ${words(to)}`;
+}
+
 type Gesture =
   | { kind: 'empty'; x: number; y: number; additive: boolean; base: BlockRef[]; moved: boolean }
   | { kind: 'block'; x: number; y: number; ref: BlockRef; refs: BlockRef[]; wasSelected: boolean; moved: boolean; delta: number }
@@ -77,6 +94,8 @@ type Menu = { kind: 'lane'; x: number; y: number; instrument: InstrumentId; bar:
  *   turn; Ctrl+X cuts, Ctrl+D doubles, Ctrl+A selects all, Delete deletes, the arrow keys move the
  *   selection a bar, Escape lets go.
  * - Ctrl with the wheel zooms where the pointer is, the wheel scrolls sideways. No scrollbars.
+ * - The key of the song sits in the settings bar, and the chords in a strip under the bar numbers,
+ *   both found again after every edit (docs/harmony.md).
  */
 export function Song() {
   const { state, project, dispatch, engine, seek } = useStudio();
@@ -95,10 +114,13 @@ export function Song() {
   const size = useElementSize(scrollerRef);
 
   const barPx = state.songBarPx;
-  const laneH = laneHeight(size.height - TIMELINE_PX);
+  const laneH = laneHeight(size.height - TIMELINE_PX - CHORDS_PX);
   const width = MAX_SONG_BARS * barPx;
   const height = INSTRUMENT_IDS.length * laneH;
   const total = songBars(project);
+  // The key and the chords, found again whenever the notes, the lanes or the meter change (docs/harmony.md).
+  const harmony = songHarmony(project);
+  const tickPx = barPx / ticksPerBar(project.meter);
 
   const selection = useMemo(() => blocksOf(project, state.selectedBlocks), [project, state.selectedBlocks]);
   const selectedKeys = useMemo(() => new Set(selection.map(refKey)), [selection]);
@@ -400,6 +422,7 @@ export function Song() {
   const style = {
     '--name-px': `${NAME_PX}px`,
     '--timeline-px': `${TIMELINE_PX}px`,
+    '--chords-px': `${CHORDS_PX}px`,
     '--lane-px': `${laneH}px`,
     '--line-px': `${barLineEvery(barPx) * barPx}px`,
   } as CSSProperties;
@@ -412,6 +435,15 @@ export function Song() {
           Bar <span ref={readoutRef}>{state.startBar + 1}</span>
           {total > 0 ? ` of ${total}` : ''}
         </p>
+        {harmony.key && (
+          <p
+            className="song-key"
+            title={`The key of the song${harmony.closeKeyName ? `; ${harmony.closeKeyName} comes close` : ''}`}
+            aria-label={`Key: ${harmony.keyName}`}
+          >
+            {harmony.keyName}
+          </p>
+        )}
         <p className="song-note" role="status" title={note || hint}>
           {note || hint}
         </p>
@@ -436,7 +468,7 @@ export function Song() {
         }}
       >
         {size.width > 0 && (
-          <div className="song-canvas" style={{ width: NAME_PX + width, height: TIMELINE_PX + height }}>
+          <div className="song-canvas" style={{ width: NAME_PX + width, height: TIMELINE_PX + CHORDS_PX + height }}>
             <div className="song-top">
               <div className="song-corner" />
               <button
@@ -453,6 +485,27 @@ export function Song() {
                   </span>
                 ))}
               </button>
+            </div>
+
+            <div className="song-chords">
+              <div className="song-corner" />
+              <div className="chords" role="list" aria-label="Chords" style={{ width }}>
+                {harmony.chords.map((chord) => {
+                  const place = chordPlace(chord, project.meter);
+                  return (
+                    <span
+                      key={chord.start}
+                      role="listitem"
+                      className="chord"
+                      style={{ left: chord.start * tickPx, width: (chord.end - chord.start) * tickPx }}
+                      title={`${chord.symbol}: ${chord.name}, ${place}. ${chord.tones}`}
+                      aria-label={`${chord.name}, ${place}`}
+                    >
+                      {chord.symbol}
+                    </span>
+                  );
+                })}
+              </div>
             </div>
 
             <div className="song-body">
@@ -503,8 +556,8 @@ export function Song() {
                         data-bar={block.startBar}
                         className={classes.join(' ')}
                         style={{ left: start * barPx, top: lane * laneH + BLOCK_INSET_PX, width: bars * barPx, height: laneH - 2 * BLOCK_INSET_PX }}
-                        title={`Pattern ${block.pattern + 1}, ${plural(bars, 'bar', 'bars')}`}
-                        aria-label={`${INSTRUMENT_LABELS[id]} pattern ${block.pattern + 1}, bar ${block.startBar + 1}, ${plural(bars, 'bar', 'bars')}${selectedKeys.has(key) ? ', selected' : ''}`}
+                        title={`${patternLabel(project.instruments[id].patterns[block.pattern], block.pattern)}, ${plural(bars, 'bar', 'bars')}`}
+                        aria-label={`${INSTRUMENT_LABELS[id]} ${patternLabel(project.instruments[id].patterns[block.pattern], block.pattern).toLowerCase()}, bar ${block.startBar + 1}, ${plural(bars, 'bar', 'bars')}${selectedKeys.has(key) ? ', selected' : ''}`}
                       >
                         <span className="block-label">{block.pattern + 1}</span>
                       </div>
@@ -638,7 +691,7 @@ function LaneMenu({
               className="menu-pattern"
               role="menuitem"
               disabled={!choice.fits}
-              title={`Pattern ${choice.index + 1}, ${plural(choice.bars, 'bar', 'bars')}${choice.fits ? '' : ': does not fit here'}`}
+              title={`${patternLabel(project.instruments[menu.instrument].patterns[choice.index], choice.index)}, ${plural(choice.bars, 'bar', 'bars')}${choice.fits ? '' : ': does not fit here'}`}
               onClick={() => onPlace(choice.index)}
             >
               {choice.index + 1}

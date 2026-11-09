@@ -14,7 +14,7 @@ import { describe, expect, it } from 'vitest';
 import { DEFAULT_WINDOW } from '../core/constants';
 import { EDITOR_VIEW_DEFAULT, barsShown, tickWidth } from '../state/view';
 import { drumsLayout, keysLayout, rowHeight, stringsLayout } from './editor/layout';
-import { LANE_MIN_PX, NAME_PX, TIMELINE_PX, laneHeight } from './song/geometry';
+import { CHORDS_PX, LANE_MIN_PX, NAME_PX, TIMELINE_PX, laneHeight } from './song/geometry';
 
 const REM = 16;
 const W = DEFAULT_WINDOW.width;
@@ -52,17 +52,18 @@ describe('the instrument pages', () => {
   const editor = page - EST.settingsBar - EST.ruler;
   const editorWithNotice = pageWithNotice - EST.settingsBar - EST.ruler;
 
-  it('have their settings in one row at 960 wide, the frets included', () => {
+  it('have their settings in one row at 960 wide, the frets and the chord included', () => {
     const pattern = small('‹') + Math.max(small('120'), 2.3 * REM) + small('›');
     const length = ['1×', '2×', '4×', '8×'].map(small).reduce((a, b) => a + b);
     const values = ['1/1', '1/2', '1/4', '1/16', '1/8T', '1/16T'].map(small).reduce((a, b) => a + b);
     const frets = 32 + ['5', '7', '12'].map(small).reduce((a, b) => a + b);
+    const chord = small('F♯m7'); // a common four-character name; longer ones are cut at 4.2 rem (editor.css)
     const zoom = ['−', '+', 'Fit'].map(small).reduce((a, b) => a + b);
     const knobs = 4 * (24 + 0.3 * REM + 1.5 * REM) + 3 * 0.5 * REM;
     const quietLine = 3 * REM; // the least the quiet line keeps before the bar wraps
-    const gaps = 7 * 0.6 * REM;
+    const gaps = 7 * 0.6 * REM; // eight groups, seven gaps
     const padding = 2 * 0.75 * REM;
-    expect(pattern + length + values + frets + zoom + knobs + quietLine + gaps + padding).toBeLessThanOrEqual(W);
+    expect(pattern + length + values + frets + chord + zoom + knobs + quietLine + gaps + padding).toBeLessThanOrEqual(W);
   });
 
   it('give the five drum rows all the room they need, with or without a notice', () => {
@@ -93,12 +94,12 @@ describe('the instrument pages', () => {
 });
 
 describe('the Song page', () => {
-  it('fits its five lanes under the settings bar and the bar numbers, with or without a notice', () => {
-    const room = page - EST.settingsBar - TIMELINE_PX;
+  it('fits its five lanes under the settings bar, the bar numbers and the chords, with or without a notice', () => {
+    const room = page - EST.settingsBar - TIMELINE_PX - CHORDS_PX;
     const lane = laneHeight(room);
     expect(5 * lane).toBeLessThanOrEqual(room);
     expect(lane).toBeGreaterThanOrEqual(80);
-    const roomWithNotice = pageWithNotice - EST.settingsBar - TIMELINE_PX;
+    const roomWithNotice = pageWithNotice - EST.settingsBar - TIMELINE_PX - CHORDS_PX;
     expect(5 * laneHeight(roomWithNotice)).toBeLessThanOrEqual(roomWithNotice);
     expect(laneHeight(roomWithNotice)).toBeGreaterThan(LANE_MIN_PX);
   });

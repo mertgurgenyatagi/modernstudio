@@ -30,6 +30,7 @@ The specification phase is closed. It was built through 16 answered questionnair
 16. [plan24.md](plan24.md) — the build plan, one step per `/plan24` invocation: the next three steps in detail, the rest in broad strokes, and the table of every step with its status.
 17. [handover.md](handover.md) — what is built, what was never run, the commands, the folder map and what to do next (plan24 step 22).
 18. [sweeping-changes.md](sweeping-changes.md) — the user's changes after the first run: what was built for each and what the builder chose. Where it disagrees with an older document, it wins.
+19. [harmony.md](harmony.md) — the key and chords on the Song page and the chord of a pattern on Rhythm, Lead and Bass: how they are found.
 
 ## Where the truth lives
 

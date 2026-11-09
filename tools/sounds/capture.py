@@ -1,4 +1,4 @@
-"""Records the four chosen General MIDI sounds from the Windows synth into the app's sample files.
+"""Records the three chosen General MIDI sounds (bass, guitar, drums) from the Windows synth into the app's sample files.
 
 Steps (run from the repository root, with the venv in tools/sounds/.venv):
 
@@ -40,7 +40,6 @@ STEP = 3  # semitones between recorded notes of the pitched instruments
 PITCHED = {
     "bass": {"gm": "Electric Bass (finger)", "program": 33, "low": 28, "high": 55, "hold": 2.5, "tail": 1.5},
     "guitar": {"gm": "Electric Guitar (jazz)", "program": 26, "low": 40, "high": 76, "hold": 3.0, "tail": 1.5},
-    "keys": {"gm": "Synth Voice", "program": 54, "low": 36, "high": 84, "hold": 4.0, "tail": 1.5},
 }
 # One sample per drum row (channel 10 note numbers, docs/midi-import.md). `tail` is how long to listen.
 DRUMS = {
@@ -266,6 +265,8 @@ def process() -> None:
         "velocity": VELOCITY,
         "source": f"{meta['synth']}, recorded by tools/sounds/capture.py",
         "instruments": {},
+        # Keys is not recorded: the audio engine makes it (docs/sound.md).
+        "generated": {"keys": "Triangle wave made by the audio engine (src/audio/voice.ts startTone), not a recording"},
     }
 
     decoded: dict[str, np.ndarray] = {}
@@ -298,7 +299,7 @@ def process() -> None:
         manifest["instruments"][inst] = {
             "kind": "pitched",
             "generalMidi": spec["gm"],
-            "usedBy": {"bass": ["bass"], "guitar": ["rhythm", "lead"], "keys": ["keys"]}[inst],
+            "usedBy": {"bass": ["bass"], "guitar": ["rhythm", "lead"]}[inst],
             "samples": entries,
         }
 

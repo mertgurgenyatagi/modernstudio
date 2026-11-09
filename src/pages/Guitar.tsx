@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react';
+import { patternChord, songHarmony } from '../core/harmony/analyse';
 import { FRET_COUNT_DEFAULT, INSTRUMENT_LABELS, type FretCount, type StringInstrumentId } from '../core/instruments';
 import { setFretCount, type Note, type StringNote } from '../core/project';
 import { useStudio } from '../state/Studio';
@@ -22,6 +23,8 @@ export function Guitar({ id }: { id: StringInstrumentId }) {
   const layout = useMemo(() => stringsLayout(id, fretCount), [id, fretCount]);
   const notes = (instrument.patterns[instrument.selectedPattern]?.notes ?? []).filter(isStringNote);
   const hidden = hiddenAboveFret(notes, fretCount);
+  // The chord of every note in the pattern on screen, spelled as the song's key spells (docs/harmony.md).
+  const chord = patternChord(project, id, instrument.selectedPattern, songHarmony(project).key);
 
   /** Sets the fret count. If notes in any pattern are now above it, the quiet line says so (Undo brings them back). */
   const changeFrets = (count: FretCount) => {
@@ -34,6 +37,13 @@ export function Guitar({ id }: { id: StringInstrumentId }) {
     <section className="ipage" aria-label={INSTRUMENT_LABELS[id]}>
       <InstrumentBar id={id} message={message || hiddenLine} onMessage={setMessage}>
         <FretChoice fretCount={fretCount} onChange={changeFrets} />
+        <p
+          className="ibar-chord"
+          title={chord ? `The chord of this pattern: ${chord.name}. ${chord.tones}` : 'The chord of this pattern: no notes yet'}
+          aria-label={chord ? `Chord: ${chord.name}` : 'Chord: none, the pattern has no notes'}
+        >
+          {chord?.symbol ?? ''}
+        </p>
       </InstrumentBar>
       <NoteEditor layout={layout} onMessage={setMessage} />
     </section>

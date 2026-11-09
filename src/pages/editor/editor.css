@@ -30,6 +30,22 @@
   border-right: 0;
 }
 
+/* The name field that replaces the number while a pattern is being named (a double click on the number). */
+.pick-name {
+  box-sizing: border-box;
+  width: 9rem;
+  height: 1.6rem;
+  margin: 0;
+  padding: 0 0.4rem;
+  font: 400 0.72rem/1 var(--font-outlier);
+  color: var(--color-ink);
+  background: var(--color-paper);
+  border: 1px solid var(--color-ink);
+  border-radius: 0;
+  outline: 2px solid var(--color-accent);
+  outline-offset: -2px;
+}
+
 .pick-number[aria-expanded='true'] {
   color: var(--color-accent-ink);
   background: var(--color-accent);
@@ -76,6 +92,23 @@
   color: var(--color-ink);
   border-style: dashed;
   border-color: var(--color-ink);
+}
+
+/* ---- Rhythm, Lead and Bass: the chord of the pattern's notes (docs/harmony.md). A long name is cut; the tooltip has it whole. ---- */
+.ibar-chord {
+  min-width: 2.3rem;
+  max-width: 4.2rem;
+  height: 1.6rem;
+  margin: 0;
+  padding: 0 0.3rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-align: center;
+  font: 500 0.72rem/calc(1.6rem - 2px) var(--font-outlier);
+  color: var(--color-ink);
+  background: var(--color-paper-2);
+  border: 1px solid var(--color-rule);
 }
 
 /* ---- The quiet line, and the knobs at the right ---- */

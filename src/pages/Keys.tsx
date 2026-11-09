@@ -2,7 +2,7 @@ import { useMemo, useState } from 'react';
 import { INSTRUMENT_LABELS } from '../core/instruments';
 import type { KeysNote, Note } from '../core/project';
 import { useStudio } from '../state/Studio';
-import { InstrumentBar } from './editor/InstrumentBar';
+import { InstrumentBar, TransposeChoice } from './editor/InstrumentBar';
 import { MIDDLE_C, hiddenOutOfRange, keyRowIndex } from './editor/keyRoll';
 import { keysLayout } from './editor/layout';
 import { NoteEditor } from './editor/NoteEditor';
@@ -19,7 +19,9 @@ export function Keys() {
   const hiddenLine = hidden === 0 ? '' : `${hidden} ${hidden === 1 ? 'note is' : 'notes are'} outside C2 to C6: hidden, kept.`;
   return (
     <section className="ipage" aria-label={INSTRUMENT_LABELS.keys}>
-      <InstrumentBar id="keys" message={message || hiddenLine} onMessage={setMessage} />
+      <InstrumentBar id="keys" message={message || hiddenLine} onMessage={setMessage}>
+        <TransposeChoice id="keys" />
+      </InstrumentBar>
       <NoteEditor layout={layout} onMessage={setMessage} startRow={keyRowIndex(MIDDLE_C) ?? 0} />
     </section>
   );

@@ -40,3 +40,5 @@ Drum hits can use all six note values. They have no length: each hit plays for t
 ## Keys
 
 For vocals. A regular piano roll. The agreed range is C2 to C6.
+
+**Transpose** (2026-11-09): the whole instrument, never one pattern, from two octaves down to two octaves up. It sits in the Keys settings bar as "Transpose − 0 +": minus and plus move a semitone, with Shift an octave, and a click on the number puts it back to 0. The notes on screen stay where they were written (the range C2 to C6 is about the written notes); only the sound moves, and the note heard while placing is the transposed one. The WAV and MIDI exports are transposed too.

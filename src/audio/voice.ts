@@ -1,7 +1,7 @@
 /**
- * One sounding note: a recorded sample, played at a rate, through its own gain that shapes the
- * envelope. It takes any audio context, so the live engine and the offline render of the WAV export
- * (plan24 step 12) build their notes the same way.
+ * One sounding note: a recorded sample played at a rate, or Keys' generated triangle wave, through its
+ * own gain that shapes the envelope. It takes any audio context, so the live engine and the offline
+ * render of the WAV export (plan24 step 12) build their notes the same way.
  */
 import { planEnvelope, type EnvelopeSettings } from '../core/envelope';
 
@@ -28,18 +28,54 @@ export function startVoice(
   envelope: EnvelopeSettings,
   onEnded?: () => void,
 ): Voice {
-  const plan = planEnvelope(envelope, holdSeconds);
   const source = context.createBufferSource();
   source.buffer = buffer;
   source.playbackRate.value = rate;
+  return playSource(context, destination, source, buffer.duration / rate, 1, when, holdSeconds, envelope, onEnded);
+}
+
+/**
+ * Starts a generated tone (Keys' triangle wave) at time `when`. It has no end of its own, so it
+ * sounds for as long as the key is held, then through the release.
+ * @param peak the top of the wave, which sets how loud it is
+ */
+export function startTone(
+  context: BaseAudioContext,
+  destination: AudioNode,
+  wave: OscillatorType,
+  frequency: number,
+  peak: number,
+  when: number,
+  holdSeconds: number,
+  envelope: EnvelopeSettings,
+  onEnded?: () => void,
+): Voice {
+  const source = context.createOscillator();
+  source.type = wave;
+  source.frequency.value = frequency;
+  return playSource(context, destination, source, Infinity, peak, when, holdSeconds, envelope, onEnded);
+}
+
+/** Shapes a started source with the envelope and schedules its end. `level` scales the whole curve. */
+function playSource(
+  context: BaseAudioContext,
+  destination: AudioNode,
+  source: AudioScheduledSourceNode,
+  naturalEnd: number,
+  level: number,
+  when: number,
+  holdSeconds: number,
+  envelope: EnvelopeSettings,
+  onEnded?: () => void,
+): Voice {
+  const plan = planEnvelope(envelope, holdSeconds);
   const gain = context.createGain();
   const [first, ...rest] = plan.points;
-  gain.gain.setValueAtTime(first ? first.gain : 1, when);
-  for (const point of rest) gain.gain.linearRampToValueAtTime(point.gain, when + point.time);
+  gain.gain.setValueAtTime((first ? first.gain : 1) * level, when);
+  for (const point of rest) gain.gain.linearRampToValueAtTime(point.gain * level, when + point.time);
   source.connect(gain);
   gain.connect(destination);
 
-  const naturalEnd = buffer.duration / rate;
   source.start(when);
   source.stop(when + Math.min(plan.end, naturalEnd) + 0.01);
   source.onended = () => {

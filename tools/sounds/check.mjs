@@ -14,7 +14,7 @@ const problems = [];
 const fail = (msg) => problems.push(msg);
 
 // The notes each instrument must cover (docs/midi-import.md, the guitars with 12 frets).
-const REQUIRED_RANGE = { bass: [28, 55], guitar: [40, 76], keys: [36, 84] };
+const REQUIRED_RANGE = { bass: [28, 55], guitar: [40, 76] };
 const DRUM_ROWS = ['kick', 'snare', 'hihat', 'openHihat', 'crash'];
 // Drum hits of the General MIDI kit are genuinely short (the kick is about 0.1 s, the closed hi-hat 0.06 s).
 const MIN_SECONDS = { pitched: 1.5, drums: 0.04 };

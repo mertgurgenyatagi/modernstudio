@@ -12,7 +12,7 @@
 import { PlayCursor } from '../core/cursor';
 import { INSTRUMENT_IDS, type InstrumentId } from '../core/instruments';
 import { instrumentGain, levelToGain, peakToMeter, smoothMeter } from '../core/levels';
-import { patternPlan, songPlan, type Plan, type Sound, type TimelineNote } from '../core/playback';
+import { patternPlan, songPlan, soundingPitch, type Plan, type Sound, type TimelineNote } from '../core/playback';
 import type { Project } from '../core/project';
 import { TICKS_PER_QUARTER } from '../core/time';
 import { loadBuffers, manifest } from './soundFiles';
@@ -237,7 +237,9 @@ export class AudioEngine {
     const gain = context.createGain();
     gain.gain.value = levelToGain(settings.volume);
     gain.connect(master);
-    const note: TimelineNote = { tick: 0, instrument, sound, lengthTicks };
+    // Keys sounds transposed, here as in playback: the note heard while placing is the note that will play.
+    const heard: Sound = instrument === 'keys' && sound.kind === 'pitch' ? { kind: 'pitch', pitch: soundingPitch(sound.pitch, settings.transpose) } : sound;
+    const note: TimelineNote = { tick: 0, instrument, sound: heard, lengthTicks };
     const secondsPerTick = 60 / project.bpm / TICKS_PER_QUARTER;
     try {
       const voice = startNote(context, gain, buffers, manifest, note, settings, secondsPerTick, context.currentTime + 0.005, () => {

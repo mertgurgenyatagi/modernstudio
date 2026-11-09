@@ -32,6 +32,7 @@ function sameInstrument(a: Instrument, b: Instrument): boolean {
     a.decay === b.decay &&
     a.release === b.release &&
     a.fretCount === b.fretCount &&
+    a.transpose === b.transpose &&
     sameData(a.patterns, b.patterns) &&
     sameData(a.lane, b.lane)
   );

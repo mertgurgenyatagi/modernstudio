@@ -4,6 +4,7 @@ import { createProject, type Project } from './project';
 import {
   MAX_SONG_BARS,
   blockAt,
+  blockAtTick,
   blocksOf,
   groupSpan,
   laneFits,
@@ -15,6 +16,7 @@ import {
   removeBlocks,
   songBars,
 } from './song';
+import { ticksPerBar } from './time';
 import { must } from './testing';
 
 function withPatterns(): Project {
@@ -214,5 +216,21 @@ describe('several blocks at once', () => {
     const left = removeBlocks(p, group);
     expect(left.instruments.drums.lane).toEqual([{ pattern: 0, startBar: 0 }]);
     expect(left.instruments.keys.lane).toEqual([]);
+  });
+});
+
+describe('the block playing at a tick of the song', () => {
+  it('finds the block under the playhead, and nothing in a gap or before the start', () => {
+    let p = withPatterns();
+    p = must(placeBlock(p, 'drums', 0, 1));
+    p = must(placeBlock(p, 'drums', 1, 4));
+    const bar = ticksPerBar(p.meter);
+    expect(blockAtTick(p, 'drums', 0)).toBeUndefined();
+    expect(blockAtTick(p, 'drums', bar)).toEqual({ pattern: 0, startBar: 1 });
+    expect(blockAtTick(p, 'drums', 2 * bar - 1)).toEqual({ pattern: 0, startBar: 1 });
+    expect(blockAtTick(p, 'drums', 2 * bar)).toBeUndefined();
+    expect(blockAtTick(p, 'drums', 5 * bar + 3)).toEqual({ pattern: 1, startBar: 4 });
+    expect(blockAtTick(p, 'drums', -1)).toBeUndefined();
+    expect(blockAtTick(p, 'keys', bar)).toBeUndefined();
   });
 });

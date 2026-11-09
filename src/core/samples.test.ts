@@ -1,12 +1,14 @@
 import { describe, expect, it } from 'vitest';
 import manifestJson from '../assets/sounds/manifest.json';
-import { DRUM_ROWS, KEYS_RANGE, TUNING } from './instruments';
+import { DRUM_ROWS, TUNING } from './instruments';
 import {
+  KEYS_TONE,
   SOUND_SET_OF,
   chooseSample,
   drumSample,
   holdSeconds,
   nearestSample,
+  pitchFrequency,
   playbackRate,
   type SoundManifest,
 } from './samples';
@@ -19,6 +21,11 @@ describe('the manifest', () => {
       expect(manifest.instruments[set].samples.length, id).toBeGreaterThan(0);
       expect(manifest.instruments[set].usedBy).toContain(id);
     }
+  });
+
+  it('has no recorded set for Keys, which is a generated tone', () => {
+    expect(Object.keys(manifest.instruments)).not.toContain('keys');
+    expect('keys' in SOUND_SET_OF).toBe(false);
   });
 
   it('has one drum sample per row', () => {
@@ -54,7 +61,6 @@ describe('choosing a sample', () => {
     for (const [id, set, low, high] of [
       ['bass', 'bass', lowest('bass'), TUNING.bass[3]! + 12],
       ['rhythm', 'guitar', lowest('rhythm'), TUNING.rhythm[5]! + 12],
-      ['keys', 'keys', KEYS_RANGE.low, KEYS_RANGE.high],
     ] as const) {
       for (let pitch = low; pitch <= high; pitch += 1) {
         const { sample } = chooseSample(manifest.instruments[set].samples, pitch);
@@ -81,5 +87,20 @@ describe('holding a note', () => {
   it('releases a long note when the recorded key went up', () => {
     expect(holdSeconds(10, sample, 1)).toBe(4);
     expect(holdSeconds(10, sample, 2)).toBe(2);
+  });
+});
+
+describe('the Keys tone', () => {
+  it('is a triangle wave at the loudness of the recorded samples (-20 dBFS RMS)', () => {
+    expect(KEYS_TONE.wave).toBe('triangle');
+    const rms = KEYS_TONE.peak / Math.sqrt(3);
+    expect(20 * Math.log10(rms)).toBeCloseTo(-20, 5);
+  });
+
+  it('turns a MIDI note into its frequency', () => {
+    expect(pitchFrequency(69)).toBeCloseTo(440);
+    expect(pitchFrequency(60)).toBeCloseTo(261.6256, 3);
+    expect(pitchFrequency(81)).toBeCloseTo(880);
+    expect(pitchFrequency(36)).toBeCloseTo(65.4064, 3);
   });
 });

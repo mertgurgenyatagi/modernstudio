@@ -12,7 +12,10 @@ import {
   canOpenMorePatterns,
   createProject,
   isActive,
+  PATTERN_NAME_MAX,
+  cleanPatternName,
   openMorePatterns,
+  patternLabel,
   selectPattern,
   setBpm,
   setEnvelope,
@@ -20,6 +23,8 @@ import {
   setMasterVolume,
   setMeter,
   setMuted,
+  setPatternName,
+  setTranspose,
   setVolume,
   showPatterns,
   type Project,
@@ -201,5 +206,64 @@ describe('switching the meter', () => {
     expect(setMeter(p, '4/4')).toBe(p);
     const three = setMeter(p, '3/4');
     expect(three.instruments).toBe(p.instruments);
+  });
+});
+
+describe('naming patterns', () => {
+  it('names a pattern, and an empty name takes the name away again', () => {
+    const named = setPatternName(createProject(), 'drums', 2, '  Big   chorus ');
+    expect(named.instruments.drums.patterns[2]?.name).toBe('Big chorus');
+    expect(patternLabel(named.instruments.drums.patterns[2], 2)).toBe('Pattern 3: Big chorus');
+    expect(patternLabel(named.instruments.drums.patterns[1], 1)).toBe('Pattern 2');
+    const cleared = setPatternName(named, 'drums', 2, '   ');
+    expect(cleared.instruments.drums.patterns[2]).toEqual({ bars: 1, notes: [] });
+    expect('name' in (cleared.instruments.drums.patterns[2] ?? {})).toBe(false);
+  });
+
+  it('changes nothing, and returns the same project, when the name is the same', () => {
+    const p = createProject();
+    expect(setPatternName(p, 'bass', 0, '')).toBe(p);
+    const named = setPatternName(p, 'bass', 0, 'Verse');
+    expect(setPatternName(named, 'bass', 0, ' Verse ')).toBe(named);
+  });
+
+  it('cuts a long name, and names only one pattern of one instrument', () => {
+    const long = 'x'.repeat(60);
+    expect(cleanPatternName(long)).toHaveLength(PATTERN_NAME_MAX);
+    const p = setPatternName(createProject(), 'keys', 5, long);
+    expect(p.instruments.keys.patterns[5]?.name).toHaveLength(PATTERN_NAME_MAX);
+    expect(p.instruments.keys.patterns[4]?.name).toBeUndefined();
+    expect(p.instruments.lead.patterns[5]?.name).toBeUndefined();
+  });
+
+  it('keeps the name when the pattern is lengthened or gets notes', () => {
+    let p = setPatternName(createProject(), 'keys', 0, 'Hook');
+    p = must(setPatternBars(p, 'keys', 0, 4));
+    p = must(addNote(p, 'keys', 0, { pitch: 60, start: 0, length: 12 }));
+    expect(p.instruments.keys.patterns[0]).toMatchObject({ name: 'Hook', bars: 4 });
+  });
+});
+
+describe('transposing Keys', () => {
+  it('starts at 0 for every instrument', () => {
+    for (const id of INSTRUMENT_IDS) expect(createProject().instruments[id].transpose).toBe(0);
+  });
+
+  it('transposes Keys by whole semitones within two octaves, and nothing else', () => {
+    const p = createProject();
+    expect(setTranspose(p, 'keys', 5).instruments.keys.transpose).toBe(5);
+    expect(setTranspose(p, 'keys', -7).instruments.keys.transpose).toBe(-7);
+    expect(setTranspose(p, 'keys', 99).instruments.keys.transpose).toBe(24);
+    expect(setTranspose(p, 'keys', -99).instruments.keys.transpose).toBe(-24);
+    expect(setTranspose(p, 'keys', 2.6).instruments.keys.transpose).toBe(3);
+    expect(setTranspose(p, 'keys', Number.NaN)).toBe(p);
+    expect(setTranspose(p, 'lead', 5)).toBe(p);
+    expect(setTranspose(p, 'keys', 0)).toBe(p);
+  });
+
+  it('leaves the written notes alone', () => {
+    let p = must(addNote(createProject(), 'keys', 0, { pitch: 60, start: 0, length: 12 }));
+    p = setTranspose(p, 'keys', 12);
+    expect(p.instruments.keys.patterns[0]?.notes).toEqual([{ pitch: 60, start: 0, length: 12 }]);
   });
 });

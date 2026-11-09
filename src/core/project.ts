@@ -11,6 +11,7 @@ import {
   PATTERNS_MAX,
   PATTERNS_SHOWN_DEFAULT,
   PATTERNS_SHOWN_STEP,
+  TRANSPOSE_MAX,
   isStringInstrument,
   type DrumRow,
   type FretCount,
@@ -52,7 +53,12 @@ export type Note = DrumNote | StringNote | KeysNote;
 export interface Pattern {
   bars: PatternBars;
   notes: Note[];
+  /** An optional name, set by double-clicking the pattern number. Absent when the pattern has none. */
+  name?: string;
 }
+
+/** The longest pattern name, in characters. */
+export const PATTERN_NAME_MAX = 24;
 
 /** One Song block: a pattern placed at a bar. Its length is the pattern's length in bars. */
 export interface Block {
@@ -80,6 +86,12 @@ export interface Instrument {
   lane: Block[];
   /** Bass and the guitars only; null for Drums and Keys. Notes on frets above it are kept, hidden. */
   fretCount: FretCount | null;
+  /**
+   * Keys only: how many semitones the whole instrument sounds above (or, negative, below) what is
+   * written, -24 to 24. 0 for every other instrument. The notes stay as written; the sound, the WAV
+   * export and the MIDI export move.
+   */
+  transpose: number;
 }
 
 export interface Project {
@@ -121,6 +133,7 @@ export function createInstrument(id: InstrumentId): Instrument {
     selectedPattern: 0,
     lane: [],
     fretCount: isStringInstrument(id) ? FRET_COUNT_DEFAULT : null,
+    transpose: 0,
   };
 }
 
@@ -183,6 +196,30 @@ export function clampLevel(value: number): number {
   return Math.min(LEVEL_MAX, Math.max(LEVEL_MIN, Math.round(value)));
 }
 
+// ---- Pattern names ----
+
+/** A name as it is kept: trimmed, inner runs of spaces made one, cut to PATTERN_NAME_MAX. Empty means no name. */
+export function cleanPatternName(name: string): string {
+  return name.replace(/\s+/g, ' ').trim().slice(0, PATTERN_NAME_MAX).trim();
+}
+
+/** "Pattern 3" or, for a named pattern, "Pattern 3: Chorus". `index` is 0 based. */
+export function patternLabel(pattern: Pattern | undefined, index: number): string {
+  return pattern?.name ? `Pattern ${index + 1}: ${pattern.name}` : `Pattern ${index + 1}`;
+}
+
+/** Names a pattern; an empty name takes the name away. Not limited to active patterns. */
+export function setPatternName(project: Project, id: InstrumentId, index: number, name: string): Project {
+  const clean = cleanPatternName(name);
+  return updatePattern(project, id, index, (pattern) => {
+    if ((pattern.name ?? '') === clean) return pattern;
+    if (clean === '') {
+      return { bars: pattern.bars, notes: pattern.notes };
+    }
+    return { ...pattern, name: clean };
+  });
+}
+
 // ---- Mixer and project settings ----
 
 export function setBpm(project: Project, bpm: number): Project {
@@ -218,6 +255,13 @@ export function setEnvelope(
     if (next.attack === i.attack && next.decay === i.decay && next.release === i.release) return i;
     return { ...i, ...next };
   });
+}
+
+/** Keys only: transposes the whole instrument by whole semitones, kept within -24 to 24. */
+export function setTranspose(project: Project, id: InstrumentId, semitones: number): Project {
+  if (id !== 'keys' || !Number.isFinite(semitones)) return project;
+  const next = Math.min(TRANSPOSE_MAX, Math.max(-TRANSPOSE_MAX, Math.round(semitones)));
+  return updateInstrument(project, id, (i) => (i.transpose === next ? i : { ...i, transpose: next }));
 }
 
 /** Bass and the guitars only. Notes on frets above the new count are kept, and hidden. */

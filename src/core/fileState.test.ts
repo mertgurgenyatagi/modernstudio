@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { displayName, ensureExtension, hasProjectExtension, isDirty, projectName, windowTitle } from './fileState';
 import { addNote, setPatternBars } from './patterns';
-import { createProject, openMorePatterns, selectPattern, setBpm, setMasterVolume } from './project';
+import { createProject, openMorePatterns, selectPattern, setBpm, setMasterVolume, setPatternName, setTranspose } from './project';
 import { DEFAULT_SETTINGS, parseSettings, serializeSettings } from './settings';
 import { parseProject, serializeProject } from './serialize';
 import { placeBlock } from './song';
@@ -23,6 +23,13 @@ describe('isDirty', () => {
     const edited = setBpm(saved, 100);
     expect(isDirty(edited, saved)).toBe(true);
     expect(isDirty(setBpm(edited, 120), saved)).toBe(false);
+  });
+
+  it('counts naming a pattern and transposing Keys as changes, and undoing them as none', () => {
+    expect(isDirty(setPatternName(saved, 'drums', 0, 'Verse'), saved)).toBe(true);
+    expect(isDirty(setPatternName(setPatternName(saved, 'drums', 0, 'Verse'), 'drums', 0, ''), saved)).toBe(false);
+    expect(isDirty(setTranspose(saved, 'keys', 3), saved)).toBe(true);
+    expect(isDirty(setTranspose(setTranspose(saved, 'keys', 3), 'keys', 0), saved)).toBe(false);
   });
 
   it('counts master volume, notes, pattern length and Song blocks', () => {

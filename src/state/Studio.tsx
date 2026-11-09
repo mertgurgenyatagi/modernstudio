@@ -7,7 +7,9 @@ import { createContext, useCallback, useContext, useEffect, useMemo, useReducer,
 import { AudioEngine } from '../audio/engine';
 import type { Project } from '../core/project';
 import { canUndo } from '../core/history';
-import { initialState, playRequestFor, reduce, type Action, type AppState, type ReplaceOptions } from './appState';
+import { selectPattern } from '../core/project';
+import { blockAtTick } from '../core/song';
+import { initialState, pageInstrument, playRequestFor, reduce, type Action, type AppState, type ReplaceOptions } from './appState';
 import { commandLetter, isTypingTarget } from './keys';
 import { useFiles, type FileActions } from './useFiles';
 
@@ -61,6 +63,33 @@ export function StudioProvider({ children }: { children: ReactNode }) {
       engine.stop();
     };
   }, [engine]);
+
+  // An instrument page always shows the pattern that is playing. In Pattern mode that is the selected
+  // pattern already. While the Song plays, the page's instrument follows the playhead: the pattern of the
+  // block under it becomes the selected one (a choice, not an Undo step). In a gap between blocks the
+  // last pattern stays. Edits on the page land in the pattern on screen, which is the one that plays.
+  const projectRef = useRef(project);
+  useEffect(() => {
+    projectRef.current = project;
+  }, [project]);
+  const instrumentOnPage = pageInstrument(state.page);
+  useEffect(() => {
+    if (!state.playing || instrumentOnPage === null) return;
+    let frame = 0;
+    const follow = () => {
+      const position = engine.playingRequest?.mode === 'song' ? engine.position() : null;
+      if (position) {
+        const current = projectRef.current;
+        const block = blockAtTick(current, instrumentOnPage, position.songTick);
+        if (block && block.pattern !== current.instruments[instrumentOnPage].selectedPattern) {
+          dispatch({ type: 'select', change: (p) => selectPattern(p, instrumentOnPage, block.pattern) });
+        }
+      }
+      frame = requestAnimationFrame(follow);
+    };
+    frame = requestAnimationFrame(follow);
+    return () => cancelAnimationFrame(frame);
+  }, [engine, state.playing, instrumentOnPage]);
 
   const playFrom = useCallback(
     (from: AppState) => {

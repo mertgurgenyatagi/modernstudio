@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { addNote, setPatternBars } from './patterns';
-import { metronomeClicks, patternPlan, songPlan } from './playback';
-import { createProject, selectPattern, setFretCount, setMeter, type Project } from './project';
+import { metronomeClicks, patternPlan, songPlan, soundingPitch } from './playback';
+import { createProject, selectPattern, setFretCount, setMeter, setTranspose, type Project } from './project';
 import { placeBlock } from './song';
 import { must } from './testing';
 
@@ -179,5 +179,31 @@ describe('Song mode', () => {
   it('follows the meter', () => {
     const p = setMeter(song(), '3/4');
     expect(songPlan(p).loop.lengthTicks).toBe(3 * 36);
+  });
+});
+
+describe('transposed Keys', () => {
+  const keysPitches = (plan: ReturnType<typeof patternPlan>) =>
+    plan.first.notes.flatMap((n) => (n.instrument === 'keys' && n.sound.kind === 'pitch' ? [n.sound.pitch] : []));
+
+  it('sounds every Keys note, in both modes, as many semitones higher as the instrument is transposed', () => {
+    let p = setTranspose(band(), 'keys', 7);
+    expect(keysPitches(patternPlan(p, 'keys'))).toEqual([67]);
+    p = must(placeBlock(p, 'keys', 0, 0));
+    expect(keysPitches(songPlan(p))).toEqual([67]);
+    expect(keysPitches(patternPlan(setTranspose(p, 'keys', -12), 'keys'))).toEqual([48]);
+  });
+
+  it('is not transposed by default, and transposes no other instrument', () => {
+    expect(keysPitches(patternPlan(band(), 'keys'))).toEqual([60]);
+    const before = patternPlan(band(), 'bass').first.notes.filter((n) => n.instrument === 'bass');
+    const after = patternPlan(setTranspose(band(), 'keys', 7), 'bass').first.notes.filter((n) => n.instrument === 'bass');
+    expect(after).toEqual(before);
+  });
+
+  it('keeps a sounding pitch inside the MIDI range', () => {
+    expect(soundingPitch(100, 24)).toBe(124);
+    expect(soundingPitch(120, 24)).toBe(127);
+    expect(soundingPitch(5, -24)).toBe(0);
   });
 });

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { addNote, setPatternBars } from './patterns';
-import { createProject, setBpm, setFretCount, setMeter, setMuted, showPatterns, type Project } from './project';
+import { createProject, setBpm, setFretCount, setMeter, setMuted, setPatternName, setTranspose, showPatterns, type Project } from './project';
 import { FILE_FORMAT, FILE_VERSION, parseProject, serializeProject } from './serialize';
 import { placeBlock } from './song';
 import { must } from './testing';
@@ -19,6 +19,9 @@ function busy(): Project {
   p = must(placeBlock(p, 'drums', 0, 4));
   p = must(placeBlock(p, 'drums', 0, 0));
   p = showPatterns(p, 'bass', 30);
+  p = setPatternName(p, 'keys', 0, 'Hook');
+  p = setPatternName(p, 'drums', 7, 'Fill');
+  p = setTranspose(p, 'keys', -5);
   return p;
 }
 
@@ -37,6 +40,13 @@ describe('saving', () => {
       expect(back.ok).toBe(true);
       if (back.ok) expect(back.project).toEqual(p);
     }
+  });
+
+  it('keeps pattern names and the Keys transpose, and writes no name for a pattern without one', () => {
+    const file = JSON.parse(serializeProject(busy())) as { project: Project };
+    expect(file.project.instruments.keys.patterns[0]?.name).toBe('Hook');
+    expect(file.project.instruments.keys.patterns[1]).toEqual({ bars: 1, notes: [] });
+    expect(file.project.instruments.keys.transpose).toBe(-5);
   });
 
   it('keeps notes a switch to 3/4 hid, even past the end of the longest 3/4 pattern', () => {
@@ -82,6 +92,24 @@ describe('opening', () => {
     expect(refusedWith(edited((p) => (p.masterVolume = 101)))).toMatch(/masterVolume/);
     expect(refusedWith(edited((p) => (p.instruments.bass.volume = -1)))).toMatch(/bass.volume/);
     expect(refusedWith(edited((p) => (p.instruments.bass.attack = 'x')))).toMatch(/attack/);
+  });
+
+  it('opens a file saved before names and transpose existed, as unnamed and not transposed', () => {
+    const file = JSON.parse(serializeProject(createProject())) as { project: { instruments: Record<string, Record<string, unknown>> } };
+    for (const id of ['drums', 'bass', 'rhythm', 'lead', 'keys']) delete file.project.instruments[id]?.transpose;
+    const back = parseProject(JSON.stringify(file));
+    expect(back.ok).toBe(true);
+    if (back.ok) expect(back.project).toEqual(createProject());
+  });
+
+  it('refuses a bad pattern name or transpose', () => {
+    expect(refusedWith(edited((p) => (p.instruments.keys.patterns[0].name = '')))).toMatch(/name/);
+    expect(refusedWith(edited((p) => (p.instruments.keys.patterns[0].name = ' padded ')))).toMatch(/name/);
+    expect(refusedWith(edited((p) => (p.instruments.keys.patterns[0].name = 'x'.repeat(25))))).toMatch(/name/);
+    expect(refusedWith(edited((p) => (p.instruments.keys.patterns[0].name = 7)))).toMatch(/name/);
+    expect(refusedWith(edited((p) => (p.instruments.keys.transpose = 25)))).toMatch(/transpose/);
+    expect(refusedWith(edited((p) => (p.instruments.keys.transpose = 1.5)))).toMatch(/transpose/);
+    expect(refusedWith(edited((p) => (p.instruments.lead.transpose = 2)))).toMatch(/only Keys/);
   });
 
   it('refuses a missing instrument or the wrong number of patterns', () => {

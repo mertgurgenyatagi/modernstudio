@@ -8,7 +8,7 @@ Built in plan24 step 2 as plain TypeScript in [src/core/](../src/core/), with un
 | --- | --- |
 | `time.ts` | Ticks (12 per quarter note), the six note values, meters, the grid, snapping, BPM limits |
 | `instruments.ts` | The five instruments, drum rows, tuning, fret counts, the Keys range, pattern and level limits |
-| `project.ts` | The types, a new project, and the mixer and settings edits (BPM, meter, volume, mute, envelope, fret count, selected pattern, patterns shown) |
+| `project.ts` | The types, a new project, and the mixer and settings edits (BPM, meter, volume, mute, envelope, fret count, Keys transpose, pattern names, selected pattern, patterns shown) |
 | `patterns.ts` | Note checks and edits, pattern length, copying notes between patterns |
 | `song.ts` | Song lanes: placing, moving and removing blocks, song length |
 | `history.ts` | Undo |
@@ -19,6 +19,8 @@ Built in plan24 step 2 as plain TypeScript in [src/core/](../src/core/), with un
 - Every edit is a pure function that returns a new project and shares what did not change. An edit that changes nothing returns the same object. An edit a rule can refuse returns `{ ok: false, reason }`, so a page can say why.
 - **Time** is in ticks, 12 to a quarter note. A bar is 48 ticks in 4/4 and 36 in 3/4. A note starts and ends on the grid (a position in a beat of 0, 2, 3, 4, 6, 8, 9 or 10) and is at least 2 ticks long. This is the grid the MIDI import uses ([midi-import.md](midi-import.md)).
 - **Notes** have no id. A drum hit is a row and a start. A string note (bass, Rhythm, Lead) is a string, a fret, a start and a length, with string 0 the lowest. A Keys note is a MIDI pitch (C4 = 60), a start and a length. Two notes with the same row/string/fret/pitch at the same start are the same note. Chords, and two notes on one string, are allowed.
+- **Pattern names** (2026-11-09) are optional: a pattern may carry a `name` of 1 to 24 characters, trimmed. A pattern without one has no `name` field in the file. Naming is an Undo step and counts as an unsaved change.
+- **Transpose** (2026-11-09) is a field of every instrument, -24 to 24 semitones, and only Keys can be other than 0. The notes stay as written; `playback.ts` moves the pitch Keys sounds, so the WAV and MIDI exports follow it. A file saved before it existed opens with 0. The file version stays 1: an older file opens unnamed and untransposed, and an older build of the app opens a newer file but drops the names and the transpose (its parser ignores fields it does not know).
 - **Patterns:** 120 per instrument, 20 shown. Hidden ones open 20 at a time once every shown pattern is active. A pattern is 1, 2, 4 or 8 bars. Notes outside a shortened pattern are kept and return when it is lengthened. A pattern is active once it has a note, and goes back to inactive when its last note is deleted.
 - **Song lanes:** blocks snap to bars, never overlap, may leave gaps, and stop at bar 256. A block is as long as its pattern. Only active patterns can be placed. The song ends at the last block of any lane.
 - **Meter switch:** notes keep their positions and nothing is deleted. Notes that fall outside the new, shorter bar are hidden, as past the end of a shortened pattern, and come back when the meter is switched back (the sweeping changes of 2026-11-09). A saved note may therefore lie anywhere inside an 8 bar pattern of 4/4.

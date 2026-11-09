@@ -10,12 +10,13 @@ import {
   LEVEL_MIN,
   PATTERNS_MAX,
   PATTERNS_SHOWN_STEP,
+  TRANSPOSE_MAX,
   isStringInstrument,
   type FretCount,
   type InstrumentId,
 } from './instruments';
 import { noteProblem } from './patterns';
-import type { Block, Instrument, Note, Pattern, Project } from './project';
+import { PATTERN_NAME_MAX, cleanPatternName, type Block, type Instrument, type Note, type Pattern, type Project } from './project';
 import { laneFits } from './song';
 import { BPM_MAX, BPM_MIN, METERS, MAX_PATTERN_BARS, PATTERN_BARS, patternTicks, type Meter, type PatternBars } from './time';
 
@@ -85,7 +86,11 @@ function parsePattern(id: InstrumentId, value: unknown, where: string): Pattern 
   const bars = oneOf<PatternBars>(raw.bars, PATTERN_BARS, `${where}.bars`);
   if (!Array.isArray(raw.notes)) bad(`${where}.notes`, 'expected a list');
   const notes = (raw.notes as unknown[]).map((n, i) => parseNote(id, n, `${where}.notes[${i}]`));
-  return { bars, notes };
+  if (raw.name === undefined) return { bars, notes };
+  if (typeof raw.name !== 'string' || raw.name === '' || cleanPatternName(raw.name) !== raw.name) {
+    bad(`${where}.name`, `expected a name of 1 to ${PATTERN_NAME_MAX} characters, trimmed`);
+  }
+  return { bars, notes, name: raw.name };
 }
 
 function parseInstrument(id: InstrumentId, value: unknown, where: string): Instrument {
@@ -117,6 +122,10 @@ function parseInstrument(id: InstrumentId, value: unknown, where: string): Instr
   if (isStringInstrument(id)) fretCount = oneOf<FretCount>(raw.fretCount, FRET_COUNTS, `${where}.fretCount`);
   else if (raw.fretCount !== null) bad(`${where}.fretCount`, 'expected null');
 
+  // Files saved before Keys could be transposed have no transpose: that is 0. Only Keys can have one.
+  const transpose = raw.transpose === undefined ? 0 : whole(raw.transpose, `${where}.transpose`, -TRANSPOSE_MAX, TRANSPOSE_MAX);
+  if (id !== 'keys' && transpose !== 0) bad(`${where}.transpose`, 'only Keys can be transposed');
+
   return {
     volume: level(raw.volume, `${where}.volume`),
     muted: raw.muted,
@@ -128,6 +137,7 @@ function parseInstrument(id: InstrumentId, value: unknown, where: string): Instr
     selectedPattern,
     lane,
     fretCount,
+    transpose,
   };
 }
 

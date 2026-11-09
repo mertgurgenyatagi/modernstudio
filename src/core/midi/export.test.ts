@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { addNote } from '../patterns';
-import { createProject, setBpm, setFretCount, setMasterVolume, setMeter, setVolume, type Project } from '../project';
+import { createProject, setBpm, setFretCount, setMasterVolume, setMeter, setTranspose, setVolume, type Project } from '../project';
 import { placeBlock } from '../song';
 import { must } from '../testing';
 import {
@@ -128,6 +128,11 @@ describe('exporting the Song', () => {
     p = setFretCount(p, 'bass', 5);
     const notes = exported(p).tracks[2]?.notes ?? [];
     expect(notes.map((n) => n.pitch)).toEqual([34]);
+  });
+
+  it('writes Keys as it sounds: transposed', () => {
+    const notes = exported(setTranspose(songProject(), 'keys', -3)).tracks[5]?.notes ?? [];
+    expect(notes.map((n) => n.pitch)).toEqual([57]);
   });
 
   it('ignores mute and the metronome: a muted instrument is still written', () => {

@@ -4,12 +4,14 @@
 
 - Each instrument shows 20 patterns, numbered. They have no names.
 - Up to 120 patterns per instrument exist (decided 2026-11-09, for MIDI import). Once all 20 shown patterns are active, a hidden control appears that opens more. Its exact look and how many it opens at a time are not decided; see [open-items.md](open-items.md). A MIDI import that needs more than 20 opens the extra ones by itself ([midi-import.md](midi-import.md)).
+- **A pattern can have a name (2026-11-09), hidden on purpose.** Double-click the pattern number on an instrument page: it turns into a text field. Enter or clicking away keeps the name, Escape drops the change, and an empty name removes it. Up to 24 characters. The name shows only as a tooltip: on the number, in the grid of patterns, on the Song's blocks and in the Song's place menu. Nothing on screen hints that names exist. Naming is an Undo step.
 - A pattern cannot be deleted. It becomes active as soon as one note is placed in it. To clear a pattern, delete its notes.
 - One pattern is one bar long: four quarter notes in 4/4, three in 3/4.
 - A pattern can be extended to 2x, 4x or 8x, and the length can be changed after notes are placed.
 - Notes that fall outside a shortened pattern are kept and come back if the pattern is lengthened again.
 - The notes of one pattern can be copied into another pattern, with copy and paste ([sweeping-changes.md](sweeping-changes.md)).
 - Pattern mode loops the pattern while it plays. The other instruments play along, each with the pattern last selected for it, unless one instrument is isolated.
+- **An instrument page always shows the pattern that is playing (2026-11-09).** In Pattern mode that is the selected pattern. While the Song plays, the page follows the playhead: when it enters a block, that block's pattern becomes the selected one and the page shows it, with a playhead moving across it. In a gap between blocks the last pattern stays on screen. The page of a stopped Song shows the selected pattern as before. Following is a choice, not an edit: it is not an Undo step and does not make the project unsaved. Choosing another pattern while the Song plays lasts only until the next frame, since the page returns to the playing one; edits land in the pattern on screen, which is the one playing. Only the page on screen follows; the other instruments' selections change when their page is opened during the Song.
 
 ## Pattern editor view
 

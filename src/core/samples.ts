@@ -31,7 +31,6 @@ export interface SoundManifest {
   instruments: {
     bass: PitchedSet;
     guitar: PitchedSet;
-    keys: PitchedSet;
     drums: { kind: 'drums'; usedBy: InstrumentId[]; samples: DrumSample[] };
   };
 }
@@ -42,16 +41,28 @@ interface PitchedSet {
   samples: PitchedSample[];
 }
 
-/** The folders of recorded files. The two guitars share one set. */
-export type SoundSetName = 'bass' | 'guitar' | 'keys' | 'drums';
+/** The folders of recorded files. The two guitars share one set. Keys has none: it is a generated tone. */
+export type SoundSetName = 'bass' | 'guitar' | 'drums';
 
-export const SOUND_SET_OF: Record<InstrumentId, SoundSetName> = {
+export const SOUND_SET_OF: Record<Exclude<InstrumentId, 'keys'>, SoundSetName> = {
   drums: 'drums',
   bass: 'bass',
   rhythm: 'guitar',
   lead: 'guitar',
-  keys: 'keys',
 };
+
+/**
+ * Keys is not recorded: it is a triangle wave made by the audio engine, so a note can be held as long
+ * as it is and any pitch is exact. `peak` is the wave's top: a triangle's RMS is its peak over the
+ * square root of 3, so 0.1732 is -20 dBFS RMS, the loudness every recorded sample was levelled to
+ * (docs/sound.md), which keeps volume 100 meaning the same for every instrument.
+ */
+export const KEYS_TONE = { wave: 'triangle', peak: 0.1 * Math.sqrt(3) } as const;
+
+/** The frequency in hertz of a MIDI note (A4 = 69 = 440 Hz). */
+export function pitchFrequency(pitch: number): number {
+  return 440 * 2 ** ((pitch - 69) / 12);
+}
 
 /** The sample whose recorded pitch is nearest to the wanted pitch (the lower one on a tie). */
 export function nearestSample(samples: readonly PitchedSample[], pitch: number): PitchedSample {

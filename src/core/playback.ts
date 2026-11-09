@@ -55,8 +55,16 @@ export interface Plan {
   loop: Timeline;
 }
 
-/** The notes of one pattern that can be heard: inside the visible length, and on frets that exist. */
-function audibleNotes(project: Project, id: InstrumentId, index: number): TimelineNote[] {
+/** The pitch Keys sounds for a written pitch: transposed, and kept within the MIDI range 0 to 127. */
+export function soundingPitch(pitch: number, transpose: number): number {
+  return Math.min(127, Math.max(0, pitch + transpose));
+}
+
+/**
+ * The notes of one pattern that can be heard: inside the visible length, and on frets that exist.
+ * Ticks count from the start of the pattern. Also what the key and chord readouts look at (harmony/).
+ */
+export function audibleNotes(project: Project, id: InstrumentId, index: number): TimelineNote[] {
   const instrument = project.instruments[id];
   const pattern = instrument.patterns[index];
   if (!pattern) return [];
@@ -76,7 +84,7 @@ function audibleNotes(project: Project, id: InstrumentId, index: number): Timeli
     } else {
       const n = note as KeysNote;
       const lengthTicks = Math.min(n.length, visible - n.start);
-      out.push({ tick: n.start, instrument: id, sound: { kind: 'pitch', pitch: n.pitch }, lengthTicks });
+      out.push({ tick: n.start, instrument: id, sound: { kind: 'pitch', pitch: soundingPitch(n.pitch, instrument.transpose) }, lengthTicks });
     }
   }
   return out;

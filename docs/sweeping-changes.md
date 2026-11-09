@@ -66,3 +66,10 @@ The user may overturn any of these.
 - The knobs replace the envelope sliders; the Mixer keeps its volume sliders.
 - A note heard while placing is cut at a beat, so a whole note does not ring for two seconds.
 - No redo, as questionnaire 14 has it, although the list asks for what a music program has.
+
+## Second round (2026-11-09, after the MIDI album picks)
+
+- **Instrument pages show the playing pattern.** While the Song plays, a page follows the playhead and shows the pattern of the block under it, with a playhead across it; see [patterns-and-song.md](patterns-and-song.md). Built: `blockAtTick` in `src/core/song.ts` (tested), the follow effect in `src/state/Studio.tsx`, the playhead in `src/pages/editor/NoteEditor.tsx`. The builder chose: following sets the selected pattern (not an Undo step, never "unsaved"); a gap keeps the last pattern; only the page on screen follows; the pattern picker cannot hold another pattern while the Song plays. Not run in a window yet.
+- **Keys is a triangle wave** instead of the recorded Synth Voice; see "The Keys tone" in [sound.md](sound.md). The 17 Keys sample files and their manifest entry are gone (`check:sounds` now checks 28 files). The exported MIDI file still names Synth Voice for Keys. Not listened to yet.
+- **Pattern names**, reached only by double-clicking the pattern number; shown as tooltips ([patterns-and-song.md](patterns-and-song.md)). Built: `setPatternName` and `patternLabel` in `src/core/project.ts`, the field in `src/pages/editor/InstrumentBar.tsx`, the tooltips on the Song page. The builder chose: tooltips only, 24 characters, an Undo step, no hint anywhere. Not run in a window yet.
+- **Keys transpose**, instrument-wide, -24 to 24 semitones ([instrument-layouts.md](instrument-layouts.md)). Built: `setTranspose` in `src/core/project.ts`, applied in `src/core/playback.ts` (so both exports follow) and in the engine's note preview, the control in the Keys settings bar. The builder chose: the range, Shift for octaves, a click on the number to reset, notes drawn as written, the exports transposed. Not run in a window yet.

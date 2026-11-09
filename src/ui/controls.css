@@ -45,3 +45,8 @@
   font: 400 0.72rem/1 var(--font-body);
   color: var(--color-muted);
 }
+
+/* The amount between a pair of step buttons (Keys' transpose): a fixed width so the bar does not shift. */
+.seg .seg-value {
+  min-width: 2.2rem;
+}

@@ -14,6 +14,7 @@ import {
   type Outcome,
   type Project,
 } from './project';
+import { ticksPerBar } from './time';
 
 export const MAX_SONG_BARS = 256;
 
@@ -41,6 +42,16 @@ function sortedLane(blocks: readonly Block[]): Block[] {
 /** The block that covers the bar, if any. */
 export function blockAt(project: Project, id: InstrumentId, bar: number): Block | undefined {
   return project.instruments[id].lane.find((b) => bar >= b.startBar && bar < blockEnd(project, id, b));
+}
+
+/**
+ * The block that is playing at a point of the song, given in ticks from the start of the song (what the
+ * engine reports as `songTick`), or undefined in a gap. Instrument pages show this block's pattern
+ * while the Song plays.
+ */
+export function blockAtTick(project: Project, id: InstrumentId, songTick: number): Block | undefined {
+  if (!Number.isFinite(songTick) || songTick < 0) return undefined;
+  return blockAt(project, id, Math.floor(songTick / ticksPerBar(project.meter)));
 }
 
 /** Whether a pattern of this many bars can start at the bar without overlapping or passing bar 256. */

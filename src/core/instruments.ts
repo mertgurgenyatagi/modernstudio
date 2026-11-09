@@ -51,6 +51,9 @@ export const FRET_MAX = 12;
 /** The agreed Keys range, C2 to C6, as MIDI note numbers. */
 export const KEYS_RANGE = { low: 36, high: 84 } as const;
 
+/** Keys can be transposed up or down by this many semitones at most (two octaves), for the whole instrument. */
+export const TRANSPOSE_MAX = 24;
+
 /** Up to 120 patterns per instrument exist; 20 are shown, and more open 20 at a time. */
 export const PATTERNS_MAX = 120;
 export const PATTERNS_SHOWN_DEFAULT = 20;

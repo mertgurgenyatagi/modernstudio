@@ -11,6 +11,7 @@ import {
 import { INSTRUMENT_LABELS } from '../../core/instruments';
 import { addNote, addNotes, noteKey, removeNotes, replaceNotes } from '../../core/patterns';
 import type { Note } from '../../core/project';
+import { blockAtTick } from '../../core/song';
 import { NOTE_VALUE_TICKS, TICKS_PER_QUARTER, patternTicks, ticksPerBar } from '../../core/time';
 import {
   afterNotePaste,
@@ -93,6 +94,10 @@ export function NoteEditor({ layout, onMessage, startRow }: { layout: EditorLayo
   const scrollerRef = useRef<HTMLDivElement>(null);
   const gridRef = useRef<HTMLDivElement>(null);
   const playheadRef = useRef<HTMLDivElement>(null);
+  const projectRef = useRef(project);
+  useEffect(() => {
+    projectRef.current = project;
+  }, [project]);
   const size = useElementSize(scrollerRef);
   const tickPx = tickWidth(size.width - layout.labelPx, barsShown(state.editorView, bars), barTicks);
   const rowPx = rowHeight(layout, size.height - RULER_PX);
@@ -196,10 +201,17 @@ export function NoteEditor({ layout, onMessage, startRow }: { layout: EditorLayo
       const playhead = playheadRef.current;
       if (playhead) {
         const request = engine.playingRequest;
-        const position = request && request.mode === 'pattern' && request.focus === id ? engine.position() : null;
-        if (position) {
+        const position = request ? engine.position() : null;
+        // Pattern mode: this instrument's own loop. Song mode: the block of this pattern under the playhead.
+        let tick: number | null = null;
+        if (position && request?.mode === 'pattern' && request.focus === id) tick = position.tick;
+        else if (position && request?.mode === 'song') {
+          const block = blockAtTick(projectRef.current, id, position.songTick);
+          if (block && block.pattern === patternIndex) tick = position.songTick - block.startBar * barTicks;
+        }
+        if (tick !== null) {
           playhead.style.display = 'block';
-          playhead.style.transform = `translateX(${Math.min(Math.max(position.tick, 0), total) * tickPx}px)`;
+          playhead.style.transform = `translateX(${Math.min(Math.max(tick, 0), total) * tickPx}px)`;
         } else {
           playhead.style.display = 'none';
         }
@@ -208,7 +220,7 @@ export function NoteEditor({ layout, onMessage, startRow }: { layout: EditorLayo
     };
     frame = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(frame);
-  }, [engine, id, total, tickPx]);
+  }, [engine, id, total, tickPx, patternIndex, barTicks]);
 
   // ---- Editing ----
 

@@ -11,6 +11,8 @@ import { ticksPerBar, type Meter } from '../../core/time';
 /** The name column at the left, and the bar numbers on top, in pixels. */
 export const NAME_PX = 112;
 export const TIMELINE_PX = 24;
+/** The chord strip under the bar numbers (docs/harmony.md). */
+export const CHORDS_PX = 20;
 
 /** A lane shares the height with the others, between these limits, in pixels. */
 export const LANE_MIN_PX = 40;

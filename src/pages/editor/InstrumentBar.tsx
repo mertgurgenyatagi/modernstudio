@@ -1,7 +1,21 @@
-import { useRef, useState, type ReactNode } from 'react';
-import { FRET_COUNTS, type FretCount, type InstrumentId } from '../../core/instruments';
+import { useEffect, useRef, useState, type ReactNode } from 'react';
+import { FRET_COUNTS, TRANSPOSE_MAX, type FretCount, type InstrumentId } from '../../core/instruments';
 import { setPatternBars } from '../../core/patterns';
-import { canOpenMorePatterns, isActive, openMorePatterns, selectPattern, setEnvelope, setVolume, VOLUME_DEFAULT, ENVELOPE_DEFAULT, type Project } from '../../core/project';
+import {
+  PATTERN_NAME_MAX,
+  canOpenMorePatterns,
+  isActive,
+  openMorePatterns,
+  patternLabel,
+  selectPattern,
+  setEnvelope,
+  setPatternName,
+  setTranspose,
+  setVolume,
+  VOLUME_DEFAULT,
+  ENVELOPE_DEFAULT,
+  type Project,
+} from '../../core/project';
 import { NOTE_VALUES, PATTERN_BARS, type NoteValue } from '../../core/time';
 import { useStudio } from '../../state/Studio';
 import { BUTTON_ZOOM, isFitting, toggleFit, zoomView } from '../../state/view';
@@ -66,10 +80,17 @@ export function InstrumentBar({
  * The pattern: the number of the selected one between a previous and a next arrow. The number opens
  * all the shown patterns as a grid, a pattern with notes outlined in ink; "+20" opens more once every
  * shown pattern has notes. Choosing a pattern is not an Undo step.
+ *
+ * A pattern can have a name, and the way to give it one is hidden on purpose (the user's request,
+ * 2026-11-09): a double click on the number turns it into a text field. Enter or leaving the field
+ * keeps the name, Escape drops the change, an empty name takes the name away. The name shows only as
+ * a tooltip, here, in the grid of patterns and on the Song. Naming is an Undo step.
  */
 function PatternPicker({ id }: { id: InstrumentId }) {
   const { project, dispatch } = useStudio();
   const [open, setOpen] = useState(false);
+  /** The pattern being named (0 based), while the number is a text field. */
+  const [naming, setNaming] = useState<number | null>(null);
   const boxRef = useRef<HTMLDivElement>(null);
   useDismiss(open, boxRef, () => setOpen(false));
   const instrument = project.instruments[id];
@@ -90,16 +111,32 @@ function PatternPicker({ id }: { id: InstrumentId }) {
       <button type="button" className="ibtn pick-step" aria-label="Previous pattern" title="Previous pattern" disabled={selected === 0} onClick={() => choose(selected - 1)}>
         ‹
       </button>
-      <button
-        type="button"
-        className="ibtn pick-number"
-        aria-expanded={open}
-        aria-label={`Pattern ${selected + 1}. Choose a pattern`}
-        title={`Pattern ${selected + 1}`}
-        onClick={() => setOpen(!open)}
-      >
-        {selected + 1}
-      </button>
+      {naming !== null ? (
+        <NameField
+          initial={instrument.patterns[naming]?.name ?? ''}
+          label={`Name of pattern ${naming + 1}`}
+          onDone={(name) => {
+            const index = naming;
+            setNaming(null);
+            if (name !== null) dispatch({ type: 'edit', change: (p) => setPatternName(p, id, index, name) });
+          }}
+        />
+      ) : (
+        <button
+          type="button"
+          className="ibtn pick-number"
+          aria-expanded={open}
+          aria-label={`${patternLabel(instrument.patterns[selected], selected)}. Choose a pattern`}
+          title={patternLabel(instrument.patterns[selected], selected)}
+          onClick={() => setOpen(!open)}
+          onDoubleClick={() => {
+            setOpen(false);
+            setNaming(selected);
+          }}
+        >
+          {selected + 1}
+        </button>
+      )}
       <button
         type="button"
         className="ibtn pick-step"
@@ -122,7 +159,8 @@ function PatternPicker({ id }: { id: InstrumentId }) {
                 type="button"
                 className={classes.join(' ')}
                 aria-pressed={index === selected}
-                aria-label={`Pattern ${index + 1}${isActive(pattern) ? '' : ', empty'}`}
+                title={pattern.name ? patternLabel(pattern, index) : undefined}
+                aria-label={`${patternLabel(pattern, index)}${isActive(pattern) ? '' : ', empty'}`}
                 onClick={() => {
                   choose(index);
                   setOpen(false);
@@ -140,6 +178,42 @@ function PatternPicker({ id }: { id: InstrumentId }) {
         </div>
       )}
     </div>
+  );
+}
+
+/** The text field that takes the place of the pattern number while a pattern is being named. `onDone(null)` means Escape. */
+function NameField({ initial, label, onDone }: { initial: string; label: string; onDone: (name: string | null) => void }) {
+  const [text, setText] = useState(initial);
+  const ref = useRef<HTMLInputElement>(null);
+  const finished = useRef(false);
+  useEffect(() => {
+    ref.current?.focus();
+    ref.current?.select();
+  }, []);
+  const finish = (name: string | null) => {
+    if (finished.current) return;
+    finished.current = true;
+    onDone(name);
+  };
+  return (
+    <input
+      ref={ref}
+      className="pick-name"
+      type="text"
+      value={text}
+      maxLength={PATTERN_NAME_MAX}
+      aria-label={label}
+      spellCheck={false}
+      onChange={(event) => setText(event.target.value)}
+      onKeyDown={(event) => {
+        if (event.key === 'Enter') finish(text);
+        else if (event.key === 'Escape') finish(null);
+        else return;
+        event.preventDefault();
+        event.stopPropagation();
+      }}
+      onBlur={() => finish(text)}
+    />
   );
 }
 
@@ -204,6 +278,41 @@ export function FretChoice({ fretCount, onChange }: { fretCount: FretCount; onCh
           {count}
         </button>
       ))}
+    </div>
+  );
+}
+
+/**
+ * Keys: transpose. The minus and plus buttons move the whole instrument down or up a semitone (Shift:
+ * an octave), the number between them shows the amount and a click on it puts it back to 0. The
+ * notes on screen do not move; the sound does. Each press is an Undo step.
+ */
+export function TransposeChoice({ id }: { id: InstrumentId }) {
+  const { project, dispatch } = useStudio();
+  const value = project.instruments[id].transpose;
+  const move = (semitones: number) => dispatch({ type: 'edit', change: (p) => setTranspose(p, id, p.instruments[id].transpose + semitones) });
+  const shown = value === 0 ? '0' : `${value > 0 ? '+' : '−'}${Math.abs(value)}`;
+  return (
+    <div className="seg seg-labelled" role="group" aria-label="Transpose">
+      <span className="seg-word" aria-hidden="true">
+        Transpose
+      </span>
+      <button type="button" aria-label="Transpose down" title="Down a semitone (Shift: an octave)" disabled={value <= -TRANSPOSE_MAX} onClick={(event) => move(event.shiftKey ? -12 : -1)}>
+        −
+      </button>
+      <button
+        type="button"
+        className="seg-value"
+        aria-label={`Transposed by ${value} semitones. Reset to 0`}
+        title={value === 0 ? 'Not transposed' : `${shown} semitones. Click to reset`}
+        disabled={value === 0}
+        onClick={() => dispatch({ type: 'edit', change: (p) => setTranspose(p, id, 0) })}
+      >
+        {shown}
+      </button>
+      <button type="button" aria-label="Transpose up" title="Up a semitone (Shift: an octave)" disabled={value >= TRANSPOSE_MAX} onClick={(event) => move(event.shiftKey ? 12 : 1)}>
+        +
+      </button>
     </div>
   );
 }

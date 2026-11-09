@@ -4,8 +4,8 @@
  */
 import type { EnvelopeSettings } from '../core/envelope';
 import type { TimelineNote } from '../core/playback';
-import { SOUND_SET_OF, chooseSample, drumSample, holdSeconds, type SoundManifest } from '../core/samples';
-import { startVoice, type Voice } from './voice';
+import { KEYS_TONE, SOUND_SET_OF, chooseSample, drumSample, holdSeconds, pitchFrequency, type SoundManifest } from '../core/samples';
+import { startTone, startVoice, type Voice } from './voice';
 
 function bufferOf(buffers: ReadonlyMap<string, AudioBuffer>, file: string): AudioBuffer {
   const buffer = buffers.get(file);
@@ -15,7 +15,8 @@ function bufferOf(buffers: ReadonlyMap<string, AudioBuffer>, file: string): Audi
 
 /**
  * Starts one note at time `when`. `secondsPerTick` gives the note its length in seconds at the
- * current tempo. A drum hit plays for the whole of its sound.
+ * current tempo. A drum hit plays for the whole of its sound. Keys is a triangle wave held for the
+ * note's whole length.
  */
 export function startNote(
   context: BaseAudioContext,
@@ -28,6 +29,11 @@ export function startNote(
   when: number,
   onEnded?: () => void,
 ): Voice {
+  if (note.instrument === 'keys') {
+    if (note.sound.kind !== 'pitch') throw new Error('Keys was given a drum hit.');
+    const wave = KEYS_TONE.wave;
+    return startTone(context, destination, wave, pitchFrequency(note.sound.pitch), KEYS_TONE.peak, when, note.lengthTicks * secondsPerTick, envelope, onEnded);
+  }
   const set = SOUND_SET_OF[note.instrument];
   if (note.sound.kind === 'drum') {
     const sample = drumSample(manifest.instruments.drums.samples, note.sound.row);
