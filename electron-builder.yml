@@ -1,0 +1,26 @@
+# The Windows installer (plan24 step 20). See docs/stack.md.
+appId: studio.modern.app
+productName: modernstudio
+copyright: Mert
+directories:
+  output: release
+  buildResources: build
+# Only what runs: the build in out/ (the fonts and the sounds are inside it) and package.json.
+# The renderer's libraries are bundled into out/, so they are dev dependencies and are not packed.
+files:
+  - out/**
+  - package.json
+  - '!**/*.map'
+asar: true
+npmRebuild: false
+win:
+  target:
+    - target: nsis
+      arch: x64
+  # No code signing: there is no certificate.
+  signAndEditExecutable: false
+nsis:
+  oneClick: true
+  perMachine: false
+  deleteAppDataOnUninstall: false
+artifactName: modernstudio-setup-${version}.${ext}

@@ -3,7 +3,7 @@
 The build plan, run one step per invocation of the `/plan24` skill ([.claude/skills/plan24/SKILL.md](../.claude/skills/plan24/SKILL.md)). Step numbers are plan24's own and have nothing to do with the older branches `00-overall` to `04-guitars`.
 
 Horizon: 24
-Last completed step: 19
+Last completed step: 20
 Replanned after step: 18
 Plan complete: no
 
@@ -19,24 +19,7 @@ The plan is replanned after every third completed step (3, 6, 9, and so on). Don
 
 ## Next three steps
 
-Replanned after step 18 (2026-11-09). The horizon stays at 24; the order is unchanged. The plan ends at step 22; 23 and 24 are reserves. Step 19 is done (see the history below); steps 20 and 21 are next, and the next replan comes after step 21.
-
-### Step 20: Installer
-
-**Produces:** a Windows installer built with `electron-builder`, and a package that holds only what runs.
-
-- **Configuration (`electron-builder.yml` and scripts):** an NSIS installer for Windows x64 (per user, no admin prompt, assumed; the user chooses the folder: no, one-click, assumed), product name "modernstudio", the app id `studio.modern.app` (assumed), no code signing (the user has no certificate; recorded). Scripts `npm run pack` (an unpacked folder, `--dir`, fast to check) and `npm run dist` (the installer).
-- **What goes in:** `out/` (the build), the three fonts and the sounds (they are inside `out/` through the bundler), `package.json`. What stays out: `docs/`, `midis/`, `tools/`, `questionnaires/`, `src/` sources, the tests and their fixtures, `.claude/`, `.serena/`, the Python prototype. The test is a script that lists the package's file list (from `app.asar` or from the `files` rules) and fails if one of those is in it.
-- **What runs differently when packaged:** the window loads from a file address and the sounds are read by `XMLHttpRequest` ([open-items.md](open-items.md), the engine items); the step checks the content security policy and the relative paths in the built `index.html` for a `file:` load and notes the check cannot be run without a window.
-- **A try:** run `npm run pack`. It needs the Electron binary (already in `node_modules`) and may need to download builder tools; if that fails offline, the configuration is kept, the failure is recorded in open-items with the exact command, and the step is **not** blocked (the accepted fallback is "configuration checked by `electron-builder --help`-level validation and the file-list test on the `files` rules").
-- **Audit of the advisories:** [stack.md](stack.md) says to revisit the `npm install` advisories at the installer step: run `npm audit --omit=dev` and note whether anything shipped is affected.
-- Icon: none is made (assumed: the Electron default stays until the user supplies one; recorded).
-
-**Relies on:** steps 1, 11 and 12 (main process, files), [stack.md](stack.md), [editing-and-project.md](editing-and-project.md) (delivered with an installer).
-
-**Done when:** the configuration is in place; the exclusion test passes; `npm run pack` has been tried and its result recorded; typecheck, lint, test and build pass; [stack.md](stack.md) and the README say how to build the installer.
-
-**Decisions it may need:** one-click per-user NSIS (assumed); no signing and no icon (assumed); the app id; the output folder `release/` (added to `.gitignore`).
+Replanned after step 18 (2026-11-09). The horizon stays at 24; the order is unchanged. The plan ends at step 22; 23 and 24 are reserves. Steps 19 and 20 are done (see the history below); step 21 is next, and the next replan comes after step 21.
 
 ### Step 21: Open items and questionnaire 17
 
@@ -392,9 +375,28 @@ Replanned after step 18 (2026-11-09). The horizon stays at 24; the order is unch
 
 **Built (2026-11-09):** [fit.md](fit.md) (the budget of every page and panel at 960 by 540) and `src/pages/fit.test.ts` (15 tests that read the sizes from the CSS and the geometry code). The audit found two real problems and fixed them in CSS: the Song lanes were cut at the bottom when a notice, a wrapped toolbar and the sideways scrollbar came together (the lane height is now `(100vh - 14rem) / 5`, and the box scrolls if the window is too low), and the Drums panel was about 541 px against 496 (the tools column is 11.5 rem wide with Length in one row and Note value in two columns, and the pad rows use the height that is left). The Guitar and Keys editors keep at least 244 px for their scrolling box in the worst case. The Mixer footer buttons stack in their narrow cell (still fits). Assumptions are in [open-items.md](open-items.md). Nothing was looked at, as planned.
 
+### Step 20: Installer
+
+**Produces:** a Windows installer built with `electron-builder`, and a package that holds only what runs.
+
+- **Configuration (`electron-builder.yml` and scripts):** an NSIS installer for Windows x64 (per user, no admin prompt, assumed; the user chooses the folder: no, one-click, assumed), product name "modernstudio", the app id `studio.modern.app` (assumed), no code signing (the user has no certificate; recorded). Scripts `npm run pack` (an unpacked folder, `--dir`, fast to check) and `npm run dist` (the installer).
+- **What goes in:** `out/` (the build), the three fonts and the sounds (they are inside `out/` through the bundler), `package.json`. What stays out: `docs/`, `midis/`, `tools/`, `questionnaires/`, `src/` sources, the tests and their fixtures, `.claude/`, `.serena/`, the Python prototype. The test is a script that lists the package's file list (from `app.asar` or from the `files` rules) and fails if one of those is in it.
+- **What runs differently when packaged:** the window loads from a file address and the sounds are read by `XMLHttpRequest` ([open-items.md](open-items.md), the engine items); the step checks the content security policy and the relative paths in the built `index.html` for a `file:` load and notes the check cannot be run without a window.
+- **A try:** run `npm run pack`. It needs the Electron binary (already in `node_modules`) and may need to download builder tools; if that fails offline, the configuration is kept, the failure is recorded in open-items with the exact command, and the step is **not** blocked (the accepted fallback is "configuration checked by `electron-builder --help`-level validation and the file-list test on the `files` rules").
+- **Audit of the advisories:** [stack.md](stack.md) says to revisit the `npm install` advisories at the installer step: run `npm audit --omit=dev` and note whether anything shipped is affected.
+- Icon: none is made (assumed: the Electron default stays until the user supplies one; recorded).
+
+**Relies on:** steps 1, 11 and 12 (main process, files), [stack.md](stack.md), [editing-and-project.md](editing-and-project.md) (delivered with an installer).
+
+**Done when:** the configuration is in place; the exclusion test passes; `npm run pack` has been tried and its result recorded; typecheck, lint, test and build pass; [stack.md](stack.md) and the README say how to build the installer.
+
+**Decisions it may need:** one-click per-user NSIS (assumed); no signing and no icon (assumed); the app id; the output folder `release/` (added to `.gitignore`).
+
+**Built (2026-11-09):** `electron-builder.yml` (NSIS, x64, one-click, per user, app id `studio.modern.app`, no signing, no icon; output `release/`), the scripts `pack`, `dist` and `check:package`, and `tools/package/` (`rules.mjs`, `check.mjs`, `rules.test.ts`: five tests). React and the fonts moved to development dependencies since they are bundled into `out/`, so the package holds only `out/` and `package.json` (98 asar entries, none foreign). `npm run pack` and `npm run dist` both worked (the 123 MB installer was built); the built app was not started. `npm audit --omit=dev` finds 0; the 15 moderate advisories are `minimatch` in build and lint tools. Assumptions and the unchecked run-time points are in [open-items.md](open-items.md).
+
 ## Later steps
 
-Broad strokes only. Steps 20 and 21 are detailed above. The next replan comes at the start of the invocation after step 21. The horizon stays at 24.
+Broad strokes only. Step 21 is detailed above. The next replan comes at the start of the invocation after step 21. The horizon stays at 24.
 
 - 22: Final lint, type check, test and build pass; documentation tidy (README and `docs/README.md` status paragraph shortened to the current state, `plan24.md` closed with `Plan complete: yes`); handover notes for the user (what is built, what was never run, what to try first). Ends the plan.
 - 23 and 24: Reserve for fixes and for anything that grew past one step; built only when the user asks.
@@ -422,7 +424,7 @@ Broad strokes only. Steps 20 and 21 are detailed above. The next replan comes at
 | 17 | MIDI import screens 1: button, flow, mapping | done | 17-import-ui |
 | 18 | MIDI import screens 2: report, album check | done | 18-report |
 | 19 | Fit at 960 by 540 | done | 19-fit |
-| 20 | Installer | todo | |
+| 20 | Installer | done | 20-installer |
 | 21 | Open items and questionnaire 17 | todo | |
 | 22 | Final pass and handover | todo | |
 | 23 | Reserve | todo | |
