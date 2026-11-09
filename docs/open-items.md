@@ -60,6 +60,15 @@ Not yet decided, or decided by assumption.
   - Mute and Isolate are drawn as a ticked square at 960 wide and as two labelled buttons below 720 px, where each instrument becomes its own block. The level meters read the engine every animation frame; Import MIDI and Export MIDI are left out until steps 13 and 17.
   - If the sounds cannot be loaded (for example the packaged app and the file address; see the engine item above) a dark line under the top bar says so.
   - The Mixer is reasoned to fit 960 by 540 at about 450 px of height (top bar 45, header 65, table head 30, five rows and the master row 50 each), not looked at.
+- WAV export assumptions (plan24 step 12, see [sound.md](sound.md)):
+  - 44.1 kHz, 16-bit PCM, stereo (the samples are mono and the app has no panning, so both channels carry the same signal). Not 48 kHz and not 24-bit: the sounds are recorded at 44.1 kHz and 16 bit, so more would add nothing.
+  - The master volume applies (it is part of the mix), nothing is normalised (the file is as loud as playback), and anything over full scale is clipped.
+  - The tail after the last bar is a fixed 3 seconds (the longest sample is about 3 seconds), so the file never ends in a cut release. Trailing silence is not trimmed.
+  - Mute and isolate are ignored, as the docs say, so a muted instrument is in the file at its volume; the metronome is not.
+  - "Export WAV" is a button in the footer row of the Mixer, in the two columns right of the master (Import MIDI and Export MIDI join it in steps 13 and 17). While rendering the button is disabled and reads "Rendering…"; there is no progress bar. The result ("Exported demo.wav", or the reason) shows on the quiet line under the top bar. A cancelled dialog says nothing.
+  - An empty Song (no blocks) writes no file and says "The Song has no blocks, so there is nothing to export."
+  - The suggested name is the project's file name with `.wav` ("Untitled.wav" for a project never saved), in the Documents folder. The export is not remembered anywhere and does not change the project or the unsaved mark. The file is written through a temporary file and renamed, like a save.
+  - The render ran on the main window's thread (a few seconds for a long Song; the window may stall meanwhile). The render and the dialog were type checked and built, not run (no window, no listening), as planned: the user's check is to export and listen.
 - Song page assumptions (plan24 step 6, see [page-designs.md](page-designs.md)):
   - The page's own Play button is dropped for the shared bar; the toolbar holds the title, the readout "Bar 6 of 12" (or "Bar 1 · empty" when no lane has a block), a quiet line for refusals, and the brush.
   - The brush's pattern is the instrument's selected pattern (the same selection as on its own page; stepping it is not an Undo step). If the selected pattern is empty the brush holds the next pattern with notes, else the last one before it, else shows a dash and a click says the instrument has none yet.

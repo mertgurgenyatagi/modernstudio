@@ -67,7 +67,7 @@ Built in plan24 step 4. The pure logic is in `src/core/` with unit tests: `playb
 - **Meters.** The peak of an analyser beside each instrument and the master, on a dB scale from -60 to 0, rising at once and falling from full to empty in 0.4 seconds. The master meter reads after the master volume.
 - **Metronome.** A click on every beat, the first beat of the bar higher, straight to the speakers: it is heard with everything muted, and it does not move the meters or the WAV export. No count-in.
 - **Pattern mode.** The selected pattern of the focused instrument loops; the other instruments play their selected pattern along, a shorter one repeating to fill the loop and a longer one cut at its end. **Song mode** plays the lanes from the chosen bar to the end of the last block, then loops from the beginning of the song (not from the chosen bar).
-- **Offline render.** The voice code takes any audio context, so the WAV export (step 12) can build its notes the same way with an offline one.
+- **Offline render.** The voice code takes any audio context, so the WAV export builds its notes the same way with an offline one (`src/audio/render.ts`, plan24 step 12): the Song from bar 1 to the end of the last block, through the same plan, voices and gain chain as playback, at 44.1 kHz stereo, written as a 16-bit PCM WAV (`src/core/wav.ts`). Mute and isolate are ignored (every instrument plays at its volume), the metronome is left out, the master volume applies, nothing is normalised, and 3 seconds of tail follow the last bar so releases and the longest sample ring out. Louder than full scale is clipped, not wrapped.
 
 ## Per-instrument settings
 
