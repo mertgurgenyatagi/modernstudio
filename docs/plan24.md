@@ -3,7 +3,7 @@
 The build plan, run one step per invocation of the `/plan24` skill ([.claude/skills/plan24/SKILL.md](../.claude/skills/plan24/SKILL.md)). Step numbers are plan24's own and have nothing to do with the older branches `00-overall` to `04-guitars`.
 
 Horizon: 24
-Last completed step: 7
+Last completed step: 8
 Replanned after step: 6
 Plan complete: no
 
@@ -19,23 +19,7 @@ The plan is replanned after every third completed step (3, 6, 9, and so on). Don
 
 ## Next three steps
 
-Replanned after step 6 (2026-11-09). The horizon stays at 24 and the order is unchanged, except that "Show whole pattern" moves from step 10 into step 7 (the pad grid needs it for 8x patterns), and the pattern-bank, tool and envelope pieces are built once, in step 7, as shared parts that steps 8 and 9 reuse. Step 7 is built and moved to the history below. The next replan comes before step 10.
-
-### Step 8: The Guitar page, "the String cards"
-
-**Produces:** the Guitar page for Bass, Rhythm Guitar and Lead Guitar ([page-designs.md](page-designs.md)), using step 7's shared parts.
-
-- Layout: two columns. The main column holds the pattern row, the tools row, the beat numbers and the string cards (lowest string first: Bass E1 A1 D2 G2; guitars E2 A2 D3 G3 B3 E4). The 15rem side panel holds the instrument choice (the store's `guitar`), the fret count (5, 7, 12 through `setFretCount`) with "Show whole pattern" under it, and the envelope strip.
-- Each card: a header strip with the open string's pitch and "open string", then fret rows 0 to the fret count (6, 8 or 13 rows), the open row tinted. Notes are ink squares showing their fret number, as wide as their length. Rows are labelled by fret, the pitch only in the header (as the design has it).
-- Placing: a click on an empty cell places a note one step of the chosen value long; dragging the right edge lengthens or shortens it (snapped to the value, at least half of a third); dragging the note moves it; a click selects it. A refusal shows its reason. Notes above a lowered fret count are hidden and kept (the model); a quiet line says how many.
-- The pure geometry (tick to x, drag to new start and length, the row of a fret) is in `src/pages/editor/` with tests, and is shared with Keys.
-- The page scrolls vertically inside its own box (accepted in questionnaire 16); sideways only inside the card area.
-
-**Relies on:** step 7; [instrument-layouts.md](instrument-layouts.md); `patterns.ts` (`addNote`, `replaceNote`, `removeNote`).
-
-**Done when:** geometry tests pass; typecheck, lint, test and build pass; the 5, 7 and 12 fret layouts and the three instruments are reasoned through.
-
-**Decisions it may need:** whether a click on an existing note selects or deletes (assumed: selects; Delete removes it in step 10); the default length of a new note (assumed: one step of the chosen value); what scrolls vertically (assumed: the main column, with the pattern and tools rows staying at the top).
+Replanned after step 6 (2026-11-09). The horizon stays at 24 and the order is unchanged, except that "Show whole pattern" moves from step 10 into step 7 (the pad grid needs it for 8x patterns), and the pattern-bank, tool and envelope pieces are built once, in step 7, as shared parts that steps 8 and 9 reuse. Steps 7 and 8 are built and moved to the history below. The next replan comes before step 10.
 
 ### Step 9: The Keys page
 
@@ -181,6 +165,24 @@ Replanned after step 6 (2026-11-09). The horizon stays at 24 and the order is un
 
 **Built (2026-11-09):** `src/pages/Drums.tsx` and `drums.css`; the shared editor parts in `src/pages/editor/` (`PatternBank`, `Tools` with Length, Note value and Show whole pattern, `EnvelopeStrip`, `useTryEdit`, and the tested `grid.ts`); the engine got a `playingRequest` getter so a page draws its playhead only for its own loop. Assumptions are in [open-items.md](open-items.md). Not looked at, as planned.
 
+### Step 8: The Guitar page, "the String cards"
+
+**Produces:** the Guitar page for Bass, Rhythm Guitar and Lead Guitar ([page-designs.md](page-designs.md)), using step 7's shared parts.
+
+- Layout: two columns. The main column holds the pattern row, the tools row, the beat numbers and the string cards (lowest string first: Bass E1 A1 D2 G2; guitars E2 A2 D3 G3 B3 E4). The 15rem side panel holds the instrument choice (the store's `guitar`), the fret count (5, 7, 12 through `setFretCount`) with "Show whole pattern" under it, and the envelope strip.
+- Each card: a header strip with the open string's pitch and "open string", then fret rows 0 to the fret count (6, 8 or 13 rows), the open row tinted. Notes are ink squares showing their fret number, as wide as their length. Rows are labelled by fret, the pitch only in the header (as the design has it).
+- Placing: a click on an empty cell places a note one step of the chosen value long; dragging the right edge lengthens or shortens it (snapped to the value, at least half of a third); dragging the note moves it; a click selects it. A refusal shows its reason. Notes above a lowered fret count are hidden and kept (the model); a quiet line says how many.
+- The pure geometry (tick to x, drag to new start and length, the row of a fret) is in `src/pages/editor/` with tests, and is shared with Keys.
+- The page scrolls vertically inside its own box (accepted in questionnaire 16); sideways only inside the card area.
+
+**Relies on:** step 7; [instrument-layouts.md](instrument-layouts.md); `patterns.ts` (`addNote`, `replaceNote`, `removeNote`).
+
+**Done when:** geometry tests pass; typecheck, lint, test and build pass; the 5, 7 and 12 fret layouts and the three instruments are reasoned through.
+
+**Decisions it may need:** whether a click on an existing note selects or deletes (assumed: selects; Delete removes it in step 10); the default length of a new note (assumed: one step of the chosen value); what scrolls vertically (assumed: the main column, with the pattern and tools rows staying at the top).
+
+**Built (2026-11-09):** `src/pages/Guitar.tsx` and `guitar.css`; the pure geometry in `src/pages/editor/noteGeometry.ts` (tested, shared with Keys) and the drag hook `useNoteDrag.ts` (shared with Keys). The note editor itself is still inside the Guitar page; step 9 pulls out what it shares. Assumptions are in [open-items.md](open-items.md). Not looked at, as planned.
+
 ## Later steps
 
 Broad strokes only. The next replan (the first `/plan24` run after step 9 is done) details steps 10 to 12. The horizon stays at 24; the order is unchanged.
@@ -211,7 +213,7 @@ Broad strokes only. The next replan (the first `/plan24` run after step 9 is don
 | 5 | App shell and the Mixer page | done | 05-shell |
 | 6 | The Song page | done | 06-song |
 | 7 | The Drums page | done | 07-drums |
-| 8 | The Guitar page | todo | |
+| 8 | The Guitar page | done | 08-guitar |
 | 9 | The Keys page | todo | |
 | 10 | Pattern tools and shortcuts | todo | |
 | 11 | Saving and files | todo | |
