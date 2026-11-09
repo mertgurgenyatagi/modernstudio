@@ -1,0 +1,39 @@
+/*
+ * The piano roll of the Keys page: 49 rows, C6 at the top. Layout, ruler, notes, playhead and the side
+ * panel are the Guitar page's (editor/noteEditor.css). Black-key rows are tinted like the open string
+ * of a card; every C row has a heavier line above it, which marks the octaves, and carries the label.
+ */
+.key-line {
+  display: flex;
+  height: var(--row-h);
+  background: var(--color-paper-2);
+  border-top: 1px solid var(--color-rule);
+}
+
+.key-line.c-row {
+  border-top-color: var(--color-ink);
+}
+
+.key-line.black .ne-row,
+.key-line.black .key-label {
+  background-color: var(--color-paper-3);
+}
+
+.key-label {
+  position: sticky;
+  left: 0;
+  z-index: 1;
+  flex: 0 0 var(--label-w);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font: 400 0.7rem/1 var(--font-outlier);
+  color: var(--color-ink);
+  background: var(--color-paper-2);
+  border-right: 1px solid var(--color-rule);
+}
+
+/* The roll is one block with the ink line round it, as a card is on the Guitar page. */
+.keys .ne-grid {
+  border-bottom: 1px solid var(--color-ink);
+}

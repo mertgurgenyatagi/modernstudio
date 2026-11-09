@@ -1,9 +1,8 @@
 import { Drums } from './pages/Drums';
 import { Guitar } from './pages/Guitar';
+import { Keys } from './pages/Keys';
 import { Mixer } from './pages/Mixer';
-import { Placeholder } from './pages/Placeholder';
 import { Song } from './pages/Song';
-import { PAGE_LABELS } from './state/appState';
 import { StudioProvider, useStudio } from './state/Studio';
 import { TopBar } from './ui/TopBar';
 import './ui/shell.css';
@@ -14,7 +13,7 @@ function CurrentPage() {
   if (state.page === 'song') return <Song />;
   if (state.page === 'drums') return <Drums />;
   if (state.page === 'guitar') return <Guitar />;
-  return <Placeholder title={PAGE_LABELS[state.page]} />;
+  return <Keys />;
 }
 
 function Shell() {

@@ -1,11 +1,11 @@
-import { useEffect, useMemo, useRef, useState, type CSSProperties, type MouseEvent as ReactMouseEvent } from 'react';
+import { useMemo, useRef, useState, type CSSProperties, type MouseEvent as ReactMouseEvent } from 'react';
 import { FRET_COUNTS, INSTRUMENT_LABELS, TUNING, type FretCount, type StringInstrumentId } from '../core/instruments';
 import { addNote, noteKey, replaceNote } from '../core/patterns';
 import { setFretCount, type StringNote } from '../core/project';
 import { patternTicks, ticksPerBar } from '../core/time';
 import { useStudio } from '../state/Studio';
 import { EnvelopeStrip } from './editor/EnvelopeStrip';
-import { beatMarks, describeStart, playheadPx } from './editor/grid';
+import { beatMarks, describeStart } from './editor/grid';
 import {
   clickStart,
   fretRows,
@@ -15,28 +15,25 @@ import {
   stringNames,
 } from './editor/noteGeometry';
 import { PatternBank } from './editor/PatternBank';
+import { Ruler, at } from './editor/Ruler';
 import { LengthChoice, NoteValueChoice, ShowWholeButton } from './editor/Tools';
 import { useNoteDrag } from './editor/useNoteDrag';
+import { usePlayhead } from './editor/usePlayhead';
 import { useTryEdit } from './editor/useTryEdit';
+import './editor/noteEditor.css';
 import './guitar.css';
 
 const GUITARS: readonly StringInstrumentId[] = ['bass', 'rhythm', 'lead'];
 
 const isStringNote = (note: unknown): note is StringNote => typeof note === 'object' && note !== null && 'string' in note;
 
-/** A position and a width in ticks, which the stylesheet turns into pixels (see guitar.css). */
-function at(start: number, width: number): CSSProperties {
-  return { '--s': start, '--w': width } as CSSProperties;
-}
-
 /** The String cards (docs/page-designs.md): Bass, Rhythm Guitar and Lead Guitar, one card per string. */
 export function Guitar() {
-  const { state, project, dispatch, engine } = useStudio();
+  const { state, project, dispatch } = useStudio();
   const tryEdit = useTryEdit();
   const [message, setMessage] = useState('');
   const [selectedKey, setSelectedKey] = useState<string | null>(null);
   const rulerRef = useRef<HTMLDivElement>(null);
-  const playheadRef = useRef<HTMLDivElement>(null);
 
   const id = state.guitar;
   const instrument = project.instruments[id];
@@ -47,6 +44,7 @@ export function Guitar() {
   const total = patternTicks(project.meter, bars);
   const value = state.noteValue;
 
+  const playheadRef = usePlayhead(id, total, rulerRef);
   const notes = useMemo(() => (pattern?.notes ?? []).filter(isStringNote), [pattern]);
   const marks = useMemo(() => beatMarks(project.meter, bars), [project.meter, bars]);
   const names = stringNames(id);
@@ -67,29 +65,6 @@ export function Guitar() {
       if (!reason) setSelectedKey(noteKey(to));
     },
   });
-
-  // The playhead follows the engine while this page's own loop is playing. It is moved straight on the
-  // element once per animation frame, so the page is not redrawn. The view does not scroll to follow it.
-  useEffect(() => {
-    let frame = 0;
-    const tick = () => {
-      const playhead = playheadRef.current;
-      const ruler = rulerRef.current;
-      if (playhead && ruler) {
-        const request = engine.playingRequest;
-        const position = request && request.mode === 'pattern' && request.focus === id ? engine.position() : null;
-        if (position) {
-          playhead.style.display = 'block';
-          playhead.style.transform = `translateX(${playheadPx(position.tick, total, ruler.offsetWidth)}px)`;
-        } else {
-          playhead.style.display = 'none';
-        }
-      }
-      frame = requestAnimationFrame(tick);
-    };
-    frame = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(frame);
-  }, [engine, id, total]);
 
   /** The width of a tick on screen, measured from the beat ruler, which is exactly `total` ticks wide. */
   const tickPx = () => (rulerRef.current && total > 0 ? rulerRef.current.getBoundingClientRect().width / total : 0);
@@ -116,9 +91,9 @@ export function Guitar() {
     hidden === 0 ? '' : `${hidden} ${hidden === 1 ? 'note is' : 'notes are'} on frets above ${fretCount}: hidden, kept, back when frets are raised.`;
 
   return (
-    <section className="guitar" aria-labelledby="guitar-title">
-      <div className="guitar-main">
-        <div className="guitar-head">
+    <section className="ne" aria-labelledby="guitar-title">
+      <div className="ne-main">
+        <div className="ne-head">
           <h1 id="guitar-title">{INSTRUMENT_LABELS[id]}</h1>
           <p className="editor-note" role="status">
             {message || hiddenLine}
@@ -127,23 +102,14 @@ export function Guitar() {
 
         <PatternBank id={id} />
 
-        <div className="guitar-tools">
+        <div className="ne-tools">
           <LengthChoice id={id} onRefused={setMessage} />
           <NoteValueChoice id={id} />
         </div>
 
-        <div className="cards-scroll">
-          <div className={state.showWholePattern ? 'cards whole' : 'cards'} style={gridStyle}>
-            <div className="ruler-row">
-              <div className="ruler-spacer" aria-hidden="true" />
-              <div className="ruler" ref={rulerRef} aria-hidden="true">
-                {marks.map((mark) => (
-                  <span key={mark.tick} className={mark.barStart ? 'tick-label bar-start' : 'tick-label'} style={at(mark.tick, 12)}>
-                    {mark.label}
-                  </span>
-                ))}
-              </div>
-            </div>
+        <div className="ne-scroll">
+          <div className={state.showWholePattern ? 'ne-grid whole' : 'ne-grid'} style={gridStyle}>
+            <Ruler marks={marks} rulerRef={rulerRef} />
 
             {names.map((name, string) => (
               <section key={string} className="card" aria-label={`String ${name}`}>
@@ -155,7 +121,7 @@ export function Guitar() {
                   <div key={fret} className={fret === 0 ? 'fret-line open' : 'fret-line'}>
                     <div className="fret-label figure">{fret}</div>
                     <div
-                      className="fret-row"
+                      className="ne-row"
                       role="group"
                       aria-label={`${name}, fret ${fret}`}
                       onClick={(event) => place(event, string, fret)}
@@ -195,12 +161,12 @@ export function Guitar() {
                 ))}
               </section>
             ))}
-            <div className="cards-playhead" ref={playheadRef} aria-hidden="true" />
+            <div className="ne-playhead" ref={playheadRef} aria-hidden="true" />
           </div>
         </div>
       </div>
 
-      <aside className="guitar-side" aria-label="Instrument settings">
+      <aside className="ne-side" aria-label="Instrument settings">
         <div className="side-group">
           <span className="tool-label" id="guitar-choice-label">
             Instrument
