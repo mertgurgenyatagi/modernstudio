@@ -2,6 +2,10 @@
 
 A minimalist, Windows-only music app. See [docs/README.md](docs/README.md) for the specification and handover, and [docs/plan24.md](docs/plan24.md) for the build plan.
 
+## What is built
+
+All 22 steps of the plan are done: five pages (Mixer, Song, Drums, Guitar, Keys), a sound engine with recorded General MIDI sounds, saving, WAV and MIDI export, MIDI import with a mapping panel and a report, and a Windows installer. None of it has been run in a window yet. [docs/handover.md](docs/handover.md) says what is built and what to check; [docs/first-run.md](docs/first-run.md) is what to try first.
+
 ## Running it
 
 Needs Node.js 24 and npm. Once, in this folder:
