@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { ensureExtension, hasProjectExtension, isDirty, projectName, windowTitle } from './fileState';
+import { displayName, ensureExtension, hasProjectExtension, isDirty, projectName, windowTitle } from './fileState';
 import { addNote, setPatternBars } from './patterns';
 import { createProject, openMorePatterns, selectPattern, setBpm, setMasterVolume } from './project';
 import { DEFAULT_SETTINGS, parseSettings, serializeSettings } from './settings';
@@ -66,6 +66,14 @@ describe('names and titles', () => {
     expect(windowTitle('C:\\songs\\demo.modernstudio', false, 'modernstudio')).toBe('demo - modernstudio');
     expect(windowTitle('C:\\songs\\demo.modernstudio', true, 'modernstudio')).toBe('* demo - modernstudio');
     expect(windowTitle(null, true, 'modernstudio')).toBe('* Untitled - modernstudio');
+  });
+
+  it('names a project with no file after its draft name (a MIDI import), else Untitled', () => {
+    expect(displayName(null, 'Is This it (2)')).toBe('Is This it (2)');
+    expect(displayName(null, '  ')).toBe('Untitled');
+    expect(displayName(null)).toBe('Untitled');
+    expect(displayName('C:\\songs\\demo.modernstudio', 'Is This it (2)')).toBe('demo');
+    expect(windowTitle(null, true, 'modernstudio', 'Soma (8)')).toBe('* Soma (8) - modernstudio');
   });
 
   it('adds the extension only when it is missing', () => {

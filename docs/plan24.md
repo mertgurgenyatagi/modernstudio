@@ -3,7 +3,7 @@
 The build plan, run one step per invocation of the `/plan24` skill ([.claude/skills/plan24/SKILL.md](../.claude/skills/plan24/SKILL.md)). Step numbers are plan24's own and have nothing to do with the older branches `00-overall` to `04-guitars`.
 
 Horizon: 24
-Last completed step: 16
+Last completed step: 17
 Replanned after step: 15
 Plan complete: no
 
@@ -19,23 +19,7 @@ The plan is replanned after every third completed step (3, 6, 9, and so on). Don
 
 ## Next three steps
 
-Replanned after step 15 (2026-11-09). The horizon stays at 24. Step 16 is built (in the history below); steps 17 and 18 are below in detail; steps 19 to 24 are in "Later steps". The old step 18 (the album check) is folded into the new step 18, and the import report moves there from step 17, so that step 16 can finish the converter and steps 17 and 18 each hold one screen. The next replan comes after step 18 (a multiple of 3).
-
-### Step 17: MIDI import screens, part one: the button, the flow and the mapping step
-
-**Produces:** the way into an import, from the Mixer button to a new project on screen.
-
-- **Flow state (`src/state/importFlow.ts`, pure, tested):** the stages "choose file", "reading", "mapping" (with the file's tracks and the guesses, editable), "converting", "done" (the outcome waiting for the report) and "refused" (a reason). Pure functions: set a track's assignment, the per-row preview (notes, octave moves at the instrument's fret count, patterns needed via `needsPatterns`), whether the mapping can be converted (at least one track mapped), and the wording of a refusal.
-- **Main process and bridge:** `files.chooseMidi()` returns the picked file's bytes and name (filter `.mid`, `.midi`), reusing the unsaved-changes prompt of step 11 ("Save changes to…?" with Save, Don't save, Cancel) before the dialog opens; a cancelled prompt or dialog changes nothing.
-- **The Import MIDI button** in the Mixer footer row beside Export WAV and Export MIDI (the Mixer's quiet line carries refusals: SMPTE, format 2, a meter other than 4/4 and 3/4).
-- **The mapping step:** a panel over the Mixer (not a dialog window) listing the file's tracks: name, channel, program, notes, and a six-way choice per row (Drums, Bass, Rhythm Guitar, Lead Guitar, Keys, Skip) pre-filled by `guessMapping`, with the preview figures per row and per instrument ("needs 143, 120 fit" where it applies). Buttons: Import and Cancel. Styled with the tokens; reasoned to fit 960 by 540 with the track list scrolling inside the panel (New York City Cops has nine tracks).
-- **Convert:** Import runs `convertMidi` (yielding to the screen once so "Converting…" shows), then `replaceProject` (new history, playback stopped, an unsaved project named from the MIDI file) and keeps the report data in the store for step 18.
-
-**Relies on:** step 16; step 11's file bridge, prompt and `replaceProject`; [midi-import.md](midi-import.md) ("Import: the flow", "Mapping guesses"); [page-designs.md](page-designs.md) (the Mixer).
-
-**Done when:** tests for the flow state pass; typecheck, lint, test and build pass; the panel is reasoned to fit. The dialog and the panel are not run, as the rule says.
-
-**Decisions it may need:** where the project's name comes from after an import (assumed: the MIDI file's name without extension, shown in the title with the unsaved mark, so the first Save asks for a path); whether Bass and Keys may take more than one track (assumed yes, merged, as the document allows; only the guess picks one); whether the mapping step can be skipped when the guess is clear (assumed no, it always shows, as the document's flow says).
+Replanned after step 15 (2026-11-09). The horizon stays at 24. Steps 16 and 17 are built (in the history below); step 18 is below in detail; steps 19 to 24 are in "Later steps". The old step 18 (the album check) is folded into the new step 18, and the import report moves there from step 17, so that step 16 can finish the converter and steps 17 and 18 each hold one screen. The next replan comes after step 18 (a multiple of 3), and it will detail steps 19 to 21.
 
 ### Step 18: MIDI import screens, part two: the report, and the album check
 
@@ -338,6 +322,24 @@ Replanned after step 15 (2026-11-09). The horizon stays at 24. Step 16 is built 
 
 **Built (2026-11-09):** `src/core/midi/chunk.ts` (the tiling and `limitPatterns`), `build.ts` (`convertMidi`, `prepareLane`, `patternsNeededFor`, `shownFor`, the report types), both tested; `tools/midi-prototype/dump_chunk.py` writes `fixtures/chunk.json`. On all 51 lanes of the eleven files the patterns, blocks, pattern lengths, cut notes and a hash of every pattern's notes equal the prototype's; the fret counts and same-string chords equal step 15's; rebuilding every lane from its patterns, blocks and fingerings gives back the folded notes with 0 differences; every project saves, parses back equal and obeys the lane rules; the totals of the document hold (679 blocks, 645 of them 8 bars, busiest lane 18 patterns). Assumptions are in [open-items.md](open-items.md).
 
+### Step 17: MIDI import screens, part one: the button, the flow and the mapping step
+
+**Produces:** the way into an import, from the Mixer button to a new project on screen.
+
+- **Flow state (`src/state/importFlow.ts`, pure, tested):** the stages "choose file", "reading", "mapping" (with the file's tracks and the guesses, editable), "converting", "done" (the outcome waiting for the report) and "refused" (a reason). Pure functions: set a track's assignment, the per-row preview (notes, octave moves at the instrument's fret count, patterns needed via `needsPatterns`), whether the mapping can be converted (at least one track mapped), and the wording of a refusal.
+- **Main process and bridge:** `files.chooseMidi()` returns the picked file's bytes and name (filter `.mid`, `.midi`), reusing the unsaved-changes prompt of step 11 ("Save changes to…?" with Save, Don't save, Cancel) before the dialog opens; a cancelled prompt or dialog changes nothing.
+- **The Import MIDI button** in the Mixer footer row beside Export WAV and Export MIDI (the Mixer's quiet line carries refusals: SMPTE, format 2, a meter other than 4/4 and 3/4).
+- **The mapping step:** a panel over the Mixer (not a dialog window) listing the file's tracks: name, channel, program, notes, and a six-way choice per row (Drums, Bass, Rhythm Guitar, Lead Guitar, Keys, Skip) pre-filled by `guessMapping`, with the preview figures per row and per instrument ("needs 143, 120 fit" where it applies). Buttons: Import and Cancel. Styled with the tokens; reasoned to fit 960 by 540 with the track list scrolling inside the panel (New York City Cops has nine tracks).
+- **Convert:** Import runs `convertMidi` (yielding to the screen once so "Converting…" shows), then `replaceProject` (new history, playback stopped, an unsaved project named from the MIDI file) and keeps the report data in the store for step 18.
+
+**Relies on:** step 16; step 11's file bridge, prompt and `replaceProject`; [midi-import.md](midi-import.md) ("Import: the flow", "Mapping guesses"); [page-designs.md](page-designs.md) (the Mixer).
+
+**Done when:** tests for the flow state pass; typecheck, lint, test and build pass; the panel is reasoned to fit. The dialog and the panel are not run, as the rule says.
+
+**Decisions it may need:** where the project's name comes from after an import (assumed: the MIDI file's name without extension, shown in the title with the unsaved mark, so the first Save asks for a path); whether Bass and Keys may take more than one track (assumed yes, merged, as the document allows; only the guess picks one); whether the mapping step can be skipped when the guess is clear (assumed no, it always shows, as the document's flow says).
+
+**Built (2026-11-09):** `src/state/importFlow.ts` (the pure flow: stages, row assignments, the figures per row and per instrument, the wording of refusals; tested in `importFlow.test.ts` on a made-up file and on New York City Cops), `src/state/useMidiImport.ts`, `src/ui/ImportMapping.tsx` and `import.css` (the panel), the bridge function `files.chooseMidi` with its main-process handler, and an "Import MIDI" button in the Mixer footer row. For the new unsaved, named project the store got `draftName` and `importReport` and `replaceProject` got options (`name`, `unsaved`, `report`); `displayName` in `fileState.ts` names a project with no file, and the two export hooks now take that name. Assumptions (the question before the dialog, refusals on the quiet line, the panel covering the window, the name and unsaved state of an import) are in [open-items.md](open-items.md). Not run in a window, as planned.
+
 ## Later steps
 
 Broad strokes only. The next replan comes after step 18. The horizon stays at 24.
@@ -368,7 +370,7 @@ Broad strokes only. The next replan comes after step 18. The horizon stays at 24
 | 14 | MIDI import 1: time, tempo, drums, range | done | 14-import-time |
 | 15 | MIDI import 2: strings and frets | done | 15-fretting |
 | 16 | MIDI import 3: patterns, lanes, project | done | 16-patterns |
-| 17 | MIDI import screens 1: button, flow, mapping | todo | |
+| 17 | MIDI import screens 1: button, flow, mapping | done | 17-import-ui |
 | 18 | MIDI import screens 2: report, album check | todo | |
 | 19 | Fit at 960 by 540 | todo | |
 | 20 | Installer | todo | |

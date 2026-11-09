@@ -5,7 +5,7 @@
  */
 import { useCallback, useState, type Dispatch } from 'react';
 import { EmptySongError, renderSongToWav } from '../audio/render';
-import { baseName, projectName } from '../core/fileState';
+import { baseName } from '../core/fileState';
 import type { Project } from '../core/project';
 import { wavFileName } from '../core/wav';
 import type { Action } from './appState';
@@ -20,7 +20,8 @@ function reasonOf(error: unknown): string {
   return error instanceof Error ? error.message : String(error);
 }
 
-export function useWavExport(project: Project, filePath: string | null, dispatch: Dispatch<Action>): WavExport {
+/** `name` is the project's display name (the file's name, the name of an import, or Untitled): the export's suggested file name. */
+export function useWavExport(project: Project, name: string, dispatch: Dispatch<Action>): WavExport {
   const [rendering, setRendering] = useState(false);
 
   const exportWav = useCallback(async () => {
@@ -34,7 +35,7 @@ export function useWavExport(project: Project, filePath: string | null, dispatch
     setRendering(true);
     try {
       const bytes = await renderSongToWav(project);
-      const result = await bridge.exportWav(bytes, wavFileName(projectName(filePath)));
+      const result = await bridge.exportWav(bytes, wavFileName(name));
       if (result.kind === 'saved') dispatch({ type: 'setNotice', message: `Exported ${baseName(result.path)}` });
       else if (result.kind === 'error') dispatch({ type: 'setNotice', message: result.message });
     } catch (error) {
@@ -43,7 +44,7 @@ export function useWavExport(project: Project, filePath: string | null, dispatch
     } finally {
       setRendering(false);
     }
-  }, [rendering, project, filePath, dispatch]);
+  }, [rendering, project, name, dispatch]);
 
   return { rendering, exportWav };
 }

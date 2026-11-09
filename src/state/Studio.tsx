@@ -7,7 +7,7 @@ import { createContext, useCallback, useContext, useEffect, useMemo, useReducer,
 import { AudioEngine } from '../audio/engine';
 import type { Project } from '../core/project';
 import { canUndo } from '../core/history';
-import { initialState, playRequestFor, reduce, type Action, type AppState } from './appState';
+import { initialState, playRequestFor, reduce, type Action, type AppState, type ReplaceOptions } from './appState';
 import { isTypingTarget } from './keys';
 import { useFiles, type FileActions } from './useFiles';
 
@@ -22,8 +22,11 @@ interface Studio {
   togglePlay: () => void;
   /** Moves the playhead to a bar (0 based); if playing, playback restarts from there. */
   seek: (bar: number) => void;
-  /** Replaces the project (New, Open, later MIDI import): a new history, playback stopped, the playhead at the start. Ask `files.confirmDiscard()` first. */
-  replaceProject: (project: Project, path?: string | null) => void;
+  /**
+   * Replaces the project (New, Open, MIDI import): a new history, playback stopped, the playhead at the start.
+   * Ask `files.confirmDiscard()` first. An import passes a name, `unsaved: true` and its report in `options`.
+   */
+  replaceProject: (project: Project, path?: string | null, options?: ReplaceOptions) => void;
   files: FileActions;
 }
 
@@ -93,9 +96,9 @@ export function StudioProvider({ children }: { children: ReactNode }) {
   }, [engine]);
 
   const replaceProject = useCallback(
-    (next: Project, path: string | null = null) => {
+    (next: Project, path: string | null = null, options?: ReplaceOptions) => {
       stop();
-      dispatch({ type: 'replaceProject', project: next, path });
+      dispatch({ type: 'replaceProject', project: next, path, options });
     },
     [stop],
   );

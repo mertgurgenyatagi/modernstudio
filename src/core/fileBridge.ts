@@ -11,6 +11,7 @@ export const CHANNELS = {
   saveAs: 'files:save-as',
   exportWav: 'files:export-wav',
   exportMidi: 'files:export-midi',
+  chooseMidi: 'files:choose-midi',
   confirmDiscard: 'files:confirm-discard',
   setDirty: 'files:set-dirty',
   closeWindow: 'files:close-window',
@@ -32,6 +33,12 @@ export type LoadLastResult = OpenedFile | { kind: 'none'; notice?: string };
 export type OpenResult = OpenedFile | { kind: 'cancelled' } | { kind: 'error'; message: string };
 export type SaveResult = { kind: 'saved'; path: string } | { kind: 'cancelled' } | { kind: 'error'; message: string };
 
+/** A MIDI file picked to import: its name (with extension) and its bytes. */
+export type ChooseMidiResult = { kind: 'chosen'; name: string; bytes: Uint8Array } | { kind: 'cancelled' } | { kind: 'error'; message: string };
+
+/** The largest MIDI file the app will read (a song is a few tens of kilobytes). */
+export const MIDI_IMPORT_MAX_BYTES = 16 * 1024 * 1024;
+
 /** The three answers of the "save changes?" dialog. */
 export type DiscardChoice = 'save' | 'discard' | 'cancel';
 
@@ -48,6 +55,8 @@ export interface FilesBridge {
   exportWav(bytes: Uint8Array, suggestedName: string): Promise<SaveResult>;
   /** Asks where, then writes the bytes of a MIDI file there. `suggestedName` is the file name with its extension. */
   exportMidi(bytes: Uint8Array, suggestedName: string): Promise<SaveResult>;
+  /** Shows the Open dialog for a `.mid` or `.midi` file and reads it. Nothing is remembered. */
+  chooseMidi(): Promise<ChooseMidiResult>;
   /** The native "Save changes to …?" dialog. */
   confirmDiscard(name: string): Promise<DiscardChoice>;
   /** Tells the main process whether there are unsaved changes, so it can hold back closing. */
