@@ -3,7 +3,7 @@
 The build plan, run one step per invocation of the `/plan24` skill ([.claude/skills/plan24/SKILL.md](../.claude/skills/plan24/SKILL.md)). Step numbers are plan24's own and have nothing to do with the older branches `00-overall` to `04-guitars`.
 
 Horizon: 24
-Last completed step: 4
+Last completed step: 5
 Replanned after step: 3
 Plan complete: no
 
@@ -19,42 +19,7 @@ The plan is replanned after every third completed step (3, 6, 9, and so on). Don
 
 ## Next three steps
 
-Replanned after step 3 (2026-11-09). Steps 4 to 6.
-
-### Step 4: Audio engine
-
-**Produces:** everything that makes sound, in two layers: pure scheduling logic in `src/core/` with unit tests, and a thin Web Audio layer in `src/audio/` that uses it. No screen is built yet; the engine is driven by a small API (`load`, `play`, `stop`, `setProject`, level readout) that step 5 wires to the app.
-
-- **Event builder (pure, tested):** turns a project into a list of timed events in ticks, for two modes. *Pattern mode*: the selected pattern of one instrument looping, with the other instruments playing their own selected pattern ([patterns-and-song.md](patterns-and-song.md)). *Song mode*: the lanes from a start bar to the song end, then looping. Drum hits, string notes (string and fret to MIDI pitch through the tuning in `instruments.ts`) and Keys notes. Notes hidden outside a shortened pattern or above a lowered fret count are not played. Plus the metronome click events (accent on beat 1). Ticks to seconds uses the BPM.
-- **Sample choice (pure, tested):** from `src/assets/sounds/manifest.json`, pick the nearest sample for a pitch and the playback-rate shift (at most 1 semitone); the guitars share files.
-- **Web Audio layer:** load the 45 WAVs once (decode to buffers); a look-ahead scheduler (a timer that schedules the next ~100 ms of events on the audio clock, so timing does not depend on the UI thread); one gain chain per instrument (envelope voice gain, instrument volume, mute and isolate, master volume) and an analyser per instrument and for the master for the level meters.
-- **Envelope:** attack, decay and release on the 0 to 100 scale of the project. The scale's meaning is decided in this step and written into [sound.md](sound.md): attack and release as 0 to about 2 s, decay as the fall from full to a sustain level over 0 to about 2 s, with 0 meaning the recorded sound unshaped. A note held longer than its sample is faded out (this matters for Keys' Synth Voice); a note shorter than its sample is cut with its release. The decided defaults of the model may be changed here (recorded in open-items).
-- **Mute and isolate:** isolate is engine state, not project state; isolating one instrument mutes the others; only one at a time; a muted instrument stays silent in the playback.
-- **Pattern loop and Song playback** starting from a given bar, looping at the song end; **play from the clicked bar** is just the start-bar argument.
-- **Metronome** on and off while playing, no count-in.
-- The pure parts must also be reusable by step 12's offline render, so the voice-building code takes an `AudioContext`-or-`OfflineAudioContext`-shaped context.
-
-**Relies on:** [sound.md](sound.md), [editing-and-project.md](editing-and-project.md), [patterns-and-song.md](patterns-and-song.md), [project-model.md](project-model.md), the manifest from step 3.
-
-**Done when:** unit tests cover the event builder (both modes, hidden notes, looping, the song end, start bar, metronome) and the sample choice; typecheck, lint and build pass; the audio layer compiles against the DOM types. The audio layer itself cannot be heard in a step without a window, so it is checked by types and by running the pure parts only; step 5 is the first one that can be heard by the user.
-
-**Decisions it may need:** the numeric meaning of attack, decay and release (decided above, recorded); whether a drum hit is cut when the same row is hit again (assumed no, they overlap); the level meter reading (assumed peak level of the analyser, fast rise, slow fall).
-
-### Step 5: App shell and the Mixer page
-
-**Produces:** the app state and the first working page.
-
-- **App state:** a React store (context and a reducer, no extra library) that holds the history (`history.ts`), the screen state the model deliberately leaves out (playing, playhead, metronome, note value, "Show whole pattern", isolate, current page), and the engine. Every project edit goes through the model's pure functions and the history.
-- **Shell:** one top bar on every page ([pages.md](pages.md)): the page switch at the left, the transport (Play, Stop, metronome toggle, Undo) at the right. Space starts and stops playback (not while typing in a field). The page switch is a row of five text tabs: Mixer, Song, Drums, Guitar, Keys; the page contents sit below, filling the window with no sideways page scroll at 960 by 540. Playing from the Mixer is Song mode if the song has blocks, else Pattern mode of the selected patterns (assumed).
-- **The Mixer, "the Ledger"** ([page-designs.md](page-designs.md)): the table with the five rows and the footer master row, volume sliders with numbers, level meters, Mute and Isolate squares, the status words, BPM as a field and a slider, the meter choice. Its own Play button is dropped, the shared bar replaces it. Import MIDI and Export MIDI buttons are left out until steps 13 and 17.
-- The other four pages are routes that show only their title until their step.
-- Styling uses the tokens of [design.md](design.md); the narrow restack is done, and the 960 by 540 fit is checked by reasoning, not by looking.
-
-**Relies on:** step 4, [page-designs.md](page-designs.md), [design.md](design.md) (including the 960 by 540 rule), [pages.md](pages.md).
-
-**Done when:** the store has unit tests for its reducer logic (edits go through the history, Undo, isolate rules, mute); typecheck, lint, test and build pass. The user can hear and look at it by running `npm run dev`; that check is the user's, not the step's.
-
-**Decisions it may need:** the place of the page switch (assumed: the top bar, tabs at the left, recorded in open-items); whether BPM or meter changes made while playing restart playback (assumed: the tempo changes at once, a meter change stops playback).
+Replanned after step 3 (2026-11-09). Steps 4 and 5 are built and moved to the history below; step 6 is the one left of this batch. The next replan comes after step 6.
 
 ### Step 6: The Song page
 
@@ -66,7 +31,7 @@ Replanned after step 3 (2026-11-09). Steps 4 to 6.
 - Drag a block to move it (snaps, refused if it would overlap); select a block by clicking, Delete removes it. The playhead is a 2 px line through all lanes and moves while playing.
 - The block-and-ghost geometry (bar to pixel, bar from pixel, the drop position) is pure code in `src/core/` or `src/pages/song/` with tests.
 
-**Relies on:** steps 4 and 5, [patterns-and-song.md](patterns-and-song.md), `song.ts`.
+**Relies on:** steps 4 and 5 (the store already has `startBar` and the `setStartBar` action, and Play on the Song page plays the Song from it; the page draws the playhead from `engine.position()`), [patterns-and-song.md](patterns-and-song.md), `song.ts`.
 
 **Done when:** geometry tests pass; typecheck, lint, test and build pass; the page reasoned to fit 960 by 540.
 
@@ -125,9 +90,48 @@ Replanned after step 3 (2026-11-09). Steps 4 to 6.
 
 **Decisions it may need:** if system-audio capture fails, whether to accept the soundfont straight away (the user already accepted it as a fallback). Capturing needs a working audio output device and a quiet machine while it runs, so this step may be marked blocked and finished with the user present.
 
+### Step 4: Audio engine
+
+**Produces:** everything that makes sound, in two layers: pure scheduling logic in `src/core/` with unit tests, and a thin Web Audio layer in `src/audio/` that uses it. No screen is built yet; the engine is driven by a small API (`load`, `play`, `stop`, `setProject`, level readout) that step 5 wires to the app.
+
+- **Event builder (pure, tested):** turns a project into a list of timed events in ticks, for two modes. *Pattern mode*: the selected pattern of one instrument looping, with the other instruments playing their own selected pattern ([patterns-and-song.md](patterns-and-song.md)). *Song mode*: the lanes from a start bar to the song end, then looping. Drum hits, string notes (string and fret to MIDI pitch through the tuning in `instruments.ts`) and Keys notes. Notes hidden outside a shortened pattern or above a lowered fret count are not played. Plus the metronome click events (accent on beat 1). Ticks to seconds uses the BPM.
+- **Sample choice (pure, tested):** from `src/assets/sounds/manifest.json`, pick the nearest sample for a pitch and the playback-rate shift (at most 1 semitone); the guitars share files.
+- **Web Audio layer:** load the 45 WAVs once (decode to buffers); a look-ahead scheduler (a timer that schedules the next ~100 ms of events on the audio clock, so timing does not depend on the UI thread); one gain chain per instrument (envelope voice gain, instrument volume, mute and isolate, master volume) and an analyser per instrument and for the master for the level meters.
+- **Envelope:** attack, decay and release on the 0 to 100 scale of the project. The scale's meaning is decided in this step and written into [sound.md](sound.md): attack and release as 0 to about 2 s, decay as the fall from full to a sustain level over 0 to about 2 s, with 0 meaning the recorded sound unshaped. A note held longer than its sample is faded out (this matters for Keys' Synth Voice); a note shorter than its sample is cut with its release. The decided defaults of the model may be changed here (recorded in open-items).
+- **Mute and isolate:** isolate is engine state, not project state; isolating one instrument mutes the others; only one at a time; a muted instrument stays silent in the playback.
+- **Pattern loop and Song playback** starting from a given bar, looping at the song end; **play from the clicked bar** is just the start-bar argument.
+- **Metronome** on and off while playing, no count-in.
+- The pure parts must also be reusable by step 12's offline render, so the voice-building code takes an `AudioContext`-or-`OfflineAudioContext`-shaped context.
+
+**Relies on:** [sound.md](sound.md), [editing-and-project.md](editing-and-project.md), [patterns-and-song.md](patterns-and-song.md), [project-model.md](project-model.md), the manifest from step 3.
+
+**Done when:** unit tests cover the event builder (both modes, hidden notes, looping, the song end, start bar, metronome) and the sample choice; typecheck, lint and build pass; the audio layer compiles against the DOM types. The audio layer itself cannot be heard in a step without a window, so it is checked by types and by running the pure parts only; step 5 is the first one that can be heard by the user.
+
+**Decisions it may need:** the numeric meaning of attack, decay and release (decided above, recorded); whether a drum hit is cut when the same row is hit again (assumed no, they overlap); the level meter reading (assumed peak level of the analyser, fast rise, slow fall).
+
+**Built (2026-11-09):** `src/core/playback.ts` (event builder for both modes), `cursor.ts` (the look-ahead walk), `samples.ts` (sample choice), `envelope.ts`, `levels.ts`, and `src/audio/` (engine, voices, sound files). Decisions are in [sound.md](sound.md) and [open-items.md](open-items.md).
+
+### Step 5: App shell and the Mixer page
+
+**Produces:** the app state and the first working page.
+
+- **App state:** a React store (context and a reducer, no extra library) that holds the history (`history.ts`), the screen state the model deliberately leaves out (playing, playhead, metronome, note value, "Show whole pattern", isolate, current page), and the engine. Every project edit goes through the model's pure functions and the history.
+- **Shell:** one top bar on every page ([pages.md](pages.md)): the page switch at the left, the transport (Play, Stop, metronome toggle, Undo) at the right. Space starts and stops playback (not while typing in a field). The page switch is a row of five text tabs: Mixer, Song, Drums, Guitar, Keys; the page contents sit below, filling the window with no sideways page scroll at 960 by 540. Playing from the Mixer is Song mode if the song has blocks, else Pattern mode of the selected patterns (assumed).
+- **The Mixer, "the Ledger"** ([page-designs.md](page-designs.md)): the table with the five rows and the footer master row, volume sliders with numbers, level meters, Mute and Isolate squares, the status words, BPM as a field and a slider, the meter choice. Its own Play button is dropped, the shared bar replaces it. Import MIDI and Export MIDI buttons are left out until steps 13 and 17.
+- The other four pages are routes that show only their title until their step.
+- Styling uses the tokens of [design.md](design.md); the narrow restack is done, and the 960 by 540 fit is checked by reasoning, not by looking.
+
+**Relies on:** step 4, [page-designs.md](page-designs.md), [design.md](design.md) (including the 960 by 540 rule), [pages.md](pages.md).
+
+**Done when:** the store has unit tests for its reducer logic (edits go through the history, Undo, isolate rules, mute); typecheck, lint, test and build pass. The user can hear and look at it by running `npm run dev`; that check is the user's, not the step's.
+
+**Decisions it may need:** the place of the page switch (assumed: the top bar, tabs at the left, recorded in open-items); whether BPM or meter changes made while playing restart playback (assumed: the tempo changes at once, a meter change stops playback).
+
+**Built (2026-11-09):** `src/state/appState.ts` (the reducer and `playRequestFor`), `src/state/Studio.tsx` (the store: reducer plus engine, and Space), `src/ui/` (top bar, slider, number field), `src/pages/Mixer.tsx`, and placeholders for the other four pages. The engine got a guard so that a Stop or a second Play during loading cancels the first Play. Assumptions are in [open-items.md](open-items.md). Not heard or seen by the step, as planned: the user's check is `npm run dev`.
+
 ## Later steps
 
-Broad strokes only. The next replan (after step 6) details steps 7 to 9. Steps 4 to 6 are detailed above. The horizon stays at 24; the order is unchanged.
+Broad strokes only. The next replan (after step 6) details steps 7 to 9. Step 6 is detailed above. The horizon stays at 24; the order is unchanged.
 
 - 7: The Drums page, "the Pad machine", including pad grids for the other note values and for 2x to 8x patterns.
 - 8: The Guitar page, "the String cards", for Bass, Rhythm Guitar and Lead Guitar, with 5, 7 and 12 fret layouts.
@@ -155,7 +159,7 @@ Broad strokes only. The next replan (after step 6) details steps 7 to 9. Steps 4
 | 2 | The project model | done | 02-model |
 | 3 | Capture the sounds | done | 03-sounds |
 | 4 | Audio engine | done | 04-audio |
-| 5 | App shell and the Mixer page | todo | |
+| 5 | App shell and the Mixer page | done | 05-shell |
 | 6 | The Song page | todo | |
 | 7 | The Drums page | todo | |
 | 8 | The Guitar page | todo | |

@@ -53,9 +53,15 @@ export class AudioEngine {
   private request: PlayRequest | null = null;
   private timer: ReturnType<typeof setInterval> | null = null;
   private voices = new Set<Voice>();
+  /** Counts stops, so that a play that was still loading when Stop (or another Play) came gives up. */
+  private generation = 0;
 
-  /** Called when playback stops by itself: an empty song, or a meter change while playing. */
-  onStopped: (() => void) | null = null;
+  private stoppedHandler: (() => void) | null = null;
+
+  /** Sets what to call when playback stops by itself: an empty song, or a meter change while playing. */
+  onStopped(handler: (() => void) | null): void {
+    this.stoppedHandler = handler;
+  }
 
   get ready(): boolean {
     return this.buffers !== null;
@@ -109,7 +115,7 @@ export class AudioEngine {
     if (!this.cursor || !this.context || !previous) return;
     if (previous.meter !== project.meter) {
       this.stop();
-      this.onStopped?.();
+      this.stoppedHandler?.();
       return;
     }
     if (previous.bpm !== project.bpm) this.cursor.setBpm(project.bpm, this.context.currentTime);
@@ -151,12 +157,16 @@ export class AudioEngine {
    * false when there is nothing to play (an empty song) or the sounds are not loaded yet.
    */
   async play(request: PlayRequest): Promise<boolean> {
+    this.stop();
+    const generation = this.generation;
     await this.load();
     const context = this.context;
-    const project = this.project;
-    if (!context || !project || !this.buffers) return false;
-    this.stop();
+    if (!context || !this.buffers) return false;
     await context.resume();
+    // A Stop or another Play came while this one was loading: give up.
+    if (generation !== this.generation) return false;
+    const project = this.project;
+    if (!project) return false;
     this.request = request;
     const plan = this.buildPlan(project);
     if (!plan) return false;
@@ -175,6 +185,7 @@ export class AudioEngine {
   stop(): void {
     if (this.timer !== null) clearInterval(this.timer);
     this.timer = null;
+    this.generation += 1;
     this.cursor = null;
     this.request = null;
     const context = this.context;

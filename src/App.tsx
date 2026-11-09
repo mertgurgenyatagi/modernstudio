@@ -1,42 +1,36 @@
-import { APP_NAME } from './core/constants';
+import { Mixer } from './pages/Mixer';
+import { Placeholder } from './pages/Placeholder';
+import { PAGE_LABELS } from './state/appState';
+import { StudioProvider, useStudio } from './state/Studio';
+import { TopBar } from './ui/TopBar';
+import './ui/shell.css';
 
-/** Placeholder screen: only shows that the shell runs and the decided tokens are in effect. */
+function CurrentPage() {
+  const { state } = useStudio();
+  return state.page === 'mixer' ? <Mixer /> : <Placeholder title={PAGE_LABELS[state.page]} />;
+}
+
+function Shell() {
+  const { state } = useStudio();
+  return (
+    <div className="shell">
+      <TopBar />
+      {state.soundsError && (
+        <p className="notice" role="status">
+          The sounds could not be loaded: {state.soundsError}
+        </p>
+      )}
+      <main className="page">
+        <CurrentPage />
+      </main>
+    </div>
+  );
+}
+
 export function App() {
   return (
-    <main
-      style={{
-        height: '100%',
-        display: 'grid',
-        placeItems: 'center',
-        background: 'var(--color-paper)',
-      }}
-    >
-      <div style={{ textAlign: 'center' }}>
-        <h1
-          style={{
-            margin: 0,
-            fontFamily: 'var(--font-display)',
-            fontWeight: 700,
-            fontSize: '3rem',
-            color: 'var(--color-ink)',
-          }}
-        >
-          {APP_NAME}
-        </h1>
-        <p style={{ margin: '0.5rem 0 0', color: 'var(--color-muted)' }}>A minimalist music app.</p>
-        <p
-          style={{
-            margin: '1rem 0 0',
-            fontFamily: 'var(--font-outlier)',
-            background: 'var(--color-accent)',
-            color: 'var(--color-accent-ink)',
-            display: 'inline-block',
-            padding: '0.25rem 0.75rem',
-          }}
-        >
-          960 x 540
-        </p>
-      </div>
-    </main>
+    <StudioProvider>
+      <Shell />
+    </StudioProvider>
   );
 }

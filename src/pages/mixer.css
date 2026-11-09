@@ -1,0 +1,276 @@
+/* The Ledger: a plain table, one row per instrument, the master in the footer (docs/page-designs.md). */
+.mixer {
+  padding: 0.9rem 1.5rem 1rem;
+  max-width: 64rem;
+}
+
+.mixer-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem 2rem;
+  margin-bottom: 0.6rem;
+}
+
+.mixer h1 {
+  margin: 0;
+  font: 700 1.6rem/1.1 var(--font-display);
+}
+
+.mixer-song {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 1.75rem;
+}
+
+.field {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 0.85rem;
+  color: var(--color-muted);
+}
+
+.bpm-number {
+  width: 4.2rem;
+  padding: 0.3rem 0.4rem;
+  font: 400 0.95rem/1 var(--font-outlier);
+  color: var(--color-ink);
+  background: var(--color-paper-2);
+  border: 1px solid var(--color-ink);
+  border-radius: 0;
+}
+
+.bpm-slider {
+  width: 9rem;
+}
+
+.choice {
+  display: flex;
+}
+
+.choice button {
+  appearance: none;
+  padding: 0.3rem 0.7rem;
+  font: 500 0.85rem/1 var(--font-body);
+  color: var(--color-ink);
+  background: var(--color-paper-2);
+  border: 1px solid var(--color-ink);
+  border-radius: 0;
+  cursor: pointer;
+}
+
+.choice button + button {
+  border-left: 0;
+}
+
+.choice button[aria-checked='true'] {
+  background: var(--color-accent);
+  color: var(--color-accent-ink);
+}
+
+/* The table: horizontal rules only, no outer border. */
+.ledger {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.ledger th,
+.ledger td {
+  padding: 0;
+  text-align: left;
+  font-weight: 400;
+}
+
+.ledger thead th {
+  padding: 0.3rem 0.5rem 0.4rem 0;
+  font-size: 0.78rem;
+  color: var(--color-muted);
+  border-bottom: 1px solid var(--color-ink);
+}
+
+.ledger tbody tr,
+.ledger tfoot tr {
+  height: 3.1rem;
+  border-bottom: 1px solid var(--color-rule);
+}
+
+.ledger tfoot tr {
+  border-bottom: 0;
+  border-top: 1px solid var(--color-ink);
+}
+
+.ledger th.name {
+  width: 11rem;
+  padding-right: 0.5rem;
+}
+
+.name-text {
+  display: block;
+  font: 500 0.95rem/1.2 var(--font-body);
+}
+
+.status {
+  display: block;
+  font-size: 0.75rem;
+  color: var(--color-muted);
+}
+
+.ledger tfoot .name-text {
+  font-weight: 600;
+}
+
+.volume {
+  width: 38%;
+  padding-right: 1.25rem;
+}
+
+.volume > .slider {
+  width: calc(100% - 3rem);
+  vertical-align: middle;
+}
+
+.figure {
+  display: inline-block;
+  width: 2.6rem;
+  text-align: right;
+  vertical-align: middle;
+  font: 400 0.9rem/1 var(--font-outlier);
+}
+
+.level {
+  padding-right: 1.25rem;
+}
+
+.meter {
+  height: 0.6rem;
+  background: var(--color-paper-3);
+  border: 1px solid var(--color-rule);
+  overflow: hidden;
+}
+
+.meter-fill {
+  width: 100%;
+  height: 100%;
+  background: var(--color-ink);
+  transform: scaleX(0);
+  transform-origin: left center;
+}
+
+.tick {
+  width: 4rem;
+}
+
+/* Mute and Isolate: a square you tick. */
+.toggle {
+  appearance: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.35rem;
+  margin: 0 0 0 -0.35rem;
+  background: none;
+  border: 0;
+  cursor: pointer;
+  color: var(--color-ink);
+  font: 500 0.85rem/1 var(--font-body);
+}
+
+.toggle .box {
+  display: block;
+  width: 1.1rem;
+  height: 1.1rem;
+  background: var(--color-paper-2);
+  border: 1px solid var(--color-ink);
+}
+
+.toggle[aria-pressed='true'] .box {
+  background: var(--color-accent);
+  box-shadow: inset 0 0 0 3px var(--color-paper-2);
+}
+
+.toggle-word {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* Muted or silenced: the name goes grey and the meter is dimmed. */
+.ledger tr.dim .name-text {
+  color: var(--color-muted);
+}
+
+.ledger tr.dim .meter {
+  opacity: 0.4;
+}
+
+/* Narrow windows: every instrument becomes a block of its own. */
+@media (max-width: 720px) {
+  .mixer {
+    padding: 0.75rem 1rem;
+  }
+
+  .ledger,
+  .ledger tbody,
+  .ledger tfoot {
+    display: block;
+  }
+
+  .ledger thead {
+    display: none;
+  }
+
+  .ledger tbody tr,
+  .ledger tfoot tr {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.4rem 0.75rem;
+    height: auto;
+    padding: 0.6rem 0;
+  }
+
+  .ledger th.name,
+  .volume,
+  .level {
+    grid-column: 1 / -1;
+    width: auto;
+    padding-right: 0;
+  }
+
+  .ledger td:empty {
+    display: none;
+  }
+
+  .tick {
+    width: auto;
+  }
+
+  .toggle {
+    width: 100%;
+    margin: 0;
+    padding: 0.5rem 0.6rem;
+    border: 1px solid var(--color-ink);
+    background: var(--color-paper-2);
+  }
+
+  .toggle .box {
+    display: none;
+  }
+
+  .toggle-word {
+    position: static;
+    width: auto;
+    height: auto;
+    clip-path: none;
+  }
+
+  .toggle[aria-pressed='true'] {
+    background: var(--color-accent);
+    color: var(--color-accent-ink);
+  }
+}
