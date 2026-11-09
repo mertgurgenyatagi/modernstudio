@@ -19,6 +19,7 @@ import {
 } from '../../src/core/fileBridge';
 import { FILE_EXTENSION, baseName, ensureExtension, hasProjectExtension, projectName } from '../../src/core/fileState';
 import { parseSettings, serializeSettings } from '../../src/core/settings';
+import { WAV_EXTENSION, ensureWavExtension } from '../../src/core/wav';
 
 const FILTERS = [{ name: `${APP_NAME} project`, extensions: [FILE_EXTENSION] }];
 
@@ -41,10 +42,10 @@ async function rememberProject(path: string): Promise<void> {
 }
 
 /** Writes a temporary file beside the target and renames it over, so a failed write never destroys the old file. */
-export async function writeFileAtomic(path: string, text: string): Promise<void> {
+export async function writeFileAtomic(path: string, text: string | Uint8Array): Promise<void> {
   const temporary = `${path}.${randomBytes(4).toString('hex')}.tmp`;
   try {
-    await writeFile(temporary, text, 'utf8');
+    await writeFile(temporary, text, typeof text === 'string' ? 'utf8' : undefined);
     await rename(temporary, path);
   } catch (error) {
     await unlink(temporary).catch(() => undefined);
@@ -119,6 +120,24 @@ async function saveAs(win: BrowserWindow | undefined, text: string, suggestedNam
   return writeProject(ensureExtension(chosen.filePath), text);
 }
 
+/** Asks where to put the WAV export and writes it. The export does not change the project, so it is not remembered. */
+async function exportWav(win: BrowserWindow | undefined, bytes: Uint8Array, suggestedName: string): Promise<SaveResult> {
+  const options = {
+    title: 'Export WAV',
+    defaultPath: join(app.getPath('documents'), baseName(suggestedName)),
+    filters: [{ name: 'WAV audio', extensions: [WAV_EXTENSION] }],
+  };
+  const chosen = win ? await dialog.showSaveDialog(win, options) : await dialog.showSaveDialog(options);
+  if (chosen.canceled || !chosen.filePath) return { kind: 'cancelled' };
+  const path = ensureWavExtension(chosen.filePath);
+  try {
+    await writeFileAtomic(path, bytes);
+  } catch (error) {
+    return { kind: 'error', message: `${baseName(path)} could not be exported: ${messageOf(error)}` };
+  }
+  return { kind: 'saved', path };
+}
+
 async function confirmDiscard(win: BrowserWindow | undefined, name: string): Promise<DiscardChoice> {
   const options = {
     type: 'warning' as const,
@@ -160,6 +179,12 @@ export function registerFileHandlers(): void {
   ipcMain.handle(CHANNELS.saveAs, (event, text: unknown, suggestedName: unknown): Promise<SaveResult> | SaveResult => {
     if (!isText(text) || !isText(suggestedName)) return { kind: 'error', message: 'The project could not be read for saving.' };
     return saveAs(windowOf(event), text, suggestedName);
+  });
+  ipcMain.handle(CHANNELS.exportWav, (event, bytes: unknown, suggestedName: unknown): Promise<SaveResult> | SaveResult => {
+    if (!(bytes instanceof Uint8Array) || bytes.length === 0 || !isText(suggestedName)) {
+      return { kind: 'error', message: 'The audio could not be read for exporting.' };
+    }
+    return exportWav(windowOf(event), bytes, suggestedName);
   });
   ipcMain.handle(CHANNELS.confirmDiscard, (event, name: unknown) => confirmDiscard(windowOf(event), isText(name) ? name : projectName(null)));
   ipcMain.on(CHANNELS.setDirty, (event, dirty: unknown) => {

@@ -3,7 +3,7 @@
 The build plan, run one step per invocation of the `/plan24` skill ([.claude/skills/plan24/SKILL.md](../.claude/skills/plan24/SKILL.md)). Step numbers are plan24's own and have nothing to do with the older branches `00-overall` to `04-guitars`.
 
 Horizon: 24
-Last completed step: 11
+Last completed step: 12
 Replanned after step: 9
 Plan complete: no
 
@@ -19,22 +19,7 @@ The plan is replanned after every third completed step (3, 6, 9, and so on). Don
 
 ## Next three steps
 
-Replanned after step 9 (2026-11-09). The horizon stays at 24 and the order is unchanged. Steps 1 to 11 are built and in the history below. The next replan comes before step 13.
-
-### Step 12: WAV export
-
-**Produces:** "Export WAV" for the whole Song with every instrument, mute and isolate ignored, the metronome left out ([editing-and-project.md](editing-and-project.md)).
-
-- **Offline render (`src/audio/render.ts`):** builds the Song events with the existing pure event builder (Song mode from bar 0 to the end, no loop, mute and isolate ignored), schedules them into an `OfflineAudioContext` through the voice-building code the live engine uses (made context-agnostic in step 4 for this), runs the same gain chain without the analysers, and adds a tail after the last note so releases and the longest sample ring out (assumed: up to 3 seconds).
-- **WAV writer (`src/core/wav.ts`, pure, tested):** 16-bit PCM, stereo, 44.1 kHz; tests check the header and sample values and the clipping.
-- **Plumbing:** the renderer calls a `files.exportWav(bytes, suggestedName)` bridge function; the main process shows the Save dialog (default name from the project file name) and writes the bytes. Progress: a quiet "Rendering…" line on the Mixer.
-- **Placement:** an "Export WAV" button on the Mixer page in the footer row next to the master (Import MIDI and Export MIDI join it in steps 13 and 17). An empty Song says so instead of writing an empty file ("The Song has no blocks").
-
-**Relies on:** steps 4, 5 and 11 (the bridge and the dialogs), [sound.md](sound.md).
-
-**Done when:** the WAV writer tests pass, a test checks the render length (Song bars to seconds plus tail); typecheck, lint, test and build pass. The render runs in Chromium only, so it is checked by types; the user's check is to export and listen.
-
-**Decisions it may need:** 44.1 kHz and 16-bit; the tail length (up to 3 s); whether the master volume applies (assumed yes, it is part of the mix); normalising (assumed none, the same level as playback).
+Replanned after step 9 (2026-11-09). Steps 1 to 12 are built and in the history below. Step 12 is a multiple of 3, so the next `/plan24` run replans first (details for steps 13 to 15, in the "Later steps" below), then builds step 13. The horizon stays at 24.
 
 ## Done steps (history)
 
@@ -236,9 +221,26 @@ Replanned after step 9 (2026-11-09). The horizon stays at 24 and the order is un
 
 **Built (2026-11-09):** the pure parts in `src/core/`: `fileState.ts` (the dirty rule, names, the window title, the extension), `settings.ts` and `fileBridge.ts` (the shared types and channel names), all tested; the main process in `electron/main/files.ts` (dialogs, atomic write, last project, holding back close) and `menu.ts`; the preload bridge `window.studio.files`; in the renderer `src/state/useFiles.ts`, the `replaceProject`, `saved` and `setNotice` actions, and a `files` object plus `replaceProject` in the store for the MIDI import step. Assumptions are in [open-items.md](open-items.md). The dialogs and the writing were type checked and built, not run (no window), as planned.
 
+### Step 12: WAV export
+
+**Produces:** "Export WAV" for the whole Song with every instrument, mute and isolate ignored, the metronome left out ([editing-and-project.md](editing-and-project.md)).
+
+- **Offline render (`src/audio/render.ts`):** builds the Song events with the existing pure event builder (Song mode from bar 0 to the end, no loop, mute and isolate ignored), schedules them into an `OfflineAudioContext` through the voice-building code the live engine uses (made context-agnostic in step 4 for this), runs the same gain chain without the analysers, and adds a tail after the last note so releases and the longest sample ring out (assumed: up to 3 seconds).
+- **WAV writer (`src/core/wav.ts`, pure, tested):** 16-bit PCM, stereo, 44.1 kHz; tests check the header and sample values and the clipping.
+- **Plumbing:** the renderer calls a `files.exportWav(bytes, suggestedName)` bridge function; the main process shows the Save dialog (default name from the project file name) and writes the bytes. Progress: a quiet "Rendering…" line on the Mixer.
+- **Placement:** an "Export WAV" button on the Mixer page in the footer row next to the master (Import MIDI and Export MIDI join it in steps 13 and 17). An empty Song says so instead of writing an empty file ("The Song has no blocks").
+
+**Relies on:** steps 4, 5 and 11 (the bridge and the dialogs), [sound.md](sound.md).
+
+**Done when:** the WAV writer tests pass, a test checks the render length (Song bars to seconds plus tail); typecheck, lint, test and build pass. The render runs in Chromium only, so it is checked by types; the user's check is to export and listen.
+
+**Decisions it may need:** 44.1 kHz and 16-bit; the tail length (up to 3 s); whether the master volume applies (assumed yes, it is part of the mix); normalising (assumed none, the same level as playback).
+
+**Built (2026-11-09):** the pure `src/core/wav.ts` (render length, file names, the 16-bit PCM writer with clipping; tested), the offline render `src/audio/render.ts` (the Song plan and `startNote` into an `OfflineAudioContext`, mute and isolate ignored, master volume applied, 3 s tail), the bridge function `files.exportWav` with its main-process handler (Save dialog, atomic write), the hook `src/state/useWavExport.ts` and an "Export WAV" button in the Mixer footer row. Assumptions are in [open-items.md](open-items.md). The render and the dialog were type checked and built, not run, as planned: the user's check is to export and listen.
+
 ## Later steps
 
-Broad strokes only. The next replan (the first `/plan24` run after step 12 is done) details steps 13 to 15. The horizon stays at 24; the order is unchanged.
+Broad strokes only. The next replan (the first `/plan24` run after step 12) details steps 13 to 15. The horizon stays at 24; the order is unchanged.
 
 - 13: MIDI file reader and writer, and MIDI export.
 - 14: MIDI import, part one: tempo, meter, pickup bars, time grid, drum mapping, pitch range, checked against the Python prototype.
@@ -267,7 +269,7 @@ Broad strokes only. The next replan (the first `/plan24` run after step 12 is do
 | 9 | The Keys page | done | 09-keys |
 | 10 | Pattern tools and shortcuts | done | 10-tools |
 | 11 | Saving and files | done | 11-files |
-| 12 | WAV export | todo | |
+| 12 | WAV export | done | 12-wav |
 | 13 | MIDI reader, writer and export | todo | |
 | 14 | MIDI import 1: time, tempo, drums, range | todo | |
 | 15 | MIDI import 2: strings and frets | todo | |

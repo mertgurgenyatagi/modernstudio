@@ -200,6 +200,30 @@
   white-space: nowrap;
 }
 
+/* The footer row's actions (Export WAV now; Import MIDI and Export MIDI join it later). */
+.export {
+  white-space: nowrap;
+}
+
+/* While rendering the button itself says "Rendering…" (a quiet line, no extra width). */
+.action {
+  min-width: 6.8rem;
+  appearance: none;
+  padding: 0.35rem 0.7rem;
+  font: 500 0.85rem/1 var(--font-body);
+  color: var(--color-ink);
+  background: var(--color-paper-2);
+  border: 1px solid var(--color-ink);
+  border-radius: 0;
+  cursor: pointer;
+}
+
+.action:disabled {
+  color: var(--color-muted);
+  border-color: var(--color-muted);
+  cursor: progress;
+}
+
 /* Muted or silenced: the name goes grey and the meter is dimmed. */
 .ledger tr.dim .name-text {
   color: var(--color-muted);
@@ -244,6 +268,10 @@
 
   .ledger td:empty {
     display: none;
+  }
+
+  .export {
+    grid-column: 1 / -1;
   }
 
   .tick {

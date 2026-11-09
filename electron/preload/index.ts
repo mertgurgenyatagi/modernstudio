@@ -1,5 +1,5 @@
 // The bridge between the window and the main process: one narrow, typed function per command
-// (the types are shared with the renderer in src/core/fileBridge.ts). Later steps add export here.
+// (the types are shared with the renderer in src/core/fileBridge.ts). Export commands are added here.
 import { contextBridge, ipcRenderer } from 'electron';
 import { CHANNELS, type FileCommand, type FilesBridge, type StudioBridge } from '../../src/core/fileBridge';
 
@@ -17,6 +17,7 @@ const files: FilesBridge = {
   open: () => ipcRenderer.invoke(CHANNELS.open),
   save: (path, text, suggestedName) => ipcRenderer.invoke(CHANNELS.save, path, text, suggestedName),
   saveAs: (text, suggestedName) => ipcRenderer.invoke(CHANNELS.saveAs, text, suggestedName),
+  exportWav: (bytes, suggestedName) => ipcRenderer.invoke(CHANNELS.exportWav, bytes, suggestedName),
   confirmDiscard: (name) => ipcRenderer.invoke(CHANNELS.confirmDiscard, name),
   setDirty: (dirty) => ipcRenderer.send(CHANNELS.setDirty, dirty),
   closeWindow: () => ipcRenderer.send(CHANNELS.closeWindow),
