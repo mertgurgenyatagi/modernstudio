@@ -25,6 +25,10 @@ Built in plan24 step 2 as plain TypeScript in [src/core/](../src/core/), with un
 - **Undo:** snapshots of the whole project, 1000 at most, no redo. Edits with the same coalescing key (a slider being dragged) are one step. Choosing a pattern is not a step, and Undo leaves the selected pattern and the number of patterns shown as they are.
 - **Saving:** `{ format: "modernstudio", version: 1, project }`. `parseProject` checks every field and refuses a damaged file with a reason; it never throws.
 
+## Used by the audio engine
+
+The engine reads the model but adds nothing to it: `levels.ts`, `envelope.ts`, `samples.ts`, `playback.ts` and `cursor.ts` in `src/core/` are described in [sound.md](sound.md). `playback.ts` turns a project into timed notes for Pattern mode and Song mode, and keeps out notes that are hidden by a shortened pattern or a lowered fret count.
+
 ## Not in the model
 
 Isolate is a playback choice, not saved with the project (a project saved while one instrument was isolated would open silent). The playhead, the playing state, the metronome, the note value chosen in an editor and "Show whole pattern" are screen state. All of these belong to the app state of plan24 step 5.

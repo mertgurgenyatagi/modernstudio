@@ -3,7 +3,7 @@
 The build plan, run one step per invocation of the `/plan24` skill ([.claude/skills/plan24/SKILL.md](../.claude/skills/plan24/SKILL.md)). Step numbers are plan24's own and have nothing to do with the older branches `00-overall` to `04-guitars`.
 
 Horizon: 24
-Last completed step: 3
+Last completed step: 4
 Replanned after step: 3
 Plan complete: no
 
@@ -154,7 +154,7 @@ Broad strokes only. The next replan (after step 6) details steps 7 to 9. Steps 4
 | 1 | Scaffold the app | done | 01-scaffold |
 | 2 | The project model | done | 02-model |
 | 3 | Capture the sounds | done | 03-sounds |
-| 4 | Audio engine | todo | |
+| 4 | Audio engine | done | 04-audio |
 | 5 | App shell and the Mixer page | todo | |
 | 6 | The Song page | todo | |
 | 7 | The Drums page | todo | |
