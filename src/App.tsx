@@ -1,5 +1,6 @@
 import { Mixer } from './pages/Mixer';
 import { Placeholder } from './pages/Placeholder';
+import { Song } from './pages/Song';
 import { PAGE_LABELS } from './state/appState';
 import { StudioProvider, useStudio } from './state/Studio';
 import { TopBar } from './ui/TopBar';
@@ -7,7 +8,9 @@ import './ui/shell.css';
 
 function CurrentPage() {
   const { state } = useStudio();
-  return state.page === 'mixer' ? <Mixer /> : <Placeholder title={PAGE_LABELS[state.page]} />;
+  if (state.page === 'mixer') return <Mixer />;
+  if (state.page === 'song') return <Song />;
+  return <Placeholder title={PAGE_LABELS[state.page]} />;
 }
 
 function Shell() {

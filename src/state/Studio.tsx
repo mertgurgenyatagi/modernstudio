@@ -19,6 +19,8 @@ interface Studio {
   play: () => void;
   stop: () => void;
   togglePlay: () => void;
+  /** Moves the playhead to a bar (0 based); if playing, playback restarts from there. */
+  seek: (bar: number) => void;
 }
 
 const StudioContext = createContext<Studio | null>(null);
@@ -53,19 +55,32 @@ export function StudioProvider({ children }: { children: ReactNode }) {
     };
   }, [engine]);
 
-  const play = useCallback(() => {
-    presses.current += 1;
-    const press = presses.current;
-    engine
-      .play(playRequestFor(state))
-      .then((started) => {
-        if (press === presses.current) dispatch({ type: started ? 'started' : 'stopped' });
-      })
-      .catch((error: unknown) => {
-        dispatch({ type: 'soundsFailed', message: error instanceof Error ? error.message : String(error) });
-        if (press === presses.current) dispatch({ type: 'stopped' });
-      });
-  }, [engine, state]);
+  const playFrom = useCallback(
+    (from: AppState) => {
+      presses.current += 1;
+      const press = presses.current;
+      engine
+        .play(playRequestFor(from))
+        .then((started) => {
+          if (press === presses.current) dispatch({ type: started ? 'started' : 'stopped' });
+        })
+        .catch((error: unknown) => {
+          dispatch({ type: 'soundsFailed', message: error instanceof Error ? error.message : String(error) });
+          if (press === presses.current) dispatch({ type: 'stopped' });
+        });
+    },
+    [engine],
+  );
+
+  const play = useCallback(() => playFrom(state), [playFrom, state]);
+
+  const seek = useCallback(
+    (bar: number) => {
+      dispatch({ type: 'setStartBar', bar });
+      if (state.playing) playFrom({ ...state, startBar: Number.isInteger(bar) && bar > 0 ? bar : 0 });
+    },
+    [playFrom, state],
+  );
 
   const stop = useCallback(() => {
     presses.current += 1;
@@ -100,8 +115,8 @@ export function StudioProvider({ children }: { children: ReactNode }) {
   }, [togglePlay]);
 
   const value = useMemo<Studio>(
-    () => ({ state, project, dispatch, engine, canUndo: canUndo(state.history), play, stop, togglePlay }),
-    [state, project, engine, play, stop, togglePlay],
+    () => ({ state, project, dispatch, engine, canUndo: canUndo(state.history), play, stop, togglePlay, seek }),
+    [state, project, engine, play, stop, togglePlay, seek],
   );
   return <StudioContext.Provider value={value}>{children}</StudioContext.Provider>;
 }

@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { canUndo } from '../core/history';
 import { addNote, setPatternBars } from '../core/patterns';
 import { selectPattern, setBpm, setMasterVolume, setMeter, setMuted, setVolume } from '../core/project';
-import { placeBlock } from '../core/song';
+import { moveBlock, placeBlock } from '../core/song';
 import { must } from '../core/testing';
 import { initialState, longestSelected, playRequestFor, reduce, type Action, type AppState } from './appState';
 
@@ -156,5 +156,31 @@ describe('what Play plays', () => {
     const longer = must(setPatternBars(initialState().history.present, 'keys', 0, 4));
     expect(longestSelected(longer)).toBe('keys');
     expect(playRequestFor(initialState(longer))).toEqual({ mode: 'pattern', focus: 'keys' });
+  });
+});
+
+describe('the Song page state', () => {
+  it('chooses the brush instrument', () => {
+    expect(initialState().brush).toBe('drums');
+    expect(run(initialState(), { type: 'setBrush', id: 'keys' }).brush).toBe('keys');
+  });
+
+  it('selects a block, and deselects it', () => {
+    const block = { instrument: 'bass', startBar: 4 } as const;
+    const s = run(initialState(), { type: 'selectBlock', block });
+    expect(s.selectedBlock).toEqual(block);
+    expect(run(s, { type: 'selectBlock', block: { ...block } })).toBe(s);
+    expect(run(s, { type: 'selectBlock', block: null }).selectedBlock).toBeNull();
+  });
+
+  it('moves a block through the history, and Undo moves it back', () => {
+    let p = must(addNote(initialState().history.present, 'drums', 0, { row: 'kick', start: 0 }));
+    p = must(placeBlock(p, 'drums', 0, 0));
+    const s = run(initialState(p), {
+      type: 'edit',
+      change: (project) => must(moveBlock(project, 'drums', 0, 3)),
+    });
+    expect(s.history.present.instruments.drums.lane).toEqual([{ pattern: 0, startBar: 3 }]);
+    expect(run(s, { type: 'undo' }).history.present.instruments.drums.lane).toEqual([{ pattern: 0, startBar: 0 }]);
   });
 });

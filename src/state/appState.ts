@@ -37,6 +37,10 @@ export interface AppState {
   guitar: StringInstrumentId;
   /** The bar the Song page's playhead stands on, 0 based. Playback in Song mode starts here. */
   startBar: number;
+  /** The Song page's brush: which instrument's lane a click places into. */
+  brush: InstrumentId;
+  /** The Song block that Delete removes: its lane and start bar. Not saved, not undone. */
+  selectedBlock: { instrument: InstrumentId; startBar: number } | null;
   /** Set when the recorded sounds could not be loaded. */
   soundsError: string | null;
 }
@@ -52,6 +56,8 @@ export function initialState(project: Project = createProject()): AppState {
     showWholePattern: false,
     guitar: 'bass',
     startBar: 0,
+    brush: 'drums',
+    selectedBlock: null,
     soundsError: null,
   };
 }
@@ -71,6 +77,8 @@ export type Action =
   | { type: 'setShowWholePattern'; on: boolean }
   | { type: 'setGuitar'; id: StringInstrumentId }
   | { type: 'setStartBar'; bar: number }
+  | { type: 'setBrush'; id: InstrumentId }
+  | { type: 'selectBlock'; block: { instrument: InstrumentId; startBar: number } | null }
   | { type: 'started' }
   | { type: 'stopped' }
   | { type: 'soundsFailed'; message: string };
@@ -112,6 +120,14 @@ export function reduce(state: AppState, action: Action): AppState {
     case 'setStartBar': {
       const bar = Number.isInteger(action.bar) && action.bar > 0 ? action.bar : 0;
       return bar === state.startBar ? state : { ...state, startBar: bar };
+    }
+    case 'setBrush':
+      return action.id === state.brush ? state : { ...state, brush: action.id };
+    case 'selectBlock': {
+      const a = state.selectedBlock;
+      const b = action.block;
+      if (a === b || (a && b && a.instrument === b.instrument && a.startBar === b.startBar)) return state;
+      return { ...state, selectedBlock: b };
     }
     case 'started':
       return state.playing ? state : { ...state, playing: true };
