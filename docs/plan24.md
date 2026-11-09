@@ -4,7 +4,7 @@ The build plan, run one step per invocation of the `/plan24` skill ([.claude/ski
 
 Horizon: 24
 Last completed step: 9
-Replanned after step: 6
+Replanned after step: 9
 Plan complete: no
 
 The plan is replanned after every third completed step (3, 6, 9, and so on). Done steps are history and are never changed by a replan.
@@ -19,11 +19,54 @@ The plan is replanned after every third completed step (3, 6, 9, and so on). Don
 
 ## Next three steps
 
-Replanned after step 6 (2026-11-09). The horizon stays at 24 and the order is unchanged, except that "Show whole pattern" moves from step 10 into step 7 (the pad grid needs it for 8x patterns), and the pattern-bank, tool and envelope pieces are built once, in step 7, as shared parts that steps 8 and 9 reuse. Steps 7 and 8 are built and moved to the history below. The next replan comes before step 10.
+Replanned after step 9 (2026-11-09). The horizon stays at 24 and the order is unchanged. Steps 1 to 9 are built and in the history below. The next replan comes before step 13.
 
 ### Step 10: Pattern tools and shortcuts
 
-Detail comes with the next replan: the first `/plan24` run after this one replans (step 9 was the third step since the last replan) and details steps 10 to 12.
+**Produces:** the editing pieces that steps 7 to 9 left out, in the shared editor parts of `src/pages/editor/`.
+
+- **"Copy notes to…"** (`CopyNotes.tsx`): a button in the tools row of Drums (next to "Show whole pattern"), Guitar and Keys. It opens a small picker under the button: the instrument's shown patterns as numbered squares (empty ones grey, the source disabled) and a two-way choice "Replace" (default) or "Add" for what happens to the target's notes. Picking a number runs `copyNotes` as one Undo step, closes the picker and says "Copied to pattern 5" (or the refusal) in the page's quiet line. Escape or a click outside closes it. The pure part (the list of targets, the wording of the result) is in `src/pages/editor/copy.ts` with tests.
+- **The hidden control for patterns 21 to 120:** in `PatternBank`, a "+20" square after the last number, drawn only when `canOpenMorePatterns` is true (every shown pattern has a note) and not once 120 are shown. It runs `openMorePatterns` as a `select` (not an Undo step, like choosing a pattern). The Song page's brush already steps over `shownPatterns`, so it needs nothing.
+- **Delete for selected notes** on Guitar and Keys: Delete removes the selected note (`removeNote`, one Undo step) and clears the selection. A hook `useDeleteKey` in `editor/` listens on the window, ignores typing targets (`isTypingTarget`) and does nothing when nothing is selected. Drums has no selection (a click on a hit removes it), so it gets no Delete.
+- **The warning when the fret count is lowered:** on the Guitar page the quiet line, when the new count hides notes, says how many notes in how many patterns of this instrument are now hidden and that raising the count brings them back (today's line counts only the selected pattern). The pure count over all patterns goes into `noteGeometry.ts` with tests. No dialog: Undo undoes the change.
+
+**Relies on:** steps 7 to 9; `copyNotes`, `openMorePatterns` and `canOpenMorePatterns` in the model (built and tested in step 2); [patterns-and-song.md](patterns-and-song.md); [open-items.md](open-items.md).
+
+**Done when:** tests for `copy.ts` and the all-pattern hidden count pass; typecheck, lint, test and build pass; the picker is reasoned to fit 960 by 540.
+
+**Decisions it may need:** copy replaces by default and adds when chosen (the model's default, in open-items); the picker is a dropdown panel under the button, not a dialog; "+20" opens 20 at a time (already assumed); Delete removes only the one selected note (there is no multi-select).
+
+### Step 11: Saving and files
+
+**Produces:** save, open, new, reopen the last project, and the unsaved-changes prompt ([editing-and-project.md](editing-and-project.md)).
+
+- **Main process (`electron/main/files.ts`):** handlers for Save (to the known path, else the Save As dialog), Save As, Open and New, with the `.modernstudio` extension (assumed; the file is the JSON of `serializeProject`). A save writes a temporary file and renames it, so a failed save never destroys the old file. The path of the last project is kept in a small `settings.json` in the user data folder; at start the window asks for it and opens it, falling back to a new project (with a quiet line) if the file is gone or does not parse.
+- **Preload bridge:** one narrow typed function per command (`window.studio.files`), the types shared with the renderer.
+- **Renderer:** the store learns the file state: the path (or none), the project last saved, and a dirty flag. A pure function decides "dirty" by comparing the present project with the saved one, ignoring the selected pattern and the number of shown patterns (choosing a pattern is not an edit); it is tested. The window title shows the file name and a mark when unsaved.
+- **Replacing the project** (`replaceProject` action): New, Open and later MIDI import start a new history with the given project, stop playback and reset the playhead.
+- **Commands:** an application menu File with New (Ctrl+N), Open (Ctrl+O), Save (Ctrl+S) and Save As (Ctrl+Shift+S). The menu stays hidden until Alt is pressed, as the window is made; the accelerators work all the time. The top bar gets no extra buttons.
+- **Close:** the main process holds back closing while the project is dirty and asks (Save, Don't save, Cancel) in a native dialog; New, Open and later import ask the same way.
+
+**Relies on:** step 5 (the store), `serialize.ts` (step 2), [editing-and-project.md](editing-and-project.md), [stack.md](stack.md).
+
+**Done when:** tests for the dirty rule, the `replaceProject` reducer case and the settings parsing (a pure function on the settings text) pass; typecheck, lint, test and build pass. The dialogs and the file writing are not run by the step (no window), only type checked; open-items says so.
+
+**Decisions it may need:** the file extension (`.modernstudio`); the title format ("name - modernstudio", a mark when unsaved); where the File commands live (assumed: the hidden menu and the shortcuts only); whether the dirty mark is in the title only (assumed yes).
+
+### Step 12: WAV export
+
+**Produces:** "Export WAV" for the whole Song with every instrument, mute and isolate ignored, the metronome left out ([editing-and-project.md](editing-and-project.md)).
+
+- **Offline render (`src/audio/render.ts`):** builds the Song events with the existing pure event builder (Song mode from bar 0 to the end, no loop, mute and isolate ignored), schedules them into an `OfflineAudioContext` through the voice-building code the live engine uses (made context-agnostic in step 4 for this), runs the same gain chain without the analysers, and adds a tail after the last note so releases and the longest sample ring out (assumed: up to 3 seconds).
+- **WAV writer (`src/core/wav.ts`, pure, tested):** 16-bit PCM, stereo, 44.1 kHz; tests check the header and sample values and the clipping.
+- **Plumbing:** the renderer calls a `files.exportWav(bytes, suggestedName)` bridge function; the main process shows the Save dialog (default name from the project file name) and writes the bytes. Progress: a quiet "Rendering…" line on the Mixer.
+- **Placement:** an "Export WAV" button on the Mixer page in the footer row next to the master (Import MIDI and Export MIDI join it in steps 13 and 17). An empty Song says so instead of writing an empty file ("The Song has no blocks").
+
+**Relies on:** steps 4, 5 and 11 (the bridge and the dialogs), [sound.md](sound.md).
+
+**Done when:** the WAV writer tests pass, a test checks the render length (Song bars to seconds plus tail); typecheck, lint, test and build pass. The render runs in Chromium only, so it is checked by types; the user's check is to export and listen.
+
+**Decisions it may need:** 44.1 kHz and 16-bit; the tail length (up to 3 s); whether the master volume applies (assumed yes, it is part of the mix); normalising (assumed none, the same level as playback).
 
 ## Done steps (history)
 
@@ -191,11 +234,8 @@ Detail comes with the next replan: the first `/plan24` run after this one replan
 
 ## Later steps
 
-Broad strokes only. The next replan (the first `/plan24` run, since step 9 is done) details steps 10 to 12. The horizon stays at 24; the order is unchanged.
+Broad strokes only. The next replan (the first `/plan24` run after step 12 is done) details steps 13 to 15. The horizon stays at 24; the order is unchanged.
 
-- 10: Pattern tools and shortcuts: "Copy notes to…" picker, the hidden control for patterns 21 to 120, Delete for selected notes, the warning when the fret count is lowered after notes are placed. ("Show whole pattern" is built in step 7, Space to play in step 5.)
-- 11: Saving and files: save, open, reopen the last project, unsaved-changes prompt on close and on import.
-- 12: WAV export by offline render.
 - 13: MIDI file reader and writer, and MIDI export.
 - 14: MIDI import, part one: tempo, meter, pickup bars, time grid, drum mapping, pitch range, checked against the Python prototype.
 - 15: MIDI import, part two: string and fret choice (Viterbi) and the fret count.
