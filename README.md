@@ -23,6 +23,7 @@ Then:
 | `npm run pack` | Builds the app into an unpacked folder, `release/win-unpacked/` (quick check of what goes in) |
 | `npm run dist` | Builds the Windows installer, `release/modernstudio-setup-<version>.exe` (no code signing, so Windows warns about an unknown publisher) |
 | `npm run check:package` | Fails if the package would hold anything that is not part of the app |
+| `npm run check:docs` | Lists broken relative links and headings in `docs/` and this file |
 
 ## Folders
 

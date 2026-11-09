@@ -16,7 +16,8 @@
     "check:sounds": "node tools/sounds/check.mjs",
     "pack": "electron-vite build && electron-builder --dir",
     "dist": "electron-vite build && electron-builder",
-    "check:package": "node tools/package/check.mjs"
+    "check:package": "node tools/package/check.mjs",
+    "check:docs": "node tools/docs/check-links.mjs"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
