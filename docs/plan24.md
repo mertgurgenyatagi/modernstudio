@@ -4,7 +4,7 @@ The build plan, run one step per invocation of the `/plan24` skill ([.claude/ski
 
 Horizon: 24
 Last completed step: 15
-Replanned after step: 12
+Replanned after step: 15
 Plan complete: no
 
 The plan is replanned after every third completed step (3, 6, 9, and so on). Done steps are history and are never changed by a replan.
@@ -19,7 +19,53 @@ The plan is replanned after every third completed step (3, 6, 9, and so on). Don
 
 ## Next three steps
 
-Replanned after step 12 (2026-11-09). The horizon stays at 24 and the order is unchanged. Steps 13 to 15 are built (in the history below). Steps 16 to 24 are in "Later steps". The next `/plan24` run replans first (15 is a multiple of 3) and details steps 16 to 18, then builds step 16.
+Replanned after step 15 (2026-11-09). The horizon stays at 24. Steps 16 to 18 are below in detail; steps 19 to 24 are in "Later steps". The old step 18 (the album check) is folded into the new step 18, and the import report moves there from step 17, so that step 16 can finish the converter and steps 17 and 18 each hold one screen. The next replan comes after step 18 (a multiple of 3).
+
+### Step 16: MIDI import, part three: patterns, Song lanes and the project
+
+**Produces:** the end of the converter as pure code in `src/core/midi/`: from a read MIDI file and a mapping to a finished `Project` plus the numbers the report needs.
+
+- **Tiling (`chunk.ts`):** a port of `tools/midi-prototype/chunk.py`. A lane (grid notes or drum hits) is cut into stretches of 1, 2, 4 or 8 bars; a signature is the list of notes inside the stretch (start inside it, length cut at its end, pitch or row); a dynamic program covers the bars with candidates, each costing 1 for the block plus 6 if its signature was not used at least twice in the previous round, up to 8 rounds, ties to the longer block. Returns the blocks and the distinct patterns numbered in order of first use.
+- **Build (`build.ts`):** `convertMidi(file, mapping)` runs timing (step 14), the drum map, quantizing, the 256-bar cut, folding into range, `chooseFretCount` on the whole folded track (step 15), the tiling, and fingering **once per distinct pattern** at the chosen count (`fingerTrack` on the pattern's signature). It returns `Result<ImportOutcome>`: the `Project` (BPM, meter, five instruments; patterns in order of first use, each with its length and notes as drum, string or Keys notes; the lane blocks; fret counts; pattern 1 selected; `shownPatterns` opened in steps of 20 for what an instrument needs; the rest of the model defaults) and the report data (tempo and meter used, other tempos and meter notes, bars, per instrument: the track used, notes, octave moves, dropped drum hits, fret count, patterns, blocks, same-string chords, and warnings such as a cut at bar 256).
+- **Limit of 120 patterns:** `convertMidi` also reports, per instrument, how many patterns it needs. If more than 120, the lane is cut after the last bar that fits and a warning says "needs 143, 120 fit". The same figure is a separate cheap function (`needsPatterns`) for the mapping step of step 17.
+- **Mapping input:** the same shape the guesses give (`TrackGuess` with an assignment per track); two tracks sent to one instrument are merged, exact duplicates (same pitch, same start) dropped; Skip is ignored; an instrument with no track stays empty.
+- **A check against the prototype:** `tools/midi-prototype/dump_chunk.py` writes, for the eleven files and every lane, the prototype's number of patterns and blocks, the block list and the pattern lengths to `fixtures/chunk.json`; a test compares the TypeScript. Also tests: made-up lanes (an exact repeat becomes one pattern, an empty bar is a gap, a note running past a block is cut and counted, a lane over 120 patterns), the round trip (rebuilding every lane from its patterns, blocks and fingerings gives back the folded notes: 0 differences on all 51 lanes), and that every produced project survives `serializeProject` and the parse back, and obeys the lane rules (`laneFits`).
+
+**Relies on:** steps 2, 13, 14 and 15; [midi-import.md](midi-import.md) ("Patterns and the Song lanes", "Limits"); `chunk.py`, `report.py`.
+
+**Done when:** the chunk comparison passes on all eleven files; the round trip is clean on all 51 lanes; the most patterns on any lane is 18, as the document says; typecheck, lint, test and build pass.
+
+**Decisions it may need:** the order of signatures (sorted by start, then length, then key, as in the prototype); the 120-pattern cut (assumed: cut the lane after the last whole block that fits); what a note running past a pattern's end becomes (cut at the pattern's end, as the document says, and counted as in the prototype's `clipped`); `shownPatterns` after an import (the smallest multiple of 20 that holds the patterns used, so the "+20" control is not needed to see them).
+
+### Step 17: MIDI import screens, part one: the button, the flow and the mapping step
+
+**Produces:** the way into an import, from the Mixer button to a new project on screen.
+
+- **Flow state (`src/state/importFlow.ts`, pure, tested):** the stages "choose file", "reading", "mapping" (with the file's tracks and the guesses, editable), "converting", "done" (the outcome waiting for the report) and "refused" (a reason). Pure functions: set a track's assignment, the per-row preview (notes, octave moves at the instrument's fret count, patterns needed via `needsPatterns`), whether the mapping can be converted (at least one track mapped), and the wording of a refusal.
+- **Main process and bridge:** `files.chooseMidi()` returns the picked file's bytes and name (filter `.mid`, `.midi`), reusing the unsaved-changes prompt of step 11 ("Save changes to…?" with Save, Don't save, Cancel) before the dialog opens; a cancelled prompt or dialog changes nothing.
+- **The Import MIDI button** in the Mixer footer row beside Export WAV and Export MIDI (the Mixer's quiet line carries refusals: SMPTE, format 2, a meter other than 4/4 and 3/4).
+- **The mapping step:** a panel over the Mixer (not a dialog window) listing the file's tracks: name, channel, program, notes, and a six-way choice per row (Drums, Bass, Rhythm Guitar, Lead Guitar, Keys, Skip) pre-filled by `guessMapping`, with the preview figures per row and per instrument ("needs 143, 120 fit" where it applies). Buttons: Import and Cancel. Styled with the tokens; reasoned to fit 960 by 540 with the track list scrolling inside the panel (New York City Cops has nine tracks).
+- **Convert:** Import runs `convertMidi` (yielding to the screen once so "Converting…" shows), then `replaceProject` (new history, playback stopped, an unsaved project named from the MIDI file) and keeps the report data in the store for step 18.
+
+**Relies on:** step 16; step 11's file bridge, prompt and `replaceProject`; [midi-import.md](midi-import.md) ("Import: the flow", "Mapping guesses"); [page-designs.md](page-designs.md) (the Mixer).
+
+**Done when:** tests for the flow state pass; typecheck, lint, test and build pass; the panel is reasoned to fit. The dialog and the panel are not run, as the rule says.
+
+**Decisions it may need:** where the project's name comes from after an import (assumed: the MIDI file's name without extension, shown in the title with the unsaved mark, so the first Save asks for a path); whether Bass and Keys may take more than one track (assumed yes, merged, as the document allows; only the guess picks one); whether the mapping step can be skipped when the guess is clear (assumed no, it always shows, as the document's flow says).
+
+### Step 18: MIDI import screens, part two: the report, and the album check
+
+**Produces:** the import report and an end-to-end check of the whole import on the eleven album files.
+
+- **Report (`src/ui/ImportReport.tsx` and a pure `reportLines` in `src/core/midi/`, tested):** after the import the report shows over the new project, dismissible: tempo and meter used (with the number of other tempos ignored and any meter change named by bar), the number of bars (and a cut at 256), and one row per instrument: the track used, notes, octave shifts, dropped drum hits by sound, fret count, patterns, blocks and warnings. Wording is plain and short; the pure part builds the lines from the report data so it can be tested.
+- **End-to-end album test:** for each of the eleven files, from the bytes in `midis/` through `readMidi`, the guessed mapping and `convertMidi`: the project passes the model's checks; its tempo, meter, bars, patterns and blocks per lane equal the prototype's figures; playing the Song plan yields the same notes as the quantized source (by pitch and position, per instrument); exporting to MIDI and reading it back gives the same pitches and times; saving to JSON and parsing gives an equal project. The totals the document quotes (51 lanes, 679 blocks, 645 of them 8 bars long, busiest lane 18 patterns) are asserted. Any difference is recorded in open-items, not hidden.
+- **Documents:** [midi-import.md](midi-import.md) gets a "Built" paragraph for the whole import; the open item "the mapping step and the import report are not drawn" is closed; [page-designs.md](page-designs.md) records the mapping panel and the report as the assistant's design.
+
+**Relies on:** steps 16 and 17; `report.py`.
+
+**Done when:** the album test passes for all eleven files; the report lines are tested; typecheck, lint, test and build pass; the panel and the report are reasoned to fit 960 by 540.
+
+**Decisions it may need:** how the report is dismissed (assumed: a Close button and Escape; it is not stored in the project); whether it is reachable later (assumed no, it shows once); the placement (assumed: a panel over the Mixer, like the mapping step).
 
 ## Done steps (history)
 
@@ -292,16 +338,13 @@ Replanned after step 12 (2026-11-09). The horizon stays at 24 and the order is u
 
 ## Later steps
 
-Broad strokes only. The next replan (the next `/plan24` run, as 15 is done) details steps 16 to 18. The horizon stays at 24; the order is unchanged.
+Broad strokes only. The next replan comes after step 18. The horizon stays at 24.
 
-- 16: MIDI import, part three: patterns and Song lanes (the tiling), fingering once per distinct pattern, and building a project from the result.
-- 17: MIDI import screens: the Import MIDI button on the Mixer, the unsaved prompt, the mapping step, the report.
-- 18: Check the eleven album files end to end against the prototype's numbers.
-- 19: Fit pass at 960 by 540 for every page, and the vertical scroll of the Guitar editor.
+- 19: Fit pass at 960 by 540 for every page, and the vertical scroll of the Guitar editor (reasoning and any pure layout maths, since no browser is used).
 - 20: Installer with `electron-builder`; the runtime-only parts excluded from the package.
-- 21: Open items and the unanswered questionnaire 17 questions: decide or ask, then document.
-- 22: Final lint, type check and test pass, documentation tidy, handover notes.
-- 23 and 24: Reserve for fixes and for anything that grew past one step.
+- 21: Open items and the unanswered questionnaire 17 questions: decide, then document.
+- 22: Final lint, type check and test pass, documentation tidy, handover notes. Ends the plan.
+- 23 and 24: Reserve for fixes and for anything that grew past one step; built only when the user asks.
 
 ## All steps
 
@@ -322,9 +365,9 @@ Broad strokes only. The next replan (the next `/plan24` run, as 15 is done) deta
 | 13 | MIDI reader, writer and export | done | 13-midi |
 | 14 | MIDI import 1: time, tempo, drums, range | done | 14-import-time |
 | 15 | MIDI import 2: strings and frets | done | 15-fretting |
-| 16 | MIDI import 3: patterns and lanes | todo | |
-| 17 | MIDI import screens | todo | |
-| 18 | Album check | todo | |
+| 16 | MIDI import 3: patterns, lanes, project | todo | |
+| 17 | MIDI import screens 1: button, flow, mapping | todo | |
+| 18 | MIDI import screens 2: report, album check | todo | |
 | 19 | Fit at 960 by 540 | todo | |
 | 20 | Installer | todo | |
 | 21 | Open items and questionnaire 17 | todo | |
