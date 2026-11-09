@@ -1,9 +1,10 @@
-import { useLayoutEffect, useMemo, useRef, useState, type CSSProperties, type MouseEvent as ReactMouseEvent } from 'react';
+import { useCallback, useLayoutEffect, useMemo, useRef, useState, type CSSProperties, type MouseEvent as ReactMouseEvent } from 'react';
 import { INSTRUMENT_LABELS } from '../core/instruments';
-import { addNote, noteKey, replaceNote } from '../core/patterns';
+import { addNote, noteKey, removeNote, replaceNote } from '../core/patterns';
 import type { KeysNote } from '../core/project';
 import { patternTicks, ticksPerBar } from '../core/time';
 import { useStudio } from '../state/Studio';
+import { CopyNotes } from './editor/CopyNotes';
 import { EnvelopeStrip } from './editor/EnvelopeStrip';
 import { beatMarks, describeStart } from './editor/grid';
 import { KEY_ROWS, hiddenOutOfRange, isBlackKey, keyLabel, keyNotesAt, startScrollTop } from './editor/keyRoll';
@@ -11,7 +12,9 @@ import { clickStart, newNoteLength, pitchName } from './editor/noteGeometry';
 import { PatternBank } from './editor/PatternBank';
 import { Ruler, at } from './editor/Ruler';
 import { LengthChoice, NoteValueChoice, ShowWholeButton } from './editor/Tools';
+import { useDeleteKey } from './editor/useDeleteKey';
 import { useNoteDrag } from './editor/useNoteDrag';
+import { useNoteSelection } from './editor/useNoteSelection';
 import { usePlayhead } from './editor/usePlayhead';
 import { useTryEdit } from './editor/useTryEdit';
 import './editor/noteEditor.css';
@@ -25,10 +28,9 @@ const isKeysNote = (note: unknown): note is KeysNote => typeof note === 'object'
  * ink bar of its length on the row of its pitch; the drag rules are the Guitar page's.
  */
 export function Keys() {
-  const { state, project } = useStudio();
+  const { state, project, dispatch } = useStudio();
   const tryEdit = useTryEdit();
   const [message, setMessage] = useState('');
-  const [selectedKey, setSelectedKey] = useState<string | null>(null);
   const rulerRef = useRef<HTMLDivElement>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
 
@@ -39,6 +41,7 @@ export function Keys() {
   const bars = pattern?.bars ?? 1;
   const total = patternTicks(project.meter, bars);
   const value = state.noteValue;
+  const [selectedKey, setSelectedKey] = useNoteSelection(`${id}:${selected}`);
 
   const playheadRef = usePlayhead(id, total, rulerRef);
   const notes = useMemo(() => (pattern?.notes ?? []).filter(isKeysNote), [pattern]);
@@ -53,6 +56,16 @@ export function Keys() {
     const ruler = box.querySelector<HTMLElement>('.ruler-row')?.offsetHeight ?? 0;
     box.scrollTop = startScrollTop(first.offsetHeight, box.clientHeight - ruler, KEY_ROWS.length);
   }, []);
+
+  // Delete removes the selected note.
+  const deleteSelected = useCallback(() => {
+    const note = notes.find((n) => noteKey(n) === selectedKey);
+    if (!note) return;
+    dispatch({ type: 'edit', change: (p) => removeNote(p, id, selected, note) });
+    setSelectedKey(null);
+    setMessage('');
+  }, [notes, selectedKey, dispatch, selected, setSelectedKey]);
+  useDeleteKey(selectedKey === null ? null : deleteSelected);
 
   const { preview, begin } = useNoteDrag<KeysNote>({
     value,
@@ -101,6 +114,7 @@ export function Keys() {
         <div className="ne-tools">
           <LengthChoice id={id} onRefused={setMessage} />
           <NoteValueChoice id={id} />
+          <CopyNotes id={id} onResult={setMessage} />
         </div>
 
         <div className="ne-scroll" ref={scrollRef}>

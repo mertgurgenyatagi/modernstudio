@@ -5,7 +5,7 @@
  * tick on screen is decided in CSS; the pages measure it and pass it in where pixels come into it.
  */
 import { FRET_MAX, TUNING, type StringInstrumentId } from '../../core/instruments';
-import type { StringNote } from '../../core/project';
+import type { Pattern, StringNote } from '../../core/project';
 import { MIN_NOTE_TICKS, NOTE_VALUE_TICKS, isGridPosition, snapDown, snapNearest, snapLength, type NoteValue } from '../../core/time';
 
 /** A pointer that moves less than this many pixels between press and release is a click, not a drag. */
@@ -79,7 +79,27 @@ export function hiddenAboveFret(notes: readonly StringNote[], fretCount: number)
   return notes.filter((n) => n.fret > fretCount).length;
 }
 
-const PITCH_NAMES = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'] as const;
+/** The notes above a fret count across all the patterns of an instrument: how many, and in how many patterns. */
+export function hiddenAcrossPatterns(patterns: readonly Pattern[], fretCount: number): { notes: number; patterns: number } {
+  let notes = 0;
+  let inPatterns = 0;
+  for (const pattern of patterns) {
+    const count = pattern.notes.filter((n) => 'string' in n && n.fret > fretCount).length;
+    notes += count;
+    if (count > 0) inPatterns += 1;
+  }
+  return { notes, patterns: inPatterns };
+}
+
+/** The quiet line after the fret count is changed: empty unless notes are now hidden. */
+export function fretChangeLine(hidden: { notes: number; patterns: number }, fretCount: number): string {
+  if (hidden.notes === 0) return '';
+  const notes = hidden.notes === 1 ? '1 note is' : `${hidden.notes} notes are`;
+  const patterns = hidden.patterns === 1 ? '1 pattern' : `${hidden.patterns} patterns`;
+  return `${notes} now above fret ${fretCount}, in ${patterns}: hidden, not deleted. Raise the frets to bring them back.`;
+}
+
+const PITCH_NAMES =['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'] as const;
 
 /** A MIDI pitch as a name, middle C (60) being C4: 28 is E1, 64 is E4. */
 export function pitchName(midi: number): string {

@@ -3,7 +3,7 @@
 The build plan, run one step per invocation of the `/plan24` skill ([.claude/skills/plan24/SKILL.md](../.claude/skills/plan24/SKILL.md)). Step numbers are plan24's own and have nothing to do with the older branches `00-overall` to `04-guitars`.
 
 Horizon: 24
-Last completed step: 9
+Last completed step: 10
 Replanned after step: 9
 Plan complete: no
 
@@ -19,22 +19,7 @@ The plan is replanned after every third completed step (3, 6, 9, and so on). Don
 
 ## Next three steps
 
-Replanned after step 9 (2026-11-09). The horizon stays at 24 and the order is unchanged. Steps 1 to 9 are built and in the history below. The next replan comes before step 13.
-
-### Step 10: Pattern tools and shortcuts
-
-**Produces:** the editing pieces that steps 7 to 9 left out, in the shared editor parts of `src/pages/editor/`.
-
-- **"Copy notes to…"** (`CopyNotes.tsx`): a button in the tools row of Drums (next to "Show whole pattern"), Guitar and Keys. It opens a small picker under the button: the instrument's shown patterns as numbered squares (empty ones grey, the source disabled) and a two-way choice "Replace" (default) or "Add" for what happens to the target's notes. Picking a number runs `copyNotes` as one Undo step, closes the picker and says "Copied to pattern 5" (or the refusal) in the page's quiet line. Escape or a click outside closes it. The pure part (the list of targets, the wording of the result) is in `src/pages/editor/copy.ts` with tests.
-- **The hidden control for patterns 21 to 120:** in `PatternBank`, a "+20" square after the last number, drawn only when `canOpenMorePatterns` is true (every shown pattern has a note) and not once 120 are shown. It runs `openMorePatterns` as a `select` (not an Undo step, like choosing a pattern). The Song page's brush already steps over `shownPatterns`, so it needs nothing.
-- **Delete for selected notes** on Guitar and Keys: Delete removes the selected note (`removeNote`, one Undo step) and clears the selection. A hook `useDeleteKey` in `editor/` listens on the window, ignores typing targets (`isTypingTarget`) and does nothing when nothing is selected. Drums has no selection (a click on a hit removes it), so it gets no Delete.
-- **The warning when the fret count is lowered:** on the Guitar page the quiet line, when the new count hides notes, says how many notes in how many patterns of this instrument are now hidden and that raising the count brings them back (today's line counts only the selected pattern). The pure count over all patterns goes into `noteGeometry.ts` with tests. No dialog: Undo undoes the change.
-
-**Relies on:** steps 7 to 9; `copyNotes`, `openMorePatterns` and `canOpenMorePatterns` in the model (built and tested in step 2); [patterns-and-song.md](patterns-and-song.md); [open-items.md](open-items.md).
-
-**Done when:** tests for `copy.ts` and the all-pattern hidden count pass; typecheck, lint, test and build pass; the picker is reasoned to fit 960 by 540.
-
-**Decisions it may need:** copy replaces by default and adds when chosen (the model's default, in open-items); the picker is a dropdown panel under the button, not a dialog; "+20" opens 20 at a time (already assumed); Delete removes only the one selected note (there is no multi-select).
+Replanned after step 9 (2026-11-09). The horizon stays at 24 and the order is unchanged. Steps 1 to 10 are built and in the history below. The next replan comes before step 13.
 
 ### Step 11: Saving and files
 
@@ -232,6 +217,23 @@ Replanned after step 9 (2026-11-09). The horizon stays at 24 and the order is un
 
 **Built (2026-11-09):** `src/pages/Keys.tsx`, `keys.css` and the pure, tested `src/pages/editor/keyRoll.ts` (rows, black keys, labels, notes on screen, the starting scroll). The note editor parts the Guitar page and Keys share were pulled out into `editor/noteEditor.css`, `Ruler.tsx` and `usePlayhead.ts`; the Guitar page now uses them and looks as before. The unused Placeholder page was removed. Assumptions are in [open-items.md](open-items.md). Not looked at, as planned.
 
+### Step 10: Pattern tools and shortcuts
+
+**Produces:** the editing pieces that steps 7 to 9 left out, in the shared editor parts of `src/pages/editor/`.
+
+- **"Copy notes to…"** (`CopyNotes.tsx`): a button in the tools row of Drums (next to "Show whole pattern"), Guitar and Keys. It opens a small picker under the button: the instrument's shown patterns as numbered squares (empty ones grey, the source disabled) and a two-way choice "Replace" (default) or "Add" for what happens to the target's notes. Picking a number runs `copyNotes` as one Undo step, closes the picker and says "Copied to pattern 5" (or the refusal) in the page's quiet line. Escape or a click outside closes it. The pure part (the list of targets, the wording of the result) is in `src/pages/editor/copy.ts` with tests.
+- **The hidden control for patterns 21 to 120:** in `PatternBank`, a "+20" square after the last number, drawn only when `canOpenMorePatterns` is true (every shown pattern has a note) and not once 120 are shown. It runs `openMorePatterns` as a `select` (not an Undo step, like choosing a pattern). The Song page's brush already steps over `shownPatterns`, so it needs nothing.
+- **Delete for selected notes** on Guitar and Keys: Delete removes the selected note (`removeNote`, one Undo step) and clears the selection. A hook `useDeleteKey` in `editor/` listens on the window, ignores typing targets (`isTypingTarget`) and does nothing when nothing is selected. Drums has no selection (a click on a hit removes it), so it gets no Delete.
+- **The warning when the fret count is lowered:** on the Guitar page the quiet line, when the new count hides notes, says how many notes in how many patterns of this instrument are now hidden and that raising the count brings them back (today's line counts only the selected pattern). The pure count over all patterns goes into `noteGeometry.ts` with tests. No dialog: Undo undoes the change.
+
+**Relies on:** steps 7 to 9; `copyNotes`, `openMorePatterns` and `canOpenMorePatterns` in the model (built and tested in step 2); [patterns-and-song.md](patterns-and-song.md); [open-items.md](open-items.md).
+
+**Done when:** tests for `copy.ts` and the all-pattern hidden count pass; typecheck, lint, test and build pass; the picker is reasoned to fit 960 by 540.
+
+**Decisions it may need:** copy replaces by default and adds when chosen (the model's default, in open-items); the picker is a dropdown panel under the button, not a dialog; "+20" opens 20 at a time (already assumed); Delete removes only the one selected note (there is no multi-select).
+
+**Built (2026-11-09):** `CopyNotes.tsx` and the pure `copy.ts`; the "+20" square in `PatternBank.tsx`; `useDeleteKey.ts` and `useNoteSelection.ts` (the selection is now scoped to the instrument and pattern on screen); `hiddenAcrossPatterns` and `fretChangeLine` in `noteGeometry.ts`. Assumptions are in [open-items.md](open-items.md). Not looked at, as planned.
+
 ## Later steps
 
 Broad strokes only. The next replan (the first `/plan24` run after step 12 is done) details steps 13 to 15. The horizon stays at 24; the order is unchanged.
@@ -261,7 +263,7 @@ Broad strokes only. The next replan (the first `/plan24` run after step 12 is do
 | 7 | The Drums page | done | 07-drums |
 | 8 | The Guitar page | done | 08-guitar |
 | 9 | The Keys page | done | 09-keys |
-| 10 | Pattern tools and shortcuts | todo | |
+| 10 | Pattern tools and shortcuts | done | 10-tools |
 | 11 | Saving and files | todo | |
 | 12 | WAV export | todo | |
 | 13 | MIDI reader, writer and export | todo | |

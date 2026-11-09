@@ -98,7 +98,7 @@ None of this is in the questionnaire answers. Change it if wrong.
 - Sixteen pads per bar are drawn because 16th is the note value shown as chosen. How the pad grid changes for Whole, Half, Quarter, Third and Half of a third is not drawn.
 - For a pattern of 2x, 4x or 8x the pads continue to the right and the compartment scrolls sideways, or "Show whole pattern" fits them all. Neither is drawn.
 - "Show whole pattern" is a button that stays pressed when on. The docs call it a toggle.
-- "Copy notes to…" is a button. The picker that follows it is not drawn.
+- "Copy notes to…" is a button. The picker that follows it was not drawn in the design; plan24 step 10 built a panel under the button (see open-items.md).
 - Empty patterns are selectable, because a pattern becomes active when the first note is placed in it.
 - The envelope values are shown on a 0 to 100 scale with no unit, as the Mixer volume is. The docs give no units for attack, decay and release.
 - The sample beat, the active pattern numbers (1, 2, 3 and 5) and the envelope values in the exhibition are made up to fill the screen.
