@@ -184,3 +184,59 @@ describe('the Song page state', () => {
     expect(run(s, { type: 'undo' }).history.present.instruments.drums.lane).toEqual([{ pattern: 0, startBar: 0 }]);
   });
 });
+
+describe('files', () => {
+  const other = () => must(addNote(initialState().history.present, 'drums', 0, { row: 'kick', start: 0 }));
+
+  it('starts with no file and the new project as the saved one', () => {
+    const s = initialState();
+    expect(s.filePath).toBeNull();
+    expect(s.savedProject).toBe(s.history.present);
+    expect(s.notice).toBeNull();
+  });
+
+  it('replaces the project with a new history, no playback and the playhead at the start', () => {
+    let s = run(
+      initialState(),
+      { type: 'edit', change: (p) => setBpm(p, 100) },
+      { type: 'setStartBar', bar: 5 },
+      { type: 'selectBlock', block: { instrument: 'bass', startBar: 2 } },
+      { type: 'started' },
+      { type: 'setNotice', message: 'old' },
+    );
+    const project = other();
+    s = run(s, { type: 'replaceProject', project, path: 'songs/a.modernstudio' });
+    expect(s.history.present).toBe(project);
+    expect(canUndo(s.history)).toBe(false);
+    expect(s.playing).toBe(false);
+    expect(s.startBar).toBe(0);
+    expect(s.selectedBlock).toBeNull();
+    expect(s.filePath).toBe('songs/a.modernstudio');
+    expect(s.savedProject).toBe(project);
+    expect(s.notice).toBeNull();
+  });
+
+  it('keeps the screen choices when the project is replaced', () => {
+    const s = run(initialState(), { type: 'setPage', page: 'keys' }, { type: 'setMetronome', on: true }, { type: 'replaceProject', project: other(), path: null });
+    expect(s.page).toBe('keys');
+    expect(s.metronome).toBe(true);
+    expect(s.filePath).toBeNull();
+  });
+
+  it('marks what was written as saved, even when the project has changed since', () => {
+    let s = run(initialState(), { type: 'edit', change: (p) => setBpm(p, 100) });
+    const written = s.history.present;
+    s = run(s, { type: 'edit', change: (p) => setBpm(p, 90) }, { type: 'saved', path: 'songs/b.modernstudio', project: written });
+    expect(s.filePath).toBe('songs/b.modernstudio');
+    expect(s.savedProject).toBe(written);
+    expect(s.history.present.bpm).toBe(90);
+    expect(canUndo(s.history)).toBe(true);
+  });
+
+  it('sets and clears the notice', () => {
+    const s = run(initialState(), { type: 'setNotice', message: 'Could not save.' });
+    expect(s.notice).toBe('Could not save.');
+    expect(run(s, { type: 'setNotice', message: 'Could not save.' })).toBe(s);
+    expect(run(s, { type: 'setNotice', message: null }).notice).toBeNull();
+  });
+});

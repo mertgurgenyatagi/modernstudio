@@ -9,6 +9,7 @@ import type { Project } from '../core/project';
 import { canUndo } from '../core/history';
 import { initialState, playRequestFor, reduce, type Action, type AppState } from './appState';
 import { isTypingTarget } from './keys';
+import { useFiles, type FileActions } from './useFiles';
 
 interface Studio {
   state: AppState;
@@ -21,6 +22,9 @@ interface Studio {
   togglePlay: () => void;
   /** Moves the playhead to a bar (0 based); if playing, playback restarts from there. */
   seek: (bar: number) => void;
+  /** Replaces the project (New, Open, later MIDI import): a new history, playback stopped, the playhead at the start. Ask `files.confirmDiscard()` first. */
+  replaceProject: (project: Project, path?: string | null) => void;
+  files: FileActions;
 }
 
 const StudioContext = createContext<Studio | null>(null);
@@ -88,6 +92,16 @@ export function StudioProvider({ children }: { children: ReactNode }) {
     dispatch({ type: 'stopped' });
   }, [engine]);
 
+  const replaceProject = useCallback(
+    (next: Project, path: string | null = null) => {
+      stop();
+      dispatch({ type: 'replaceProject', project: next, path });
+    },
+    [stop],
+  );
+
+  const files = useFiles(state, dispatch, replaceProject);
+
   const togglePlay = useCallback(() => {
     if (state.playing) stop();
     else play();
@@ -115,8 +129,8 @@ export function StudioProvider({ children }: { children: ReactNode }) {
   }, [togglePlay]);
 
   const value = useMemo<Studio>(
-    () => ({ state, project, dispatch, engine, canUndo: canUndo(state.history), play, stop, togglePlay, seek }),
-    [state, project, engine, play, stop, togglePlay, seek],
+    () => ({ state, project, dispatch, engine, canUndo: canUndo(state.history), play, stop, togglePlay, seek, replaceProject, files }),
+    [state, project, engine, play, stop, togglePlay, seek, replaceProject, files],
   );
   return <StudioContext.Provider value={value}>{children}</StudioContext.Provider>;
 }

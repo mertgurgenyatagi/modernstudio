@@ -43,6 +43,12 @@ export interface AppState {
   selectedBlock: { instrument: InstrumentId; startBar: number } | null;
   /** Set when the recorded sounds could not be loaded. */
   soundsError: string | null;
+  /** The file the project is saved in, or null for a project that has not been saved yet. */
+  filePath: string | null;
+  /** The project as last saved or opened. "Unsaved changes" means the present project differs from it (core/fileState.ts). */
+  savedProject: Project;
+  /** A quiet line about a file command (it could not be opened or saved), or null. Not saved, not undone. */
+  notice: string | null;
 }
 
 export function initialState(project: Project = createProject()): AppState {
@@ -59,6 +65,9 @@ export function initialState(project: Project = createProject()): AppState {
     brush: 'drums',
     selectedBlock: null,
     soundsError: null,
+    filePath: null,
+    savedProject: project,
+    notice: null,
   };
 }
 
@@ -81,7 +90,12 @@ export type Action =
   | { type: 'selectBlock'; block: { instrument: InstrumentId; startBar: number } | null }
   | { type: 'started' }
   | { type: 'stopped' }
-  | { type: 'soundsFailed'; message: string };
+  | { type: 'soundsFailed'; message: string }
+  /** New, Open and (later) MIDI import: a different project, with a new history, no playback and the playhead at the start. */
+  | { type: 'replaceProject'; project: Project; path: string | null }
+  /** The project was written to `path`: that is now the saved state. `project` is what was written, not necessarily the present one. */
+  | { type: 'saved'; path: string; project: Project }
+  | { type: 'setNotice'; message: string | null };
 
 /** A meter change moves the bar lines under the playhead, so playback stops (the engine stops itself too). */
 function stopOnMeterChange(before: AppState, after: AppState): AppState {
@@ -135,6 +149,21 @@ export function reduce(state: AppState, action: Action): AppState {
       return state.playing ? { ...state, playing: false } : state;
     case 'soundsFailed':
       return { ...state, soundsError: action.message };
+    case 'replaceProject':
+      return {
+        ...state,
+        history: newHistory(action.project),
+        playing: false,
+        startBar: 0,
+        selectedBlock: null,
+        filePath: action.path,
+        savedProject: action.project,
+        notice: null,
+      };
+    case 'saved':
+      return { ...state, filePath: action.path, savedProject: action.project, notice: null };
+    case 'setNotice':
+      return action.message === state.notice ? state : { ...state, notice: action.message };
   }
 }
 
