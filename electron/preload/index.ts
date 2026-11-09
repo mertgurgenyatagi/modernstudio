@@ -18,6 +18,7 @@ const files: FilesBridge = {
   save: (path, text, suggestedName) => ipcRenderer.invoke(CHANNELS.save, path, text, suggestedName),
   saveAs: (text, suggestedName) => ipcRenderer.invoke(CHANNELS.saveAs, text, suggestedName),
   exportWav: (bytes, suggestedName) => ipcRenderer.invoke(CHANNELS.exportWav, bytes, suggestedName),
+  exportMidi: (bytes, suggestedName) => ipcRenderer.invoke(CHANNELS.exportMidi, bytes, suggestedName),
   confirmDiscard: (name) => ipcRenderer.invoke(CHANNELS.confirmDiscard, name),
   setDirty: (dirty) => ipcRenderer.send(CHANNELS.setDirty, dirty),
   closeWindow: () => ipcRenderer.send(CHANNELS.closeWindow),

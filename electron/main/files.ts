@@ -19,6 +19,7 @@ import {
 } from '../../src/core/fileBridge';
 import { FILE_EXTENSION, baseName, ensureExtension, hasProjectExtension, projectName } from '../../src/core/fileState';
 import { parseSettings, serializeSettings } from '../../src/core/settings';
+import { MIDI_EXTENSION, ensureMidiExtension } from '../../src/core/midi/export';
 import { WAV_EXTENSION, ensureWavExtension } from '../../src/core/wav';
 
 const FILTERS = [{ name: `${APP_NAME} project`, extensions: [FILE_EXTENSION] }];
@@ -138,6 +139,24 @@ async function exportWav(win: BrowserWindow | undefined, bytes: Uint8Array, sugg
   return { kind: 'saved', path };
 }
 
+/** Asks where to put the MIDI export and writes it. Like the WAV export, it is not remembered and does not change the project. */
+async function exportMidi(win: BrowserWindow | undefined, bytes: Uint8Array, suggestedName: string): Promise<SaveResult> {
+  const options = {
+    title: 'Export MIDI',
+    defaultPath: join(app.getPath('documents'), baseName(suggestedName)),
+    filters: [{ name: 'MIDI file', extensions: [MIDI_EXTENSION, 'midi'] }],
+  };
+  const chosen = win ? await dialog.showSaveDialog(win, options) : await dialog.showSaveDialog(options);
+  if (chosen.canceled || !chosen.filePath) return { kind: 'cancelled' };
+  const path = ensureMidiExtension(chosen.filePath);
+  try {
+    await writeFileAtomic(path, bytes);
+  } catch (error) {
+    return { kind: 'error', message: `${baseName(path)} could not be exported: ${messageOf(error)}` };
+  }
+  return { kind: 'saved', path };
+}
+
 async function confirmDiscard(win: BrowserWindow | undefined, name: string): Promise<DiscardChoice> {
   const options = {
     type: 'warning' as const,
@@ -185,6 +204,12 @@ export function registerFileHandlers(): void {
       return { kind: 'error', message: 'The audio could not be read for exporting.' };
     }
     return exportWav(windowOf(event), bytes, suggestedName);
+  });
+  ipcMain.handle(CHANNELS.exportMidi, (event, bytes: unknown, suggestedName: unknown): Promise<SaveResult> | SaveResult => {
+    if (!(bytes instanceof Uint8Array) || bytes.length === 0 || !isText(suggestedName)) {
+      return { kind: 'error', message: 'The MIDI file could not be read for exporting.' };
+    }
+    return exportMidi(windowOf(event), bytes, suggestedName);
   });
   ipcMain.handle(CHANNELS.confirmDiscard, (event, name: unknown) => confirmDiscard(windowOf(event), isText(name) ? name : projectName(null)));
   ipcMain.on(CHANNELS.setDirty, (event, dirty: unknown) => {
