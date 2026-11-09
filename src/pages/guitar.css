@@ -1,0 +1,343 @@
+/*
+ * The String cards (docs/page-designs.md): a main column on the paper-3 ground and a 15rem panel at
+ * the right on paper-2, with a 1px ink rule between them. The pattern row and the tools row stay at
+ * the top of the main column; the cards scroll up and down under them, and sideways as one piece
+ * (the page itself never does). The width of a tick (--tick-px) is the one number the cards hang on:
+ * at most 14 px, never wider than makes one bar fit, and with "Show whole pattern" the whole pattern
+ * fits. --s and --w on a note are its start and length in ticks.
+ */
+.guitar {
+  --label-w: 2.2rem;
+  --row-h: 1.3rem;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 15rem;
+  height: 100%;
+  min-height: 0;
+}
+
+.guitar-main {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  min-width: 0;
+  min-height: 0;
+  padding: 0.5rem 1rem 0;
+}
+
+.guitar-head {
+  display: flex;
+  align-items: baseline;
+  gap: 0.25rem 1rem;
+}
+
+.guitar h1 {
+  margin: 0;
+  font: 700 1.4rem/1.1 var(--font-display);
+}
+
+.guitar-tools {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 1.5rem;
+}
+
+/* Length and Note value sit in a row here; the buttons are the shared ones. */
+.guitar-tools .tool-length {
+  grid-template-columns: repeat(4, auto);
+}
+
+.guitar-tools .tool-values {
+  grid-template-columns: repeat(6, auto);
+}
+
+/* ---- Cards ---- */
+.cards-scroll {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  container-type: inline-size;
+}
+
+.cards {
+  --tick-px: min(14px, calc((100cqw - var(--label-w) - 2px) / var(--bar-ticks)));
+  position: relative;
+  width: calc(var(--label-w) + 2px + var(--tick-px) * var(--total));
+  padding-bottom: 0.75rem;
+}
+
+.cards.whole {
+  --tick-px: calc((100cqw - var(--label-w) - 2px) / var(--total));
+}
+
+.ruler-row {
+  position: sticky;
+  top: 0;
+  z-index: 3;
+  display: flex;
+  height: 1.4rem;
+  padding-left: 1px;
+  background: var(--color-paper-3);
+}
+
+.ruler-spacer {
+  position: sticky;
+  left: 0;
+  flex: 0 0 var(--label-w);
+  background: var(--color-paper-3);
+}
+
+.ruler {
+  position: relative;
+  flex: 0 0 auto;
+  width: calc(var(--tick-px) * var(--total));
+}
+
+.tick-label {
+  position: absolute;
+  top: 0;
+  left: calc(var(--tick-px) * var(--s));
+  width: calc(var(--tick-px) * var(--w));
+  padding: 0.25rem 0 0 0.25rem;
+  overflow: hidden;
+  white-space: nowrap;
+  font: 400 0.7rem/1 var(--font-outlier);
+  color: var(--color-muted);
+}
+
+.tick-label.bar-start {
+  color: var(--color-ink);
+}
+
+.card {
+  margin-bottom: 0.6rem;
+  background: var(--color-paper-2);
+  border: 1px solid var(--color-ink);
+}
+
+.card-head {
+  position: sticky;
+  left: 0;
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+  width: max-content;
+  padding: 0.2rem 0.5rem;
+}
+
+.card-name {
+  font: 700 1.05rem/1.2 var(--font-display);
+}
+
+.card-sub {
+  font-size: 0.75rem;
+  color: var(--color-muted);
+}
+
+.fret-line {
+  display: flex;
+  height: var(--row-h);
+  border-top: 1px solid var(--color-rule);
+}
+
+.fret-label {
+  position: sticky;
+  left: 0;
+  z-index: 1;
+  flex: 0 0 var(--label-w);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font: 400 0.7rem/1 var(--font-outlier);
+  color: var(--color-muted);
+  background: var(--color-paper-2);
+  border-right: 1px solid var(--color-rule);
+}
+
+.fret-line.open .fret-label,
+.fret-line.open .fret-row {
+  background-color: var(--color-paper-3);
+}
+
+/* A hairline at every beat, a heavier one at every bar. Clicking anywhere in the row places a note. */
+.fret-row {
+  position: relative;
+  flex: 0 0 auto;
+  width: calc(var(--tick-px) * var(--total));
+  cursor: crosshair;
+  background-image:
+    repeating-linear-gradient(
+      to right,
+      var(--color-ink) 0,
+      var(--color-ink) 1px,
+      transparent 1px,
+      transparent calc(var(--tick-px) * var(--bar-ticks))
+    ),
+    repeating-linear-gradient(
+      to right,
+      var(--color-rule) 0,
+      var(--color-rule) 1px,
+      transparent 1px,
+      transparent calc(var(--tick-px) * 12)
+    );
+}
+
+/* ---- Notes: an ink square showing its fret, as wide as its length ---- */
+.note {
+  position: absolute;
+  top: 2px;
+  bottom: 2px;
+  left: calc(var(--tick-px) * var(--s) + 1px);
+  width: max(4px, calc(var(--tick-px) * var(--w) - 2px));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  color: var(--color-accent-ink);
+  background: var(--color-accent);
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+}
+
+.note.dragging {
+  cursor: grabbing;
+  opacity: 0.85;
+}
+
+.note.selected {
+  outline: 2px solid var(--color-ink);
+  outline-offset: 1px;
+}
+
+.note-fret {
+  font: 400 0.7rem/1 var(--font-outlier);
+  pointer-events: none;
+}
+
+.note-grip {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 6px;
+  cursor: ew-resize;
+  border-left: 1px solid color-mix(in oklch, var(--color-accent-ink) 45%, transparent);
+}
+
+.cards-playhead {
+  position: absolute;
+  top: 1.4rem;
+  bottom: 0;
+  left: calc(var(--label-w) + 1px);
+  z-index: 2;
+  display: none;
+  width: 2px;
+  margin-left: -1px;
+  background: var(--color-ink);
+  pointer-events: none;
+  outline: 1px solid var(--color-paper-3);
+}
+
+/* ---- Side panel ---- */
+.guitar-side {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  min-height: 0;
+  padding: 0.7rem 0.9rem;
+  overflow-y: auto;
+  background: var(--color-paper-2);
+  border-left: 1px solid var(--color-ink);
+}
+
+.side-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.side-buttons {
+  display: grid;
+  gap: 0.2rem;
+}
+
+.side-frets {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.2rem;
+}
+
+.side-buttons button,
+.side-frets button {
+  appearance: none;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 0.3rem 0.5rem;
+  font: 500 0.85rem/1.2 var(--font-body);
+  color: var(--color-ink);
+  background: var(--color-paper-2);
+  border: 1px solid var(--color-ink);
+  border-radius: 0;
+  cursor: pointer;
+}
+
+.side-frets button {
+  justify-content: center;
+  font-family: var(--font-outlier);
+}
+
+.side-buttons button[aria-checked='true'],
+.side-frets button[aria-checked='true'] {
+  color: var(--color-accent-ink);
+  background: var(--color-accent);
+}
+
+.side-sub {
+  font-size: 0.7rem;
+  opacity: 0.7;
+}
+
+/* The shared envelope strip is a row of four; in the panel it is a column. */
+.guitar-side .envelope {
+  grid-template-columns: 1fr;
+}
+
+.guitar-side .envelope-cell {
+  padding: 0.25rem 0;
+  border-left: 0;
+}
+
+/* Narrow windows: one column. The panel moves under the cards, in two columns; the cards scroll
+   sideways as one piece and the page scrolls up and down. */
+@media (max-width: 720px) {
+  .guitar {
+    grid-template-columns: minmax(0, 1fr);
+    height: auto;
+  }
+
+  .guitar-main {
+    padding: 0.5rem 0.75rem 0;
+  }
+
+  .cards-scroll {
+    flex: none;
+    overflow-y: visible;
+    overflow-x: auto;
+  }
+
+  .ruler-row {
+    position: static;
+  }
+
+  .guitar-side {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    border-left: 0;
+    border-top: 1px solid var(--color-ink);
+  }
+
+  .bank-numbers {
+    grid-template-columns: repeat(10, minmax(0, 1.9rem));
+  }
+}
