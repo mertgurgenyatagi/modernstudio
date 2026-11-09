@@ -4,7 +4,7 @@ The build plan, run one step per invocation of the `/plan24` skill ([.claude/ski
 
 Horizon: 24
 Last completed step: 12
-Replanned after step: 9
+Replanned after step: 12
 Plan complete: no
 
 The plan is replanned after every third completed step (3, 6, 9, and so on). Done steps are history and are never changed by a replan.
@@ -19,7 +19,53 @@ The plan is replanned after every third completed step (3, 6, 9, and so on). Don
 
 ## Next three steps
 
-Replanned after step 9 (2026-11-09). Steps 1 to 12 are built and in the history below. Step 12 is a multiple of 3, so the next `/plan24` run replans first (details for steps 13 to 15, in the "Later steps" below), then builds step 13. The horizon stays at 24.
+Replanned after step 12 (2026-11-09). The horizon stays at 24 and the order is unchanged. Steps 13 to 15 are in detail below; steps 16 to 24 are in "Later steps".
+
+### Step 13: MIDI file reader, writer and export
+
+**Produces:** the MIDI file layer and the Export MIDI command. The import steps 14 to 16 build on the reader.
+
+- **Reader (`src/core/midi/read.ts`, pure, tested):** parses format 0 and 1 files into tracks of events (note on and off with absolute tick, channel, track name, program, tempo changes, time signatures), the time division and the end tick. Handles running status, variable-length quantities and note-on with velocity 0 as note off, and ignores other meta and sysex events. Format 2 and SMPTE division are refused with a message that says what the file has. A port of `tools/midi-prototype/midilib.py`.
+- **Writer (`src/core/midi/write.ts`, pure, tested):** a small track-and-event writer (VLQ, meta events, end of track) producing a standard MIDI file as bytes. Tests read the bytes back with the reader.
+- **Export (`src/core/midi/export.ts`, pure, tested):** the Song flattened as [midi-import.md](midi-import.md) says: format 1, 480 ticks per quarter, a conductor track (BPM, meter) and five named tracks; the programs and channels of [sound.md](sound.md) (Bass 33 on channel 1, Rhythm Guitar 26 on 2, Lead Guitar 26 on 3, Keys 54 on 4, Drums on 10), drum rows as 36, 38, 42, 46, 49 (each hit a short note), string notes as pitches, controller 7 from instrument volume and master volume, velocity 100. Mute and isolate are ignored. It uses the Song plan of `playback.ts` for the notes, so export and playback agree. An empty Song says "The Song has no blocks, so there is nothing to export."
+- **Plumbing:** `files.exportMidi(bytes, suggestedName)` in the bridge with a Save dialog in the main process (filter `.mid`), like `exportWav`; a hook `useMidiExport` like `useWavExport`; an "Export MIDI" button in the Mixer footer row next to "Export WAV".
+
+**Relies on:** steps 2, 4, 11 and 12; [midi-import.md](midi-import.md) (the Export section); [sound.md](sound.md); the prototype's `midilib.py`.
+
+**Done when:** tests pass for the reader (including the real files in `midis/`: the eleven album files parse, with track and note counts equal to the prototype's where it prints them), the writer round trip and the export (pitches, positions, lengths, channels, programs, controller 7, the empty Song); typecheck, lint, test and build pass. The dialog is type checked and built, not run.
+
+**Decisions it may need:** a drum hit's length (assumed one 16th, 120 ticks); the controller 7 value (assumed round(volume x master / 100 x 127 / 100), recorded in open-items).
+
+### Step 14: MIDI import, part one: time, tempo, drums, range
+
+**Produces:** the first half of the converter as pure code in `src/core/midi/`, checked against the Python prototype.
+
+- **Mapping guesses (`guess.ts`):** the track list with the pre-filled assignment of [midi-import.md](midi-import.md) (channel 10, "bass", vocals, program families; Bass and Keys take the busiest track, guitars named or busiest; the rest Skip; per-row note counts).
+- **Tempo, meter and pickup (`timing.ts`):** the dominant tempo (clamped 40 to 300, 120 if none), the dominant meter (4/4 and 3/4 only, else a refusal that names the meter), the pickup shift, and the notes about ignored tempo and meter changes for the report.
+- **Grid snapping (`quantize.ts`):** starts and ends to the allowed positions in twelfths (0, 2, 3, 4, 6, 8, 9, 10; ties go to the straight 16th), minimum length 2 twelfths, the overlap and duplicate rules, the 256-bar cut.
+- **Drums and range (`drums.ts`, `range.ts`):** the channel-10 map to the five rows with the dropped sounds counted; the octave folding into each instrument's range (counting moved notes), parameterised by the fret count (the choice of the count is step 15).
+- **A check against the prototype:** a script `tools/midi-prototype/dump.py` writes the prototype's numbers for the eleven album files (tempo, meter, shift, bars, note counts after snapping, dropped hits, octave shifts) to a JSON fixture in `src/core/midi/fixtures/`; a test runs the TypeScript on the same files from `midis/` and compares. If Python cannot run, the step compares against the figures in the [midi-import.md](midi-import.md) album table and records the gap in open-items.
+
+**Relies on:** step 13, [midi-import.md](midi-import.md), the prototype's `pipeline.py` and `report.py`.
+
+**Done when:** unit tests for each piece pass, the album comparison passes for all eleven files; typecheck, lint, test and build pass.
+
+**Decisions it may need:** where the converter's types live (`src/core/midi/types.ts`); how a refusal is returned (a result type with a message, never an exception); ties at exact midpoints (the prototype's rule).
+
+### Step 15: MIDI import, part two: strings and frets
+
+**Produces:** the fingering search as pure code, checked against the prototype.
+
+- **Fingering (`src/core/midi/fretting.ts`):** chord grouping, the cheapest 24 arrangements per chord (a shared string only if nothing else exists), the group and transition costs of [midi-import.md](midi-import.md), the `f` decay by gap, Viterbi with the per-survivor ringing check. A port of `fretting.py` with the same weights.
+- **Fret count choice:** run at 5, 7 and 12, the penalty (3 per octave-moved note, 2 per chord with two notes on one string, 1 per ringing clash), the smallest count within `max(1, 0.2% of the notes)` of the best.
+- **API:** `fingerTrack(notes, tuning, fretCount)` and `chooseFretCount(notes, tuning)`, returning string, fret and the metrics the report needs. The use once per distinct pattern comes in step 16.
+- **Tests:** hand-made cases (a lone note on its lowest string; a chord on distinct strings; open strings do not move the hand; every result has the input pitch; a chord that cannot be placed on distinct strings falls back to a shared string), and a comparison with the prototype's fret counts and metrics on the eleven files, run on whole tracks.
+
+**Relies on:** step 14, [midi-import.md](midi-import.md), `fretting.py`, `instruments.ts` (tunings).
+
+**Done when:** tests pass; the chosen fret counts of the 33 guitar and bass parts equal the prototype's; typecheck, lint, test and build pass; the longest part (Barely Legal's rhythm guitar) finishes in a few seconds (noted in open-items).
+
+**Decisions it may need:** exact float equality with the prototype is not required, only the same fingering choices except for recorded ties; the cap of 24 and the weights stay as in the docs.
 
 ## Done steps (history)
 
@@ -240,13 +286,10 @@ Replanned after step 9 (2026-11-09). Steps 1 to 12 are built and in the history 
 
 ## Later steps
 
-Broad strokes only. The next replan (the first `/plan24` run after step 12) details steps 13 to 15. The horizon stays at 24; the order is unchanged.
+Broad strokes only. The next replan (the first `/plan24` run after step 15) details steps 16 to 18. The horizon stays at 24; the order is unchanged.
 
-- 13: MIDI file reader and writer, and MIDI export.
-- 14: MIDI import, part one: tempo, meter, pickup bars, time grid, drum mapping, pitch range, checked against the Python prototype.
-- 15: MIDI import, part two: string and fret choice (Viterbi) and the fret count.
-- 16: MIDI import, part three: patterns and Song lanes (the tiling).
-- 17: MIDI import screens: Import and Export buttons on the Mixer, the mapping step, the report.
+- 16: MIDI import, part three: patterns and Song lanes (the tiling), fingering once per distinct pattern, and building a project from the result.
+- 17: MIDI import screens: the Import MIDI button on the Mixer, the unsaved prompt, the mapping step, the report.
 - 18: Check the eleven album files end to end against the prototype's numbers.
 - 19: Fit pass at 960 by 540 for every page, and the vertical scroll of the Guitar editor.
 - 20: Installer with `electron-builder`; the runtime-only parts excluded from the package.
