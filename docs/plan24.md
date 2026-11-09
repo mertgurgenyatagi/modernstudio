@@ -3,7 +3,7 @@
 The build plan, run one step per invocation of the `/plan24` skill ([.claude/skills/plan24/SKILL.md](../.claude/skills/plan24/SKILL.md)). Step numbers are plan24's own and have nothing to do with the older branches `00-overall` to `04-guitars`.
 
 Horizon: 24
-Last completed step: 5
+Last completed step: 6
 Replanned after step: 3
 Plan complete: no
 
@@ -19,23 +19,9 @@ The plan is replanned after every third completed step (3, 6, 9, and so on). Don
 
 ## Next three steps
 
-Replanned after step 3 (2026-11-09). Steps 4 and 5 are built and moved to the history below; step 6 is the one left of this batch. The next replan comes after step 6.
+Replanned after step 3 (2026-11-09). Steps 4 to 6 are built and moved to the history below. The next replan comes before step 7, which is the next to build.
 
-### Step 6: The Song page
-
-**Produces:** the "Brush bar" ([page-designs.md](page-designs.md)).
-
-- Toolbar: position readout "Bar 6 of 12", the brush (instrument choice, pattern stepper that skips empty patterns). The page's own Play button is dropped for the shared bar.
-- Timeline of bar numbers; click a bar moves the playhead; playback starts from there. 16 bars visible, scrolling sideways to 256 (the lanes scroll as one piece, the page never does).
-- Five lanes with their blocks (pattern number large). The brush lane shows a dashed ghost block, snapped to the bar and as wide as the pattern. Click an empty bar to place (through `song.ts`, refused placements say why in a quiet line).
-- Drag a block to move it (snaps, refused if it would overlap); select a block by clicking, Delete removes it. The playhead is a 2 px line through all lanes and moves while playing.
-- The block-and-ghost geometry (bar to pixel, bar from pixel, the drop position) is pure code in `src/core/` or `src/pages/song/` with tests.
-
-**Relies on:** steps 4 and 5 (the store already has `startBar` and the `setStartBar` action, and Play on the Song page plays the Song from it; the page draws the playhead from `engine.position()`), [patterns-and-song.md](patterns-and-song.md), `song.ts`.
-
-**Done when:** geometry tests pass; typecheck, lint, test and build pass; the page reasoned to fit 960 by 540.
-
-**Decisions it may need:** how a drag that would overlap behaves (assumed: the block snaps back and the reason shows); the playhead position after Stop (assumed: stays where it was started).
+No step is detailed here until that replan.
 
 ## Done steps (history)
 
@@ -129,9 +115,27 @@ Replanned after step 3 (2026-11-09). Steps 4 and 5 are built and moved to the hi
 
 **Built (2026-11-09):** `src/state/appState.ts` (the reducer and `playRequestFor`), `src/state/Studio.tsx` (the store: reducer plus engine, and Space), `src/ui/` (top bar, slider, number field), `src/pages/Mixer.tsx`, and placeholders for the other four pages. The engine got a guard so that a Stop or a second Play during loading cancels the first Play. Assumptions are in [open-items.md](open-items.md). Not heard or seen by the step, as planned: the user's check is `npm run dev`.
 
+### Step 6: The Song page
+
+**Produces:** the "Brush bar" ([page-designs.md](page-designs.md)).
+
+- Toolbar: position readout "Bar 6 of 12", the brush (instrument choice, pattern stepper that skips empty patterns). The page's own Play button is dropped for the shared bar.
+- Timeline of bar numbers; click a bar moves the playhead; playback starts from there. 16 bars visible, scrolling sideways to 256 (the lanes scroll as one piece, the page never does).
+- Five lanes with their blocks (pattern number large). The brush lane shows a dashed ghost block, snapped to the bar and as wide as the pattern. Click an empty bar to place (through `song.ts`, refused placements say why in a quiet line).
+- Drag a block to move it (snaps, refused if it would overlap); select a block by clicking, Delete removes it. The playhead is a 2 px line through all lanes and moves while playing.
+- The block-and-ghost geometry (bar to pixel, bar from pixel, the drop position) is pure code in `src/core/` or `src/pages/song/` with tests.
+
+**Relies on:** steps 4 and 5 (the store already has `startBar` and the `setStartBar` action, and Play on the Song page plays the Song from it; the page draws the playhead from `engine.position()`), [patterns-and-song.md](patterns-and-song.md), `song.ts`.
+
+**Done when:** geometry tests pass; typecheck, lint, test and build pass; the page reasoned to fit 960 by 540.
+
+**Decisions it may need:** how a drag that would overlap behaves (assumed: the block snaps back and the reason shows); the playhead position after Stop (assumed: stays where it was started).
+
+**Built (2026-11-09):** `src/pages/Song.tsx` and `song.css`, with the pure parts in `src/pages/song/` (`geometry.ts`, `brush.ts`, both tested); the store got `brush`, `selectedBlock` and `seek`. Assumptions are in [open-items.md](open-items.md). Not looked at, as planned.
+
 ## Later steps
 
-Broad strokes only. The next replan (after step 6) details steps 7 to 9. Step 6 is detailed above. The horizon stays at 24; the order is unchanged.
+Broad strokes only. The next replan (the next `/plan24` run, since step 6 is a multiple of 3) details steps 7 to 9. The horizon stays at 24; the order is unchanged.
 
 - 7: The Drums page, "the Pad machine", including pad grids for the other note values and for 2x to 8x patterns.
 - 8: The Guitar page, "the String cards", for Bass, Rhythm Guitar and Lead Guitar, with 5, 7 and 12 fret layouts.
@@ -160,7 +164,7 @@ Broad strokes only. The next replan (after step 6) details steps 7 to 9. Step 6 
 | 3 | Capture the sounds | done | 03-sounds |
 | 4 | Audio engine | done | 04-audio |
 | 5 | App shell and the Mixer page | done | 05-shell |
-| 6 | The Song page | todo | |
+| 6 | The Song page | done | 06-song |
 | 7 | The Drums page | todo | |
 | 8 | The Guitar page | todo | |
 | 9 | The Keys page | todo | |
