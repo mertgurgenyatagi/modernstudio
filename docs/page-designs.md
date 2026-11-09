@@ -39,6 +39,13 @@ None of this is in the questionnaire answers. Change it if wrong.
 
 The drawn version is design 02 in [exhibition/mixer.html](exhibition/mixer.html). The other sixteen stay there as the record of what was considered.
 
+### The import panels (the assistant's design, not drawn in an exhibition)
+
+The Mixer's footer row holds three buttons, Import MIDI, Export WAV and Export MIDI. Import MIDI opens two panels in turn. Both are one frame: a dimmed scrim over the whole window and a panel on the paper tint, at most 56 rem wide and the window's height less a 1 rem margin, bordered in ink, with the title in the display face and the file name in the mono face. Only one part of each panel scrolls, so the buttons at the foot are always in view at 960 by 540. Where a lane is too long the palette has no second colour, so a warning is bold and underlined. Built in plan24 steps 17 and 18; the details and assumptions are in [open-items.md](open-items.md).
+
+- **The mapping step.** Header, a line with the tempo and meter that will be used, a five-cell summary (per instrument: its patterns and fret count, or "no track"), the track list (name, channel, program, notes, what the choice comes to, and a six-way choice Drums, Bass, Rhythm, Lead, Keys, Skip, the chosen one filled), and Import and Cancel. Escape cancels.
+- **The report.** Header, a headline ("96 BPM · 4/4 · 57 bars"), the sentences about tempo, meter and limits, then one row per instrument (its name and track at the left; notes, octave moves, frets, patterns and blocks at the right, warnings in bold under them), and Close. It shows once after the import. Escape or Close dismisses it.
+
 ## Song: the Brush bar
 
 Chosen on 2026-11-08 from [exhibition/song.html](exhibition/song.html), design 08. Ten designs were built. None was opened in a browser; they were only checked with the static lint, so the picked layout is unseen rendered.
