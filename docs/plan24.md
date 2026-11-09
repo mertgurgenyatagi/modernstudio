@@ -3,7 +3,7 @@
 The build plan, run one step per invocation of the `/plan24` skill ([.claude/skills/plan24/SKILL.md](../.claude/skills/plan24/SKILL.md)). Step numbers are plan24's own and have nothing to do with the older branches `00-overall` to `04-guitars`.
 
 Horizon: 24
-Last completed step: 20
+Last completed step: 21
 Replanned after step: 18
 Plan complete: no
 
@@ -19,22 +19,11 @@ The plan is replanned after every third completed step (3, 6, 9, and so on). Don
 
 ## Next three steps
 
-Replanned after step 18 (2026-11-09). The horizon stays at 24; the order is unchanged. The plan ends at step 22; 23 and 24 are reserves. Steps 19 and 20 are done (see the history below); step 21 is next, and the next replan comes after step 21.
+Replanned after step 18 (2026-11-09). The horizon stays at 24; the order is unchanged. The plan ends at step 22; 23 and 24 are reserves. Steps 19 to 21 are done (see the history below). Step 22 is next; since 21 is a multiple of 3, the next invocation replans first (nothing but step 22 and the reserves is left to plan), then builds step 22.
 
-### Step 21: Open items and questionnaire 17
+### Step 22: Final pass and handover
 
-**Produces:** an `open-items.md` a person can read in ten minutes, and the final word on the questions that were left open.
-
-- **Questionnaire 17:** its five questions are all settled by the build: Undo restores notes deleted by a meter change (step 2), Delete removes the selected note (step 10), copying replaces by default and adds when chosen (steps 2 and 10), Keys labels the Cs only (step 9), and the third value (assumed in step 7: the grid shows the steps of the chosen value, and off-grid hits are narrow marks). The step writes one short table that says so, with the step that settled each and how the user can overturn it, in [open-items.md](open-items.md) and a note at the top of [questionnaire_answers/](questionnaire_answers/) is **not** added (the answers folder is verbatim; nothing there is touched).
-- **Restructure `open-items.md`:** three sections instead of one long list: *Decided* (no longer open), *Assumed by the builder* (the user may overturn; each with the step and the file where it lives), *Needs the user's check* (everything type checked and built but never run: sounds, envelope feel, Export WAV and MIDI, Import, Save and Open, the packaged app, the fit at 960 by 540). No fact is dropped; entries are grouped and shortened only where they repeat, and the step-by-step detail stays under its step.
-- **A checklist of what to try first** (`docs/first-run.md`, added to the reading order): about fifteen lines, in the order a person would try the app after `npm run dev`.
-- **Close or restate** items that later steps made untrue (for example "the four decided layouts draw their own Play and Undo buttons", "the Mixer has no Import button", "no `Copy notes to…` picker").
-
-**Relies on:** all of the earlier steps; [open-items.md](open-items.md), [pages.md](pages.md), [project-model.md](project-model.md).
-
-**Done when:** every statement in the three sections is checked against the code or a step's "Built" paragraph (a grep or a test, not memory); no item is left under "Not decided" that a step decided; links resolve (a script lists broken relative links in `docs/`); typecheck, lint, test and build pass.
-
-**Decisions it may need:** none beyond the structure. Anything found undecided on the way is decided and recorded in the section it belongs to.
+Detailed at the replan that comes before it. In broad strokes: see "Later steps" below.
 
 ## Done steps (history)
 
@@ -394,9 +383,26 @@ Replanned after step 18 (2026-11-09). The horizon stays at 24; the order is unch
 
 **Built (2026-11-09):** `electron-builder.yml` (NSIS, x64, one-click, per user, app id `studio.modern.app`, no signing, no icon; output `release/`), the scripts `pack`, `dist` and `check:package`, and `tools/package/` (`rules.mjs`, `check.mjs`, `rules.test.ts`: five tests). React and the fonts moved to development dependencies since they are bundled into `out/`, so the package holds only `out/` and `package.json` (98 asar entries, none foreign). `npm run pack` and `npm run dist` both worked (the 123 MB installer was built); the built app was not started. `npm audit --omit=dev` finds 0; the 15 moderate advisories are `minimatch` in build and lint tools. Assumptions and the unchecked run-time points are in [open-items.md](open-items.md).
 
+### Step 21: Open items and questionnaire 17
+
+**Produces:** an `open-items.md` a person can read in ten minutes, and the final word on the questions that were left open.
+
+- **Questionnaire 17:** its five questions are all settled by the build: Undo restores notes deleted by a meter change (step 2), Delete removes the selected note (step 10), copying replaces by default and adds when chosen (steps 2 and 10), Keys labels the Cs only (step 9), and the third value (assumed in step 7: the grid shows the steps of the chosen value, and off-grid hits are narrow marks). The step writes one short table that says so, with the step that settled each and how the user can overturn it, in [open-items.md](open-items.md) and a note at the top of [questionnaire_answers/](questionnaire_answers/) is **not** added (the answers folder is verbatim; nothing there is touched).
+- **Restructure `open-items.md`:** three sections instead of one long list: *Decided* (no longer open), *Assumed by the builder* (the user may overturn; each with the step and the file where it lives), *Needs the user's check* (everything type checked and built but never run: sounds, envelope feel, Export WAV and MIDI, Import, Save and Open, the packaged app, the fit at 960 by 540). No fact is dropped; entries are grouped and shortened only where they repeat, and the step-by-step detail stays under its step.
+- **A checklist of what to try first** (`docs/first-run.md`, added to the reading order): about fifteen lines, in the order a person would try the app after `npm run dev`.
+- **Close or restate** items that later steps made untrue (for example "the four decided layouts draw their own Play and Undo buttons", "the Mixer has no Import button", "no `Copy notes to…` picker").
+
+**Relies on:** all of the earlier steps; [open-items.md](open-items.md), [pages.md](pages.md), [project-model.md](project-model.md).
+
+**Done when:** every statement in the three sections is checked against the code or a step's "Built" paragraph (a grep or a test, not memory); no item is left under "Not decided" that a step decided; links resolve (a script lists broken relative links in `docs/`); typecheck, lint, test and build pass.
+
+**Decisions it may need:** none beyond the structure. Anything found undecided on the way is decided and recorded in the section it belongs to.
+
+**Built (2026-11-09):** [open-items.md](open-items.md) is regrouped into *Questionnaire 17* (a table: question, how it was settled, step, file, how to overturn), *Decided*, *Assumed by the builder* (the pre-build choices, then each step's items in step order) and *Needs the user's check*. Every old entry is kept; entries that later steps made untrue were restated in place (the Play and Undo buttons of the four layouts, the Mixer's three buttons, "Copy notes to…", the "+20" control, Delete, the fret warning, the "nobody has heard it" line). [first-run.md](first-run.md) is the fourteen-line list of what to try first. `npm run check:docs` (`tools/docs/check-links.mjs`) lists broken relative links and headings in `docs/` and the root README; it finds none (247 links in 35 files). Not run in a window, as planned.
+
 ## Later steps
 
-Broad strokes only. Step 21 is detailed above. The next replan comes at the start of the invocation after step 21. The horizon stays at 24.
+Broad strokes only. The replan after step 21 comes at the start of the next invocation and details step 22. The horizon stays at 24.
 
 - 22: Final lint, type check, test and build pass; documentation tidy (README and `docs/README.md` status paragraph shortened to the current state, `plan24.md` closed with `Plan complete: yes`); handover notes for the user (what is built, what was never run, what to try first). Ends the plan.
 - 23 and 24: Reserve for fixes and for anything that grew past one step; built only when the user asks.
@@ -425,7 +431,7 @@ Broad strokes only. Step 21 is detailed above. The next replan comes at the star
 | 18 | MIDI import screens 2: report, album check | done | 18-report |
 | 19 | Fit at 960 by 540 | done | 19-fit |
 | 20 | Installer | done | 20-installer |
-| 21 | Open items and questionnaire 17 | todo | |
+| 21 | Open items and questionnaire 17 | done | 21-open-items |
 | 22 | Final pass and handover | todo | |
 | 23 | Reserve | todo | |
 | 24 | Reserve | todo | |
