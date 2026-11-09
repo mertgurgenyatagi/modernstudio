@@ -3,7 +3,7 @@
 The build plan, run one step per invocation of the `/plan24` skill ([.claude/skills/plan24/SKILL.md](../.claude/skills/plan24/SKILL.md)). Step numbers are plan24's own and have nothing to do with the older branches `00-overall` to `04-guitars`.
 
 Horizon: 24
-Last completed step: 2
+Last completed step: 3
 Replanned after step: 0
 Plan complete: no
 
@@ -72,7 +72,7 @@ The plan is replanned after every third completed step (3, 6, 9, and so on). Don
 
 ## Later steps
 
-Broad strokes only. The next replan (after step 3) details steps 4 to 6.
+Broad strokes only. The next replan (after step 3, due at the start of the next invocation) details steps 4 to 6.
 
 - 4: Audio engine. Load the samples, schedule notes ahead of time in Web Audio, apply per-instrument envelope and volume, mute and isolate, master volume, level meters, the metronome, pattern loop and song playback, play from the clicked bar.
 - 5: App shell and the Mixer page. App state and Undo wired to the model, the transport bar (Play, Stop, metronome, Undo), the page switch (place undecided: ask), the Mixer layout "the Ledger".
@@ -101,7 +101,7 @@ Broad strokes only. The next replan (after step 3) details steps 4 to 6.
 | --- | --- | --- | --- |
 | 1 | Scaffold the app | done | 01-scaffold |
 | 2 | The project model | done | 02-model |
-| 3 | Capture the sounds | todo | 03-sounds |
+| 3 | Capture the sounds | done | 03-sounds |
 | 4 | Audio engine | todo | |
 | 5 | App shell and the Mixer page | todo | |
 | 6 | The Song page | todo | |

@@ -41,8 +41,13 @@ What the audition tool found (2026-11-08):
 
 - Playing the synth is not possible from a web page. Chrome and Edge hide the Microsoft GS Wavetable Synth from Web MIDI on purpose (Chromium blocklisted it in 2015 after a crash bug, and Firefox does the same). Windows itself has it, and the browser lists no outputs for it.
 - The audition tool plays it through a local Node script that calls the Windows MIDI API (winmm) through PowerShell. This works for playing. It has not been heard being recorded.
-- Recording is still open. Capturing system audio while the bridge plays the notes is the likely route. The final app plays the recorded files, so it does not need the bridge.
-- Fallback, accepted by the user in questionnaire 16: a free General MIDI soundfont with the same four instrument names, if the Windows synth cannot be recorded exactly.
+- Recording is solved (plan24 step 3, 2026-11-09): the bridge's PowerShell helper plays the notes while WASAPI loopback (`PyAudioWPatch`) captures the speakers' digital signal. Details in [sound.md](sound.md). The final app plays the recorded files, so it does not need the bridge.
+- Fallback, accepted by the user in questionnaire 16: a free General MIDI soundfont with the same four instrument names. Not needed.
+
+### As built (plan24 step 3)
+
+- `tools/sounds/` holds the capture script (Python, `capture.py`), its requirements and the checker (`check.mjs`, run by `npm run check:sounds`). The Python venv and the raw takes are not committed.
+- Python is a tool for regenerating the samples only. The app and its build do not need Python.
 
 ## Tooling installed
 
