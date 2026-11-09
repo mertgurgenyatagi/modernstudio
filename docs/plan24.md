@@ -3,7 +3,7 @@
 The build plan, run one step per invocation of the `/plan24` skill ([.claude/skills/plan24/SKILL.md](../.claude/skills/plan24/SKILL.md)). Step numbers are plan24's own and have nothing to do with the older branches `00-overall` to `04-guitars`.
 
 Horizon: 24
-Last completed step: 6
+Last completed step: 7
 Replanned after step: 6
 Plan complete: no
 
@@ -19,24 +19,7 @@ The plan is replanned after every third completed step (3, 6, 9, and so on). Don
 
 ## Next three steps
 
-Replanned after step 6 (2026-11-09). The horizon stays at 24 and the order is unchanged, except that "Show whole pattern" moves from step 10 into step 7 (the pad grid needs it for 8x patterns), and the pattern-bank, tool and envelope pieces are built once, in step 7, as shared parts that steps 8 and 9 reuse. The next replan comes before step 10.
-
-### Step 7: The Drums page, "the Pad machine"
-
-**Produces:** the Drums page ([page-designs.md](page-designs.md)) and the editor parts the Guitar and Keys pages reuse.
-
-- **Shared parts in `src/pages/editor/`:** the pattern bank (the shown pattern numbers in rows of ten; selected = ink-filled, with notes = ink outline, empty = grey outline, all selectable; choosing is `selectPattern` through a `select` action, so not an Undo step), the Length choice (1x, 2x, 4x, 8x through `setPatternBars`; a refusal shows its reason in a quiet line), the Note value choice (six buttons, the store's `noteValue`), the "Show whole pattern" pressed-state button (the store's `showWholePattern`), and the envelope strip (Volume, Attack, Decay, Release: name, number, slider; edits coalesce by the keys `volume:<id>`, `attack:<id>` and so on, volume with the same key the Mixer uses).
-- **Pad grid geometry, pure and tested (`src/pages/editor/grid.ts`):** the cells of a note value across a pattern (a cell is one step of that value; the last cell may overhang the end, as a whole note in 3/4 does), tick to cell, whether a hit lies on the chosen value's grid, the width of a tick, the playhead position.
-- **The pads:** five rows, top to bottom Crash, Open hi-hat, Hi-hat, Snare, Kick; beat numbers above; hairlines at every beat and a heavier line at every bar. Each cell of the chosen note value is a pale pad; a click places a hit (`addNote`), a click on a placed hit removes it (`removeNote`). A hit that is not on the chosen value's grid (placed with another value) is drawn as a narrow ink mark at its own time and removed by clicking it, so a pattern can mix straight and third hits. Hits beyond a shortened pattern are not drawn (they are kept).
-- **Width:** a tick is at most 14 px wide (16 pads of 42 px per bar at 4/4 and the 16th) and never wider than makes one bar fit the pad compartment; a longer pattern scrolls sideways inside the compartment; "Show whole pattern" fits all bars at once. The playhead (2 px line) follows `engine.position().tick` while playing.
-- The page is the one bordered panel of the design, minus the Undo and Play buttons the shared bar replaces. "Copy notes to…" is not drawn until step 10, where its picker is built.
-- `App.tsx` routes `drums` to the page.
-
-**Relies on:** steps 4 to 6 (the store and `patterns.ts` already hold every edit), [page-designs.md](page-designs.md), [time-and-notes.md](time-and-notes.md), [instrument-layouts.md](instrument-layouts.md), [design.md](design.md) (960 by 540).
-
-**Done when:** grid tests pass; typecheck, lint, test and build pass; the page is reasoned to fit 960 by 540. Not looked at, as the rule says.
-
-**Decisions it may need:** how off-grid hits look (assumed: narrow ink marks); whether a placed pad sounds at once (assumed no; the engine has no audition call); the playhead on a pattern wider than the view (assumed: the view does not scroll to follow it, the same rule as the Song page).
+Replanned after step 6 (2026-11-09). The horizon stays at 24 and the order is unchanged, except that "Show whole pattern" moves from step 10 into step 7 (the pad grid needs it for 8x patterns), and the pattern-bank, tool and envelope pieces are built once, in step 7, as shared parts that steps 8 and 9 reuse. Step 7 is built and moved to the history below. The next replan comes before step 10.
 
 ### Step 8: The Guitar page, "the String cards"
 
@@ -179,6 +162,25 @@ Replanned after step 6 (2026-11-09). The horizon stays at 24 and the order is un
 
 **Built (2026-11-09):** `src/pages/Song.tsx` and `song.css`, with the pure parts in `src/pages/song/` (`geometry.ts`, `brush.ts`, both tested); the store got `brush`, `selectedBlock` and `seek`. Assumptions are in [open-items.md](open-items.md). Not looked at, as planned.
 
+### Step 7: The Drums page, "the Pad machine"
+
+**Produces:** the Drums page ([page-designs.md](page-designs.md)) and the editor parts the Guitar and Keys pages reuse.
+
+- **Shared parts in `src/pages/editor/`:** the pattern bank (the shown pattern numbers in rows of ten; selected = ink-filled, with notes = ink outline, empty = grey outline, all selectable; choosing is `selectPattern` through a `select` action, so not an Undo step), the Length choice (1x, 2x, 4x, 8x through `setPatternBars`; a refusal shows its reason in a quiet line), the Note value choice (six buttons, the store's `noteValue`), the "Show whole pattern" pressed-state button (the store's `showWholePattern`), and the envelope strip (Volume, Attack, Decay, Release: name, number, slider; edits coalesce by the keys `volume:<id>`, `attack:<id>` and so on, volume with the same key the Mixer uses).
+- **Pad grid geometry, pure and tested (`src/pages/editor/grid.ts`):** the cells of a note value across a pattern (a cell is one step of that value; the last cell may overhang the end, as a whole note in 3/4 does), tick to cell, whether a hit lies on the chosen value's grid, the width of a tick, the playhead position.
+- **The pads:** five rows, top to bottom Crash, Open hi-hat, Hi-hat, Snare, Kick; beat numbers above; hairlines at every beat and a heavier line at every bar. Each cell of the chosen note value is a pale pad; a click places a hit (`addNote`), a click on a placed hit removes it (`removeNote`). A hit that is not on the chosen value's grid (placed with another value) is drawn as a narrow ink mark at its own time and removed by clicking it, so a pattern can mix straight and third hits. Hits beyond a shortened pattern are not drawn (they are kept).
+- **Width:** a tick is at most 14 px wide (16 pads of 42 px per bar at 4/4 and the 16th) and never wider than makes one bar fit the pad compartment; a longer pattern scrolls sideways inside the compartment; "Show whole pattern" fits all bars at once. The playhead (2 px line) follows `engine.position().tick` while playing.
+- The page is the one bordered panel of the design, minus the Undo and Play buttons the shared bar replaces. "Copy notes to…" is not drawn until step 10, where its picker is built.
+- `App.tsx` routes `drums` to the page.
+
+**Relies on:** steps 4 to 6 (the store and `patterns.ts` already hold every edit), [page-designs.md](page-designs.md), [time-and-notes.md](time-and-notes.md), [instrument-layouts.md](instrument-layouts.md), [design.md](design.md) (960 by 540).
+
+**Done when:** grid tests pass; typecheck, lint, test and build pass; the page is reasoned to fit 960 by 540. Not looked at, as the rule says.
+
+**Decisions it may need:** how off-grid hits look (assumed: narrow ink marks); whether a placed pad sounds at once (assumed no; the engine has no audition call); the playhead on a pattern wider than the view (assumed: the view does not scroll to follow it, the same rule as the Song page).
+
+**Built (2026-11-09):** `src/pages/Drums.tsx` and `drums.css`; the shared editor parts in `src/pages/editor/` (`PatternBank`, `Tools` with Length, Note value and Show whole pattern, `EnvelopeStrip`, `useTryEdit`, and the tested `grid.ts`); the engine got a `playingRequest` getter so a page draws its playhead only for its own loop. Assumptions are in [open-items.md](open-items.md). Not looked at, as planned.
+
 ## Later steps
 
 Broad strokes only. The next replan (the first `/plan24` run after step 9 is done) details steps 10 to 12. The horizon stays at 24; the order is unchanged.
@@ -208,7 +210,7 @@ Broad strokes only. The next replan (the first `/plan24` run after step 9 is don
 | 4 | Audio engine | done | 04-audio |
 | 5 | App shell and the Mixer page | done | 05-shell |
 | 6 | The Song page | done | 06-song |
-| 7 | The Drums page | todo | |
+| 7 | The Drums page | done | 07-drums |
 | 8 | The Guitar page | todo | |
 | 9 | The Keys page | todo | |
 | 10 | Pattern tools and shortcuts | todo | |

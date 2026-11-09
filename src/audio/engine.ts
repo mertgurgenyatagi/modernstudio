@@ -71,6 +71,11 @@ export class AudioEngine {
     return this.cursor !== null;
   }
 
+  /** What is playing now, or null when stopped. A pattern editor draws its playhead only for its own loop. */
+  get playingRequest(): PlayRequest | null {
+    return this.cursor ? this.request : null;
+  }
+
   /** Creates the audio context and decodes every recorded sound. Safe to call more than once. */
   load(): Promise<void> {
     this.loading ??= this.doLoad();

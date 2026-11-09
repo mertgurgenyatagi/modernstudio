@@ -1,0 +1,138 @@
+/*
+ * Parts the instrument pages share (Drums, Guitar, Keys): the pattern bank, the length and note value
+ * choices, "Show whole pattern" and the envelope strip. Each part is a plain block; the page lays them
+ * out. Square corners, 1px ink lines, as the decided pages have them (docs/page-designs.md).
+ */
+
+/* ---- Pattern bank ---- */
+.bank {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+}
+
+.bank-word {
+  padding-top: 0.3rem;
+  font-size: 0.85rem;
+  color: var(--color-muted);
+}
+
+.bank-numbers {
+  display: grid;
+  grid-template-columns: repeat(10, 1.9rem);
+  gap: 0.25rem;
+}
+
+.bank-number {
+  appearance: none;
+  height: 1.65rem;
+  padding: 0;
+  font: 400 0.8rem/1 var(--font-outlier);
+  color: var(--color-muted);
+  background: transparent;
+  border: 1px solid var(--color-rule);
+  border-radius: 0;
+  cursor: pointer;
+}
+
+.bank-number.active {
+  color: var(--color-ink);
+  border-color: var(--color-ink);
+}
+
+.bank-number.selected {
+  color: var(--color-accent-ink);
+  background: var(--color-accent);
+  border-color: var(--color-ink);
+}
+
+/* ---- Length, note value, show whole pattern ---- */
+.tool-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.tool-label {
+  font-size: 0.8rem;
+  color: var(--color-muted);
+}
+
+.tool-buttons {
+  display: grid;
+  gap: 0.2rem;
+}
+
+.tool-length {
+  grid-template-columns: 1fr 1fr;
+}
+
+.tool-values {
+  grid-template-columns: 1fr;
+}
+
+.tool-buttons button,
+.tool-whole {
+  appearance: none;
+  padding: 0.22rem 0.5rem;
+  font: 500 0.8rem/1.2 var(--font-body);
+  text-align: center;
+  color: var(--color-ink);
+  background: var(--color-paper-2);
+  border: 1px solid var(--color-ink);
+  border-radius: 0;
+  cursor: pointer;
+}
+
+.tool-buttons button[aria-checked='true'],
+.tool-whole[aria-pressed='true'] {
+  color: var(--color-accent-ink);
+  background: var(--color-accent);
+}
+
+/* ---- Envelope strip ---- */
+.envelope {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+}
+
+.envelope-cell {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+  padding: 0.45rem 0.8rem 0.35rem;
+  border-left: 1px solid var(--color-ink);
+}
+
+.envelope-cell:first-child {
+  border-left: 0;
+}
+
+.envelope-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  font-size: 0.85rem;
+}
+
+.envelope-head .figure {
+  font: 400 0.85rem/1 var(--font-outlier);
+}
+
+/* A quiet line that says why an edit was refused. It keeps its height so nothing jumps. */
+.editor-note {
+  margin: 0;
+  min-height: 1.1em;
+  font-size: 0.8rem;
+  color: var(--color-muted);
+}
+
+@media (max-width: 720px) {
+  .envelope {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .envelope-cell:nth-child(3) {
+    border-left: 0;
+  }
+}

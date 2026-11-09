@@ -104,6 +104,10 @@ None of this is in the questionnaire answers. Change it if wrong.
 - The sample beat, the active pattern numbers (1, 2, 3 and 5) and the envelope values in the exhibition are made up to fill the screen.
 - Corner shape, line weight and pad size are this page's own and are not a decision for other pages.
 
+### Built
+
+Plan24 step 7 built it as `src/pages/Drums.tsx`, with the assumptions listed in [open-items.md](open-items.md). The grid is made of pads for the chosen note value (16 per 4/4 bar at the 16th, 12 thirds, 24 halves of a third, 4 quarters), and the pads of a longer pattern run on to the right.
+
 ### Where to look
 
 The drawn version is design 03 in [exhibition/drums.html](exhibition/drums.html). The other nine stay there as the record of what was considered.

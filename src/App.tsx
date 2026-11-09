@@ -1,3 +1,4 @@
+import { Drums } from './pages/Drums';
 import { Mixer } from './pages/Mixer';
 import { Placeholder } from './pages/Placeholder';
 import { Song } from './pages/Song';
@@ -10,6 +11,7 @@ function CurrentPage() {
   const { state } = useStudio();
   if (state.page === 'mixer') return <Mixer />;
   if (state.page === 'song') return <Song />;
+  if (state.page === 'drums') return <Drums />;
   return <Placeholder title={PAGE_LABELS[state.page]} />;
 }
 
