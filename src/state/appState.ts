@@ -7,22 +7,32 @@
  */
 import type { PlayRequest } from '../audio/engine';
 import { commit, newHistory, replacePresent, undo, type History } from '../core/history';
-import { INSTRUMENT_IDS, type InstrumentId, type StringInstrumentId } from '../core/instruments';
+import { INSTRUMENT_IDS, type InstrumentId } from '../core/instruments';
 import { createProject, type Project } from '../core/project';
 import type { ImportReport } from '../core/midi/build';
-import { songBars } from '../core/song';
+import { songBars, type BlockRef } from '../core/song';
 import type { NoteValue } from '../core/time';
+import type { BlockClipboard, NoteClipboard } from './clipboard';
+import { EDITOR_VIEW_DEFAULT, SONG_BAR_PX_DEFAULT, SONG_BAR_PX_MAX, SONG_BAR_PX_MIN, type EditorView } from './view';
 
-export const PAGES = ['mixer', 'song', 'drums', 'guitar', 'keys'] as const;
+/** The seven tabs, in the order the user asked for (sweeping changes, 2026-11-09): the instruments, then the Song and the Mixer. */
+export const PAGES = ['rhythm', 'lead', 'bass', 'drums', 'keys', 'song', 'mixer'] as const;
 export type Page = (typeof PAGES)[number];
 
 export const PAGE_LABELS: Record<Page, string> = {
-  mixer: 'Mixer',
-  song: 'Song',
+  rhythm: 'Rhythm',
+  lead: 'Lead',
+  bass: 'Bass',
   drums: 'Drums',
-  guitar: 'Guitar',
   keys: 'Keys',
+  song: 'Song',
+  mixer: 'Mixer',
 };
+
+/** The instrument a page edits, or null for the Song and the Mixer. */
+export function pageInstrument(page: Page): InstrumentId | null {
+  return page === 'song' || page === 'mixer' ? null : page;
+}
 
 export interface AppState {
   history: History;
@@ -33,15 +43,17 @@ export interface AppState {
   isolated: InstrumentId | null;
   /** The note value chosen on the instrument pages (the 16th is the one the designs show as chosen). */
   noteValue: NoteValue;
-  showWholePattern: boolean;
-  /** Which of Bass, Rhythm Guitar and Lead Guitar the Guitar page shows. */
-  guitar: StringInstrumentId;
+  /** How much of a pattern the instrument pages show across their width (horizontal zoom), shared by them. */
+  editorView: EditorView;
+  /** The width of a bar on the Song page, in pixels (its horizontal zoom). */
+  songBarPx: number;
   /** The bar the Song page's playhead stands on, 0 based. Playback in Song mode starts here. */
   startBar: number;
-  /** The Song page's brush: which instrument's lane a click places into. */
-  brush: InstrumentId;
-  /** The Song block that Delete removes: its lane and start bar. Not saved, not undone. */
-  selectedBlock: { instrument: InstrumentId; startBar: number } | null;
+  /** The selected Song blocks (Delete, copy, move). Not saved, not undone. */
+  selectedBlocks: BlockRef[];
+  /** Notes copied on an instrument page, and Song blocks copied on the Song page. Not saved, not undone. */
+  noteClipboard: NoteClipboard | null;
+  blockClipboard: BlockClipboard | null;
   /** Set when the recorded sounds could not be loaded. */
   soundsError: string | null;
   /** The file the project is saved in, or null for a project that has not been saved yet. */
@@ -64,11 +76,12 @@ export function initialState(project: Project = createProject()): AppState {
     metronome: false,
     isolated: null,
     noteValue: 'sixteenth',
-    showWholePattern: false,
-    guitar: 'bass',
+    editorView: EDITOR_VIEW_DEFAULT,
+    songBarPx: SONG_BAR_PX_DEFAULT,
     startBar: 0,
-    brush: 'drums',
-    selectedBlock: null,
+    selectedBlocks: [],
+    noteClipboard: null,
+    blockClipboard: null,
     soundsError: null,
     filePath: null,
     savedProject: project,
@@ -99,11 +112,12 @@ export type Action =
   | { type: 'toggleIsolate'; id: InstrumentId }
   | { type: 'setMetronome'; on: boolean }
   | { type: 'setNoteValue'; value: NoteValue }
-  | { type: 'setShowWholePattern'; on: boolean }
-  | { type: 'setGuitar'; id: StringInstrumentId }
+  | { type: 'setEditorView'; view: EditorView }
+  | { type: 'setSongBarPx'; px: number }
   | { type: 'setStartBar'; bar: number }
-  | { type: 'setBrush'; id: InstrumentId }
-  | { type: 'selectBlock'; block: { instrument: InstrumentId; startBar: number } | null }
+  | { type: 'selectBlocks'; blocks: BlockRef[] }
+  | { type: 'setNoteClipboard'; clipboard: NoteClipboard | null }
+  | { type: 'setBlockClipboard'; clipboard: BlockClipboard | null }
   | { type: 'started' }
   | { type: 'stopped' }
   | { type: 'soundsFailed'; message: string }
@@ -114,6 +128,10 @@ export type Action =
   /** The project was written to `path`: that is now the saved state. `project` is what was written, not necessarily the present one. */
   | { type: 'saved'; path: string; project: Project }
   | { type: 'setNotice'; message: string | null };
+
+function sameBlocks(a: readonly BlockRef[], b: readonly BlockRef[]): boolean {
+  return a.length === b.length && a.every((x, i) => x.instrument === b[i]?.instrument && x.startBar === b[i]?.startBar);
+}
 
 /** A meter change moves the bar lines under the playhead, so playback stops (the engine stops itself too). */
 function stopOnMeterChange(before: AppState, after: AppState): AppState {
@@ -145,22 +163,25 @@ export function reduce(state: AppState, action: Action): AppState {
       return action.on === state.metronome ? state : { ...state, metronome: action.on };
     case 'setNoteValue':
       return action.value === state.noteValue ? state : { ...state, noteValue: action.value };
-    case 'setShowWholePattern':
-      return action.on === state.showWholePattern ? state : { ...state, showWholePattern: action.on };
-    case 'setGuitar':
-      return action.id === state.guitar ? state : { ...state, guitar: action.id };
+    case 'setEditorView': {
+      const a = state.editorView;
+      const b = action.view;
+      return a.fit === b.fit && a.barsInView === b.barsInView ? state : { ...state, editorView: b };
+    }
+    case 'setSongBarPx': {
+      const px = Number.isFinite(action.px) ? Math.min(SONG_BAR_PX_MAX, Math.max(SONG_BAR_PX_MIN, action.px)) : state.songBarPx;
+      return px === state.songBarPx ? state : { ...state, songBarPx: px };
+    }
     case 'setStartBar': {
       const bar = Number.isInteger(action.bar) && action.bar > 0 ? action.bar : 0;
       return bar === state.startBar ? state : { ...state, startBar: bar };
     }
-    case 'setBrush':
-      return action.id === state.brush ? state : { ...state, brush: action.id };
-    case 'selectBlock': {
-      const a = state.selectedBlock;
-      const b = action.block;
-      if (a === b || (a && b && a.instrument === b.instrument && a.startBar === b.startBar)) return state;
-      return { ...state, selectedBlock: b };
-    }
+    case 'selectBlocks':
+      return sameBlocks(state.selectedBlocks, action.blocks) ? state : { ...state, selectedBlocks: action.blocks };
+    case 'setNoteClipboard':
+      return action.clipboard === state.noteClipboard ? state : { ...state, noteClipboard: action.clipboard };
+    case 'setBlockClipboard':
+      return action.clipboard === state.blockClipboard ? state : { ...state, blockClipboard: action.clipboard };
     case 'started':
       return state.playing ? state : { ...state, playing: true };
     case 'stopped':
@@ -173,7 +194,9 @@ export function reduce(state: AppState, action: Action): AppState {
         history: newHistory(action.project),
         playing: false,
         startBar: 0,
-        selectedBlock: null,
+        selectedBlocks: [],
+        // Copied blocks point at patterns by number, which are other patterns in another project.
+        blockClipboard: null,
         filePath: action.path,
         // An unsaved project (an import) is compared with an empty one, so it counts as changed until it is saved.
         savedProject: action.options?.unsaved ? createProject() : action.project,
@@ -198,12 +221,12 @@ export function reduce(state: AppState, action: Action): AppState {
 export function playRequestFor(state: AppState): PlayRequest {
   const project = state.history.present;
   switch (state.page) {
+    case 'rhythm':
+    case 'lead':
+    case 'bass':
     case 'drums':
-      return { mode: 'pattern', focus: 'drums' };
-    case 'guitar':
-      return { mode: 'pattern', focus: state.guitar };
     case 'keys':
-      return { mode: 'pattern', focus: 'keys' };
+      return { mode: 'pattern', focus: state.page };
     case 'song':
       return { mode: 'song', startBar: state.startBar };
     case 'mixer':

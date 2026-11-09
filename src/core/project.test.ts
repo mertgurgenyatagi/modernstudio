@@ -164,17 +164,20 @@ describe('switching the meter', () => {
     expect(back.instruments.drums.patterns[0]?.notes).toEqual([{ row: 'kick', start: 30 }]);
   });
 
-  it('deletes notes that fall outside the shorter bar, for good', () => {
+  it('keeps notes that fall outside the shorter bar, hidden, and they come back when switched back', () => {
     const three = setMeter(withNotes(), '3/4');
     expect(three.meter).toBe('3/4');
-    expect(three.instruments.drums.patterns[0]?.notes).toEqual([{ row: 'kick', start: 0 }]);
+    expect(three.instruments.drums.patterns[0]?.notes).toEqual([
+      { row: 'kick', start: 0 },
+      { row: 'snare', start: 36 },
+    ]);
     const back = setMeter(three, '4/4');
-    expect(back.instruments.drums.patterns[0]?.notes).toEqual([{ row: 'kick', start: 0 }]);
+    expect(back.instruments.drums.patterns[0]?.notes).toEqual(withNotes().instruments.drums.patterns[0]?.notes);
   });
 
-  it('shortens a note that runs past the new end', () => {
+  it('keeps the full length of a note that runs past the new end', () => {
     const three = setMeter(withNotes(), '3/4');
-    expect(three.instruments.bass.patterns[0]?.notes).toEqual([{ string: 0, fret: 0, start: 24, length: 12 }]);
+    expect(three.instruments.bass.patterns[0]?.notes).toEqual([{ string: 0, fret: 0, start: 24, length: 24 }]);
   });
 
   it('keeps positions in a longer pattern, where the note moves to another bar line', () => {
@@ -184,19 +187,19 @@ describe('switching the meter', () => {
     expect(three.instruments.keys.patterns[0]?.notes).toEqual([{ pitch: 60, start: 40, length: 12 }]);
   });
 
-  it('deletes notes hidden past the end of a shortened pattern when they fall beyond the new bar', () => {
+  it('keeps notes hidden past the end of a shortened pattern through a meter switch', () => {
     let p = must(setPatternBars(createProject(), 'drums', 0, 2));
     p = must(addNote(p, 'drums', 0, { row: 'kick', start: 60 })); // bar 2
     p = must(setPatternBars(p, 'drums', 0, 1)); // kept, hidden
-    expect(p.instruments.drums.patterns[0]?.notes).toHaveLength(1);
-    p = setMeter(p, '3/4');
-    expect(p.instruments.drums.patterns[0]?.notes).toHaveLength(0);
+    p = setMeter(setMeter(p, '3/4'), '4/4');
+    expect(p.instruments.drums.patterns[0]?.notes).toEqual([{ row: 'kick', start: 60 }]);
+    expect(must(setPatternBars(p, 'drums', 0, 2)).instruments.drums.patterns[0]?.notes).toHaveLength(1);
   });
 
   it('is a no-op for the same meter, and shares unchanged instruments', () => {
     const p = withNotes();
     expect(setMeter(p, '4/4')).toBe(p);
     const three = setMeter(p, '3/4');
-    expect(three.instruments.keys).toBe(p.instruments.keys);
+    expect(three.instruments).toBe(p.instruments);
   });
 });

@@ -38,6 +38,15 @@ describe('saving', () => {
       if (back.ok) expect(back.project).toEqual(p);
     }
   });
+
+  it('keeps notes a switch to 3/4 hid, even past the end of the longest 3/4 pattern', () => {
+    let p = must(setPatternBars(createProject(), 'drums', 0, 8));
+    p = must(addNote(p, 'drums', 0, { row: 'kick', start: 372 })); // the last beat of bar 8 in 4/4
+    p = setMeter(p, '3/4'); // 8 bars of 3/4 end at 288
+    const back = parseProject(serializeProject(p));
+    expect(back.ok).toBe(true);
+    if (back.ok) expect(back.project).toEqual(p);
+  });
 });
 
 describe('opening', () => {

@@ -8,6 +8,8 @@ The specification phase is closed. It was built through 16 answered questionnair
 
 **The build is complete.** [plan24.md](plan24.md) ran 22 steps: the Electron, TypeScript and React shell, the project model, the recorded sounds, the audio engine, all five pages (Mixer, Song, Drums, Guitar, Keys), saving, WAV and MIDI export, the whole MIDI import with its mapping panel and report, the check at 960 by 540, and the Windows installer. Nothing has been run in a window yet. [handover.md](handover.md) says what is built and what to check; [first-run.md](first-run.md) is the order to try it in. See the root [README.md](../README.md) for how to run it.
 
+**Sweeping changes (2026-11-09).** After the first run the user asked for a list of changes: seven tabs, zoom, no scrollbars, compact instrument pages, selection and copying as in a music program, and more. They are built and recorded in [sweeping-changes.md](sweeping-changes.md); the user's words are in [questionnaire_answers/sweeping_changes.md](questionnaire_answers/sweeping_changes.md).
+
 ## Read in this order
 
 1. [overview.md](overview.md) — what the app is and why it exists.
@@ -27,10 +29,11 @@ The specification phase is closed. It was built through 16 answered questionnair
 15. [first-run.md](first-run.md) — what to try first after `npm run dev`, in order (plan24 step 21).
 16. [plan24.md](plan24.md) — the build plan, one step per `/plan24` invocation: the next three steps in detail, the rest in broad strokes, and the table of every step with its status.
 17. [handover.md](handover.md) — what is built, what was never run, the commands, the folder map and what to do next (plan24 step 22).
+18. [sweeping-changes.md](sweeping-changes.md) — the user's changes after the first run: what was built for each and what the builder chose. Where it disagrees with an older document, it wins.
 
 ## Where the truth lives
 
-If a doc and a questionnaire answer disagree, the answer file wins, unless a later answer overrides it. Questionnaires 2 and 3 said BPM and meter can change mid-song. Questionnaires 7 and 8 corrected that: they are set for the whole song.
+If a doc and a questionnaire answer disagree, the answer file wins, unless a later answer overrides it. Questionnaires 2 and 3 said BPM and meter can change mid-song. Questionnaires 7 and 8 corrected that: they are set for the whole song. The sweeping changes of 2026-11-09 overturn two answers: the editors zoom (questionnaire 12 said no) and a meter switch keeps notes (questionnaire 16 deleted them).
 
 ## Next
 

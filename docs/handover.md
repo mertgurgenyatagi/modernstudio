@@ -4,6 +4,8 @@ The state of modernstudio at the end of [plan24.md](plan24.md) (step 22, 2026-11
 
 ## What is built
 
+**Changed since:** the user's sweeping changes after the first run are built: seven tabs, zoom, no scrollbars, compact instrument pages, selection and copying as in a music program, the right-click menu on the Song, the meter switch that keeps notes. [sweeping-changes.md](sweeping-changes.md) says what changed; the list below is the state at step 22.
+
 **Pages** (top-bar tabs: Mixer, Song, Drums, Guitar, Keys; one transport bar on every page with Play, Stop, metronome and Undo, and Space for Play/Stop)
 
 - **Mixer** (the Ledger): five channels with volume, level meters, Mute and Isolate, BPM (field and slider), meter 4/4 or 3/4, master volume, and the buttons Import MIDI, Export WAV and Export MIDI.
@@ -57,7 +59,7 @@ All are in [open-items.md](open-items.md) with the file where each lives. The on
 - The envelope scale: attack and release 0 to about 2 s, decay the fall to a sustain level, squared curves.
 - Importing opens a new, unsaved project named after the MIDI file; the report shows once.
 - MIDI drums: toms and splash are dropped, pedal hi-hat goes to hi-hat, the crashes to crash.
-- A placed pad or note makes no sound when placed (no audition call).
+- A placed pad or note makes no sound when placed (no audition call). Since the sweeping changes it does.
 - No window minimum size, no icon, no code signing, version stays 0.1.0, no release tag.
 
 ## What next

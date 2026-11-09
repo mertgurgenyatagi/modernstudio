@@ -1,6 +1,7 @@
 /*
- * The shell: the top bar, then the page filling the window. The page scrolls up and down inside its
- * own box if it must, and never sideways (docs/design.md).
+ * The shell: the top bar, then the page filling the window. Every page is laid out to fit the window
+ * (docs/fit.md); only a window made smaller than the pages allow lets the page move up and down, with
+ * the wheel and without a scrollbar. Never sideways (docs/design.md).
  */
 .shell {
   height: 100%;

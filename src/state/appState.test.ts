@@ -6,7 +6,7 @@ import { addNote, setPatternBars } from '../core/patterns';
 import { selectPattern, setBpm, setMasterVolume, setMeter, setMuted, setVolume } from '../core/project';
 import { moveBlock, placeBlock } from '../core/song';
 import { must } from '../core/testing';
-import { initialState, longestSelected, playRequestFor, reduce, type Action, type AppState } from './appState';
+import { PAGES, PAGE_LABELS, initialState, longestSelected, pageInstrument, playRequestFor, reduce, type Action, type AppState } from './appState';
 
 function run(state: AppState, ...actions: Action[]): AppState {
   return actions.reduce(reduce, state);
@@ -143,9 +143,9 @@ describe('what Play plays', () => {
   it('loops the instrument of the page on an instrument page', () => {
     expect(playRequestFor(run(withSong(), { type: 'setPage', page: 'keys' }))).toEqual({ mode: 'pattern', focus: 'keys' });
     expect(playRequestFor(run(initialState(), { type: 'setPage', page: 'drums' }))).toEqual({ mode: 'pattern', focus: 'drums' });
-    expect(playRequestFor(run(initialState(), { type: 'setPage', page: 'guitar' }))).toEqual({ mode: 'pattern', focus: 'bass' });
-    const lead = run(initialState(), { type: 'setPage', page: 'guitar' }, { type: 'setGuitar', id: 'lead' });
-    expect(playRequestFor(lead)).toEqual({ mode: 'pattern', focus: 'lead' });
+    for (const page of ['rhythm', 'lead', 'bass'] as const) {
+      expect(playRequestFor(run(initialState(), { type: 'setPage', page }))).toEqual({ mode: 'pattern', focus: page });
+    }
   });
 
   it('plays the Song on the Song page', () => {
@@ -161,18 +161,56 @@ describe('what Play plays', () => {
   });
 });
 
-describe('the Song page state', () => {
-  it('chooses the brush instrument', () => {
-    expect(initialState().brush).toBe('drums');
-    expect(run(initialState(), { type: 'setBrush', id: 'keys' }).brush).toBe('keys');
+describe('the pages', () => {
+  it('are seven tabs, the instruments first, then the Song and the Mixer', () => {
+    expect(PAGES.map((page) => PAGE_LABELS[page])).toEqual(['Rhythm', 'Lead', 'Bass', 'Drums', 'Keys', 'Song', 'Mixer']);
+    expect(PAGES.map(pageInstrument)).toEqual(['rhythm', 'lead', 'bass', 'drums', 'keys', null, null]);
+    expect(initialState().page).toBe('mixer');
+  });
+});
+
+describe('the zoom of the editors and the Song', () => {
+  it('keeps one view for the instrument pages, and changes only when it differs', () => {
+    const s0 = initialState();
+    expect(s0.editorView).toEqual({ fit: false, barsInView: 1 });
+    const s = run(s0, { type: 'setEditorView', view: { fit: true, barsInView: 1 } });
+    expect(s.editorView.fit).toBe(true);
+    expect(run(s, { type: 'setEditorView', view: { fit: true, barsInView: 1 } })).toBe(s);
   });
 
-  it('selects a block, and deselects it', () => {
-    const block = { instrument: 'bass', startBar: 4 } as const;
-    const s = run(initialState(), { type: 'selectBlock', block });
-    expect(s.selectedBlock).toEqual(block);
-    expect(run(s, { type: 'selectBlock', block: { ...block } })).toBe(s);
-    expect(run(s, { type: 'selectBlock', block: null }).selectedBlock).toBeNull();
+  it('keeps the width of a Song bar between its limits', () => {
+    expect(initialState().songBarPx).toBe(48);
+    expect(run(initialState(), { type: 'setSongBarPx', px: 1 }).songBarPx).toBe(4);
+    expect(run(initialState(), { type: 'setSongBarPx', px: 1000 }).songBarPx).toBe(192);
+    expect(run(initialState(), { type: 'setSongBarPx', px: Number.NaN }).songBarPx).toBe(48);
+  });
+});
+
+describe('the Song page state', () => {
+  it('selects several blocks, and deselects them', () => {
+    const blocks = [
+      { instrument: 'bass', startBar: 4 },
+      { instrument: 'keys', startBar: 0 },
+    ] as const;
+    const s = run(initialState(), { type: 'selectBlocks', blocks: [...blocks] });
+    expect(s.selectedBlocks).toEqual(blocks);
+    expect(run(s, { type: 'selectBlocks', blocks: blocks.map((b) => ({ ...b })) })).toBe(s);
+    expect(run(s, { type: 'selectBlocks', blocks: [] }).selectedBlocks).toEqual([]);
+  });
+
+  it('forgets the selection and the copied blocks with a new project, and keeps the copied notes', () => {
+    const notes = { instrument: 'keys', pattern: 0, notes: [], span: 12, next: { pattern: 0, shift: 12 } } as const;
+    const blocks = { blocks: [], start: 0, span: 1, nextStart: 1 };
+    let s = run(
+      initialState(),
+      { type: 'selectBlocks', blocks: [{ instrument: 'bass', startBar: 4 }] },
+      { type: 'setNoteClipboard', clipboard: { ...notes, notes: [] } },
+      { type: 'setBlockClipboard', clipboard: blocks },
+    );
+    s = run(s, { type: 'replaceProject', project: initialState().history.present, path: null });
+    expect(s.selectedBlocks).toEqual([]);
+    expect(s.blockClipboard).toBeNull();
+    expect(s.noteClipboard).not.toBeNull();
   });
 
   it('moves a block through the history, and Undo moves it back', () => {
@@ -202,7 +240,7 @@ describe('files', () => {
       initialState(),
       { type: 'edit', change: (p) => setBpm(p, 100) },
       { type: 'setStartBar', bar: 5 },
-      { type: 'selectBlock', block: { instrument: 'bass', startBar: 2 } },
+      { type: 'selectBlocks', blocks: [{ instrument: 'bass', startBar: 2 }] },
       { type: 'started' },
       { type: 'setNotice', message: 'old' },
     );
@@ -212,7 +250,7 @@ describe('files', () => {
     expect(canUndo(s.history)).toBe(false);
     expect(s.playing).toBe(false);
     expect(s.startBar).toBe(0);
-    expect(s.selectedBlock).toBeNull();
+    expect(s.selectedBlocks).toEqual([]);
     expect(s.filePath).toBe('songs/a.modernstudio');
     expect(s.savedProject).toBe(project);
     expect(s.notice).toBeNull();

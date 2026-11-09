@@ -21,7 +21,8 @@ Built in plan24 step 2 as plain TypeScript in [src/core/](../src/core/), with un
 - **Notes** have no id. A drum hit is a row and a start. A string note (bass, Rhythm, Lead) is a string, a fret, a start and a length, with string 0 the lowest. A Keys note is a MIDI pitch (C4 = 60), a start and a length. Two notes with the same row/string/fret/pitch at the same start are the same note. Chords, and two notes on one string, are allowed.
 - **Patterns:** 120 per instrument, 20 shown. Hidden ones open 20 at a time once every shown pattern is active. A pattern is 1, 2, 4 or 8 bars. Notes outside a shortened pattern are kept and return when it is lengthened. A pattern is active once it has a note, and goes back to inactive when its last note is deleted.
 - **Song lanes:** blocks snap to bars, never overlap, may leave gaps, and stop at bar 256. A block is as long as its pattern. Only active patterns can be placed. The song ends at the last block of any lane.
-- **Meter switch:** notes keep their positions. Notes that fall outside the new, shorter bar are deleted, hidden ones included, and a note running past the new end is shortened.
+- **Meter switch:** notes keep their positions and nothing is deleted. Notes that fall outside the new, shorter bar are hidden, as past the end of a shortened pattern, and come back when the meter is switched back (the sweeping changes of 2026-11-09). A saved note may therefore lie anywhere inside an 8 bar pattern of 4/4.
+- **Several at once:** `addNotes`, `removeNotes` and `replaceNotes` edit a selection of notes, `placeBlocks`, `moveBlocks` and `removeBlocks` a selection of blocks, each as one edit and all or nothing.
 - **Undo:** snapshots of the whole project, 1000 at most, no redo. Edits with the same coalescing key (a slider being dragged) are one step. Choosing a pattern is not a step, and Undo leaves the selected pattern and the number of patterns shown as they are.
 - **Saving:** `{ format: "modernstudio", version: 1, project }`. `parseProject` checks every field and refuses a damaged file with a reason; it never throws.
 
@@ -31,4 +32,4 @@ The engine reads the model but adds nothing to it: `levels.ts`, `envelope.ts`, `
 
 ## Not in the model
 
-Isolate is a playback choice, not saved with the project (a project saved while one instrument was isolated would open silent). The playhead, the playing state, the metronome, the note value chosen in an editor and "Show whole pattern" are screen state. All of these belong to the app state of plan24 step 5.
+Isolate is a playback choice, not saved with the project (a project saved while one instrument was isolated would open silent). The playhead, the playing state, the metronome, the note value chosen in an editor, the zoom, the selections and the clipboards are screen state. All of these belong to the app state of plan24 step 5.

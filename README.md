@@ -4,7 +4,7 @@ A minimalist, Windows-only music app. See [docs/README.md](docs/README.md) for t
 
 ## What is built
 
-All 22 steps of the plan are done: five pages (Mixer, Song, Drums, Guitar, Keys), a sound engine with recorded General MIDI sounds, saving, WAV and MIDI export, MIDI import with a mapping panel and a report, and a Windows installer. None of it has been run in a window yet. [docs/handover.md](docs/handover.md) says what is built and what to check; [docs/first-run.md](docs/first-run.md) is what to try first.
+All 22 steps of the plan are done, and the user's sweeping changes after the first run ([docs/sweeping-changes.md](docs/sweeping-changes.md)) are built: seven tabs (Rhythm, Lead, Bass, Drums, Keys, Song, Mixer), a sound engine with recorded General MIDI sounds, saving, WAV and MIDI export, MIDI import with a mapping panel and a report, and a Windows installer. The sweeping changes have not been run in a window yet. [docs/handover.md](docs/handover.md) says what is built and what to check; [docs/first-run.md](docs/first-run.md) is what to try first.
 
 ## Running it
 

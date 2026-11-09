@@ -14,26 +14,27 @@ Questionnaire 17 was published and never answered, because the user closed the q
 
 | Question | Settled as | By | Where it lives | How to overturn |
 | --- | --- | --- | --- | --- |
-| Does Undo restore notes a meter change deleted? | Yes, it is an edit like any other (the history holds whole-project snapshots) | Step 2 | `src/core/history.ts`, tested in `history.test.ts` | Make the meter change clear the history, or keep the deleted notes aside; say so |
-| Does Delete remove selected notes in the instrument editors? | Yes, on Guitar and Keys: the one selected note, one Undo step. Drums has no selection (a click on a hit removes it) | Step 10 | `src/pages/editor/useDeleteKey.ts`, used by `Guitar.tsx` and `Keys.tsx` | Ask for multi-select, or for a Delete button |
-| Does copying notes into a pattern replace or add? | Replaces by default; "Add" is a choice in the picker | Steps 2 and 10 | `copyNotes` in `src/core/patterns.ts`; the picker in `src/pages/editor/CopyNotes.tsx` | Flip the default in `copy.ts` and `CopyNotes.tsx` |
+| Does Undo restore notes a meter change deleted? | Moot since the sweeping changes: a meter change deletes nothing, the notes past the shorter bar are hidden and come back on switching back. Undo undoes the switch like any other edit | Step 2, then the sweeping changes | `setMeter` in `src/core/project.ts`, tested in `project.test.ts` | Say so |
+| Does Delete remove selected notes in the instrument editors? | Yes, the whole selection, one Undo step, on every instrument page; several notes can be selected since the sweeping changes (a click on a drum hit still removes it) | Step 10, then the sweeping changes | `src/pages/editor/NoteEditor.tsx` | Ask for a Delete button |
+| Does copying notes into a pattern replace or add? | Adds: "Copy notes to…" is gone since the sweeping changes, and a paste adds to the notes there (to replace, select all and delete first) | Steps 2 and 10, then the sweeping changes | `addNotes` in `src/core/patterns.ts`; the paste in `src/pages/editor/NoteEditor.tsx` | Say so |
 | Does Keys label every row or only the Cs? | The Cs only (C2 to C6); screen readers get every pitch | Step 9 | `keyLabel` in `src/pages/editor/keyRoll.ts` | Change the label rule there (it is tested) |
-| Does the third value show only third steps? | The grid shows the steps of the chosen value; a hit placed with another value is a narrow ink mark at its own time, so straight and third hits can mix | Step 7 | `isOnGrid` in `src/pages/editor/grid.ts`, and the Drums page | Say how the thirds should look; the pure grid code is tested |
+| Does the third value show only third steps? | The grid shows the steps of the chosen value, lines and pads alike (the sweeping changes made the lines follow it on every page); a hit placed with another value is a narrow ink mark at its own time, so straight and third hits can mix | Step 7, then the sweeping changes | `isOnGrid` and `gridLines` in `src/pages/editor/grid.ts` | Say how the thirds should look; the pure grid code is tested |
 
 ## Decided
 
 No longer open.
 
+- **Sweeping changes (2026-11-09).** The user's list after the first run, as written in [questionnaire_answers/sweeping_changes.md](questionnaire_answers/sweeping_changes.md), built and described in [sweeping-changes.md](sweeping-changes.md). It overrides the items below where they disagree (the tabs, the meter switch, zoom, the Song's brush, the instrument page layouts). The builder's own choices in it are listed there under "Assumed by the builder".
 - **Sounds.** Bass is Electric Bass (finger), both guitars are Electric Guitar (jazz), Keys is Synth Voice, Drums is the Standard Kit ([sound.md](sound.md)). Recording them from the Windows synth was solved in step 3: the real synth was captured, so the soundfont fallback (questionnaire 16) was not used. The Windows synth was not checked for all eight drum kits, which no longer matters since the Standard Kit was picked.
 - **Tech stack.** The assistant recommended Electron, TypeScript, React and Web Audio, and the user agreed ([stack.md](stack.md)). Its one known risk, recording the General MIDI sounds, was resolved in step 3.
 - **Palette and fonts.** "Bone and black", look 09 of the overall-feel exhibition ([design.md](design.md)). That is all it decides. Page layouts were picked page by page and are recorded in [page-designs.md](page-designs.md): the Mixer (the Ledger), the Song page (the Brush bar), the Drums page (the Pad machine), the Guitar page (the String cards), and Keys (built from the Guitar page, no exhibition).
 - **Default window size: 960 by 540**, and every page must handle it ([design.md](design.md)). The four layouts were designed before this and were unchecked; step 19 checked them by reasoning and by tests and made two small changes ([fit.md](fit.md)). The Guitar page is the known tall one: six string cards run about 1000 pixels at the drawn row height, so the editor scrolls vertically inside its own box. The user accepted this in questionnaire 16.
-- **Bass, Rhythm Guitar and Lead Guitar are one page** (the user's decision of 2026-11-08), with the instrument chosen in a side panel and each instrument keeping its own patterns, notes, fret count and envelope.
+- **Bass, Rhythm Guitar and Lead Guitar are one page** (the user's decision of 2026-11-08), each instrument keeping its own patterns, notes, fret count and envelope. Since the sweeping changes each has its own tab (Rhythm, Lead, Bass) drawing that page, and the side panel's instrument choice is gone.
 - **Keys** is built from the Guitar page (the user's decision of 2026-11-08): the same two columns, pattern row, tools row and side panel, with the string cards replaced by a regular piano roll from C2 to C6. No exhibition was run for it; it was built in step 9.
 - **The Keys range of C2 to C6 and the BPM range of 40 to 300** were examples the user accepted.
 - **Pattern names:** the answer was "No", read as numbered only.
-- **Meter switch:** notes falling outside the new bar are deleted for good (questionnaire 16), and Undo brings them back (the questionnaire 17 table above). See [time-and-notes.md](time-and-notes.md).
-- **More than 20 patterns per instrument:** 120, shown 20 at a time with a hidden control (2026-11-09). The control is the dashed "+20" square in the pattern bank, built in step 10; the Song page's brush steps over the shown patterns and needs nothing.
+- **Meter switch:** notes falling outside the new bar are kept, hidden, and come back when the meter is switched back (the sweeping changes, overturning questionnaire 16, which deleted them). See [time-and-notes.md](time-and-notes.md).
+- **More than 20 patterns per instrument:** 120, shown 20 at a time with a hidden control (2026-11-09). The control is the dashed "+20" square, built in step 10; since the sweeping changes it is in the grid the pattern number opens, and the Song's right-click menu lists every shown pattern with notes.
 - **Fret count lowered after notes are placed:** the notes are kept, hidden, and return when the count is raised (the model, step 2), and the Guitar page's quiet line warns (step 10). This closes the old question, which mattered because imports set 12 frets for most guitar parts.
 - **Blocks are removed** by selecting and pressing Delete, with no button (questionnaire 16).
 - **The transport** (Play, Stop, metronome, Undo) is one bar at the top of every page (questionnaire 16). The four decided designs drew their own Play and Undo buttons; the build dropped them for the shared bar (steps 5 to 8, noted in [page-designs.md](page-designs.md)). The page switch sits in that bar (step 5).
@@ -326,7 +327,11 @@ Everything below was type checked, linted, unit tested where it has pure parts, 
 
 **Smaller points to feel for**
 
-- Playing a pad or a note makes no sound when placed (the engine has no audition call).
-- The Drums pads have many tab stops (no roving focus), and on Guitar and Keys placing a note by keyboard is not built (steps 7 and 8).
+- Placing a pad or a note plays it (since the sweeping changes), at the instrument's volume, whatever mute and isolate say. Is that the right loudness?
+- Placing a note by keyboard is not built on any instrument page; notes are moved by keyboard (the arrow keys) once selected.
 - The Keys roll opens on middle C and none of the pages follows the playhead.
-- Whether the Song's 48 px bar and 16 visible bars read well, and whether a bar-click restart while playing feels right.
+- Whether a bar-click restart while playing feels right.
+
+**The sweeping changes (2026-11-09)**
+
+- Everything in [sweeping-changes.md](sweeping-changes.md) was type checked, linted, unit tested where it has pure parts, and built, not run in a window: the seven tabs, the settings bar and its knobs, the editor (click, rectangle, drag in time and across rows, the grip, the keys), copy and paste, the zoom (wheel and buttons), the Song's right-click menus and selection, the hidden scrollbars, the Mixer's new row. Look at the instrument pages and the Song at 960 by 540 first.

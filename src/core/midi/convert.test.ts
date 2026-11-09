@@ -50,6 +50,21 @@ describe('guessing the mapping', () => {
     expect(rows.map((r) => r.assignment)).toEqual(['skip', 'bass', 'skip', 'skip', 'keys']);
   });
 
+  it('gives Keys to a vocal track before a busier track that is not vocals', () => {
+    const rows = guessMapping(fileOf([track('Piano', many(9), 0), track('Lead Vocals', many(3), 29), track('Strings', many(6), 48)]));
+    expect(rows.map((r) => r.assignment)).toEqual(['skip', 'keys', 'skip']);
+  });
+
+  it('knows a vocal track by a voice program or a short word when the name does not say', () => {
+    // Program 54 is Synth Voice (55 in the 1 based list); "Vox" stands alone in the name.
+    const byProgram = guessMapping(fileOf([track('Organ', many(9), 16), track('Track 4', many(2), 54)]));
+    expect(byProgram.map((r) => r.assignment)).toEqual(['skip', 'keys']);
+    const byWord = guessMapping(fileOf([track('Pad', many(9), 88), track('Lead Vox', many(2), 65)]));
+    expect(byWord.map((r) => r.assignment)).toEqual(['skip', 'keys']);
+    const notAWord = guessMapping(fileOf([track('Voxel synth', many(9), 80), track('Single', many(2), 81)]));
+    expect(notAWord.map((r) => r.assignment)).toEqual(['keys', 'skip']);
+  });
+
   it('puts the busiest guitar on Rhythm and the next on Lead, the rest on Skip', () => {
     const rows = guessMapping(fileOf([track('g1', many(3), 27), track('g2', many(9), 27), track('g3', many(6), 27), track('g4', many(1), 27)]));
     expect(rows.map((r) => r.assignment)).toEqual(['skip', 'rhythm', 'lead', 'skip']);

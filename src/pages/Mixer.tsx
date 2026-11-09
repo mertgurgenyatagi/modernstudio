@@ -52,6 +52,7 @@ export function Mixer() {
   const midiImport = useMidiImport();
   const importing = midiImport.stage.stage !== 'idle';
   const endDrag = () => dispatch({ type: 'endDrag' });
+  // The BPM is typed (no slider, the user's sweeping changes); the arrow keys step it by one.
   const editBpm = (value: number) => dispatch({ type: 'edit', change: (p) => setBpm(p, value), key: 'bpm' });
 
   return (
@@ -59,13 +60,10 @@ export function Mixer() {
       <div className="mixer-head">
         <h1 id="mixer-title">Mixer</h1>
         <div className="mixer-song">
-          <div className="field">
+          <label className="field">
             <span>BPM</span>
             <NumberField label="BPM" className="bpm-number" value={project.bpm} min={BPM_MIN} max={BPM_MAX} onCommit={editBpm} />
-            <div className="bpm-slider">
-              <LevelSlider label="BPM slider" value={project.bpm} min={BPM_MIN} max={BPM_MAX} onChange={editBpm} onGrabChange={endDrag} />
-            </div>
-          </div>
+          </label>
           <div className="field">
             <span id="meter-label">Meter</span>
             <div className="choice" role="radiogroup" aria-labelledby="meter-label">
@@ -166,20 +164,23 @@ export function Mixer() {
                 <div className="meter-fill" ref={meterRef('master')} />
               </div>
             </td>
-            <td className="export" colSpan={2}>
-              <button type="button" className="action" disabled={importing} onClick={() => void midiImport.begin()}>
-                Import MIDI
-              </button>
-              <button type="button" className="action" disabled={wav.rendering} aria-busy={wav.rendering} onClick={() => void wav.exportWav()}>
-                {wav.rendering ? 'Rendering…' : 'Export WAV'}
-              </button>
-              <button type="button" className="action" onClick={() => void exportMidi()}>
-                Export MIDI
-              </button>
-            </td>
+            <td className="tick" />
+            <td className="tick" />
           </tr>
         </tfoot>
       </table>
+
+      <div className="mixer-actions" role="group" aria-label="Files">
+        <button type="button" className="action" disabled={importing} onClick={() => void midiImport.begin()}>
+          Import MIDI
+        </button>
+        <button type="button" className="action" disabled={wav.rendering} aria-busy={wav.rendering} onClick={() => void wav.exportWav()}>
+          {wav.rendering ? 'Rendering…' : 'Export WAV'}
+        </button>
+        <button type="button" className="action" onClick={() => void exportMidi()}>
+          Export MIDI
+        </button>
+      </div>
       {state.importReport !== null && !importing && (
         <ImportReport report={state.importReport} name={name} onClose={() => dispatch({ type: 'dismissReport' })} />
       )}

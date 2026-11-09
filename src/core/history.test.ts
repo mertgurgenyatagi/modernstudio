@@ -51,12 +51,12 @@ describe('undo', () => {
     expect(back.present.instruments.bass.volume).toBe(p0.instruments.bass.volume);
   });
 
-  it('restores notes deleted by a meter change (assumed: it is an edit like any other)', () => {
+  it('undoes a meter change like any other edit, and the notes it hid stay where they were', () => {
     let p = must(addNote(createProject(), 'drums', 0, { row: 'snare', start: 36 }));
     let h = newHistory(p);
     p = setMeter(p, '3/4');
     h = commit(h, p);
-    expect(h.present.instruments.drums.patterns[0]?.notes).toHaveLength(0);
+    expect(h.present.instruments.drums.patterns[0]?.notes).toEqual([{ row: 'snare', start: 36 }]);
     h = undo(h);
     expect(h.present.meter).toBe('4/4');
     expect(h.present.instruments.drums.patterns[0]?.notes).toEqual([{ row: 'snare', start: 36 }]);

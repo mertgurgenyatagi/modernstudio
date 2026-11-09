@@ -258,30 +258,13 @@ export function showPatterns(project: Project, id: InstrumentId, count: number):
 }
 
 /**
- * Changes the meter. Notes keep their positions. Switching to a shorter bar deletes, for good,
- * every note that now falls outside its pattern (questionnaire 16), including notes that were
- * already hidden past the end, and shortens notes that run past the new end. Switching back does not
- * bring them back; Undo does, because it restores the whole project.
+ * Changes the meter. Notes keep their positions and nothing is deleted: switching to a shorter bar
+ * hides the notes that now fall outside their pattern, as a shortened pattern does, and they come
+ * back when the meter is switched back (the user's sweeping changes, 2026-11-09, overturning
+ * questionnaire 16). A note that runs past the new end is cut short where it plays and where it is
+ * drawn, and keeps its length.
  */
 export function setMeter(project: Project, meter: Meter): Project {
   if (meter === project.meter) return project;
-  const instruments = {} as Record<InstrumentId, Instrument>;
-  for (const id of INSTRUMENT_IDS) {
-    const instrument = project.instruments[id];
-    let changed = false;
-    const patterns = instrument.patterns.map((pattern) => {
-      const end = patternTicks(meter, pattern.bars);
-      const notes: Note[] = [];
-      for (const note of pattern.notes) {
-        if (note.start >= end) continue;
-        if ('length' in note && note.start + note.length > end) notes.push({ ...note, length: end - note.start });
-        else notes.push(note);
-      }
-      if (notes.length === pattern.notes.length && notes.every((n, i) => n === pattern.notes[i])) return pattern;
-      changed = true;
-      return { ...pattern, notes };
-    });
-    instruments[id] = changed ? { ...instrument, patterns } : instrument;
-  }
-  return { ...project, meter, instruments };
+  return { ...project, meter };
 }

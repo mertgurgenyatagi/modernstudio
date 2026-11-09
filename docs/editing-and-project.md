@@ -3,11 +3,11 @@
 ## Editing
 
 - Note placement and length are described in [time-and-notes.md](time-and-notes.md).
-- Undo is required. There is no redo.
+- Undo is required, from the Undo button or Ctrl+Z. There is no redo.
 - A Song block is removed by selecting it and pressing Delete, with no button (questionnaire 16).
-- Other editing actions (select, move, copy, delete and so on) are left to whatever feels natural.
+- Other editing actions are as a music program has them (the user's sweeping changes, 2026-11-09): selecting several notes or blocks (Ctrl+click, a rectangle), moving them together, Delete, Ctrl+A, Ctrl+C, Ctrl+X, Ctrl+V, Ctrl+D and the arrow keys. See [sweeping-changes.md](sweeping-changes.md).
 - No MIDI keyboard input. MIDI files are a separate matter: they can be imported and exported ([midi-import.md](midi-import.md)).
-- Editors are not zoomable.
+- The editors and the Song zoom sideways (Ctrl with the wheel, or the buttons). Nothing shows a scrollbar.
 
 ## Playback
 

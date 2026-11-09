@@ -4,7 +4,11 @@ The decided layout of each page, one section per page. The palette and fonts are
 
 Pages are decided one at a time, from an exhibition of layouts (see [exhibition/](exhibition/)). A page with no section here is still open.
 
+**Changed after the first run (2026-11-09).** The user's sweeping changes overturned parts of every design below: no scrollbars anywhere, horizontal zoom, seven tabs (Rhythm, Lead and Bass each their own), the instrument pages' pattern bank, tools and side panel folded into one bar of small buttons, the Song's brush replaced by a right-click menu and its blocks drawn grey, the Mixer's BPM slider gone. Each section says what changed in one line; [sweeping-changes.md](sweeping-changes.md) has the whole of it. Where a section and that file disagree, the file wins.
+
 ## Mixer: the Ledger
+
+*Changed 2026-11-09: BPM is a number field only (no slider); Import MIDI, Export WAV and Export MIDI have their own row under the table instead of the master's row.*
 
 Chosen on 2026-11-08 from [exhibition/mixer.html](exhibition/mixer.html), design 02. Seventeen of the planned twenty designs were built. Designs 01 to 08 were looked at in a browser; 09 to 17 were never viewed. The guiding principle was that intuitiveness and ease of use come first.
 
@@ -48,6 +52,8 @@ The Mixer's footer row holds three buttons, Import MIDI, Export WAV and Export M
 
 ## Song: the Brush bar
 
+*Changed 2026-11-09: the brush (instrument choice and pattern stepper) is gone; a right click on an empty bar offers the lane's patterns. Blocks are grey with a black line and their number at the left. The lanes zoom sideways and fill the height; the toolbar is a thin bar with the readout and the zoom.*
+
 Chosen on 2026-11-08 from [exhibition/song.html](exhibition/song.html), design 08. Ten designs were built. None was opened in a browser; they were only checked with the static lint, so the picked layout is unseen rendered.
 
 ### What it is
@@ -79,6 +85,8 @@ None of this is in the questionnaire answers. Change it if wrong.
 The drawn version is design 08 in [exhibition/song.html](exhibition/song.html). The other nine stay there as the record of what was considered.
 
 ## Drums: the Pad machine
+
+*Changed 2026-11-09: the pattern bank, the tools column and the envelope strip became one bar of small buttons above the pads (the shared settings bar), and the title went; the pads fill the page. Hits can be selected, dragged, copied and pasted.*
 
 Chosen on 2026-11-08 from [exhibition/drums.html](exhibition/drums.html), design 03. Ten designs were built. None was opened in a browser; they were only checked with the static lint, so the picked layout is unseen rendered.
 
@@ -121,6 +129,8 @@ The drawn version is design 03 in [exhibition/drums.html](exhibition/drums.html)
 
 ## Guitar: the String cards
 
+*Changed 2026-11-09: Rhythm, Lead and Bass are three tabs drawing this page, with no instrument choice. The pattern row, tools row and side panel became the shared settings bar; the card headers became the string's name on its open-string row, with an ink line between strings. Notes move across strings and frets when dragged.*
+
 Chosen on 2026-11-08 from [exhibition/guitars.html](exhibition/guitars.html), design 11. Twelve designs were built. None was opened in a browser; they were only checked with the static lint, so the picked layout is unseen rendered. The guiding principle was simplicity and ease of use.
 
 ### What it is
@@ -161,6 +171,8 @@ None of this is in the questionnaire answers. Change it if wrong.
 The drawn version is design 11 in [exhibition/guitars.html](exhibition/guitars.html), shown with Lead Guitar. The other eleven stay there as the record of what was considered.
 
 ## Keys: the piano roll
+
+*Changed 2026-11-09: the same settings bar and editor as the other instrument pages; no side panel. Notes move between keys when dragged.*
 
 Not drawn as an exhibition. The user decided on 2026-11-08 that Keys is built from the Guitar page ([open-items.md](open-items.md)), and it was built in plan24 step 9 from the code of the Guitar page.
 

@@ -46,7 +46,7 @@ Chosen on 2026-11-08 from the twenty looks in [exhibition/overall-feel.html](exh
 Decided by the user on 2026-11-08. The program's default resolution is **960 by 540**, and every page design must be able to handle it. Every exhibition is judged against it, and every page is built to work at that size.
 
 - This is the default, not a limit. The window can still be resized and maximized ([editing-and-project.md](editing-and-project.md)).
-- The page never scrolls sideways at 960 wide. Wide editors may scroll sideways inside their own box, as the Song lanes and the string cards already do.
+- The page never scrolls sideways at 960 wide. Wide editors may scroll sideways inside their own box, as the Song lanes and the string cards already do. Since the sweeping changes of 2026-11-09 nothing shows a scrollbar: boxes scroll with the wheel ([sweeping-changes.md](sweeping-changes.md)).
 - Not decided: whether 960 by 540 is the window or the area inside it, whether there is a smaller minimum window, and whether the rows may shrink. An editor may scroll vertically at 540 high: the user accepted this for the Guitar editor in questionnaire 16.
 
 The layouts decided before this rule (Mixer, Song, Drums, Guitar) were not designed against it. Plan24 step 19 checked every page and panel at 960 by 540 by reasoning and by pure layout maths, never by looking, and made two small changes (the Song lane height and the Drums tools column); the budgets are in [fit.md](fit.md). They are still unseen in a window.

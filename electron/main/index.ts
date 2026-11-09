@@ -26,6 +26,8 @@ function createWindow(): void {
 
   win.once('ready-to-show', () => win.show());
   guardClosing(win);
+  // The editors and the Song zoom themselves (Ctrl and the wheel); the window itself never zooms.
+  void win.webContents.setVisualZoomLevelLimits(1, 1);
 
   if (process.env['ELECTRON_RENDERER_URL']) {
     void win.loadURL(process.env['ELECTRON_RENDERER_URL']);

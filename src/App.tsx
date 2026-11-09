@@ -9,11 +9,19 @@ import './ui/shell.css';
 
 function CurrentPage() {
   const { state } = useStudio();
-  if (state.page === 'mixer') return <Mixer />;
-  if (state.page === 'song') return <Song />;
-  if (state.page === 'drums') return <Drums />;
-  if (state.page === 'guitar') return <Guitar />;
-  return <Keys />;
+  switch (state.page) {
+    case 'mixer':
+      return <Mixer />;
+    case 'song':
+      return <Song />;
+    case 'drums':
+      return <Drums />;
+    case 'keys':
+      return <Keys />;
+    default:
+      // Rhythm, Lead and Bass: the same page, drawn afresh for each so nothing carries over between them.
+      return <Guitar key={state.page} id={state.page} />;
+  }
 }
 
 function Shell() {

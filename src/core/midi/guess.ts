@@ -1,7 +1,8 @@
 /**
  * The pre-filled mapping of the mapping step: which instrument each track of a file is sent to.
- * Pure. A port of guess_mapping in tools/midi-prototype/pipeline.py; the rules are in
- * docs/midi-import.md ("Mapping guesses").
+ * Pure. A port of guess_mapping in tools/midi-prototype/pipeline.py, with one change the prototype
+ * does not have: vocal tracks (by name, or by a General MIDI voice program) take Keys before any
+ * busier non-vocal track. The rules are in docs/midi-import.md ("Mapping guesses").
  */
 import type { InstrumentId } from '../instruments';
 import type { MidiFile } from './read';
@@ -19,9 +20,14 @@ export interface TrackGuess {
   assignment: Assignment;
 }
 
-type Kind = 'drums' | 'bass' | 'keys' | 'guitar';
+/** 'vocals' is a Keys track that is the song's voice: it takes Keys before any other Keys track. */
+type Kind = 'drums' | 'bass' | 'vocals' | 'keys' | 'guitar';
 
-const VOCAL_WORDS = ['vocal', 'voice', 'julian', 'julien', 'casablancas', 'singer', 'sang'];
+const VOCAL_WORDS = ['vocal', 'voice', 'julian', 'julien', 'casablancas', 'singer', 'sang', 'lyric', 'choir'];
+/** Short vocal words that must stand alone ("vox", "voz", "sing"), so that "Voxel" or "Single" do not count. */
+const VOCAL_WORD_PATTERN = /\b(vox|voz|sing|singing)\b/;
+/** General MIDI voice programs, zero based: Choir Aahs, Voice Oohs, Synth Voice, and Lead 6 (voice). */
+const VOCAL_PROGRAMS = new Set([52, 53, 54, 85]);
 /** MIDI channel 10, zero based. */
 const DRUM_CHANNEL = 9;
 
@@ -34,12 +40,17 @@ interface Row {
   kind: Kind;
 }
 
+function isVocalName(name: string): boolean {
+  return VOCAL_WORDS.some((word) => name.includes(word)) || VOCAL_WORD_PATTERN.test(name);
+}
+
 function kindOf(name: string, onlyDrumChannel: boolean, program: number | null): Kind {
   if (onlyDrumChannel) return 'drums';
   if (name.includes('bass') || name.includes('basse')) return 'bass';
-  if (VOCAL_WORDS.some((word) => name.includes(word))) return 'keys';
+  if (isVocalName(name)) return 'vocals';
   if (program !== null && program >= 32 && program <= 39) return 'bass';
   if (program !== null && program >= 24 && program <= 31) return 'guitar';
+  if (program !== null && VOCAL_PROGRAMS.has(program)) return 'vocals';
   return 'keys';
 }
 
@@ -65,14 +76,13 @@ export function guessMapping(file: MidiFile): TrackGuess[] {
   for (const row of rows) assigned.set(row.index, 'skip');
   for (const row of rows.filter((r) => r.kind === 'drums')) assigned.set(row.index, 'drums');
 
-  // One track each for Bass and Keys: the busiest. The others that matched stay on Skip.
-  for (const [kind, instrument] of [
-    ['bass', 'bass'],
-    ['keys', 'keys'],
-  ] as const) {
-    const first = busiestFirst(rows.filter((r) => r.kind === kind))[0];
-    if (first) assigned.set(first.index, instrument);
-  }
+  // One track for Bass: the busiest. One for Keys: the busiest vocal track, and only when the file has
+  // none, the busiest other Keys track (Keys is the instrument for vocals). The others stay on Skip.
+  const bass = busiestFirst(rows.filter((r) => r.kind === 'bass'))[0];
+  if (bass) assigned.set(bass.index, 'bass');
+  const vocals = busiestFirst(rows.filter((r) => r.kind === 'vocals'));
+  const keys = vocals[0] ?? busiestFirst(rows.filter((r) => r.kind === 'keys'))[0];
+  if (keys) assigned.set(keys.index, 'keys');
 
   // Guitars: a name wins over the busiest-first order.
   const guitars = busiestFirst(rows.filter((r) => r.kind === 'guitar'));

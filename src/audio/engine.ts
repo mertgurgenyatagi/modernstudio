@@ -12,7 +12,7 @@
 import { PlayCursor } from '../core/cursor';
 import { INSTRUMENT_IDS, type InstrumentId } from '../core/instruments';
 import { instrumentGain, levelToGain, peakToMeter, smoothMeter } from '../core/levels';
-import { patternPlan, songPlan, type Plan } from '../core/playback';
+import { patternPlan, songPlan, type Plan, type Sound, type TimelineNote } from '../core/playback';
 import type { Project } from '../core/project';
 import { TICKS_PER_QUARTER } from '../core/time';
 import { loadBuffers, manifest } from './soundFiles';
@@ -218,6 +218,36 @@ export class AudioEngine {
         this.voices.delete(voice),
       );
       this.voices.add(voice);
+    }
+  }
+
+  /**
+   * Plays one note now, as a note sounds when it is placed or dragged to another pitch in an editor.
+   * It goes through its own gain at the instrument's volume straight to the master, so mute and
+   * isolate do not silence it: the user is listening to the note being edited. A Stop fades it out.
+   */
+  audition(instrument: InstrumentId, sound: Sound, lengthTicks: number): void {
+    const context = this.context;
+    const buffers = this.buffers;
+    const project = this.project;
+    const master = this.master;
+    if (!context || !buffers || !project || !master) return;
+    void context.resume();
+    const settings = project.instruments[instrument];
+    const gain = context.createGain();
+    gain.gain.value = levelToGain(settings.volume);
+    gain.connect(master);
+    const note: TimelineNote = { tick: 0, instrument, sound, lengthTicks };
+    const secondsPerTick = 60 / project.bpm / TICKS_PER_QUARTER;
+    try {
+      const voice = startNote(context, gain, buffers, manifest, note, settings, secondsPerTick, context.currentTime + 0.005, () => {
+        this.voices.delete(voice);
+        gain.disconnect();
+      });
+      this.voices.add(voice);
+    } catch {
+      // A sound that is not loaded: the note simply makes no sound.
+      gain.disconnect();
     }
   }
 

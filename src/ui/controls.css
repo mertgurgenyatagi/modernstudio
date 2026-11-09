@@ -1,0 +1,47 @@
+/* Small buttons shared by the settings bars of the instrument pages and the Song page: square, 1px ink, the mono face. */
+.ibtn,
+.seg button {
+  appearance: none;
+  height: 1.6rem;
+  margin: 0;
+  padding: 0 0.3rem;
+  font: 400 0.72rem/1 var(--font-outlier);
+  color: var(--color-ink);
+  background: var(--color-paper-2);
+  border: 1px solid var(--color-ink);
+  border-radius: 0;
+  cursor: pointer;
+}
+
+.ibtn:hover:not(:disabled),
+.seg button:hover:not([aria-checked='true'], [aria-pressed='true'], :disabled) {
+  background: var(--color-paper-3);
+}
+
+.ibtn:disabled,
+.seg button:disabled {
+  color: var(--color-rule);
+  cursor: default;
+}
+
+/* A row of choices, the chosen one filled with ink. */
+.seg {
+  display: flex;
+  align-items: center;
+}
+
+.seg button + button {
+  border-left: 0;
+}
+
+.seg button[aria-checked='true'],
+.seg button[aria-pressed='true'] {
+  color: var(--color-accent-ink);
+  background: var(--color-accent);
+}
+
+.seg-word {
+  margin-right: 0.35rem;
+  font: 400 0.72rem/1 var(--font-body);
+  color: var(--color-muted);
+}

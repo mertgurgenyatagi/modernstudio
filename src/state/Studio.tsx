@@ -8,7 +8,7 @@ import { AudioEngine } from '../audio/engine';
 import type { Project } from '../core/project';
 import { canUndo } from '../core/history';
 import { initialState, playRequestFor, reduce, type Action, type AppState, type ReplaceOptions } from './appState';
-import { isTypingTarget } from './keys';
+import { commandLetter, isTypingTarget } from './keys';
 import { useFiles, type FileActions } from './useFiles';
 
 interface Studio {
@@ -111,11 +111,17 @@ export function StudioProvider({ children }: { children: ReactNode }) {
   }, [state.playing, play, stop]);
 
   // Space starts and stops playback, except while typing in a field. A focused button would also
-  // be pressed by Space, so the key is taken on the way down and on the way up.
+  // be pressed by Space, so the key is taken on the way down and on the way up. Ctrl+Z undoes, on
+  // every page (there is no redo, questionnaire 14).
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
-      if (event.code !== 'Space' || event.ctrlKey || event.metaKey || event.altKey) return;
       if (isTypingTarget(event.target as HTMLElement | null)) return;
+      if (commandLetter(event) === 'z' && !event.shiftKey) {
+        event.preventDefault();
+        dispatch({ type: 'undo' });
+        return;
+      }
+      if (event.code !== 'Space' || event.ctrlKey || event.metaKey || event.altKey) return;
       event.preventDefault();
       if (!event.repeat) togglePlay();
     };
@@ -123,11 +129,17 @@ export function StudioProvider({ children }: { children: ReactNode }) {
       if (event.code !== 'Space' || isTypingTarget(event.target as HTMLElement | null)) return;
       event.preventDefault();
     };
+    // Ctrl with the wheel zooms the editors and the Song, never the whole window.
+    const onWheel = (event: WheelEvent) => {
+      if (event.ctrlKey) event.preventDefault();
+    };
     window.addEventListener('keydown', onKeyDown, true);
     window.addEventListener('keyup', onKeyUp, true);
+    window.addEventListener('wheel', onWheel, { passive: false });
     return () => {
       window.removeEventListener('keydown', onKeyDown, true);
       window.removeEventListener('keyup', onKeyUp, true);
+      window.removeEventListener('wheel', onWheel);
     };
   }, [togglePlay]);
 

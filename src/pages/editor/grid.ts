@@ -1,17 +1,13 @@
 /**
- * The geometry of a pattern editor, as pure functions so it can be tested without a window. The pad
- * grid of the Drums page is built from it, and the Guitar and Keys pages reuse it.
+ * The geometry of a pattern editor, as pure functions so it can be tested without a window. All five
+ * instrument pages share it (NoteEditor.tsx).
  *
- * Positions are ticks (12 to a quarter note). The screen width of a tick is decided in CSS (a tick is
- * at most MAX_TICK_PX wide and shrinks so that one bar fits, or all bars with "Show whole pattern");
- * nothing here depends on it except `playheadPx`, which is given the measured width.
+ * Positions are ticks (12 to a quarter note). The screen width of a tick follows the zoom
+ * (src/state/view.ts): by default one bar fills the width.
  */
 import { DRUM_ROWS, type DrumRow } from '../../core/instruments';
 import type { DrumNote } from '../../core/project';
 import { MIN_NOTE_TICKS, NOTE_VALUE_TICKS, TICKS_PER_QUARTER, ticksPerBar, type Meter, type NoteValue } from '../../core/time';
-
-/** A tick is at most this wide: 16 pads of 42 px per 4/4 bar at the 16th. */
-export const MAX_TICK_PX = 14;
 
 /** Drum rows as the pads show them, top to bottom (the model lists them bottom to top). */
 export const DRUM_ROWS_TOP_DOWN: readonly DrumRow[] = [...DRUM_ROWS].reverse();
@@ -74,6 +70,39 @@ export function beatMarks(meter: Meter, bars: number): BeatMark[] {
     }
   }
   return marks;
+}
+
+/**
+ * The marks above the grid at a zoom: every beat while a beat is at least `MIN_BEAT_LABEL_PX` wide,
+ * otherwise only the first beat of each bar, numbered by its bar.
+ */
+export function rulerMarks(meter: Meter, bars: number, tickPx: number): BeatMark[] {
+  const marks = beatMarks(meter, bars);
+  if (TICKS_PER_QUARTER * tickPx >= MIN_BEAT_LABEL_PX) return marks;
+  const perBar = ticksPerBar(meter);
+  return marks.filter((m) => m.barStart).map((m) => ({ ...m, label: String(m.tick / perBar + 1) }));
+}
+
+/** A beat narrower than this has no number of its own; the bars keep theirs. */
+export const MIN_BEAT_LABEL_PX = 26;
+/** Lines closer than this are left out, so a zoomed-out grid does not turn grey. */
+export const MIN_LINE_GAP_PX = 5;
+
+/**
+ * The vertical lines of a grid, which follow the chosen note value (the user's sweeping changes,
+ * 2026-11-09): `majorTicks` is the period of the lines in the rule colour (every step of a value of a
+ * beat or longer, or every beat when the value is shorter), `minorTicks` the period of faint lines at
+ * every step of a value shorter than a beat. 0 means no lines. The bar lines are always drawn, in ink.
+ * The Drums pads show the steps themselves, so they ask for no faint lines (`withSteps` false).
+ */
+export function gridLines(value: NoteValue, tickPx: number, withSteps = true): { majorTicks: number; minorTicks: number } {
+  const step = NOTE_VALUE_TICKS[value];
+  const major = Math.max(TICKS_PER_QUARTER, step);
+  const minor = withSteps && step < TICKS_PER_QUARTER ? step : 0;
+  return {
+    majorTicks: major * tickPx >= MIN_LINE_GAP_PX ? major : 0,
+    minorTicks: minor > 0 && minor * tickPx >= MIN_LINE_GAP_PX ? minor : 0,
+  };
 }
 
 /** Where a pad is, in words, for a screen reader: "bar 2, beat 3" and how far past the beat. */

@@ -5,9 +5,11 @@ import {
   cellCount,
   cellStarts,
   describeStart,
+  gridLines,
   hitWidthTicks,
   isOnGrid,
   playheadPx,
+  rulerMarks,
   visibleHits,
 } from './grid';
 
@@ -109,5 +111,35 @@ describe('words and playhead', () => {
     expect(playheadPx(-5, 48, 600)).toBe(0);
     expect(playheadPx(60, 48, 600)).toBe(600);
     expect(playheadPx(10, 0, 600)).toBe(0);
+  });
+});
+
+describe('grid lines that follow the note value', () => {
+  it('draws faint lines at each step of a value shorter than a beat, and the beats in the rule colour', () => {
+    expect(gridLines('sixteenth', 20)).toEqual({ majorTicks: 12, minorTicks: 3 });
+    expect(gridLines('third', 20)).toEqual({ majorTicks: 12, minorTicks: 4 });
+    expect(gridLines('halfThird', 20)).toEqual({ majorTicks: 12, minorTicks: 2 });
+  });
+
+  it('draws a line at each step of a beat or a longer value, and nothing finer', () => {
+    expect(gridLines('quarter', 20)).toEqual({ majorTicks: 12, minorTicks: 0 });
+    expect(gridLines('half', 20)).toEqual({ majorTicks: 24, minorTicks: 0 });
+    expect(gridLines('whole', 20)).toEqual({ majorTicks: 48, minorTicks: 0 });
+  });
+
+  it('leaves out lines that would crowd, and the faint ones on the drum pads', () => {
+    expect(gridLines('halfThird', 2)).toEqual({ majorTicks: 12, minorTicks: 0 });
+    expect(gridLines('sixteenth', 0.3)).toEqual({ majorTicks: 0, minorTicks: 0 });
+    expect(gridLines('sixteenth', 20, false)).toEqual({ majorTicks: 12, minorTicks: 0 });
+  });
+});
+
+describe('ruler marks at a zoom', () => {
+  it('numbers every beat when there is room, and only the bars when there is not', () => {
+    expect(rulerMarks('4/4', 2, 20).map((m) => m.label)).toEqual(['1.1', '1.2', '1.3', '1.4', '2.1', '2.2', '2.3', '2.4']);
+    expect(rulerMarks('4/4', 2, 1)).toEqual([
+      { tick: 0, label: '1', barStart: true },
+      { tick: 48, label: '2', barStart: true },
+    ]);
   });
 });

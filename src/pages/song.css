@@ -1,189 +1,97 @@
 /*
- * The Brush bar (docs/page-designs.md): one toolbar, then five tall lanes that carry only their blocks.
- * The bar width is --bar-px (src/pages/song/geometry.ts). At the default 960 by 540 window sixteen bars
- * show beside the name column; the lanes scroll sideways as one piece, the page never does, and the
- * lane height shrinks with the window so that all five lanes fit.
+ * The Song page (Song.tsx): a thin settings bar, then the lanes, which fill the rest of the window.
+ * The bar numbers stick to the top and the lane names to the left while the lanes scroll sideways;
+ * nothing shows a scrollbar. Sizes come from the component in pixels: --name-px, --timeline-px,
+ * --lane-px (the five lanes share the height) and --line-px (how far apart the bar lines are).
  */
 .song {
-  --name-w: 8rem;
-  --lane-h: clamp(3.4rem, calc((100vh - 14rem) / 5), 5.5rem);
   display: flex;
   flex-direction: column;
   height: 100%;
-  padding: 0.6rem 1rem 0.5rem;
+  min-height: 0;
 }
 
-/* ---- The toolbar ---- */
+/* ---- The settings bar ---- */
 .song-bar {
   display: flex;
-  flex-wrap: wrap;
   align-items: center;
-  justify-content: space-between;
-  gap: 0.4rem 1.5rem;
-  margin-bottom: 0.6rem;
-}
-
-.song-where {
-  display: flex;
-  align-items: baseline;
-  gap: 0.25rem 1rem;
-  min-width: 0;
-}
-
-.song h1 {
-  margin: 0;
-  font: 700 1.6rem/1.1 var(--font-display);
+  gap: 0.35rem 0.6rem;
+  padding: 0.35rem 0.75rem;
+  background: var(--color-paper);
+  border-bottom: 1px solid var(--color-ink);
 }
 
 .song-readout {
   margin: 0;
-  font: 400 0.95rem/1 var(--font-outlier);
   white-space: nowrap;
+  font: 400 0.8rem/1.6rem var(--font-outlier);
 }
 
 .song-note {
+  flex: 1;
+  min-width: 0;
   margin: 0;
-  min-height: 1.1em;
-  font-size: 0.8rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 0.75rem;
   color: var(--color-muted);
 }
 
-.brush {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0.4rem 0.75rem;
-}
-
-.brush-word {
-  font-size: 0.85rem;
-  color: var(--color-muted);
-}
-
-.brush-choice {
-  display: flex;
-}
-
-.brush-choice button,
-.stepper button {
-  appearance: none;
-  padding: 0.3rem 0.65rem;
-  font: 500 0.85rem/1 var(--font-body);
-  color: var(--color-ink);
-  background: var(--color-paper-2);
-  border: 1px solid var(--color-ink);
-  border-radius: 0;
-  cursor: pointer;
-}
-
-.brush-choice button + button {
-  border-left: 0;
-}
-
-.brush-choice button[aria-checked='true'] {
-  background: var(--color-accent);
-  color: var(--color-accent-ink);
-}
-
-.stepper {
-  display: flex;
-  align-items: stretch;
-}
-
-.stepper button {
-  padding: 0.3rem 0.6rem;
-  font-size: 1rem;
-}
-
-.stepper button:disabled {
-  color: var(--color-rule);
-  border-color: var(--color-rule);
-  cursor: default;
-}
-
-.stepper-number {
-  min-width: 2.6rem;
-  padding: 0.3rem 0.4rem;
-  text-align: center;
-  font: 400 0.95rem/1 var(--font-outlier);
-  background: var(--color-paper-2);
-  border-top: 1px solid var(--color-ink);
-  border-bottom: 1px solid var(--color-ink);
-}
-
-/* ---- The lanes: one scrolling piece ---- */
-.song-scroll {
+/* ---- The lanes ---- */
+.song-scroller {
   flex: 1;
   min-height: 0;
-  overflow-x: auto;
-  /* Only if the window is too low for five lanes: then they scroll instead of being cut off. */
-  overflow-y: auto;
-  border-top: 1px solid var(--color-ink);
-  border-bottom: 1px solid var(--color-ink);
+  overflow: auto;
+  overscroll-behavior: contain;
+  background: var(--color-paper-2);
+  user-select: none;
 }
 
-.song-grid {
+.song-canvas {
   position: relative;
-  min-width: 100%;
 }
 
-.song-row {
+.song-top {
+  position: sticky;
+  top: 0;
+  z-index: 6;
   display: flex;
-  height: var(--lane-h);
-  border-bottom: 1px solid var(--color-rule);
-}
-
-.song-row:last-child {
-  border-bottom: 0;
-}
-
-.song-timeline-row {
-  height: 1.9rem;
+  height: var(--timeline-px);
+  background: var(--color-paper);
   border-bottom: 1px solid var(--color-ink);
 }
 
-/* The name stays in view while the lanes scroll sideways. */
-.lane-name {
+.song-corner {
   position: sticky;
   left: 0;
-  z-index: 3;
-  flex: 0 0 var(--name-w);
-  display: flex;
-  align-items: center;
-  padding: 0 0.5rem 0 0;
-  font: 500 0.9rem/1.2 var(--font-body);
+  z-index: 1;
+  flex: 0 0 var(--name-px);
   background: var(--color-paper);
   border-right: 1px solid var(--color-ink);
 }
 
-/* The brush's lane: its name is outlined in ink. */
-.lane-name.brush-lane span {
-  padding: 0.2rem 0.45rem;
-  border: 1px solid var(--color-ink);
-}
-
-.lane-name span {
-  padding: 0.2rem 0.45rem 0.2rem 0;
-}
-
+/* Clicking a bar number moves the playhead there. */
 .timeline {
   appearance: none;
-  flex: 1 0 auto;
-  display: flex;
-  padding: 0;
+  position: relative;
+  flex: none;
   margin: 0;
+  padding: 0;
   background: none;
   border: 0;
   border-radius: 0;
   cursor: pointer;
-  color: var(--color-muted);
 }
 
 .timeline-bar {
-  flex: 0 0 var(--bar-px);
-  padding: 0.55rem 0 0 0.3rem;
-  text-align: left;
-  font: 400 0.75rem/1 var(--font-outlier);
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  padding: 6px 0 0 4px;
+  white-space: nowrap;
+  font: 400 0.68rem/1 var(--font-outlier);
+  color: var(--color-muted);
   border-left: 1px solid var(--color-rule);
 }
 
@@ -191,101 +99,113 @@
   color: var(--color-ink);
 }
 
-.song-lanes {
-  position: relative;
+.song-body {
+  display: flex;
 }
 
-.track {
+.song-names {
+  position: sticky;
+  left: 0;
+  z-index: 5;
+  flex: 0 0 var(--name-px);
+  background: var(--color-paper);
+  border-right: 1px solid var(--color-ink);
+}
+
+.song-name {
+  display: flex;
+  align-items: center;
+  height: var(--lane-px);
+  padding: 0 0.6rem;
+  overflow: hidden;
+  white-space: nowrap;
+  font: 500 0.85rem/1.2 var(--font-body);
+  border-bottom: 1px solid var(--color-rule);
+}
+
+.song-lanes {
   position: relative;
-  flex: 1 0 auto;
-  cursor: copy;
-  /* A hairline at every bar line. */
+  flex: none;
+  touch-action: none;
+}
+
+/* A hairline at every bar, fewer when the bars are narrow. */
+.song-lane {
+  height: var(--lane-px);
+  border-bottom: 1px solid var(--color-rule);
   background-image: repeating-linear-gradient(
     to right,
     var(--color-rule) 0,
     var(--color-rule) 1px,
     transparent 1px,
-    transparent var(--bar-px)
+    transparent var(--line-px)
   );
 }
 
-/* ---- Blocks, the ghost, the playhead ---- */
-.block,
-.ghost {
+/* The empty bar under the pointer, where a right click places a pattern. */
+.song-hover {
   position: absolute;
-  top: 0.4rem;
-  bottom: 0.4rem;
+  z-index: 1;
+  pointer-events: none;
+  background: var(--color-paper-3);
+}
+
+/* ---- Blocks: grey inside a black line, the pattern's number at the left ---- */
+.block {
+  position: absolute;
+  z-index: 2;
   display: flex;
   align-items: center;
-  justify-content: center;
-  margin: 0;
-  padding: 0;
-  font: 400 1.7rem/1 var(--font-outlier);
-  border-radius: 0;
-}
-
-.block {
-  appearance: none;
-  z-index: 1;
-  color: var(--color-accent-ink);
-  background: var(--color-accent);
+  overflow: clip;
+  color: var(--color-ink);
+  background: var(--color-rule);
   border: 1px solid var(--color-ink);
   cursor: grab;
-  touch-action: none;
-  user-select: none;
 }
 
+/* The number stays in view at the left while the block is scrolled partly out of it. */
+.block-label {
+  position: sticky;
+  left: calc(var(--name-px) + 4px);
+  padding: 0 6px;
+  white-space: nowrap;
+  font: 400 0.9rem/1 var(--font-outlier);
+}
+
+/* A selected block turns pale, inside a heavier line. */
 .block.selected {
-  outline: 2px solid var(--color-ink);
-  outline-offset: 2px;
+  background: var(--color-paper-2);
+  border-width: 2px;
 }
 
 .block.dragging {
-  z-index: 2;
+  z-index: 3;
   cursor: grabbing;
-  opacity: 0.85;
 }
 
-/* A drop that would overlap: the block is drawn hollow, and snaps back on release. */
+/* A drop that would overlap: dashed, and the blocks go back on release. */
 .block.refused {
-  color: var(--color-ink);
   background: var(--color-paper-2);
   border-style: dashed;
 }
 
-.ghost {
-  z-index: 0;
+.song-marquee {
+  position: absolute;
+  z-index: 4;
   pointer-events: none;
-  color: var(--color-muted);
+  background: color-mix(in oklch, var(--color-ink) 6%, transparent);
   border: 1px dashed var(--color-ink);
 }
 
-.ghost.refused {
-  color: var(--color-rule);
-  border-color: var(--color-rule);
-}
-
-/* Two pixels of ink through every lane. It starts at the track's left edge and moves by transform. */
-.playhead {
+/* Two pixels of ink through every lane, moved by transform. */
+.song-playhead {
   position: absolute;
   top: 0;
   bottom: 0;
-  left: var(--name-w);
-  z-index: 2;
+  left: 0;
+  z-index: 5;
   width: 2px;
   margin-left: -1px;
   background: var(--color-ink);
   pointer-events: none;
-}
-
-/* Narrow windows: the toolbar wraps, the name column narrows. */
-@media (max-width: 720px) {
-  .song {
-    --name-w: 5.5rem;
-    padding: 0.5rem 0.75rem;
-  }
-
-  .lane-name {
-    font-size: 0.8rem;
-  }
 }

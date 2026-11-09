@@ -1,105 +1,27 @@
-import { useCallback, useMemo, useRef, useState, type CSSProperties, type MouseEvent as ReactMouseEvent } from 'react';
-import { FRET_COUNTS, INSTRUMENT_LABELS, TUNING, type FretCount, type StringInstrumentId } from '../core/instruments';
-import { addNote, noteKey, removeNote, replaceNote } from '../core/patterns';
-import { setFretCount, type StringNote } from '../core/project';
-import { patternTicks, ticksPerBar } from '../core/time';
+import { useMemo, useState } from 'react';
+import { FRET_COUNT_DEFAULT, INSTRUMENT_LABELS, type FretCount, type StringInstrumentId } from '../core/instruments';
+import { setFretCount, type Note, type StringNote } from '../core/project';
 import { useStudio } from '../state/Studio';
-import { CopyNotes } from './editor/CopyNotes';
-import { EnvelopeStrip } from './editor/EnvelopeStrip';
-import { beatMarks, describeStart } from './editor/grid';
-import {
-  clickStart,
-  fretChangeLine,
-  fretRows,
-  hiddenAboveFret,
-  hiddenAcrossPatterns,
-  newNoteLength,
-  notesAt,
-  stringNames,
-} from './editor/noteGeometry';
-import { PatternBank } from './editor/PatternBank';
-import { Ruler, at } from './editor/Ruler';
-import { LengthChoice, NoteValueChoice, ShowWholeButton } from './editor/Tools';
-import { useDeleteKey } from './editor/useDeleteKey';
-import { useNoteDrag } from './editor/useNoteDrag';
-import { useNoteSelection } from './editor/useNoteSelection';
-import { usePlayhead } from './editor/usePlayhead';
-import { useTryEdit } from './editor/useTryEdit';
-import './editor/noteEditor.css';
-import './guitar.css';
+import { FretChoice, InstrumentBar } from './editor/InstrumentBar';
+import { stringsLayout } from './editor/layout';
+import { NoteEditor } from './editor/NoteEditor';
+import { fretChangeLine, hiddenAboveFret, hiddenAcrossPatterns } from './editor/noteGeometry';
 
-const GUITARS: readonly StringInstrumentId[] = ['bass', 'rhythm', 'lead'];
+const isStringNote = (note: Note): note is StringNote => 'string' in note;
 
-const isStringNote = (note: unknown): note is StringNote => typeof note === 'object' && note !== null && 'string' in note;
-
-/** The String cards (docs/page-designs.md): Bass, Rhythm Guitar and Lead Guitar, one card per string. */
-export function Guitar() {
-  const { state, project, dispatch } = useStudio();
-  const tryEdit = useTryEdit();
+/**
+ * Rhythm, Lead and Bass: one tab each (the user's sweeping changes, 2026-11-09), the same page. The
+ * string layout: each string its open string and then its frets, lowest string at the top
+ * (docs/instrument-layouts.md). The fret count sits in the settings bar.
+ */
+export function Guitar({ id }: { id: StringInstrumentId }) {
+  const { project, dispatch } = useStudio();
   const [message, setMessage] = useState('');
-  const rulerRef = useRef<HTMLDivElement>(null);
-
-  const id = state.guitar;
   const instrument = project.instruments[id];
-  const fretCount: FretCount = instrument.fretCount ?? 7;
-  const selected = instrument.selectedPattern;
-  const pattern = instrument.patterns[selected];
-  const bars = pattern?.bars ?? 1;
-  const total = patternTicks(project.meter, bars);
-  const value = state.noteValue;
-  const [selectedKey, setSelectedKey] = useNoteSelection(`${id}:${selected}`);
-
-  const playheadRef = usePlayhead(id, total, rulerRef);
-  const notes = useMemo(() => (pattern?.notes ?? []).filter(isStringNote), [pattern]);
-  const marks = useMemo(() => beatMarks(project.meter, bars), [project.meter, bars]);
-  const names = stringNames(id);
-  const frets = fretRows(fretCount);
+  const fretCount: FretCount = instrument.fretCount ?? FRET_COUNT_DEFAULT;
+  const layout = useMemo(() => stringsLayout(id, fretCount), [id, fretCount]);
+  const notes = (instrument.patterns[instrument.selectedPattern]?.notes ?? []).filter(isStringNote);
   const hidden = hiddenAboveFret(notes, fretCount);
-
-  // Delete removes the selected note, if it is on screen (a note above the fret count is hidden).
-  const deleteSelected = useCallback(() => {
-    const note = notes.find((n) => noteKey(n) === selectedKey);
-    if (!note || note.fret > fretCount) return;
-    dispatch({ type: 'edit', change: (p) => removeNote(p, id, selected, note) });
-    setSelectedKey(null);
-    setMessage('');
-  }, [notes, selectedKey, fretCount, dispatch, id, selected, setSelectedKey]);
-  useDeleteKey(selectedKey === null ? null : deleteSelected);
-
-  const { preview, begin } = useNoteDrag<StringNote>({
-    value,
-    total,
-    onClick: (note) => {
-      setMessage('');
-      setSelectedKey(noteKey(note));
-    },
-    onCommit: (note, next) => {
-      const to: StringNote = { ...note, start: next.start, length: next.length };
-      const reason = tryEdit((p) => replaceNote(p, id, selected, note, to));
-      setMessage(reason ?? '');
-      if (!reason) setSelectedKey(noteKey(to));
-    },
-  });
-
-  /** The width of a tick on screen, measured from the beat ruler, which is exactly `total` ticks wide. */
-  const tickPx = () => (rulerRef.current && total > 0 ? rulerRef.current.getBoundingClientRect().width / total : 0);
-
-  const place = (event: ReactMouseEvent<HTMLDivElement>, string: number, fret: number) => {
-    const px = tickPx();
-    if (px <= 0) return;
-    const rect = event.currentTarget.getBoundingClientRect();
-    const start = clickStart(event.clientX - rect.left, px, value, total);
-    const note: StringNote = { string, fret, start, length: newNoteLength(start, value, total) };
-    const reason = tryEdit((p) => addNote(p, id, selected, note));
-    setMessage(reason ?? '');
-    setSelectedKey(reason ? null : noteKey(note));
-  };
-
-  const chooseGuitar = (next: StringInstrumentId) => {
-    setMessage('');
-    setSelectedKey(null);
-    dispatch({ type: 'setGuitar', id: next });
-  };
 
   /** Sets the fret count. If notes in any pattern are now above it, the quiet line says so (Undo brings them back). */
   const changeFrets = (count: FretCount) => {
@@ -107,133 +29,13 @@ export function Guitar() {
     setMessage(fretChangeLine(hiddenAcrossPatterns(instrument.patterns, count), count));
   };
 
-  const gridStyle = { '--total': total, '--bar-ticks': ticksPerBar(project.meter) } as CSSProperties;
-  const hiddenLine =
-    hidden === 0 ? '' : `${hidden} ${hidden === 1 ? 'note is' : 'notes are'} on frets above ${fretCount}: hidden, kept, back when frets are raised.`;
-
+  const hiddenLine = hidden === 0 ? '' : `${hidden} ${hidden === 1 ? 'note is' : 'notes are'} above fret ${fretCount}: hidden, kept.`;
   return (
-    <section className="ne" aria-labelledby="guitar-title">
-      <div className="ne-main">
-        <div className="ne-head">
-          <h1 id="guitar-title">{INSTRUMENT_LABELS[id]}</h1>
-          <p className="editor-note" role="status">
-            {message || hiddenLine}
-          </p>
-        </div>
-
-        <PatternBank id={id} />
-
-        <div className="ne-tools">
-          <LengthChoice id={id} onRefused={setMessage} />
-          <NoteValueChoice id={id} />
-          <CopyNotes id={id} onResult={setMessage} />
-        </div>
-
-        <div className="ne-scroll">
-          <div className={state.showWholePattern ? 'ne-grid whole' : 'ne-grid'} style={gridStyle}>
-            <Ruler marks={marks} rulerRef={rulerRef} />
-
-            {names.map((name, string) => (
-              <section key={string} className="card" aria-label={`String ${name}`}>
-                <header className="card-head">
-                  <span className="card-name">{name}</span>
-                  <span className="card-sub">open string</span>
-                </header>
-                {frets.map((fret) => (
-                  <div key={fret} className={fret === 0 ? 'fret-line open' : 'fret-line'}>
-                    <div className="fret-label figure">{fret}</div>
-                    <div
-                      className="ne-row"
-                      role="group"
-                      aria-label={`${name}, fret ${fret}`}
-                      onClick={(event) => place(event, string, fret)}
-                    >
-                      {notesAt(notes, string, fret, fretCount, total).map((note) => {
-                        const key = noteKey(note);
-                        const live = preview && preview.key === key ? preview : note;
-                        const classes = ['note'];
-                        if (key === selectedKey) classes.push('selected');
-                        if (preview && preview.key === key) classes.push('dragging');
-                        return (
-                          <div
-                            key={key}
-                            className={classes.join(' ')}
-                            style={at(live.start, live.length)}
-                            role="button"
-                            tabIndex={0}
-                            aria-pressed={key === selectedKey}
-                            aria-label={`${name}, fret ${fret}, ${describeStart(live.start, project.meter)}`}
-                            onClick={(event) => event.stopPropagation()}
-                            onKeyDown={(event) => {
-                              if (event.key === 'Enter') setSelectedKey(key);
-                            }}
-                            onPointerDown={(event) => begin(event, note, key, 'move', tickPx())}
-                          >
-                            <span className="note-fret figure">{note.fret}</span>
-                            <span
-                              className="note-grip"
-                              aria-hidden="true"
-                              onPointerDown={(event) => begin(event, note, key, 'resize', tickPx())}
-                            />
-                          </div>
-                        );
-                      })}
-                    </div>
-                  </div>
-                ))}
-              </section>
-            ))}
-            <div className="ne-playhead" ref={playheadRef} aria-hidden="true" />
-          </div>
-        </div>
-      </div>
-
-      <aside className="ne-side" aria-label="Instrument settings">
-        <div className="side-group">
-          <span className="tool-label" id="guitar-choice-label">
-            Instrument
-          </span>
-          <div className="side-buttons" role="radiogroup" aria-labelledby="guitar-choice-label">
-            {GUITARS.map((guitar) => (
-              <button
-                key={guitar}
-                type="button"
-                role="radio"
-                aria-checked={id === guitar}
-                onClick={() => chooseGuitar(guitar)}
-              >
-                {INSTRUMENT_LABELS[guitar]}
-                <span className="side-sub">{TUNING[guitar].length} strings</span>
-              </button>
-            ))}
-          </div>
-        </div>
-
-        <div className="side-group">
-          <span className="tool-label" id="guitar-frets-label">
-            Frets
-          </span>
-          <div className="side-frets" role="radiogroup" aria-labelledby="guitar-frets-label">
-            {FRET_COUNTS.map((count) => (
-              <button
-                key={count}
-                type="button"
-                role="radio"
-                aria-checked={fretCount === count}
-                onClick={() => changeFrets(count)}
-              >
-                {count}
-              </button>
-            ))}
-          </div>
-          <ShowWholeButton />
-        </div>
-
-        <div className="side-group side-envelope">
-          <span className="tool-label">Envelope</span>
-          <EnvelopeStrip id={id} />
-        </div>
-      </aside>
+    <section className="ipage" aria-label={INSTRUMENT_LABELS[id]}>
+      <InstrumentBar id={id} message={message || hiddenLine} onMessage={setMessage}>
+        <FretChoice fretCount={fretCount} onChange={changeFrets} />
+      </InstrumentBar>
+      <NoteEditor layout={layout} onMessage={setMessage} />
     </section>
   );
 }

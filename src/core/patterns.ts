@@ -160,6 +160,84 @@ export function replaceNote(project: Project, id: InstrumentId, pattern: number,
   );
 }
 
+// ---- Editing several notes at once (a selection) ----
+
+/**
+ * Places several notes as one edit (a paste or a duplicate). A note that is already there is
+ * skipped, so pasting twice in one place changes nothing; any other problem refuses the whole edit.
+ */
+export function addNotes(project: Project, id: InstrumentId, pattern: number, notes: readonly Note[]): Outcome {
+  if (!patternExists(project, id, pattern)) return refuse('That pattern does not exist.');
+  const limits = placingLimits(project, id, pattern);
+  for (const note of notes) {
+    const problem = noteProblem(id, note, limits);
+    if (problem) return refuse(problem);
+  }
+  const existing = project.instruments[id].patterns[pattern]?.notes ?? [];
+  const keys = new Set(existing.map(noteKey));
+  const extra: Note[] = [];
+  for (const note of notes) {
+    const key = noteKey(note);
+    if (keys.has(key)) continue;
+    keys.add(key);
+    extra.push(note);
+  }
+  if (extra.length === 0) return ok(project);
+  return ok(updatePattern(project, id, pattern, (p) => ({ ...p, notes: [...p.notes, ...extra] })));
+}
+
+/** Removes several notes as one edit (Delete on a selection, or a cut). */
+export function removeNotes(project: Project, id: InstrumentId, pattern: number, notes: readonly Note[]): Project {
+  const keys = new Set(notes.map(noteKey));
+  return updatePattern(project, id, pattern, (p) => {
+    const kept = p.notes.filter((n) => !keys.has(noteKey(n)));
+    return kept.length === p.notes.length ? p : { ...p, notes: kept };
+  });
+}
+
+/**
+ * Replaces several notes by others as one edit: a selection moved or made longer. `to[i]` takes the
+ * place of `from[i]`. Refused if a new note does not fit the layout or the pattern, lands on a note
+ * that is not being moved, or two of the new notes are the same note.
+ */
+export function replaceNotes(
+  project: Project,
+  id: InstrumentId,
+  pattern: number,
+  from: readonly Note[],
+  to: readonly Note[],
+): Outcome {
+  if (!patternExists(project, id, pattern)) return refuse('That pattern does not exist.');
+  if (from.length !== to.length) return refuse('Every moved note needs a place.');
+  const limits = placingLimits(project, id, pattern);
+  for (const note of to) {
+    const problem = noteProblem(id, note, limits);
+    if (problem) return refuse(problem);
+  }
+  const notes = project.instruments[id].patterns[pattern]?.notes ?? [];
+  const fromKeys = new Set(from.map(noteKey));
+  const present = new Set(notes.map(noteKey));
+  if (from.some((n) => !present.has(noteKey(n)))) return refuse('There is no such note.');
+  const unchanged = from.every((n, i) => {
+    const t = to[i];
+    return t !== undefined && noteKey(t) === noteKey(n) && noteEnd(t) === noteEnd(n);
+  });
+  if (unchanged) return ok(project);
+  const staying = new Set(notes.filter((n) => !fromKeys.has(noteKey(n))).map(noteKey));
+  const toKeys = new Set<string>();
+  for (const note of to) {
+    const key = noteKey(note);
+    if (staying.has(key) || toKeys.has(key)) return refuse('A note is already there.');
+    toKeys.add(key);
+  }
+  return ok(
+    updatePattern(project, id, pattern, (p) => ({
+      ...p,
+      notes: [...p.notes.filter((n) => !fromKeys.has(noteKey(n))), ...to],
+    })),
+  );
+}
+
 // ---- Editing patterns ----
 
 /**

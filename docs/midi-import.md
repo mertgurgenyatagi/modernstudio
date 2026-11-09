@@ -25,12 +25,12 @@ In this order, first match wins:
 
 1. Every note on MIDI channel 10: **Drums**. All such tracks go to Drums together (the album files have extra Tambourine and Timbale tracks on channel 10, which hold only dropped sounds).
 2. Track name contains "bass" or "basse": **Bass**.
-3. Track name contains "vocal", "voice", "singer" or the singer's name (Julian, Julien, Casablancas): **Keys**. This comes before the program test because the vocal tracks in the album files carry random programs (oohs, violin, oboe, alto sax, overdriven guitar).
+3. Track name contains "vocal", "voice", "singer", "lyric", "choir", the singer's name (Julian, Julien, Casablancas) or the word "vox", "voz" or "sing" on its own: **Keys**, as the vocals. This comes before the program test because the vocal tracks in the album files carry random programs (oohs, violin, oboe, alto sax, overdriven guitar). A track with a General MIDI voice program (Choir Aahs, Voice Oohs, Synth Voice, Lead 6 voice) and no telling name also counts as vocals (added in the sweeping changes, 2026-11-09).
 4. GM program 33 to 40 (Bass family): **Bass**. Program 25 to 32 (Guitar family): a guitar. Anything else: **Keys**.
 
 Then, per instrument:
 
-- **Bass and Keys:** the track with the most notes is used. Other tracks that matched are set to Skip.
+- **Bass and Keys:** the track with the most notes is used. Other tracks that matched are set to Skip. For Keys, a vocal track always wins over a busier track that is not vocals ("Vocals of a midi should map to keys", the sweeping changes of 2026-11-09); the Python prototype does not have this rule.
 - **Guitars:** a track named "rhythm" is Rhythm and one named "lead" is Lead. Otherwise the track with the most notes is Rhythm Guitar and the next is Lead Guitar. The rest are set to Skip. Both guitars use the same sound and layout, so only the label depends on this guess, and the user can swap them.
 
 Merging: the user may send two tracks to the same instrument. Their notes are combined and exact duplicates (same pitch, same start) are dropped. Merging is never the default, because a doubled overdub track would just add noise. The drum tracks are the one case that is merged automatically.

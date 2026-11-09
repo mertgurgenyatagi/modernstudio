@@ -16,10 +16,10 @@ One pattern can mix straight notes and third notes.
 
 ## Placing notes
 
-Select the note value first, then place. A placed note can be dragged longer or shorter.
+Select the note value first, then place. A placed note can be dragged longer or shorter. The grid's lines follow the chosen note value ([sweeping-changes.md](sweeping-changes.md)).
 
 A note can ring past the end of its pattern into the next one when the instrument's release is long enough.
 
 ## When the meter changes
 
-Notes keep their positions. Switching 4/4 to 3/4 shortens the bar, and notes that now fall outside the bar are deleted for good (questionnaire 16). They do not come back if the meter is switched back. This differs from shortening a pattern, where notes outside are kept (see [patterns-and-song.md](patterns-and-song.md)). Whether Undo restores them was not decided.
+Notes keep their positions. Switching 4/4 to 3/4 shortens the bar, and notes that now fall outside the bar are kept, hidden, as when a pattern is shortened (see [patterns-and-song.md](patterns-and-song.md)). They come back when the meter is switched back to 4/4. A note that runs past the new end plays and shows cut short, and keeps its length. This is the user's sweeping change of 2026-11-09 ("It should remember it somehow"), overturning questionnaire 16, which deleted them for good. See [sweeping-changes.md](sweeping-changes.md).

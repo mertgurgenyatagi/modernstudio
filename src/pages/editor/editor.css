@@ -1,33 +1,59 @@
 /*
- * Parts the instrument pages share (Drums, Guitar, Keys): the pattern bank, the length and note value
- * choices, "Show whole pattern" and the envelope strip. Each part is a plain block; the page lays them
- * out. Square corners, 1px ink lines, as the decided pages have them (docs/page-designs.md).
+ * The settings bar above every instrument editor (InstrumentBar.tsx): one row of small buttons that
+ * wraps only in a narrow window. The buttons themselves are src/ui/controls.css.
  */
-
-/* ---- Pattern bank ---- */
-.bank {
+.ibar {
   display: flex;
-  align-items: flex-start;
-  gap: 0.75rem;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem 0.6rem;
+  padding: 0.35rem 0.75rem;
+  background: var(--color-paper);
+  border-bottom: 1px solid var(--color-ink);
 }
 
-.bank-word {
-  padding-top: 0.3rem;
-  font-size: 0.85rem;
-  color: var(--color-muted);
+/* ---- The pattern: previous, the number (which opens them all), next ---- */
+.pick {
+  position: relative;
+  display: flex;
 }
 
-.bank-numbers {
+.pick-step {
+  padding: 0 0.3rem;
+  font: 500 0.9rem/1 var(--font-body);
+}
+
+.pick-number {
+  min-width: 2.3rem;
+  font-size: 0.82rem;
+  border-left: 0;
+  border-right: 0;
+}
+
+.pick-number[aria-expanded='true'] {
+  color: var(--color-accent-ink);
+  background: var(--color-accent);
+}
+
+.pick-panel {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  z-index: 20;
   display: grid;
-  grid-template-columns: repeat(10, 1.9rem);
-  gap: 0.25rem;
+  grid-template-columns: repeat(10, 1.8rem);
+  gap: 3px;
+  padding: 6px;
+  background: var(--color-paper-2);
+  border: 1px solid var(--color-ink);
 }
 
-.bank-number {
+.pick-cell {
   appearance: none;
-  height: 1.65rem;
+  height: 1.5rem;
+  margin: 0;
   padding: 0;
-  font: 400 0.8rem/1 var(--font-outlier);
+  font: 400 0.72rem/1 var(--font-outlier);
   color: var(--color-muted);
   background: transparent;
   border: 1px solid var(--color-rule);
@@ -35,140 +61,37 @@
   cursor: pointer;
 }
 
-.bank-number.active {
+.pick-cell.active {
   color: var(--color-ink);
   border-color: var(--color-ink);
 }
 
-.bank-number.selected {
+.pick-cell.selected {
   color: var(--color-accent-ink);
   background: var(--color-accent);
   border-color: var(--color-ink);
 }
 
-/* ---- Length, note value, show whole pattern ---- */
-.tool-group {
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
-}
-
-.tool-label {
-  font-size: 0.8rem;
-  color: var(--color-muted);
-}
-
-.tool-buttons {
-  display: grid;
-  gap: 0.2rem;
-}
-
-.tool-length {
-  grid-template-columns: 1fr 1fr;
-}
-
-.tool-values {
-  grid-template-columns: 1fr;
-}
-
-.tool-buttons button,
-.tool-whole {
-  appearance: none;
-  padding: 0.22rem 0.5rem;
-  font: 500 0.8rem/1.2 var(--font-body);
-  text-align: center;
-  color: var(--color-ink);
-  background: var(--color-paper-2);
-  border: 1px solid var(--color-ink);
-  border-radius: 0;
-  cursor: pointer;
-}
-
-.tool-buttons button[aria-checked='true'],
-.tool-whole[aria-pressed='true'] {
-  color: var(--color-accent-ink);
-  background: var(--color-accent);
-}
-
-.bank-number.more {
+.pick-cell.more {
   color: var(--color-ink);
   border-style: dashed;
   border-color: var(--color-ink);
 }
 
-.bank-number:disabled {
-  opacity: 0.35;
-  cursor: default;
-}
-
-/* ---- Copy notes to… : a button and a panel that opens under it ---- */
-.copy {
-  position: relative;
-  align-self: flex-start;
-}
-
-.copy-panel {
-  position: absolute;
-  top: calc(100% + 0.25rem);
-  left: 0;
-  z-index: 10;
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  max-height: 15rem;
-  padding: 0.5rem;
-  overflow-y: auto;
-  background: var(--color-paper-2);
-  border: 1px solid var(--color-ink);
-}
-
-.copy-mode {
-  grid-template-columns: 1fr 1fr;
-}
-
-/* ---- Envelope strip ---- */
-.envelope {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-}
-
-.envelope-cell {
-  display: flex;
-  flex-direction: column;
-  gap: 0.1rem;
-  padding: 0.45rem 0.8rem 0.35rem;
-  border-left: 1px solid var(--color-ink);
-}
-
-.envelope-cell:first-child {
-  border-left: 0;
-}
-
-.envelope-head {
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  font-size: 0.85rem;
-}
-
-.envelope-head .figure {
-  font: 400 0.85rem/1 var(--font-outlier);
-}
-
-/* A quiet line that says why an edit was refused. It keeps its height so nothing jumps. */
-.editor-note {
+/* ---- The quiet line, and the knobs at the right ---- */
+.ibar-note {
+  flex: 1 1 3rem;
+  min-width: 0;
   margin: 0;
-  min-height: 1.1em;
-  font-size: 0.8rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 0.75rem;
   color: var(--color-muted);
 }
 
-@media (max-width: 720px) {
-  .envelope {
-    grid-template-columns: 1fr 1fr;
-  }
-
-  .envelope-cell:nth-child(3) {
-    border-left: 0;
-  }
+.ibar-knobs {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }

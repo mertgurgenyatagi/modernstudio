@@ -1,7 +1,20 @@
 import { describe, expect, it } from 'vitest';
 import { addNote, setPatternBars } from './patterns';
 import { createProject, type Project } from './project';
-import { MAX_SONG_BARS, blockAt, laneFits, moveBlock, placeBlock, removeBlock, songBars } from './song';
+import {
+  MAX_SONG_BARS,
+  blockAt,
+  blocksOf,
+  groupSpan,
+  laneFits,
+  moveBlock,
+  moveBlocks,
+  placeBlock,
+  placeBlocks,
+  removeBlock,
+  removeBlocks,
+  songBars,
+} from './song';
 import { must } from './testing';
 
 function withPatterns(): Project {
@@ -136,5 +149,70 @@ describe('laneFits', () => {
     expect(laneFits([{ startBar: -1, bars: 1 }])).toBe(false);
     expect(laneFits([{ startBar: 255, bars: 2 }])).toBe(false);
     expect(laneFits([{ startBar: 254, bars: 2 }])).toBe(true);
+  });
+});
+
+describe('several blocks at once', () => {
+  function laid(): Project {
+    let p = withPatterns();
+    p = must(placeBlock(p, 'drums', 0, 0)); // bar 1
+    p = must(placeBlock(p, 'drums', 1, 1)); // bars 2 and 3
+    p = must(placeBlock(p, 'keys', 0, 0));
+    return p;
+  }
+
+  it('moves a group across lanes by the same number of bars, as one edit', () => {
+    const p = must(
+      moveBlocks(laid(), [
+        { instrument: 'drums', startBar: 0 },
+        { instrument: 'drums', startBar: 1 },
+        { instrument: 'keys', startBar: 0 },
+      ], 4),
+    );
+    expect(p.instruments.drums.lane).toEqual([
+      { pattern: 0, startBar: 4 },
+      { pattern: 1, startBar: 5 },
+    ]);
+    expect(p.instruments.keys.lane).toEqual([{ pattern: 0, startBar: 4 }]);
+  });
+
+  it('lets the blocks of a group pass over each other, but not over a block that stays', () => {
+    const shifted = must(moveBlocks(laid(), [{ instrument: 'drums', startBar: 0 }, { instrument: 'drums', startBar: 1 }], 1));
+    expect(shifted.instruments.drums.lane.map((b) => b.startBar)).toEqual([1, 2]);
+    const blocked = moveBlocks(laid(), [{ instrument: 'drums', startBar: 0 }], 1);
+    expect(blocked).toEqual({ ok: false, reason: 'Bar 2 is taken in the Drums lane.' });
+    expect(moveBlocks(laid(), [{ instrument: 'keys', startBar: 0 }], -1)).toEqual({ ok: false, reason: 'A block cannot start before bar 1.' });
+  });
+
+  it('places a group all or nothing, and names the taken bars', () => {
+    const p = laid();
+    const pasted = placeBlocks(p, [
+      { instrument: 'drums', pattern: 1, startBar: 3 },
+      { instrument: 'keys', pattern: 0, startBar: 3 },
+    ]);
+    expect(must(pasted).instruments.drums.lane.map((b) => b.startBar)).toEqual([0, 1, 3]);
+    const refused = placeBlocks(p, [
+      { instrument: 'keys', pattern: 0, startBar: 5 },
+      { instrument: 'drums', pattern: 1, startBar: 2 },
+    ]);
+    expect(refused).toEqual({ ok: false, reason: 'Bars 3 to 4 are taken in the Drums lane.' });
+    expect(placeBlocks(p, [{ instrument: 'keys', pattern: 0, startBar: MAX_SONG_BARS }])).toEqual({
+      ok: false,
+      reason: 'That would run past bar 256.',
+    });
+  });
+
+  it('removes a group, and reads the span of a group', () => {
+    const p = laid();
+    const group = blocksOf(p, [{ instrument: 'drums', startBar: 1 }, { instrument: 'keys', startBar: 0 }, { instrument: 'bass', startBar: 7 }]);
+    expect(group).toEqual([
+      { instrument: 'drums', startBar: 1, pattern: 1 },
+      { instrument: 'keys', startBar: 0, pattern: 0 },
+    ]);
+    expect(groupSpan(p, group)).toEqual({ start: 0, end: 3 });
+    expect(groupSpan(p, [])).toBeNull();
+    const left = removeBlocks(p, group);
+    expect(left.instruments.drums.lane).toEqual([{ pattern: 0, startBar: 0 }]);
+    expect(left.instruments.keys.lane).toEqual([]);
   });
 });

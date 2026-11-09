@@ -1,0 +1,78 @@
+/* A small knob: a dial of ink on a rule-coloured track, and a word beside it that turns into the value while the knob is touched. */
+.knob {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.knob-dial {
+  width: 24px;
+  height: 24px;
+  flex: none;
+  cursor: ns-resize;
+  touch-action: none;
+  user-select: none;
+}
+
+.knob-dial svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.knob-track,
+.knob-value {
+  fill: none;
+  stroke-width: 2.5;
+  stroke-linecap: butt;
+}
+
+.knob-track {
+  stroke: var(--color-rule);
+}
+
+.knob-value {
+  stroke: var(--color-ink);
+}
+
+.knob-pointer {
+  stroke: var(--color-ink);
+  stroke-width: 2;
+  stroke-linecap: round;
+}
+
+.knob-dial:focus-visible {
+  outline-offset: 1px;
+}
+
+/* The word and the value share one place, so the bar does not move when one replaces the other. */
+.knob-word {
+  display: inline-grid;
+  min-width: 1.5rem;
+  font: 400 0.72rem/1 var(--font-body);
+  color: var(--color-muted);
+}
+
+.knob-label,
+.knob-value-text {
+  grid-area: 1 / 1;
+}
+
+.knob-value-text {
+  visibility: hidden;
+  font-family: var(--font-outlier);
+  color: var(--color-ink);
+}
+
+.knob:hover .knob-label,
+.knob.active .knob-label,
+.knob:focus-within .knob-label {
+  visibility: hidden;
+}
+
+.knob:hover .knob-value-text,
+.knob.active .knob-value-text,
+.knob:focus-within .knob-value-text {
+  visibility: visible;
+}

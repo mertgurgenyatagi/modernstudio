@@ -19,6 +19,12 @@ import type { Block, Instrument, Note, Pattern, Project } from './project';
 import { laneFits } from './song';
 import { BPM_MAX, BPM_MIN, METERS, MAX_PATTERN_BARS, PATTERN_BARS, patternTicks, type Meter, type PatternBars } from './time';
 
+/**
+ * Where a saved note may lie: anywhere inside the longest pattern of the longest bar. A project in 3/4
+ * can hold notes placed in 4/4, hidden past the shorter bar until the meter is switched back.
+ */
+const NOTE_LIMIT_TICKS = patternTicks('4/4', MAX_PATTERN_BARS);
+
 export const FILE_FORMAT = 'modernstudio';
 export const FILE_VERSION = 1;
 
@@ -62,11 +68,11 @@ function oneOf<T extends string | number>(value: unknown, allowed: readonly T[],
   return value as T;
 }
 
-function parseNote(id: InstrumentId, value: unknown, where: string, meter: Meter): Note {
+function parseNote(id: InstrumentId, value: unknown, where: string): Note {
   const raw = record(value, where);
   const note = raw as unknown as Note;
   // Hidden notes may lie anywhere inside the longest pattern, and on any fret the editor can show.
-  const problem = noteProblem(id, note, { end: patternTicks(meter, MAX_PATTERN_BARS), maxFret: FRET_MAX });
+  const problem = noteProblem(id, note, { end: NOTE_LIMIT_TICKS, maxFret: FRET_MAX });
   if (problem) bad(where, problem);
   const keys = Object.keys(raw).sort().join(',');
   const expected = ['row,start', 'fret,length,start,string', 'length,pitch,start'];
@@ -74,21 +80,21 @@ function parseNote(id: InstrumentId, value: unknown, where: string, meter: Meter
   return note;
 }
 
-function parsePattern(id: InstrumentId, value: unknown, where: string, meter: Meter): Pattern {
+function parsePattern(id: InstrumentId, value: unknown, where: string): Pattern {
   const raw = record(value, where);
   const bars = oneOf<PatternBars>(raw.bars, PATTERN_BARS, `${where}.bars`);
   if (!Array.isArray(raw.notes)) bad(`${where}.notes`, 'expected a list');
-  const notes = (raw.notes as unknown[]).map((n, i) => parseNote(id, n, `${where}.notes[${i}]`, meter));
+  const notes = (raw.notes as unknown[]).map((n, i) => parseNote(id, n, `${where}.notes[${i}]`));
   return { bars, notes };
 }
 
-function parseInstrument(id: InstrumentId, value: unknown, where: string, meter: Meter): Instrument {
+function parseInstrument(id: InstrumentId, value: unknown, where: string): Instrument {
   const raw = record(value, where);
   if (typeof raw.muted !== 'boolean') bad(`${where}.muted`, 'expected true or false');
   if (!Array.isArray(raw.patterns) || raw.patterns.length !== PATTERNS_MAX) {
     bad(`${where}.patterns`, `expected ${PATTERNS_MAX} patterns`);
   }
-  const patterns = (raw.patterns as unknown[]).map((p, i) => parsePattern(id, p, `${where}.patterns[${i}]`, meter));
+  const patterns = (raw.patterns as unknown[]).map((p, i) => parsePattern(id, p, `${where}.patterns[${i}]`));
 
   const shownPatterns = whole(raw.shownPatterns, `${where}.shownPatterns`, PATTERNS_SHOWN_STEP, PATTERNS_MAX);
   if (shownPatterns % PATTERNS_SHOWN_STEP !== 0) bad(`${where}.shownPatterns`, 'expected a multiple of 20');
@@ -147,7 +153,7 @@ export function parseProject(text: string): ParseResult {
     const instruments = record(raw.instruments, 'project.instruments');
     const parsed = {} as Record<InstrumentId, Instrument>;
     for (const id of INSTRUMENT_IDS) {
-      parsed[id] = parseInstrument(id, instruments[id], `project.instruments.${id}`, meter);
+      parsed[id] = parseInstrument(id, instruments[id], `project.instruments.${id}`);
     }
     return {
       ok: true,

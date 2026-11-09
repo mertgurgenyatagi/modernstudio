@@ -17,8 +17,19 @@ body {
   color: var(--color-ink);
   font-family: var(--font-body);
   font-weight: 400;
-  /* The page never scrolls sideways (docs/design.md). */
-  overflow-x: hidden;
+  /* The window itself never scrolls: each page fits it (docs/design.md, docs/fit.md). */
+  overflow: hidden;
+}
+
+/* No scrollbars anywhere (the user's sweeping changes, 2026-11-09). A box that holds more than it shows still scrolls with the wheel. */
+* {
+  scrollbar-width: none;
+}
+
+*::-webkit-scrollbar {
+  display: none;
+  width: 0;
+  height: 0;
 }
 
 :focus-visible {

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { addNote, copyNotes, noteKey, pitchOf, removeNote, replaceNote, setPatternBars } from './patterns';
+import { addNote, addNotes, copyNotes, noteKey, pitchOf, removeNote, removeNotes, replaceNote, replaceNotes, setPatternBars } from './patterns';
 import { createProject, isActive, setFretCount, type Note } from './project';
 import { placeBlock } from './song';
 import { must } from './testing';
@@ -211,5 +211,56 @@ describe('copying notes between patterns', () => {
     expect(copied.instruments.drums.patterns[1]?.bars).toBe(4);
     expect(copyNotes(p, 'drums', 0, 0).ok).toBe(false);
     expect(copyNotes(p, 'drums', 0, 30).ok).toBe(false);
+  });
+});
+
+describe('several notes at once', () => {
+  const chord: Note[] = [
+    { pitch: 60, start: 0, length: 12 },
+    { pitch: 64, start: 0, length: 12 },
+    { pitch: 67, start: 0, length: 12 },
+  ];
+
+  it('adds a group as one edit, skipping notes that are already there', () => {
+    const p = must(addNotes(createProject(), 'keys', 0, chord));
+    expect(p.instruments.keys.patterns[0]?.notes).toEqual(chord);
+    expect(must(addNotes(p, 'keys', 0, chord))).toBe(p);
+    const more = must(addNotes(p, 'keys', 0, [chord[0]!, { pitch: 72, start: 12, length: 12 }]));
+    expect(more.instruments.keys.patterns[0]?.notes).toHaveLength(4);
+  });
+
+  it('refuses the whole group when one note does not fit', () => {
+    const bad = addNotes(createProject(), 'keys', 0, [chord[0]!, { pitch: 60, start: 48, length: 12 }]);
+    expect(bad).toEqual({ ok: false, reason: 'A note must start inside the pattern.' });
+  });
+
+  it('removes a group', () => {
+    const p = must(addNotes(createProject(), 'keys', 0, chord));
+    expect(removeNotes(p, 'keys', 0, chord.slice(0, 2)).instruments.keys.patterns[0]?.notes).toEqual([chord[2]]);
+    expect(removeNotes(p, 'keys', 0, [{ pitch: 50, start: 0, length: 12 }])).toBe(p);
+  });
+
+  it('moves a group in time and pitch, the notes passing over each other', () => {
+    const p = must(addNotes(createProject(), 'keys', 0, chord));
+    const up = chord.map((n) => ({ ...n, pitch: (n as { pitch: number }).pitch + 4, start: 12 }));
+    expect(must(replaceNotes(p, 'keys', 0, chord, up)).instruments.keys.patterns[0]?.notes).toEqual(up);
+    // 60 64 67 up a third: 64 lands where 64 was, which is moving too.
+    const third = chord.map((n) => ({ ...n, pitch: (n as { pitch: number }).pitch + 4 }));
+    expect(replaceNotes(p, 'keys', 0, chord, third).ok).toBe(true);
+  });
+
+  it('refuses a move onto a note that stays, or past the end, and changes nothing when nothing moves', () => {
+    const p = must(addNotes(createProject(), 'keys', 0, chord));
+    const onto = replaceNotes(p, 'keys', 0, [chord[0]!], [{ pitch: 64, start: 0, length: 12 }]);
+    expect(onto).toEqual({ ok: false, reason: 'A note is already there.' });
+    expect(replaceNotes(p, 'keys', 0, [chord[0]!], [{ pitch: 60, start: 40, length: 12 }]).ok).toBe(false);
+    expect(must(replaceNotes(p, 'keys', 0, chord, chord))).toBe(p);
+    expect(replaceNotes(p, 'keys', 0, [{ pitch: 50, start: 0, length: 12 }], [{ pitch: 51, start: 0, length: 12 }]).ok).toBe(false);
+  });
+
+  it('lengthens a group', () => {
+    const p = must(addNotes(createProject(), 'keys', 0, chord));
+    const long = chord.map((n) => ({ ...n, length: 24 }));
+    expect(must(replaceNotes(p, 'keys', 0, chord, long)).instruments.keys.patterns[0]?.notes).toEqual(long);
   });
 });
