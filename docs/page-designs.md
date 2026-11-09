@@ -152,3 +152,17 @@ None of this is in the questionnaire answers. Change it if wrong.
 ### Where to look
 
 The drawn version is design 11 in [exhibition/guitars.html](exhibition/guitars.html), shown with Lead Guitar. The other eleven stay there as the record of what was considered.
+
+## Keys: the piano roll
+
+Not drawn as an exhibition. The user decided on 2026-11-08 that Keys is built from the Guitar page ([open-items.md](open-items.md)), and it was built in plan24 step 9 from the code of the Guitar page.
+
+### Layout
+
+- **The same two columns, pattern row and tools row as the Guitar page** (pattern bank, Length, Note value; the title "Keys" and the quiet line for refusals above them).
+- **The roll, instead of the string cards.** A regular piano roll with 49 rows from C6 at the top down to C2. A narrow left column carries the labels: every C is labelled and the other rows are blank. Black-key rows are tinted (paper-3); each C row has a heavier ink line above it, so the octaves read at a glance. The beat numbers stick to the top, as on the Guitar page. A note is an ink bar as wide as its length.
+- **Side panel (15rem).** "View" with "Show whole pattern", then the Envelope (Volume, Attack, Decay, Release). No instrument choice and no frets.
+- **Scrolling.** The roll scrolls vertically inside its own box (49 rows are about 1020 px) and sideways as one piece; it first shows the octave around middle C. The page itself never scrolls sideways.
+- **Narrow windows.** As on the Guitar page: one column, the panel under the roll in two columns.
+
+Placing and dragging notes work as on the Guitar page. The assumptions are in [open-items.md](open-items.md).

@@ -3,7 +3,7 @@
 The build plan, run one step per invocation of the `/plan24` skill ([.claude/skills/plan24/SKILL.md](../.claude/skills/plan24/SKILL.md)). Step numbers are plan24's own and have nothing to do with the older branches `00-overall` to `04-guitars`.
 
 Horizon: 24
-Last completed step: 8
+Last completed step: 9
 Replanned after step: 6
 Plan complete: no
 
@@ -21,20 +21,9 @@ The plan is replanned after every third completed step (3, 6, 9, and so on). Don
 
 Replanned after step 6 (2026-11-09). The horizon stays at 24 and the order is unchanged, except that "Show whole pattern" moves from step 10 into step 7 (the pad grid needs it for 8x patterns), and the pattern-bank, tool and envelope pieces are built once, in step 7, as shared parts that steps 8 and 9 reuse. Steps 7 and 8 are built and moved to the history below. The next replan comes before step 10.
 
-### Step 9: The Keys page
+### Step 10: Pattern tools and shortcuts
 
-**Produces:** the Keys page, built from the Guitar page ([open-items.md](open-items.md)): the same two columns, pattern row, tools row and side panel, with the string cards replaced by a regular piano roll from C2 to C6 (49 rows).
-
-- Rows are piano keys with the black-key rows tinted; the side panel holds only the Keys envelope strip and "Show whole pattern" (no instrument choice, no frets).
-- Notes are ink bars of their length with the same drag rules as step 8's. The row labelling is decided here: every C is labelled (C2 to C6), other rows carry no label (assumed; settles that part of questionnaire 17).
-- The roll is 49 rows tall, so the main column scrolls vertically, starting with the octave around middle C (C4) in view.
-- The note editor part both pages share is pulled into one component if step 8 left it inside the Guitar page.
-
-**Relies on:** step 8.
-
-**Done when:** tests for the pitch-to-row mapping and the label rule pass; typecheck, lint, test and build pass; fit reasoned.
-
-**Decisions it may need:** the row labelling (assumed: Cs only); the starting scroll (assumed: C4 in view).
+Detail comes with the next replan: the first `/plan24` run after this one replans (step 9 was the third step since the last replan) and details steps 10 to 12.
 
 ## Done steps (history)
 
@@ -183,9 +172,26 @@ Replanned after step 6 (2026-11-09). The horizon stays at 24 and the order is un
 
 **Built (2026-11-09):** `src/pages/Guitar.tsx` and `guitar.css`; the pure geometry in `src/pages/editor/noteGeometry.ts` (tested, shared with Keys) and the drag hook `useNoteDrag.ts` (shared with Keys). The note editor itself is still inside the Guitar page; step 9 pulls out what it shares. Assumptions are in [open-items.md](open-items.md). Not looked at, as planned.
 
+### Step 9: The Keys page
+
+**Produces:** the Keys page, built from the Guitar page ([open-items.md](open-items.md)): the same two columns, pattern row, tools row and side panel, with the string cards replaced by a regular piano roll from C2 to C6 (49 rows).
+
+- Rows are piano keys with the black-key rows tinted; the side panel holds only the Keys envelope strip and "Show whole pattern" (no instrument choice, no frets).
+- Notes are ink bars of their length with the same drag rules as step 8's. The row labelling is decided here: every C is labelled (C2 to C6), other rows carry no label (assumed; settles that part of questionnaire 17).
+- The roll is 49 rows tall, so the main column scrolls vertically, starting with the octave around middle C (C4) in view.
+- The note editor part both pages share is pulled into one component if step 8 left it inside the Guitar page.
+
+**Relies on:** step 8.
+
+**Done when:** tests for the pitch-to-row mapping and the label rule pass; typecheck, lint, test and build pass; fit reasoned.
+
+**Decisions it may need:** the row labelling (assumed: Cs only); the starting scroll (assumed: C4 in view).
+
+**Built (2026-11-09):** `src/pages/Keys.tsx`, `keys.css` and the pure, tested `src/pages/editor/keyRoll.ts` (rows, black keys, labels, notes on screen, the starting scroll). The note editor parts the Guitar page and Keys share were pulled out into `editor/noteEditor.css`, `Ruler.tsx` and `usePlayhead.ts`; the Guitar page now uses them and looks as before. The unused Placeholder page was removed. Assumptions are in [open-items.md](open-items.md). Not looked at, as planned.
+
 ## Later steps
 
-Broad strokes only. The next replan (the first `/plan24` run after step 9 is done) details steps 10 to 12. The horizon stays at 24; the order is unchanged.
+Broad strokes only. The next replan (the first `/plan24` run, since step 9 is done) details steps 10 to 12. The horizon stays at 24; the order is unchanged.
 
 - 10: Pattern tools and shortcuts: "Copy notes to…" picker, the hidden control for patterns 21 to 120, Delete for selected notes, the warning when the fret count is lowered after notes are placed. ("Show whole pattern" is built in step 7, Space to play in step 5.)
 - 11: Saving and files: save, open, reopen the last project, unsaved-changes prompt on close and on import.
@@ -214,7 +220,7 @@ Broad strokes only. The next replan (the first `/plan24` run after step 9 is don
 | 6 | The Song page | done | 06-song |
 | 7 | The Drums page | done | 07-drums |
 | 8 | The Guitar page | done | 08-guitar |
-| 9 | The Keys page | todo | |
+| 9 | The Keys page | done | 09-keys |
 | 10 | Pattern tools and shortcuts | todo | |
 | 11 | Saving and files | todo | |
 | 12 | WAV export | todo | |
