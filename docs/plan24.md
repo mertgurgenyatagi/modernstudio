@@ -3,7 +3,7 @@
 The build plan, run one step per invocation of the `/plan24` skill ([.claude/skills/plan24/SKILL.md](../.claude/skills/plan24/SKILL.md)). Step numbers are plan24's own and have nothing to do with the older branches `00-overall` to `04-guitars`.
 
 Horizon: 24
-Last completed step: 18
+Last completed step: 19
 Replanned after step: 18
 Plan complete: no
 
@@ -19,23 +19,7 @@ The plan is replanned after every third completed step (3, 6, 9, and so on). Don
 
 ## Next three steps
 
-Replanned after step 18 (2026-11-09). The horizon stays at 24; the order is unchanged. The plan ends at step 22; 23 and 24 are reserves.
-
-### Step 19: Fit at 960 by 540
-
-**Produces:** a checked answer to "does every page work at the default window?", reached by reasoning and by pure layout maths, since no browser is used.
-
-- **Audit:** read the CSS and the layout code of every page (Mixer, Song, Drums, Guitar, Keys), the top bar, the mapping panel and the report panel, and write down for each the height budget at 540 and the width budget at 960 in a new `docs/fit.md` (what takes how many pixels, what scrolls and inside which box, what is left over). The window is 960 by 540 inside the frame ([open-items.md](open-items.md), step 1), and the top bar is about 45 px, so a page has about 495 px.
-- **Pure layout maths with tests (`src/pages/fit.test.ts`):** where a page's size comes from code (the tick width for one bar to fit, the Song's 16 visible bars at 48 px, the lane height formula, the cards' heights at 5, 7 and 12 frets, the Keys roll height) the test computes it at 960 by 540 and asserts the rule: no page-level sideways scroll, one bar of every note editor fits its box, the Song's sixteen bars fit, the fixed heights above the scrolling box leave at least a stated minimum for it (assumed 200 px for the Guitar and Keys editors, so at least a card or an octave is in view).
-- **Fix what the audit finds:** small CSS changes (tighter rows, a smaller gap, an inner scroll instead of a page scroll) and no redesign. A change that goes against a decided layout is not made; it is recorded in [open-items.md](open-items.md) instead.
-- **The Guitar editor:** the vertical scroll the user accepted; the step checks that only the card box scrolls, that the beat numbers and fret column stick, and writes the figure for how much is in view at 5, 7 and 12 frets.
-- `docs/fit.md` is added to the reading order of [README.md](README.md); [design.md](design.md)'s "unchecked at 960 by 540" lines and the open items are brought up to date.
-
-**Relies on:** steps 5 to 10 and 17 to 18 (the pages and panels), [design.md](design.md), [page-designs.md](page-designs.md), [open-items.md](open-items.md).
-
-**Done when:** the fit tests pass; `docs/fit.md` has a budget for each page and panel; typecheck, lint, test and build pass. Nothing is looked at in a window.
-
-**Decisions it may need:** the least height left for the scrolling box of the Guitar and Keys editors (assumed 200 px); whether any page may scroll vertically as a whole at 540 (assumed: only where a page already does, Drums if its panel is taller, with the reason in `fit.md`); a minimum window size (assumed: still none, as step 1 decided).
+Replanned after step 18 (2026-11-09). The horizon stays at 24; the order is unchanged. The plan ends at step 22; 23 and 24 are reserves. Step 19 is done (see the history below); steps 20 and 21 are next, and the next replan comes after step 21.
 
 ### Step 20: Installer
 
@@ -390,9 +374,27 @@ Replanned after step 18 (2026-11-09). The horizon stays at 24; the order is unch
 
 **Built (2026-11-09):** `src/core/midi/reportLines.ts` (the pure wording, tested in `reportLines.test.ts`), `src/ui/ImportReport.tsx` with its styles in `import.css`, shown by the Mixer while the store holds `importReport` and closed by the existing `dismissReport` action (Close or Escape). `src/core/midi/album.test.ts` runs the eleven files end to end (prototype figures, model rules, JSON round trip, `songPlan` against the quantized source, MIDI export and read back, the totals); it passed with no difference to record. [midi-import.md](midi-import.md) has its "Built" paragraph, [page-designs.md](page-designs.md) records both panels, and the assumptions are in [open-items.md](open-items.md). Not run in a window, as planned.
 
+### Step 19: Fit at 960 by 540
+
+**Produces:** a checked answer to "does every page work at the default window?", reached by reasoning and by pure layout maths, since no browser is used.
+
+- **Audit:** read the CSS and the layout code of every page (Mixer, Song, Drums, Guitar, Keys), the top bar, the mapping panel and the report panel, and write down for each the height budget at 540 and the width budget at 960 in a new `docs/fit.md` (what takes how many pixels, what scrolls and inside which box, what is left over). The window is 960 by 540 inside the frame ([open-items.md](open-items.md), step 1), and the top bar is about 45 px, so a page has about 495 px.
+- **Pure layout maths with tests (`src/pages/fit.test.ts`):** where a page's size comes from code (the tick width for one bar to fit, the Song's 16 visible bars at 48 px, the lane height formula, the cards' heights at 5, 7 and 12 frets, the Keys roll height) the test computes it at 960 by 540 and asserts the rule: no page-level sideways scroll, one bar of every note editor fits its box, the Song's sixteen bars fit, the fixed heights above the scrolling box leave at least a stated minimum for it (assumed 200 px for the Guitar and Keys editors, so at least a card or an octave is in view).
+- **Fix what the audit finds:** small CSS changes (tighter rows, a smaller gap, an inner scroll instead of a page scroll) and no redesign. A change that goes against a decided layout is not made; it is recorded in [open-items.md](open-items.md) instead.
+- **The Guitar editor:** the vertical scroll the user accepted; the step checks that only the card box scrolls, that the beat numbers and fret column stick, and writes the figure for how much is in view at 5, 7 and 12 frets.
+- `docs/fit.md` is added to the reading order of [README.md](README.md); [design.md](design.md)'s "unchecked at 960 by 540" lines and the open items are brought up to date.
+
+**Relies on:** steps 5 to 10 and 17 to 18 (the pages and panels), [design.md](design.md), [page-designs.md](page-designs.md), [open-items.md](open-items.md).
+
+**Done when:** the fit tests pass; `docs/fit.md` has a budget for each page and panel; typecheck, lint, test and build pass. Nothing is looked at in a window.
+
+**Decisions it may need:** the least height left for the scrolling box of the Guitar and Keys editors (assumed 200 px); whether any page may scroll vertically as a whole at 540 (assumed: only where a page already does, Drums if its panel is taller, with the reason in `fit.md`); a minimum window size (assumed: still none, as step 1 decided).
+
+**Built (2026-11-09):** [fit.md](fit.md) (the budget of every page and panel at 960 by 540) and `src/pages/fit.test.ts` (15 tests that read the sizes from the CSS and the geometry code). The audit found two real problems and fixed them in CSS: the Song lanes were cut at the bottom when a notice, a wrapped toolbar and the sideways scrollbar came together (the lane height is now `(100vh - 14rem) / 5`, and the box scrolls if the window is too low), and the Drums panel was about 541 px against 496 (the tools column is 11.5 rem wide with Length in one row and Note value in two columns, and the pad rows use the height that is left). The Guitar and Keys editors keep at least 244 px for their scrolling box in the worst case. The Mixer footer buttons stack in their narrow cell (still fits). Assumptions are in [open-items.md](open-items.md). Nothing was looked at, as planned.
+
 ## Later steps
 
-Broad strokes only. Steps 19 to 21 are detailed above. The next replan comes at the start of the invocation after step 21. The horizon stays at 24.
+Broad strokes only. Steps 20 and 21 are detailed above. The next replan comes at the start of the invocation after step 21. The horizon stays at 24.
 
 - 22: Final lint, type check, test and build pass; documentation tidy (README and `docs/README.md` status paragraph shortened to the current state, `plan24.md` closed with `Plan complete: yes`); handover notes for the user (what is built, what was never run, what to try first). Ends the plan.
 - 23 and 24: Reserve for fixes and for anything that grew past one step; built only when the user asks.
@@ -419,7 +421,7 @@ Broad strokes only. Steps 19 to 21 are detailed above. The next replan comes at 
 | 16 | MIDI import 3: patterns, lanes, project | done | 16-patterns |
 | 17 | MIDI import screens 1: button, flow, mapping | done | 17-import-ui |
 | 18 | MIDI import screens 2: report, album check | done | 18-report |
-| 19 | Fit at 960 by 540 | todo | |
+| 19 | Fit at 960 by 540 | done | 19-fit |
 | 20 | Installer | todo | |
 | 21 | Open items and questionnaire 17 | todo | |
 | 22 | Final pass and handover | todo | |
