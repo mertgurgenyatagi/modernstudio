@@ -4,7 +4,7 @@ The build plan, run one step per invocation of the `/plan24` skill ([.claude/ski
 
 Horizon: 24
 Last completed step: 18
-Replanned after step: 15
+Replanned after step: 18
 Plan complete: no
 
 The plan is replanned after every third completed step (3, 6, 9, and so on). Done steps are history and are never changed by a replan.
@@ -19,7 +19,55 @@ The plan is replanned after every third completed step (3, 6, 9, and so on). Don
 
 ## Next three steps
 
-Step 18 is done and 18 is a multiple of 3, so the next invocation replans first ("Replanned after step" is still 15) and will detail steps 19 to 21 from "Later steps" below. The horizon stays at 24.
+Replanned after step 18 (2026-11-09). The horizon stays at 24; the order is unchanged. The plan ends at step 22; 23 and 24 are reserves.
+
+### Step 19: Fit at 960 by 540
+
+**Produces:** a checked answer to "does every page work at the default window?", reached by reasoning and by pure layout maths, since no browser is used.
+
+- **Audit:** read the CSS and the layout code of every page (Mixer, Song, Drums, Guitar, Keys), the top bar, the mapping panel and the report panel, and write down for each the height budget at 540 and the width budget at 960 in a new `docs/fit.md` (what takes how many pixels, what scrolls and inside which box, what is left over). The window is 960 by 540 inside the frame ([open-items.md](open-items.md), step 1), and the top bar is about 45 px, so a page has about 495 px.
+- **Pure layout maths with tests (`src/pages/fit.test.ts`):** where a page's size comes from code (the tick width for one bar to fit, the Song's 16 visible bars at 48 px, the lane height formula, the cards' heights at 5, 7 and 12 frets, the Keys roll height) the test computes it at 960 by 540 and asserts the rule: no page-level sideways scroll, one bar of every note editor fits its box, the Song's sixteen bars fit, the fixed heights above the scrolling box leave at least a stated minimum for it (assumed 200 px for the Guitar and Keys editors, so at least a card or an octave is in view).
+- **Fix what the audit finds:** small CSS changes (tighter rows, a smaller gap, an inner scroll instead of a page scroll) and no redesign. A change that goes against a decided layout is not made; it is recorded in [open-items.md](open-items.md) instead.
+- **The Guitar editor:** the vertical scroll the user accepted; the step checks that only the card box scrolls, that the beat numbers and fret column stick, and writes the figure for how much is in view at 5, 7 and 12 frets.
+- `docs/fit.md` is added to the reading order of [README.md](README.md); [design.md](design.md)'s "unchecked at 960 by 540" lines and the open items are brought up to date.
+
+**Relies on:** steps 5 to 10 and 17 to 18 (the pages and panels), [design.md](design.md), [page-designs.md](page-designs.md), [open-items.md](open-items.md).
+
+**Done when:** the fit tests pass; `docs/fit.md` has a budget for each page and panel; typecheck, lint, test and build pass. Nothing is looked at in a window.
+
+**Decisions it may need:** the least height left for the scrolling box of the Guitar and Keys editors (assumed 200 px); whether any page may scroll vertically as a whole at 540 (assumed: only where a page already does, Drums if its panel is taller, with the reason in `fit.md`); a minimum window size (assumed: still none, as step 1 decided).
+
+### Step 20: Installer
+
+**Produces:** a Windows installer built with `electron-builder`, and a package that holds only what runs.
+
+- **Configuration (`electron-builder.yml` and scripts):** an NSIS installer for Windows x64 (per user, no admin prompt, assumed; the user chooses the folder: no, one-click, assumed), product name "modernstudio", the app id `studio.modern.app` (assumed), no code signing (the user has no certificate; recorded). Scripts `npm run pack` (an unpacked folder, `--dir`, fast to check) and `npm run dist` (the installer).
+- **What goes in:** `out/` (the build), the three fonts and the sounds (they are inside `out/` through the bundler), `package.json`. What stays out: `docs/`, `midis/`, `tools/`, `questionnaires/`, `src/` sources, the tests and their fixtures, `.claude/`, `.serena/`, the Python prototype. The test is a script that lists the package's file list (from `app.asar` or from the `files` rules) and fails if one of those is in it.
+- **What runs differently when packaged:** the window loads from a file address and the sounds are read by `XMLHttpRequest` ([open-items.md](open-items.md), the engine items); the step checks the content security policy and the relative paths in the built `index.html` for a `file:` load and notes the check cannot be run without a window.
+- **A try:** run `npm run pack`. It needs the Electron binary (already in `node_modules`) and may need to download builder tools; if that fails offline, the configuration is kept, the failure is recorded in open-items with the exact command, and the step is **not** blocked (the accepted fallback is "configuration checked by `electron-builder --help`-level validation and the file-list test on the `files` rules").
+- **Audit of the advisories:** [stack.md](stack.md) says to revisit the `npm install` advisories at the installer step: run `npm audit --omit=dev` and note whether anything shipped is affected.
+- Icon: none is made (assumed: the Electron default stays until the user supplies one; recorded).
+
+**Relies on:** steps 1, 11 and 12 (main process, files), [stack.md](stack.md), [editing-and-project.md](editing-and-project.md) (delivered with an installer).
+
+**Done when:** the configuration is in place; the exclusion test passes; `npm run pack` has been tried and its result recorded; typecheck, lint, test and build pass; [stack.md](stack.md) and the README say how to build the installer.
+
+**Decisions it may need:** one-click per-user NSIS (assumed); no signing and no icon (assumed); the app id; the output folder `release/` (added to `.gitignore`).
+
+### Step 21: Open items and questionnaire 17
+
+**Produces:** an `open-items.md` a person can read in ten minutes, and the final word on the questions that were left open.
+
+- **Questionnaire 17:** its five questions are all settled by the build: Undo restores notes deleted by a meter change (step 2), Delete removes the selected note (step 10), copying replaces by default and adds when chosen (steps 2 and 10), Keys labels the Cs only (step 9), and the third value (assumed in step 7: the grid shows the steps of the chosen value, and off-grid hits are narrow marks). The step writes one short table that says so, with the step that settled each and how the user can overturn it, in [open-items.md](open-items.md) and a note at the top of [questionnaire_answers/](questionnaire_answers/) is **not** added (the answers folder is verbatim; nothing there is touched).
+- **Restructure `open-items.md`:** three sections instead of one long list: *Decided* (no longer open), *Assumed by the builder* (the user may overturn; each with the step and the file where it lives), *Needs the user's check* (everything type checked and built but never run: sounds, envelope feel, Export WAV and MIDI, Import, Save and Open, the packaged app, the fit at 960 by 540). No fact is dropped; entries are grouped and shortened only where they repeat, and the step-by-step detail stays under its step.
+- **A checklist of what to try first** (`docs/first-run.md`, added to the reading order): about fifteen lines, in the order a person would try the app after `npm run dev`.
+- **Close or restate** items that later steps made untrue (for example "the four decided layouts draw their own Play and Undo buttons", "the Mixer has no Import button", "no `Copy notes to…` picker").
+
+**Relies on:** all of the earlier steps; [open-items.md](open-items.md), [pages.md](pages.md), [project-model.md](project-model.md).
+
+**Done when:** every statement in the three sections is checked against the code or a step's "Built" paragraph (a grep or a test, not memory); no item is left under "Not decided" that a step decided; links resolve (a script lists broken relative links in `docs/`); typecheck, lint, test and build pass.
+
+**Decisions it may need:** none beyond the structure. Anything found undecided on the way is decided and recorded in the section it belongs to.
 
 ## Done steps (history)
 
@@ -344,12 +392,9 @@ Step 18 is done and 18 is a multiple of 3, so the next invocation replans first 
 
 ## Later steps
 
-Broad strokes only. The next replan comes at the start of the next invocation (after step 18). The horizon stays at 24.
+Broad strokes only. Steps 19 to 21 are detailed above. The next replan comes at the start of the invocation after step 21. The horizon stays at 24.
 
-- 19: Fit pass at 960 by 540 for every page, and the vertical scroll of the Guitar editor (reasoning and any pure layout maths, since no browser is used).
-- 20: Installer with `electron-builder`; the runtime-only parts excluded from the package.
-- 21: Open items and the unanswered questionnaire 17 questions: decide, then document.
-- 22: Final lint, type check and test pass, documentation tidy, handover notes. Ends the plan.
+- 22: Final lint, type check, test and build pass; documentation tidy (README and `docs/README.md` status paragraph shortened to the current state, `plan24.md` closed with `Plan complete: yes`); handover notes for the user (what is built, what was never run, what to try first). Ends the plan.
 - 23 and 24: Reserve for fixes and for anything that grew past one step; built only when the user asks.
 
 ## All steps
