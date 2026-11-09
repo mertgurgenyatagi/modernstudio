@@ -3,7 +3,7 @@
 The build plan, run one step per invocation of the `/plan24` skill ([.claude/skills/plan24/SKILL.md](../.claude/skills/plan24/SKILL.md)). Step numbers are plan24's own and have nothing to do with the older branches `00-overall` to `04-guitars`.
 
 Horizon: 24
-Last completed step: 15
+Last completed step: 16
 Replanned after step: 15
 Plan complete: no
 
@@ -19,23 +19,7 @@ The plan is replanned after every third completed step (3, 6, 9, and so on). Don
 
 ## Next three steps
 
-Replanned after step 15 (2026-11-09). The horizon stays at 24. Steps 16 to 18 are below in detail; steps 19 to 24 are in "Later steps". The old step 18 (the album check) is folded into the new step 18, and the import report moves there from step 17, so that step 16 can finish the converter and steps 17 and 18 each hold one screen. The next replan comes after step 18 (a multiple of 3).
-
-### Step 16: MIDI import, part three: patterns, Song lanes and the project
-
-**Produces:** the end of the converter as pure code in `src/core/midi/`: from a read MIDI file and a mapping to a finished `Project` plus the numbers the report needs.
-
-- **Tiling (`chunk.ts`):** a port of `tools/midi-prototype/chunk.py`. A lane (grid notes or drum hits) is cut into stretches of 1, 2, 4 or 8 bars; a signature is the list of notes inside the stretch (start inside it, length cut at its end, pitch or row); a dynamic program covers the bars with candidates, each costing 1 for the block plus 6 if its signature was not used at least twice in the previous round, up to 8 rounds, ties to the longer block. Returns the blocks and the distinct patterns numbered in order of first use.
-- **Build (`build.ts`):** `convertMidi(file, mapping)` runs timing (step 14), the drum map, quantizing, the 256-bar cut, folding into range, `chooseFretCount` on the whole folded track (step 15), the tiling, and fingering **once per distinct pattern** at the chosen count (`fingerTrack` on the pattern's signature). It returns `Result<ImportOutcome>`: the `Project` (BPM, meter, five instruments; patterns in order of first use, each with its length and notes as drum, string or Keys notes; the lane blocks; fret counts; pattern 1 selected; `shownPatterns` opened in steps of 20 for what an instrument needs; the rest of the model defaults) and the report data (tempo and meter used, other tempos and meter notes, bars, per instrument: the track used, notes, octave moves, dropped drum hits, fret count, patterns, blocks, same-string chords, and warnings such as a cut at bar 256).
-- **Limit of 120 patterns:** `convertMidi` also reports, per instrument, how many patterns it needs. If more than 120, the lane is cut after the last bar that fits and a warning says "needs 143, 120 fit". The same figure is a separate cheap function (`needsPatterns`) for the mapping step of step 17.
-- **Mapping input:** the same shape the guesses give (`TrackGuess` with an assignment per track); two tracks sent to one instrument are merged, exact duplicates (same pitch, same start) dropped; Skip is ignored; an instrument with no track stays empty.
-- **A check against the prototype:** `tools/midi-prototype/dump_chunk.py` writes, for the eleven files and every lane, the prototype's number of patterns and blocks, the block list and the pattern lengths to `fixtures/chunk.json`; a test compares the TypeScript. Also tests: made-up lanes (an exact repeat becomes one pattern, an empty bar is a gap, a note running past a block is cut and counted, a lane over 120 patterns), the round trip (rebuilding every lane from its patterns, blocks and fingerings gives back the folded notes: 0 differences on all 51 lanes), and that every produced project survives `serializeProject` and the parse back, and obeys the lane rules (`laneFits`).
-
-**Relies on:** steps 2, 13, 14 and 15; [midi-import.md](midi-import.md) ("Patterns and the Song lanes", "Limits"); `chunk.py`, `report.py`.
-
-**Done when:** the chunk comparison passes on all eleven files; the round trip is clean on all 51 lanes; the most patterns on any lane is 18, as the document says; typecheck, lint, test and build pass.
-
-**Decisions it may need:** the order of signatures (sorted by start, then length, then key, as in the prototype); the 120-pattern cut (assumed: cut the lane after the last whole block that fits); what a note running past a pattern's end becomes (cut at the pattern's end, as the document says, and counted as in the prototype's `clipped`); `shownPatterns` after an import (the smallest multiple of 20 that holds the patterns used, so the "+20" control is not needed to see them).
+Replanned after step 15 (2026-11-09). The horizon stays at 24. Step 16 is built (in the history below); steps 17 and 18 are below in detail; steps 19 to 24 are in "Later steps". The old step 18 (the album check) is folded into the new step 18, and the import report moves there from step 17, so that step 16 can finish the converter and steps 17 and 18 each hold one screen. The next replan comes after step 18 (a multiple of 3).
 
 ### Step 17: MIDI import screens, part one: the button, the flow and the mapping step
 
@@ -336,6 +320,24 @@ Replanned after step 15 (2026-11-09). The horizon stays at 24. Steps 16 to 18 ar
 
 **Built (2026-11-09):** `src/core/midi/fretting.ts` (`fingerTrack`, `chooseFretCount`, `chordArrangements`, `measureFingering`) and its test `fretting.test.ts`; `tools/midi-prototype/dump_fretting.py` writes `fixtures/fretting.json`. For all 33 guitar and bass parts the fret count, the three penalties, the metrics and the whole fingering (by hash) equal the prototype's, with no ties to record. The longest part takes about 0.2 s. Assumptions (the folding inside `fingerTrack`, a beam for very wide chords) are in [open-items.md](open-items.md).
 
+### Step 16: MIDI import, part three: patterns, Song lanes and the project
+
+**Produces:** the end of the converter as pure code in `src/core/midi/`: from a read MIDI file and a mapping to a finished `Project` plus the numbers the report needs.
+
+- **Tiling (`chunk.ts`):** a port of `tools/midi-prototype/chunk.py`. A lane (grid notes or drum hits) is cut into stretches of 1, 2, 4 or 8 bars; a signature is the list of notes inside the stretch (start inside it, length cut at its end, pitch or row); a dynamic program covers the bars with candidates, each costing 1 for the block plus 6 if its signature was not used at least twice in the previous round, up to 8 rounds, ties to the longer block. Returns the blocks and the distinct patterns numbered in order of first use.
+- **Build (`build.ts`):** `convertMidi(file, mapping)` runs timing (step 14), the drum map, quantizing, the 256-bar cut, folding into range, `chooseFretCount` on the whole folded track (step 15), the tiling, and fingering **once per distinct pattern** at the chosen count (`fingerTrack` on the pattern's signature). It returns `Result<ImportOutcome>`: the `Project` (BPM, meter, five instruments; patterns in order of first use, each with its length and notes as drum, string or Keys notes; the lane blocks; fret counts; pattern 1 selected; `shownPatterns` opened in steps of 20 for what an instrument needs; the rest of the model defaults) and the report data (tempo and meter used, other tempos and meter notes, bars, per instrument: the track used, notes, octave moves, dropped drum hits, fret count, patterns, blocks, same-string chords, and warnings such as a cut at bar 256).
+- **Limit of 120 patterns:** `convertMidi` also reports, per instrument, how many patterns it needs. If more than 120, the lane is cut after the last bar that fits and a warning says "needs 143, 120 fit". The same figure is a separate cheap function (`needsPatterns`) for the mapping step of step 17.
+- **Mapping input:** the same shape the guesses give (`TrackGuess` with an assignment per track); two tracks sent to one instrument are merged, exact duplicates (same pitch, same start) dropped; Skip is ignored; an instrument with no track stays empty.
+- **A check against the prototype:** `tools/midi-prototype/dump_chunk.py` writes, for the eleven files and every lane, the prototype's number of patterns and blocks, the block list and the pattern lengths to `fixtures/chunk.json`; a test compares the TypeScript. Also tests: made-up lanes (an exact repeat becomes one pattern, an empty bar is a gap, a note running past a block is cut and counted, a lane over 120 patterns), the round trip (rebuilding every lane from its patterns, blocks and fingerings gives back the folded notes: 0 differences on all 51 lanes), and that every produced project survives `serializeProject` and the parse back, and obeys the lane rules (`laneFits`).
+
+**Relies on:** steps 2, 13, 14 and 15; [midi-import.md](midi-import.md) ("Patterns and the Song lanes", "Limits"); `chunk.py`, `report.py`.
+
+**Done when:** the chunk comparison passes on all eleven files; the round trip is clean on all 51 lanes; the most patterns on any lane is 18, as the document says; typecheck, lint, test and build pass.
+
+**Decisions it may need:** the order of signatures (sorted by start, then length, then key, as in the prototype); the 120-pattern cut (assumed: cut the lane after the last whole block that fits); what a note running past a pattern's end becomes (cut at the pattern's end, as the document says, and counted as in the prototype's `clipped`); `shownPatterns` after an import (the smallest multiple of 20 that holds the patterns used, so the "+20" control is not needed to see them).
+
+**Built (2026-11-09):** `src/core/midi/chunk.ts` (the tiling and `limitPatterns`), `build.ts` (`convertMidi`, `prepareLane`, `patternsNeededFor`, `shownFor`, the report types), both tested; `tools/midi-prototype/dump_chunk.py` writes `fixtures/chunk.json`. On all 51 lanes of the eleven files the patterns, blocks, pattern lengths, cut notes and a hash of every pattern's notes equal the prototype's; the fret counts and same-string chords equal step 15's; rebuilding every lane from its patterns, blocks and fingerings gives back the folded notes with 0 differences; every project saves, parses back equal and obeys the lane rules; the totals of the document hold (679 blocks, 645 of them 8 bars, busiest lane 18 patterns). Assumptions are in [open-items.md](open-items.md).
+
 ## Later steps
 
 Broad strokes only. The next replan comes after step 18. The horizon stays at 24.
@@ -365,7 +367,7 @@ Broad strokes only. The next replan comes after step 18. The horizon stays at 24
 | 13 | MIDI reader, writer and export | done | 13-midi |
 | 14 | MIDI import 1: time, tempo, drums, range | done | 14-import-time |
 | 15 | MIDI import 2: strings and frets | done | 15-fretting |
-| 16 | MIDI import 3: patterns, lanes, project | todo | |
+| 16 | MIDI import 3: patterns, lanes, project | done | 16-patterns |
 | 17 | MIDI import screens 1: button, flow, mapping | todo | |
 | 18 | MIDI import screens 2: report, album check | todo | |
 | 19 | Fit at 960 by 540 | todo | |
