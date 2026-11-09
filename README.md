@@ -20,6 +20,9 @@ Then:
 | `npm run lint` | Checks the code style |
 | `npm test` | Runs the unit tests |
 | `npm run check:sounds` | Checks the recorded sound files against their manifest |
+| `npm run pack` | Builds the app into an unpacked folder, `release/win-unpacked/` (quick check of what goes in) |
+| `npm run dist` | Builds the Windows installer, `release/modernstudio-setup-<version>.exe` (no code signing, so Windows warns about an unknown publisher) |
+| `npm run check:package` | Fails if the package would hold anything that is not part of the app |
 
 ## Folders
 
